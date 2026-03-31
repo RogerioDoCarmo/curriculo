@@ -1,0 +1,884 @@
+# Implementation Plan: Personal Resume Website
+
+## Overview
+
+This implementation plan breaks down the personal resume website into discrete, incremental coding tasks following **Test-Driven Development (TDD)** methodology. The site is a static Next.js 14 application with TypeScript, featuring multi-language support, dark mode, Firebase integration, comprehensive testing, and CI/CD automation. Each task builds on previous work, with checkpoints to validate progress.
+
+## TDD Workflow Requirements
+
+**CRITICAL: All implementation MUST follow strict TDD methodology:**
+
+1. **Test First**: Write tests BEFORE writing implementation code
+2. **Red-Green-Refactor Cycle**:
+   - **RED**: Write a failing test that describes the desired behavior
+   - **GREEN**: Write minimal code to make the test pass
+   - **REFACTOR**: Improve code quality while keeping tests passing
+3. **No Code Without Tests**: No production code should be written without a corresponding failing test
+4. **90%+ Coverage**: Maintain minimum 90% test coverage throughout development
+5. **Property-Based Tests**: Implement all 48 correctness properties as property-based tests
+
+**Task Order Enforcement**:
+
+- Test tasks (marked with `*`) must be completed BEFORE implementation tasks
+- Implementation tasks assume corresponding tests already exist and are failing
+- CI/CD pipeline will block deployment if tests fail or coverage < 90%
+
+## Tasks
+
+- [ ] 1. Project setup and core infrastructure
+  - [ ] 1.1 Initialize Next.js 14 project with TypeScript and App Router
+    - Run `npx create-next-app@latest` with TypeScript, ESLint, Tailwind CSS, App Router
+    - Configure `next.config.js` with `output: 'export'` for static generation
+    - Set up directory structure: `app/`, `components/`, `lib/`, `hooks/`, `content/`, `messages/`, `public/`, `tests/`
+    - _Requirements: 8.1, 21.1_
+  - [ ] 1.2 Set up environment variables and security
+    - Create `.env.local` for local development secrets
+    - Create `.env.example` template with placeholder values
+    - Add `.env*.local` to `.gitignore` to prevent committing secrets
+    - Document all required environment variables in README
+    - Configure Next.js to expose public variables with `NEXT_PUBLIC_` prefix
+    - Set up environment variables in Vercel dashboard for production
+    - _Requirements: 8.1, 10.1, 10.5_
+  - [ ] 1.3 Configure Tailwind CSS with dark mode support
+    - Set `darkMode: 'class'` in `tailwind.config.js`
+    - Define custom color tokens for light and dark themes
+    - Ensure WCAG AA contrast ratios (4.5:1 minimum)
+    - Create `styles/print.css` for print-specific styles
+    - _Requirements: 17.1, 17.9, 18.3_
+  - [ ] 1.4 Set up TypeScript configuration and type definitions
+    - Enable strict mode in `tsconfig.json`
+    - Create type definitions for data models: `Project`, `Experience`, `SkillCategory`, `ContactFormData`
+    - Configure path aliases (`@/` for root)
+    - _Requirements: 12.1, 12.3_
+  - [ ]\* 1.5 Configure ESLint and Prettier
+    - Install and configure ESLint with Next.js recommended rules
+    - Install and configure Prettier with consistent formatting rules
+    - Add pre-commit hooks with husky and lint-staged
+    - _Requirements: 12.1_
+
+- [ ] 2. Content management system and data layer
+  - [ ] 2.1 Create content directory structure and markdown files
+    - Create `/content/projects/`, `/content/experience/`, `/content/skills.md`
+    - Define markdown frontmatter schema with gray-matter
+    - Add sample content files for testing
+    - _Requirements: 21.2, 21.5_
+  - [ ] 2.2 Implement content parsing utilities
+    - Create `lib/content.ts` with functions to read and parse markdown files
+    - Implement `getProjects()`, `getExperiences()`, `getSkills()` functions
+    - Add content validation at build time
+    - Handle missing or malformed content gracefully
+    - _Requirements: 21.2, 21.9_
+  - [ ]\* 2.3 Write property test for content parsing
+    - **Property 45: Content-Driven Project Addition**
+    - **Validates: Requirements 21.5**
+    - Test that new markdown files are parsed and included without code changes
+  - [ ]\* 2.4 Write property test for content field support
+    - **Property 46: Content Field Support**
+    - **Validates: Requirements 21.6**
+    - Test that all standard fields (title, description, technologies, images, links) are supported
+  - [ ] 2.5 Generate JSON Resume format
+    - Create `lib/json-resume.ts` to generate JSON Resume schema
+    - Export `/public/resume.json` at build time
+    - Include all sections: basics, work, education, skills, languages
+    - _Requirements: 20.6_
+
+- [ ] 3. Internationalization (i18n) setup
+  - [ ] 3.1 Install and configure next-intl
+    - Install `next-intl` package
+    - Create middleware for locale detection and routing
+    - Configure supported locales: pt-BR (default), en, es
+    - Set up `app/[locale]/` directory structure
+    - _Requirements: 11.1, 11.2_
+  - [ ] 3.2 Create translation files for all languages
+    - Create `messages/pt-BR.json`, `messages/en.json`, `messages/es.json`
+    - Define translation keys for all UI text: navigation, hero, sections, forms, buttons
+    - Ensure complete coverage across all language files
+    - _Requirements: 11.7_
+  - [ ]\* 3.3 Write property test for translation coverage
+    - **Property 24: Complete Translation Coverage**
+    - **Validates: Requirements 11.7**
+    - Test that all translation keys exist in all language files with non-empty values
+  - [ ] 3.4 Implement language detection and persistence
+    - Create `hooks/useLanguage.ts` for language state management
+    - Detect browser language from Accept-Language header
+    - Implement fallback to pt-BR for unsupported languages
+    - Persist language preference to localStorage
+    - _Requirements: 11.2, 11.3, 11.4, 11.6_
+  - [ ]\* 3.5 Write property test for language detection
+    - **Property 20: Browser Language Detection**
+    - **Validates: Requirements 11.2**
+    - Test that Accept-Language header is correctly parsed
+  - [ ]\* 3.6 Write property test for language persistence
+    - **Property 23: Language Preference Persistence**
+    - **Validates: Requirements 11.6**
+    - Test round-trip: select language → save → reload → language restored
+  - [ ] 3.7 Create LanguageSelector component
+    - Build dropdown component with flag icons for pt-BR, en, es
+    - Handle language switching with next-intl navigation
+    - Display current language
+    - _Requirements: 11.5_
+
+- [ ] 4. Theme system and dark mode
+  - [ ] 4.1 Create theme context and provider
+    - Create `hooks/useTheme.ts` with theme state management
+    - Implement system preference detection via `prefers-color-scheme`
+    - Add theme persistence to localStorage
+    - Apply `dark` class to `<html>` element
+    - _Requirements: 17.1, 17.2, 17.4, 17.7_
+  - [ ] 4.2 Implement FOUC prevention
+    - Add inline script in `<head>` to apply theme before render
+    - Check localStorage and system preference synchronously
+    - _Requirements: 17.2_
+  - [ ]\* 4.3 Write property test for system theme detection
+    - **Property 29: System Theme Detection**
+    - **Validates: Requirements 17.2**
+    - Test that prefers-color-scheme is correctly detected and applied
+  - [ ]\* 4.4 Write property test for theme persistence
+    - **Property 32: Theme Preference Persistence**
+    - **Validates: Requirements 17.7**
+    - Test round-trip: select theme → save → reload → theme restored
+  - [ ] 4.5 Create ThemeToggle component
+    - Build toggle button with sun/moon icons
+    - Handle theme switching without page reload
+    - Add smooth transition animations
+    - Ensure visible on all pages
+    - _Requirements: 17.5, 17.6, 17.8_
+  - [ ]\* 4.6 Write property test for theme toggle functionality
+    - **Property 31: Theme Toggle Switches Themes**
+    - **Validates: Requirements 17.6**
+    - Test that clicking toggle switches between light and dark
+  - [ ] 4.7 Apply dark mode styles to all components
+    - Add `dark:` variants to all Tailwind classes
+    - Ensure WCAG AA contrast in dark mode
+    - Test all UI components in both themes
+    - _Requirements: 17.10_
+
+- [ ] 5. Core UI components
+  - [ ] 5.1 Create Button component with variants
+    - Implement variants: primary, secondary, ghost
+    - Implement sizes: sm, md, lg
+    - Add loading and disabled states
+    - Include focus indicators for accessibility
+    - _Requirements: 9.4_
+  - [ ]\* 5.2 Write unit tests for Button component
+    - Test all variants and sizes render correctly
+    - Test disabled and loading states
+    - Test click handlers
+  - [ ] 5.3 Create Card component
+    - Implement container with consistent styling
+    - Support optional title prop
+    - Add hover effects
+    - Ensure responsive behavior
+    - _Requirements: 4.4_
+  - [ ] 5.4 Create Modal component
+    - Implement overlay with backdrop
+    - Add focus trap for accessibility
+    - Support ESC key and backdrop click to close
+    - Include ARIA attributes (role="dialog", aria-modal)
+    - _Requirements: 9.5_
+  - [ ] 5.5 Create HighlightedText component
+    - Implement text highlighting functionality
+    - Accept `text` (full content) and `highlight` (substring to bold)
+    - Find and bold all occurrences of highlight text
+    - Make matching case-insensitive by default
+    - Fall back to regular text if highlight not found
+    - Ensure accessibility with proper semantic markup
+    - Add unit tests for various scenarios
+    - _Requirements: 1.6, 9.5_
+  - [ ]\* 5.6 Write unit tests for Modal component
+    - Test open/close functionality
+    - Test ESC key closes modal
+    - Test backdrop click closes modal
+    - Test focus trap
+  - [ ]\* 5.7 Write unit tests for HighlightedText component
+    - Test basic highlighting functionality
+    - Test multiple occurrences are highlighted
+    - Test case-insensitive matching
+    - Test fallback when highlight not found
+    - Test empty strings handling
+
+- [ ] 6. Layout components
+  - [ ] 6.1 Create RootLayout with theme and language providers
+    - Implement `app/[locale]/layout.tsx`
+    - Wrap with ThemeProvider and next-intl provider
+    - Add metadata generation for SEO
+    - Load fonts (system fonts or Google Fonts)
+    - _Requirements: 7.1, 11.1_
+  - [ ] 6.2 Create Header component with responsive navigation and anchor support
+    - Build horizontal navbar for desktop (≥768px)
+    - Implement left sidebar navigation for mobile (<768px)
+    - Include LanguageSelector and ThemeToggle
+    - Add hamburger menu button to toggle sidebar on mobile
+    - Implement smooth slide-in/out animation for sidebar
+    - Add overlay/backdrop when sidebar is open
+    - Close sidebar on link click or backdrop click
+    - Add navigation links: Home, Projects, Experience, Skills, Contact, Tech Stack
+    - Implement URL anchor navigation that updates URL hash (e.g., `/#projects`, `/#experience`)
+    - Highlight active section in navigation based on scroll position
+    - Support deep linking to all major sections
+    - Use smooth scrolling (500-800ms) for anchor navigation
+    - Handle browser back/forward navigation correctly
+    - Ensure sidebar is accessible (keyboard navigation, ARIA labels)
+    - _Requirements: 4.1, 4.2, 4.3, 17.5, 24.1-24.10_
+  - [ ] 6.3 Create Footer component
+    - Display social media links (LinkedIn, GitHub, Twitter)
+    - Add copyright notice
+    - Create text-based sitemap with organized sections: About, Projects, Experience, Skills, Contact, Languages
+    - Implement multi-column layout on desktop (3-4 columns), stacked on mobile
+    - Add links to all major sections and pages
+    - Ensure all links are keyboard accessible
+    - _Requirements: 3.1, 7.5_
+  - [ ] 6.4 Create BackToTopButton component
+    - Implement floating button in bottom-right corner
+    - Add scroll detection (show after 300px scroll)
+    - Implement smooth scroll to top on click (500-800ms)
+    - Add upward arrow icon
+    - Ensure button follows current theme (light/dark)
+    - Make button keyboard accessible (Tab navigation)
+    - Add ARIA labels for screen readers
+    - Hide button in print media
+    - _Requirements: 22.1-22.10_
+  - [ ]\* 6.5 Write integration test for responsive navigation
+    - Test mobile menu appears at < 768px
+    - Test desktop nav appears at >= 1024px
+    - Test hamburger menu functionality
+  - [ ]\* 6.6 Write unit tests for BackToTopButton
+    - Test button appears after scrolling threshold
+    - Test button hidden at top of page
+    - Test smooth scroll functionality
+    - Test keyboard accessibility
+    - Test theme compatibility
+  - [ ] 6.7 Create useAnchorNavigation hook
+    - Implement hook that manages URL hash-based navigation
+    - Track active section based on scroll position using Intersection Observer
+    - Update URL hash without page reload using History API
+    - Handle browser history navigation (back/forward buttons)
+    - Integrate with Next.js router for locale-aware URLs (e.g., `/en/#projects`)
+    - Support all major sections: home, projects, experience, skills, contact, tech-stack
+    - _Requirements: 24.1-24.10_
+  - [ ]\* 6.8 Write unit tests for useAnchorNavigation hook
+    - Test URL hash updates when navigating to sections
+    - Test active section detection based on scroll position
+    - Test browser history navigation (back/forward)
+    - Test locale-aware URL handling
+    - Test smooth scrolling behavior
+  - [ ]\* 6.9 Write property test for URL anchor navigation
+    - **Property 49: URL Updates on Section Navigation**
+    - **Validates: Requirements 24.1, 24.2**
+    - Test that clicking navigation items updates URL with correct section anchor
+    - Test that scrolling to sections updates URL to reflect current visible section
+  - [ ]\* 6.10 Write property test for deep linking and history navigation
+    - **Property 50: Deep Linking and History Navigation**
+    - **Validates: Requirements 24.3, 24.4, 24.8**
+    - Test that loading URL with section anchor scrolls to correct section
+    - Test that browser back/forward navigation restores appropriate section
+    - Test that all major sections support deep linking
+
+- [ ] 7. Hero section and career path selection
+  - [ ] 7.1 Create Hero component
+    - Display developer name and professional title
+    - Add animated introduction
+    - Include call-to-action button
+    - Ensure responsive layout
+    - _Requirements: 1.1_
+  - [ ] 7.2 Create CareerPathSelector component
+    - Build toggle/tab interface for Professional vs Academic
+    - Implement smooth transition between paths
+    - Persist selection to sessionStorage
+    - Allow switching without page reload
+    - _Requirements: 1.2, 1.7_
+  - [ ]\* 7.3 Write property test for career path switching
+    - **Property 3: Career Path Switching Without Reload**
+    - **Validates: Requirements 1.7**
+    - Test that switching paths doesn't trigger page navigation
+  - [ ] 7.4 Create Timeline component
+    - Build visual timeline with vertical line and circular markers
+    - Support different marker styles for event types (education, work, achievement)
+    - Implement smooth animations on scroll
+    - Add date labels positioned alongside markers
+    - Create content cards for each timeline item
+    - Ensure accessibility with proper ARIA labels
+    - _Requirements: 1.3, 1.4, 9.5_
+  - [ ] 7.5 Create ExperienceSection component with Timeline
+    - Display experiences based on selected career path using Timeline component
+    - Show organization, role, location, dates, description, achievements
+    - Highlight important milestones (degrees, promotions, major achievements)
+    - Implement expandable details for each experience
+    - Calculate and display duration for each experience
+    - _Requirements: 1.3, 1.4_
+  - [ ]\* 7.6 Write property test for career path content display
+    - **Property 1: Career Path Selection Displays Correct Content**
+    - **Validates: Requirements 1.3, 1.4**
+    - Test that selecting a path displays all associated content
+  - [ ]\* 7.5 Write property test for career path content display
+    - **Property 1: Career Path Selection Displays Correct Content**
+    - **Validates: Requirements 1.3, 1.4**
+    - Test that selecting a path displays all associated content
+  - [ ] 7.6 Create SkillsSection component
+    - Display skills organized by category
+    - Show skill level indicators (optional)
+    - Implement search/filter functionality
+    - Ensure responsive grid layout
+    - _Requirements: 1.5_
+  - [ ]\* 7.7 Write property test for skills categorization
+    - **Property 2: Skills Organized by Category**
+    - **Validates: Requirements 1.5**
+    - Test that skills are grouped under category headings
+
+- [ ] 8. Projects portfolio section
+  - [ ] 8.1 Create ProjectsSection component
+    - Display projects in responsive grid layout
+    - Show project cards with title, description, technologies, image
+    - Implement filtering by technology
+    - Support featured projects
+    - _Requirements: 2.1, 2.2, 2.3_
+  - [ ]\* 8.2 Write property test for complete project rendering
+    - **Property 4: Complete Project Rendering**
+    - **Validates: Requirements 2.1, 2.2, 2.3**
+    - Test that all non-empty project fields are rendered
+  - [ ] 8.3 Implement project detail modal
+    - Show expanded project information on click
+    - Display full description, screenshots, technologies
+    - Include links to live demo and repository
+    - Add close button and keyboard navigation
+    - _Requirements: 2.4, 2.5_
+  - [ ]\* 8.4 Write property test for project links
+    - **Property 5: Project Links Rendered When Present**
+    - **Validates: Requirements 2.5**
+    - Test that projects with URLs have clickable links
+  - [ ]\* 8.5 Write property test for project details expansion
+    - **Property 6: Project Details Expansion**
+    - **Validates: Requirements 2.4**
+    - Test that clicking project reveals additional details
+  - [ ] 8.6 Optimize project images
+    - Use Next.js Image component for optimization
+    - Implement lazy loading for below-fold images
+    - Add responsive srcset for different viewport sizes
+    - Include alt text for all images
+    - _Requirements: 4.5, 6.3, 9.1_
+  - [ ]\* 8.7 Write property test for lazy loading
+    - **Property 12: Lazy Loading for Below-Fold Images**
+    - **Validates: Requirements 6.3**
+    - Test that images below fold have loading="lazy"
+
+- [ ] 9. Contact form
+  - [ ] 9.1 Create ContactForm component with react-hook-form
+    - Build form with fields: name, email, message
+    - Implement client-side validation with Zod schema
+    - Display inline error messages
+    - Add submit button with loading state
+    - _Requirements: 3.2, 3.3_
+  - [ ]\* 9.2 Write property test for form validation
+    - **Property 7: Contact Form Accepts Valid Input**
+    - **Property 8: Contact Form Validates Required Fields**
+    - **Validates: Requirements 3.2, 3.3**
+    - Test that valid inputs are accepted and invalid inputs are rejected
+  - [ ] 9.3 Integrate Formspree for form submission
+    - Set up Formspree account and get form endpoint
+    - Implement form submission with fetch API
+    - Handle success and error responses
+    - Display confirmation message on success
+    - _Requirements: 3.4, 3.5_
+  - [ ]\* 9.4 Write property test for submission confirmation
+    - **Property 9: Successful Submission Shows Confirmation**
+    - **Validates: Requirements 3.5**
+    - Test that successful submission displays confirmation message
+  - [ ]\* 9.5 Write integration test for contact form flow
+    - Test complete flow: fill form → submit → see confirmation
+    - Test error handling for API failures
+    - Test form reset after successful submission
+
+- [ ] 10. Checkpoint - Core functionality complete
+  - Ensure all tests pass, verify core features work (navigation, content display, forms)
+  - Ask the user if questions arise
+
+- [ ] 11. Firebase integration
+  - [ ] 11.1 Set up Firebase project and install SDKs
+    - Create Firebase project in Firebase Console
+    - Install `firebase` package
+    - Create `lib/firebase.ts` with Firebase initialization
+    - Add Firebase config to environment variables
+    - _Requirements: 10.1, 10.2_
+  - [ ] 11.2 Implement Firebase Analytics
+    - Initialize Analytics in `lib/firebase.ts`
+    - Create `lib/analytics.ts` with tracking functions
+    - Implement `trackPageView()`, `trackEvent()`, `trackContactFormSubmission()`, `trackProjectClick()`, `trackLanguageChange()`, `trackThemeToggle()`, `trackCareerPathSelection()`
+    - Add analytics calls throughout the application
+    - _Requirements: 10.1, 10.2, 10.3, 10.4_
+  - [ ]\* 11.3 Write property test for analytics events
+    - **Property 18: Analytics Events for User Actions**
+    - **Validates: Requirements 10.3, 10.4**
+    - Test that tracked actions send analytics events
+  - [ ] 11.4 Implement error logging with Firebase and Sentry
+    - Install `@sentry/nextjs` package
+    - Configure Sentry in `sentry.client.config.ts`
+    - Create `logError()` function that logs to both Firebase Analytics and Sentry
+    - Add error boundaries with error logging
+    - _Requirements: 10.5_
+  - [ ]\* 11.5 Write property test for error logging
+    - **Property 19: Errors Logged to Monitoring Service**
+    - **Validates: Requirements 10.5**
+    - Test that runtime errors are captured and logged
+  - [ ] 11.6 Implement Firebase Cloud Messaging (FCM)
+    - Create service worker `public/firebase-messaging-sw.js`
+    - Create `lib/notifications.ts` with `requestNotificationPermission()` and `setupForegroundNotifications()`
+    - Create NotificationPrompt component
+    - Add PWA manifest for notification support
+    - _Requirements: 10.1_
+  - [ ]\* 11.7 Write unit tests for notification permission flow
+    - Test permission request handling
+    - Test foreground notification display
+    - Test notification dismissal
+
+- [ ] 12. SEO and structured data
+  - [ ] 12.1 Create SEO metadata utilities
+    - Create `lib/seo.ts` with metadata generation functions
+    - Implement meta tags: title, description, keywords
+    - Add Open Graph tags for social sharing
+    - Add Twitter Card tags
+    - _Requirements: 7.1, 7.2_
+  - [ ] 12.2 Generate sitemap.xml
+    - Create `app/sitemap.ts` to generate sitemap
+    - Include all pages and locales
+    - Add lastmod, changefreq, priority
+    - Include alternate language links
+    - _Requirements: 7.3_
+  - [ ] 12.3 Create robots.txt
+    - Create `app/robots.ts` to generate robots.txt
+    - Allow all user agents
+    - Include sitemap URL
+    - _Requirements: 7.4_
+  - [ ] 12.4 Implement Schema.org structured data
+    - Create `lib/structured-data.ts` with JSON-LD generation
+    - Implement Person schema with all properties
+    - Implement WebSite schema
+    - Embed structured data in page head
+    - _Requirements: 20.1, 20.2, 20.7_
+  - [ ]\* 12.5 Write property test for structured data completeness
+    - **Property 41: Structured Data Completeness**
+    - **Validates: Requirements 20.2**
+    - Test that Person schema includes all essential properties
+
+  - [ ] 12.6 Add semantic HTML and microdata
+    - Use semantic HTML5 elements: article, section, header, nav, main, footer
+    - Add proper heading hierarchy (h1 → h2 → h3)
+    - Include microdata/RDFa for work experience
+    - _Requirements: 7.5, 20.3, 20.8, 20.9_
+  - [ ]\* 12.7 Write property test for semantic HTML structure
+    - **Property 13: Semantic HTML Structure**
+    - **Validates: Requirements 7.5, 20.3**
+    - Test that pages use semantic elements instead of generic divs
+  - [ ]\* 12.8 Write property test for heading hierarchy
+    - **Property 15: Proper Heading Hierarchy**
+    - **Validates: Requirements 9.2, 20.8**
+    - Test that headings follow logical hierarchy without skipped levels
+
+- [ ] 13. Accessibility implementation
+  - [ ] 13.1 Add alt text to all images
+    - Ensure all img elements have descriptive alt attributes
+    - Use role="presentation" for decorative images
+    - _Requirements: 9.1_
+  - [ ]\* 13.2 Write property test for image alt text
+    - **Property 14: All Images Have Alt Text**
+    - **Validates: Requirements 9.1**
+    - Test that all img elements have alt or role="presentation"
+  - [ ] 13.3 Implement focus indicators for interactive elements
+    - Add visible focus styles to all buttons, links, inputs
+    - Use Tailwind's focus: variants
+    - Ensure sufficient contrast for focus indicators
+    - _Requirements: 9.4_
+  - [ ]\* 13.4 Write property test for focus indicators
+    - **Property 16: Focusable Elements Have Focus Indicators**
+    - **Validates: Requirements 9.4**
+    - Test that interactive elements have focus styles defined
+  - [ ] 13.5 Add ARIA labels to interactive elements
+    - Add aria-label to icon buttons and image links
+    - Add aria-labelledby where appropriate
+    - Ensure form inputs have associated labels
+    - _Requirements: 9.5_
+  - [ ]\* 13.6 Write property test for accessible labels
+    - **Property 17: Interactive Elements Have Accessible Labels**
+    - **Validates: Requirements 9.5**
+    - Test that elements without visible text have ARIA labels
+  - [ ] 13.7 Verify color contrast ratios
+    - Use WebAIM Contrast Checker to verify WCAG AA compliance
+    - Ensure 4.5:1 minimum contrast for all text
+    - Test both light and dark modes
+    - _Requirements: 9.3, 17.9_
+
+- [ ] 14. Print and PDF optimization
+  - [ ] 14.1 Create print stylesheet
+    - Implement `styles/print.css` with @media print rules
+    - Hide non-essential elements: nav, theme toggle, buttons
+    - Apply print-friendly typography (serif fonts, black on white)
+    - Set page margins and size (letter/A4)
+    - _Requirements: 18.2, 18.3, 18.9_
+  - [ ]\* 14.2 Write property test for print mode element hiding
+    - **Property 35: Print Mode Hides Non-Essential Elements**
+    - **Validates: Requirements 18.2**
+    - Test that non-essential elements are hidden in print media
+  - [ ] 14.3 Implement page break controls
+    - Add page-break-after: avoid to headings
+    - Add page-break-inside: avoid to sections
+    - Ensure headings stay with content
+    - _Requirements: 18.4, 18.5_
+  - [ ] 14.4 Expand collapsed content for print
+    - Ensure all details/accordion content is visible in print
+    - Display all project information
+    - Show full URLs for links
+    - _Requirements: 18.7, 18.8_
+  - [ ]\* 14.5 Write property test for print content expansion
+    - **Property 36: Print Mode Expands Collapsed Content**
+    - **Validates: Requirements 18.7**
+    - Test that collapsible content is expanded in print media
+
+- [ ] 15. Exit intent detection
+  - [ ] 15.1 Create useExitIntent hook
+    - Implement mouse movement tracking
+    - Detect cursor at top edge with upward velocity
+    - Track time on page
+    - Respect minimum time threshold (5 seconds)
+    - Disable on mobile viewports (< 768px)
+    - _Requirements: 19.1, 19.2, 19.7, 19.9_
+  - [ ]\* 15.2 Write property test for exit intent detection
+    - **Property 37: Exit Intent Detection Tracks Mouse Movement**
+    - **Property 38: Exit Intent Triggers at Threshold**
+    - **Validates: Requirements 19.1, 19.2**
+    - Test that mouse movement is tracked and threshold triggers detection
+  - [ ]\* 15.3 Write property test for minimum time requirement
+    - **Property 40: Exit Intent Respects Minimum Time**
+    - **Validates: Requirements 19.9**
+    - Test that detection doesn't trigger before minimum time
+  - [ ] 15.4 Create ExitIntentModal component
+    - Build modal with custom content
+    - Include headline "Before you go..."
+    - Add actions: download resume, connect on LinkedIn, star GitHub
+    - Implement close button and backdrop dismiss
+    - Show only once per session
+    - _Requirements: 19.3, 19.4, 19.5, 19.10_
+  - [ ]\* 15.5 Write property test for session-based display
+    - **Property 39: Exit Intent Modal Shows Once Per Session**
+    - **Validates: Requirements 19.3, 19.5**
+    - Test that modal only displays once per session
+  - [ ]\* 15.6 Write unit tests for exit intent hook
+    - Test that hook doesn't trigger before minimum time
+    - Test that hook triggers at threshold after minimum time
+    - Test that hook is disabled on mobile
+
+- [ ] 16. Responsive design implementation
+  - [ ] 16.1 Implement mobile layout (< 768px)
+    - Create mobile-optimized navigation (hamburger menu)
+    - Stack content vertically
+    - Optimize touch targets (minimum 44x44px)
+    - Test on mobile viewports
+    - _Requirements: 4.1_
+  - [ ] 16.2 Implement tablet layout (768px - 1024px)
+    - Adjust grid layouts for tablet
+    - Optimize spacing and typography
+    - Test on tablet viewports
+    - _Requirements: 4.2_
+  - [ ] 16.3 Implement desktop layout (> 1024px)
+    - Create multi-column layouts
+    - Optimize for large screens
+    - Test on desktop viewports
+    - _Requirements: 4.3_
+  - [ ]\* 16.4 Write integration tests for responsive breakpoints
+    - Test mobile layout at 767px
+    - Test tablet layout at 768px
+    - Test desktop layout at 1025px
+    - _Requirements: 4.1, 4.2, 4.3_
+  - [ ] 16.5 Optimize images for responsive viewports
+    - Implement responsive srcset for all images
+    - Load appropriate image sizes per viewport
+    - _Requirements: 4.5_
+  - [ ]\* 16.6 Write property test for responsive image optimization
+    - **Property 10: Responsive Image Optimization**
+    - **Validates: Requirements 4.5**
+    - Test that images use appropriate sources for viewport size
+
+- [ ] 17. Checkpoint - Features complete
+  - Ensure all tests pass, verify all features work end-to-end
+  - Test on multiple devices and browsers
+  - Ask the user if questions arise
+
+- [ ] 18. Tech Stack explanation section
+  - [ ] 18.1 Create TechStackSection component
+    - Build component to display technologies used in the website
+    - Organize by category: Framework, Styling, Content, Testing, Analytics, Deployment, Monitoring
+    - Display technology name, logo/icon, simple description
+    - Include "Why chosen" and "Benefits" explanations in plain language
+    - Ensure responsive grid/card layout
+    - Make accessible with proper heading structure and ARIA labels
+    - _Requirements: 23.1, 23.2, 23.5, 23.8, 23.9_
+  - [ ]\* 18.2 Write unit tests for TechStackSection
+    - Test that all technology items are displayed
+    - Test that categories are organized correctly
+    - Test that descriptions are non-technical and understandable
+    - Test responsive layout behavior
+    - Test accessibility features
+  - [ ] 18.3 Create TechStackItem data and translations
+    - Create data file with all technologies used in the project
+    - Include: Next.js, Tailwind CSS, Markdown/Gray-matter, next-intl, Jest, Playwright, Firebase Analytics, Firebase Crashlytics, FCM, Vercel, Sentry, Formspree, Storybook, GitHub Actions, SonarQube
+    - Add simple descriptions in all supported languages (pt-BR, en, es)
+    - Add "Why chosen" explanations for each technology
+    - Add "Benefits" list for each technology
+    - _Requirements: 23.3, 23.7_
+  - [ ]\* 18.4 Write property test for translation coverage
+    - **Property 26: Tech Stack Translation Coverage**
+    - **Validates: Requirements 23.7**
+    - Test that all tech stack explanations exist in all language files
+  - [ ] 18.5 Add visual elements and links
+    - Add technology logos/icons for visual recognition
+    - Add links to official documentation for each technology
+    - Ensure links open in new tab with proper attributes
+    - _Requirements: 23.6, 23.10_
+  - [ ]\* 18.6 Write property test for documentation links
+    - **Property 27: Tech Stack Documentation Links**
+    - **Validates: Requirements 23.10**
+    - Test that technologies with documentation have clickable links
+  - [ ] 18.7 Integrate TechStackSection into website
+    - Add TechStackSection to appropriate page (About or separate Tech page)
+    - Ensure it follows the current theme (light/dark mode)
+    - Test with all supported languages
+    - Verify print media compatibility (hidden or simplified)
+    - _Requirements: 23.1, 23.9_
+
+- [ ] 19. Testing infrastructure
+  - [ ] 19.1 Set up Jest with React Testing Library
+    - Install Jest, @testing-library/react, @testing-library/jest-dom
+    - Configure `jest.config.js` with Next.js preset
+    - Create `tests/setup.ts` with global test setup
+    - Configure coverage thresholds (90% minimum)
+    - _Requirements: 14.1, 14.2, 14.3_
+  - [ ] 19.2 Set up fast-check for property-based testing
+    - Install `fast-check` package
+    - Create property test utilities in `tests/properties/`
+    - Configure minimum 100 iterations per property test
+    - _Requirements: 14.1_
+  - [ ] 19.3 Set up Playwright for E2E testing
+    - Install `@playwright/test` package
+    - Configure `playwright.config.ts` with multiple browsers
+    - Set up test projects: chromium, firefox, webkit, mobile-chrome, mobile-safari
+    - Create E2E test directory `tests/e2e/`
+    - _Requirements: 14.4_
+  - [ ]\* 19.4 Write E2E test for language switching
+    - Test switching between all supported languages
+    - Test language persistence after reload
+    - _Requirements: 11.1, 11.6_
+  - [ ]\* 19.5 Write E2E test for theme switching
+    - Test switching between light and dark mode
+    - Test theme persistence after reload
+    - _Requirements: 17.1, 17.7_
+  - [ ]\* 19.6 Write E2E test for career path navigation
+    - Test switching between professional and academic paths
+    - Test content updates correctly
+    - _Requirements: 1.3, 1.4, 1.7_
+  - [ ]\* 19.7 Write E2E test for contact form flow
+    - Test complete form submission flow
+    - Test validation errors
+    - Test success confirmation
+    - _Requirements: 3.2, 3.3, 3.4, 3.5_
+  - [ ]\* 19.8 Write E2E test for exit intent
+    - Test modal appears on exit intent
+    - Test modal doesn't appear on mobile
+    - Test modal only shows once per session
+    - _Requirements: 19.2, 19.3, 19.7_
+  - [ ]\* 19.9 Write E2E test for print/PDF output
+    - Test print styles hide non-essential elements
+    - Test PDF generation
+    - _Requirements: 18.2_
+
+- [ ] 20. Storybook setup and component documentation
+  - [ ] 20.1 Install and configure Storybook
+    - Run `npx storybook@latest init`
+    - Configure Storybook for Next.js and Tailwind
+    - Set up `.storybook/main.ts` and `.storybook/preview.ts`
+    - _Requirements: 13.1_
+  - [ ] 20.2 Create stories for all UI components
+    - Write stories for Button, Card, Modal, ThemeToggle, LanguageSelector
+    - Document all variants and states
+    - Add JSDoc comments for prop documentation
+    - Include realistic usage examples
+    - _Requirements: 13.1, 13.2, 13.3, 13.4_
+  - [ ]\* 20.3 Write property test for component documentation
+    - **Property 25: Component Documentation Completeness**
+    - **Validates: Requirements 13.1**
+    - Test that all UI components have corresponding story files
+
+- [ ] 21. CI/CD pipeline setup
+  - [ ] 21.1 Create GitHub Actions workflow for CI
+    - Create `.github/workflows/ci.yml`
+    - Add jobs: lint, type-check, test, coverage
+    - Run on push to any branch and pull requests
+    - _Requirements: 16.1, 16.2_
+  - [ ] 21.2 Configure test coverage enforcement
+    - Add coverage check job to CI workflow
+    - Fail pipeline if coverage < 90%
+    - Generate and upload coverage reports
+    - _Requirements: 14.1, 16.3_
+  - [ ] 21.3 Set up SonarQube Cloud integration
+    - Create SonarQube Cloud account and project
+    - Create `sonar-project.properties` configuration
+    - Add SonarQube analysis job to CI workflow
+    - Configure quality gate: 90% rating (A), zero critical issues
+    - _Requirements: 16.5, 16.6, 16.7, 16.8_
+  - [ ] 21.4 Create deployment workflow
+    - Create `.github/workflows/deploy.yml`
+    - Trigger on push to main branch
+    - Run tests before deployment
+    - Deploy to Vercel on success
+    - _Requirements: 8.2, 16.9_
+  - [ ] 21.5 Configure Vercel project
+    - Connect GitHub repository to Vercel
+    - Configure build settings: `npm run build`
+    - Set up environment variables for Firebase, Formspree, Sentry
+    - Configure custom domains
+    - _Requirements: 8.1, 8.3, 8.4_
+  - [ ] 21.6 Set up domain configuration
+    - Configure DNS for all four domains in Hostinger
+    - Point domains to Vercel: rogeriodocarmo.com, rogeriodocarmo.com.br, rogeriodocarmo.xyz, rogeriodocarmo.online
+    - Verify HTTPS certificates
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 8.3_
+  - [ ]\* 21.7 Write property test for multi-domain consistency
+    - **Property 11: Multi-Domain Content Consistency**
+    - **Validates: Requirements 5.5**
+    - Test that all domains serve identical content
+
+- [ ] 22. Performance optimization
+  - [ ] 22.1 Implement code splitting and lazy loading
+    - Use dynamic imports for heavy components
+    - Lazy load below-fold images
+    - Split JavaScript bundles
+    - _Requirements: 6.3, 6.4_
+  - [ ] 22.2 Optimize bundle size
+    - Analyze bundle with `@next/bundle-analyzer`
+    - Remove unused dependencies
+    - Ensure gzipped JS bundle < 200KB
+    - _Requirements: 6.4_
+  - [ ] 22.3 Implement static generation optimizations
+    - Pre-render all pages at build time
+    - Generate static HTML for all locales
+    - Optimize images with Next.js Image component
+    - _Requirements: 6.1, 6.2, 21.9_
+  - [ ]\* 22.4 Write property test for static content generation
+    - **Property 47: Static Content Generation**
+    - **Property 48: No Runtime Content API Calls**
+    - **Validates: Requirements 21.9, 21.10**
+    - Test that content is served from static files without API calls
+  - [ ]\* 22.5 Run Lighthouse audits
+    - Test First Contentful Paint < 1.5s
+    - Test Time to Interactive < 3s
+    - Test Performance score >= 90
+    - _Requirements: 6.1, 6.2, 6.5_
+
+- [ ] 23. Version control and documentation
+  - [ ] 23.1 Create comprehensive README
+    - Document project overview and architecture
+    - Include setup instructions
+    - Add development commands
+    - Document deployment process
+    - Include tech stack and design decisions
+    - _Requirements: 15.2_
+  - [ ] 23.2 Set up Git repository and branch protection
+    - Initialize Git repository
+    - Create `.gitignore` for Node.js/Next.js
+    - Push to GitHub
+    - Configure branch protection for main branch
+    - Require pull request reviews
+    - _Requirements: 15.1, 15.4_
+  - [ ] 23.3 Add LICENSE file
+    - Choose appropriate license (MIT recommended)
+    - Add LICENSE file to repository
+    - _Requirements: 15.5_
+  - [ ] 23.4 Configure semantic commit messages
+    - Document conventional commit format
+    - Add commitlint configuration (optional)
+    - _Requirements: 15.3_
+  - [ ] 23.5 Add inline code comments
+    - Document complex logic and business rules
+    - Add JSDoc comments to functions
+    - Explain non-obvious implementation decisions
+    - _Requirements: 12.2_
+
+- [ ] 24. Content population and final polish
+  - [ ] 24.1 Add real content to markdown files
+    - Populate professional experience entries
+    - Populate academic experience entries
+    - Add real project data with descriptions and images
+    - Add skills organized by category
+    - _Requirements: 1.3, 1.4, 2.1, 2.2_
+  - [ ] 24.2 Add professional images and assets
+    - Add profile photo
+    - Add project screenshots
+    - Add favicon and app icons
+    - Optimize all images
+    - _Requirements: 2.2_
+  - [ ] 24.3 Configure Firebase project with real credentials
+    - Set up production Firebase project
+    - Configure Analytics, Crashlytics, FCM
+    - Add production environment variables
+    - _Requirements: 10.1_
+  - [ ] 24.4 Configure Formspree with real email
+    - Set up Formspree account
+    - Configure form endpoint
+    - Test email delivery
+    - _Requirements: 3.4_
+  - [ ] 24.5 Configure Sentry for production
+    - Set up Sentry project
+    - Add production DSN to environment variables
+    - Test error reporting
+    - _Requirements: 10.5_
+
+- [ ] 25. Final checkpoint and deployment
+  - Ensure all tests pass with 90%+ coverage
+  - Verify SonarQube quality gate passes
+  - Test all features on staging deployment
+  - Verify all four domains work correctly
+  - Test on multiple browsers and devices
+  - Run final Lighthouse audits
+  - Ask the user if questions arise before production deployment
+
+- [ ] 26. Production deployment
+  - [ ] 26.1 Deploy to production via Vercel
+    - Merge to main branch to trigger deployment
+    - Verify deployment succeeds
+    - Test production site on all domains
+    - _Requirements: 8.1, 8.2_
+  - [ ] 26.2 Verify all integrations in production
+    - Test Firebase Analytics tracking
+    - Test contact form submission
+    - Test error logging to Sentry
+    - Test FCM notifications
+    - _Requirements: 10.1, 10.3, 10.5_
+  - [ ] 26.3 Submit sitemap to search engines
+    - Submit sitemap to Google Search Console
+    - Submit sitemap to Bing Webmaster Tools
+    - _Requirements: 7.3_
+  - [ ] 26.4 Final verification
+    - Test all 21 requirements in production
+    - Verify accessibility with screen reader
+    - Test print/PDF output
+    - Verify SEO metadata and structured data
+    - _Requirements: All_
+
+## Notes
+
+**CRITICAL TDD REQUIREMENTS:**
+
+1. **Test-First Development**: Tests MUST be written BEFORE implementation code
+2. **Red-Green-Refactor**: Follow strict TDD cycle for all code:
+   - **RED**: Write failing test describing desired behavior
+   - **GREEN**: Write minimal code to make test pass
+   - **REFACTOR**: Improve code while keeping tests passing
+3. **No Code Without Tests**: No production code without corresponding failing test
+4. **Test Coverage**: Maintain 90%+ test coverage throughout development
+5. **Property-Based Tests**: Implement all 48 correctness properties
+
+**Task Execution Rules:**
+
+- Tasks marked with `*` are **MANDATORY** test tasks and MUST be completed BEFORE implementation
+- Each implementation task assumes corresponding tests already exist and are failing
+- CI/CD pipeline will block deployment if tests fail or coverage < 90%
+- All code must follow TypeScript strict mode and ESLint rules
+- Checkpoints ensure incremental validation and provide opportunities for user feedback
+- Each task references specific requirements for traceability
