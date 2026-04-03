@@ -1,0 +1,119 @@
+/* Print-specific styles for PDF export and printing */
+@media print {
+  /* Page setup - letter/A4 with minimum 0.5in margins */
+  @page {
+    size: A4;
+    margin: 0.5in;
+  }
+
+  /* Hide non-essential UI elements */
+  nav,
+  header nav,
+  .theme-toggle,
+  .language-selector,
+  .back-to-top,
+  .exit-intent-modal,
+  .hamburger-menu,
+  .sidebar-overlay,
+  button:not(.print-visible),
+  [data-print="hidden"] {
+    display: none !important;
+  }
+
+  /* Print-friendly typography */
+  body {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000000 !important;
+    background: #ffffff !important;
+  }
+
+  /* Ensure all text is black on white for grayscale printing */
+  * {
+    color: #000000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Links: show URL after link text */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #444444 !important;
+  }
+
+  /* Don't show URL for internal anchor links */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  /* Page break controls */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep headings with their content */
+  h1 + *,
+  h2 + *,
+  h3 + * {
+    page-break-before: avoid;
+  }
+
+  /* Avoid breaking inside sections */
+  section,
+  article,
+  .card,
+  .experience-item,
+  .project-card,
+  .skill-category {
+    page-break-inside: avoid;
+  }
+
+  /* Single-column layout for print */
+  .grid,
+  .flex {
+    display: block !important;
+  }
+
+  /* Expand collapsed/interactive content */
+  details,
+  [data-collapsed="true"] {
+    display: block !important;
+  }
+
+  summary {
+    display: block !important;
+  }
+
+  details > *:not(summary) {
+    display: block !important;
+  }
+
+  /* Ensure images print correctly */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Contact info formatting */
+  .contact-info {
+    display: block !important;
+  }
+
+  /* Remove animations */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Your Name",
+    "label": "Mobile React Native Developer",
+    "email": "email@example.com",
+    "phone": "+55 (11) 99999-9999",
+    "url": "https://example.com",
+    "summary": "Experienced Mobile React Native Developer with expertise in building cross-platform mobile applications for enterprise clients.",
+    "location": {
+      "city": "São Paulo",
+      "countryCode": "BR",
+      "region": "SP"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "username",
+        "url": "https://linkedin.com/in/username"
+      },
+      {
+        "network": "GitHub",
+        "username": "username",
+        "url": "https://github.com/username"
+      }
+    ]
+  },
+  "work": [],
+  "education": [],
+  "skills": [],
+  "languages": [
+    { "language": "Portuguese", "fluency": "Native speaker" },
+    { "language": "English", "fluency": "Professional working proficiency" },
+    { "language": "Spanish", "fluency": "Elementary proficiency" }
+  ]
+}
