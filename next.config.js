@@ -15,6 +15,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // We'll run TypeScript checks separately in CI
   },
+  // For static export with i18n, we need to disable locale detection
+  // Users will navigate to /en, /es, or /pt-BR directly
 };
 
 module.exports = withNextIntl(nextConfig);
