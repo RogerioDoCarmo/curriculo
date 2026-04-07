@@ -46,7 +46,9 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
   const projectsDir = path.join(contentDir, "projects");
 
   if (!fs.existsSync(projectsDir)) {
-    console.warn(`[content] Projects directory not found: ${projectsDir}`);
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[content] Projects directory not found: ${projectsDir}`);
+    }
     return [];
   }
 
@@ -84,7 +86,9 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
         throw err;
       }
       // Log and skip malformed files
-      console.warn(`[content] Skipping malformed file "${filePath}": ${String(err)}`);
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[content] Skipping malformed file "${filePath}": ${String(err)}`);
+      }
     }
   }
 
@@ -110,7 +114,9 @@ export async function getExperiences(
   const experienceDir = path.join(contentDir, "experience");
 
   if (!fs.existsSync(experienceDir)) {
-    console.warn(`[content] Experience directory not found: ${experienceDir}`);
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[content] Experience directory not found: ${experienceDir}`);
+    }
     return [];
   }
 
@@ -162,7 +168,9 @@ export async function getExperiences(
       if (err instanceof Error && err.message.startsWith("Content validation error")) {
         throw err;
       }
-      console.warn(`[content] Skipping malformed file "${filePath}": ${String(err)}`);
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`[content] Skipping malformed file "${filePath}": ${String(err)}`);
+      }
     }
   }
 
@@ -189,7 +197,9 @@ export async function getSkills(
   const skillsFile = path.join(contentDir, "skills.md");
 
   if (!fs.existsSync(skillsFile)) {
-    console.warn(`[content] Skills file not found: ${skillsFile}`);
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`[content] Skills file not found: ${skillsFile}`);
+    }
     return [];
   }
 

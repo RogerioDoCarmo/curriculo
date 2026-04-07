@@ -47,6 +47,24 @@ The personal resume website is a static, performance-optimized web application b
 - **Property Testing**: fast-check library for property-based tests
 - **Coverage**: Minimum 90% code coverage enforced in CI/CD
 - **Configuration**: Next.js has built-in Jest support with `next/jest` configuration
+- **Testing Best Practices**:
+  - **ALWAYS use `waitFor` instead of `act()`**: When testing async state updates, wrap assertions in `waitFor()` from `@testing-library/react`
+  - **Never use `act()` directly**: React Testing Library's utilities handle `act()` internally
+  - **Suppress `act()` warnings**: Configure Jest setup to suppress expected React 18 `act()` warnings that occur during state updates
+  - **Example pattern**:
+
+    ```typescript
+    // ✓ CORRECT: Use waitFor for async state updates
+    await user.click(button);
+    await waitFor(() => {
+      expect(screen.getByText("Updated")).toBeInTheDocument();
+    });
+
+    // ✗ INCORRECT: Don't use act() directly
+    await act(async () => {
+      await user.click(button);
+    });
+    ```
 
 #### Component Documentation: Storybook 8
 
@@ -704,11 +722,7 @@ function useTheme(): {
 #### useExitIntent
 
 ```typescript
-function useExitIntent(options: {
-  enabled: boolean;
-  threshold: number;
-  minTimeOnPage: number;
-}): {
+function useExitIntent(options: { enabled: boolean; threshold: number; minTimeOnPage: number }): {
   showModal: boolean;
   dismissModal: () => void;
 };
@@ -1006,9 +1020,7 @@ module.exports = {
   (function () {
     const theme =
       localStorage.getItem("theme") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light");
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.classList.toggle("dark", theme === "dark");
   })();
 </script>
@@ -1289,12 +1301,8 @@ export function setUserProperties(properties: object) {
 
 ```javascript
 // Import Firebase scripts
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
-);
+importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js");
 
 // Initialize Firebase in service worker
 firebase.initializeApp({
@@ -1389,11 +1397,7 @@ export function setupForegroundNotifications() {
   });
 }
 
-function showNotificationBanner(notification: {
-  title: string;
-  body: string;
-  action: () => void;
-}) {
+function showNotificationBanner(notification: { title: string; body: string; action: () => void }) {
   // Create and show a custom notification banner in the UI
   // This could be a toast notification or banner component
   const banner = document.createElement("div");
@@ -1409,12 +1413,10 @@ function showNotificationBanner(notification: {
 
   document.body.appendChild(banner);
 
-  document
-    .getElementById("notification-action")
-    ?.addEventListener("click", () => {
-      notification.action();
-      banner.remove();
-    });
+  document.getElementById("notification-action")?.addEventListener("click", () => {
+    notification.action();
+    banner.remove();
+  });
 
   // Auto-dismiss after 10 seconds
   setTimeout(() => banner.remove(), 10000);
@@ -1500,10 +1502,7 @@ admin.initializeApp({
   }),
 });
 
-async function notifyContentUpdate(
-  contentType: "project" | "experience",
-  title: string,
-) {
+async function notifyContentUpdate(contentType: "project" | "experience", title: string) {
   const message = {
     notification: {
       title: "New Content Available!",
@@ -1582,10 +1581,7 @@ Monitor these metrics in Firebase Console:
 
 ```html
 <meta property="og:type" content="website" />
-<meta
-  property="og:title"
-  content="Developer Name | Mobile React Native Developer"
-/>
+<meta property="og:title" content="Developer Name | Mobile React Native Developer" />
 <meta property="og:description" content="..." />
 <meta property="og:image" content="https://rogeriodocarmo.com/og-image.jpg" />
 <meta property="og:url" content="https://rogeriodocarmo.com" />
@@ -2642,7 +2638,7 @@ describe("Language Preference Persistence Property Tests", () => {
         // Verify language was restored
         expect(loadResult.current.locale).toBe(locale);
       }),
-      { numRuns: 100 },
+      { numRuns: 100 }
     );
   });
 });
@@ -2668,7 +2664,7 @@ describe("Translation Coverage Property Tests", () => {
           expect(typeof value).toBe("string");
         });
       }),
-      { numRuns: 100 },
+      { numRuns: 100 }
     );
   });
 });
@@ -2701,9 +2697,9 @@ describe("Structured Data Property Tests", () => {
           expect(structuredData.knowsAbout).toEqual(personData.skills);
           expect(structuredData.worksFor).toBeDefined();
           expect(structuredData.alumniOf).toBeDefined();
-        },
+        }
       ),
-      { numRuns: 100 },
+      { numRuns: 100 }
     );
   });
 });
@@ -2768,7 +2764,7 @@ describe("useExitIntent", () => {
         threshold: 20,
         minTimeOnPage: 5000,
         onExitIntent,
-      }),
+      })
     );
 
     // Simulate mouse movement to top edge immediately
@@ -2787,7 +2783,7 @@ describe("useExitIntent", () => {
         threshold: 20,
         minTimeOnPage: 5000,
         onExitIntent,
-      }),
+      })
     );
 
     // Wait for minimum time
@@ -2919,7 +2915,7 @@ describe("Exit Intent on Mobile", () => {
         threshold: 20,
         minTimeOnPage: 0,
         onExitIntent,
-      }),
+      })
     );
 
     // Simulate mouse movement to top edge
