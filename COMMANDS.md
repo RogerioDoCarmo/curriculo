@@ -50,7 +50,10 @@ git commit -m "type: message"        # Commit with message
 git push origin branch-name          # Push to remote
 git checkout -b feature/name         # Create new branch
 git pull origin main                 # Pull latest changes from main
+git branch -d branch-name            # Delete merged branch (safe - prevents data loss)
 ```
+
+**Important**: Always use `-d` (lowercase) when deleting branches. This is the safe option that prevents deleting unmerged work. Never use `-D` (uppercase) as it force-deletes branches even if they contain unmerged changes.
 
 ## Package Management
 
