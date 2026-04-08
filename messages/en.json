@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "experience": "Experience",
+    "skills": "Skills",
+    "contact": "Contact",
+    "techStack": "Tech Stack"
+  },
+  "hero": {
+    "greeting": "Hello, I'm",
+    "title": "Mobile React Native Developer",
+    "subtitle": "Specialist in building cross-platform mobile applications for enterprise clients.",
+    "cta": "View My Work"
+  },
+  "careerPath": {
+    "title": "Choose a Path",
+    "professional": "Professional Developer",
+    "academic": "Academic Background"
+  },
+  "sections": {
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "contact": "Contact",
+    "techStack": "Technologies Used"
+  },
+  "forms": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Send Message",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light mode",
+    "dark": "Dark mode"
+  },
+  "language": {
+    "selector": "Select language"
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "sitemap": "Sitemap"
+  },
+  "backToTop": {
+    "label": "Back to top"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "close": "Close",
+    "learnMore": "Learn more"
+  }
+}
