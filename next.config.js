@@ -1,3 +1,7 @@
+const createNextIntlPlugin = require("next-intl/plugin");
+
+const withNextIntl = createNextIntlPlugin("./i18n.ts");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export", // Static export for Vercel
@@ -11,6 +15,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // We'll run TypeScript checks separately in CI
   },
+  // For static export with i18n, we need to disable locale detection
+  // Users will navigate to /en, /es, or /pt-BR directly
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

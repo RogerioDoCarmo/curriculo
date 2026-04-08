@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "projects": "Proyectos",
+    "experience": "Experiencia",
+    "skills": "Habilidades",
+    "contact": "Contacto",
+    "techStack": "Tecnologías"
+  },
+  "hero": {
+    "greeting": "Hola, soy",
+    "title": "Desarrollador React Native Mobile",
+    "subtitle": "Especialista en desarrollo de aplicaciones móviles multiplataforma para clientes enterprise.",
+    "cta": "Ver Mi Trabajo"
+  },
+  "careerPath": {
+    "title": "Elige un Camino",
+    "professional": "Desarrollador Profesional",
+    "academic": "Formación Académica"
+  },
+  "sections": {
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "skills": "Habilidades",
+    "contact": "Contacto",
+    "techStack": "Tecnologías Utilizadas"
+  },
+  "forms": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "submit": "Enviar Mensaje",
+    "success": "¡Mensaje enviado con éxito!",
+    "error": "Error al enviar el mensaje. Por favor, inténtalo de nuevo."
+  },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "light": "Modo claro",
+    "dark": "Modo oscuro"
+  },
+  "language": {
+    "selector": "Seleccionar idioma"
+  },
+  "footer": {
+    "copyright": "Todos los derechos reservados.",
+    "sitemap": "Mapa del sitio"
+  },
+  "backToTop": {
+    "label": "Volver arriba"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "close": "Cerrar",
+    "learnMore": "Saber más"
+  }
+}

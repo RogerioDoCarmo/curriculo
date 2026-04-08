@@ -25,13 +25,13 @@ This implementation plan breaks down the personal resume website into discrete, 
 
 ## Tasks
 
-- [ ] 1. Project setup and core infrastructure
-  - [ ] 1.1 Initialize Next.js 14 project with TypeScript and App Router
+- [x] 1. Project setup and core infrastructure
+  - [x] 1.1 Initialize Next.js 14 project with TypeScript and App Router
     - Run `npx create-next-app@latest` with TypeScript, ESLint, Tailwind CSS, App Router
     - Configure `next.config.js` with `output: 'export'` for static generation
     - Set up directory structure: `app/`, `components/`, `lib/`, `hooks/`, `content/`, `messages/`, `public/`, `tests/`
     - _Requirements: 8.1, 21.1_
-  - [ ] 1.2 Set up environment variables and security
+  - [x] 1.2 Set up environment variables and security
     - Create `.env.local` for local development secrets
     - Create `.env.example` template with placeholder values
     - Add `.env*.local` to `.gitignore` to prevent committing secrets
@@ -39,115 +39,115 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure Next.js to expose public variables with `NEXT_PUBLIC_` prefix
     - Set up environment variables in Vercel dashboard for production
     - _Requirements: 8.1, 10.1, 10.5_
-  - [ ] 1.3 Configure Tailwind CSS with dark mode support
+  - [x] 1.3 Configure Tailwind CSS with dark mode support
     - Set `darkMode: 'class'` in `tailwind.config.js`
     - Define custom color tokens for light and dark themes
     - Ensure WCAG AA contrast ratios (4.5:1 minimum)
     - Create `styles/print.css` for print-specific styles
     - _Requirements: 17.1, 17.9, 18.3_
-  - [ ] 1.4 Set up TypeScript configuration and type definitions
+  - [x] 1.4 Set up TypeScript configuration and type definitions
     - Enable strict mode in `tsconfig.json`
     - Create type definitions for data models: `Project`, `Experience`, `SkillCategory`, `ContactFormData`
     - Configure path aliases (`@/` for root)
     - _Requirements: 12.1, 12.3_
-  - [ ]\* 1.5 Configure ESLint and Prettier
+  - [x] 1.5 Configure ESLint and Prettier
     - Install and configure ESLint with Next.js recommended rules
     - Install and configure Prettier with consistent formatting rules
     - Add pre-commit hooks with husky and lint-staged
     - _Requirements: 12.1_
 
-- [ ] 2. Content management system and data layer
-  - [ ] 2.1 Create content directory structure and markdown files
+- [x] 2. Content management system and data layer
+  - [x] 2.1 Create content directory structure and markdown files
     - Create `/content/projects/`, `/content/experience/`, `/content/skills.md`
     - Define markdown frontmatter schema with gray-matter
     - Add sample content files for testing
     - _Requirements: 21.2, 21.5_
-  - [ ] 2.2 Implement content parsing utilities
+  - [x] 2.2 Implement content parsing utilities
     - Create `lib/content.ts` with functions to read and parse markdown files
     - Implement `getProjects()`, `getExperiences()`, `getSkills()` functions
     - Add content validation at build time
     - Handle missing or malformed content gracefully
     - _Requirements: 21.2, 21.9_
-  - [ ]\* 2.3 Write property test for content parsing
+  - [x]\* 2.3 Write property test for content parsing
     - **Property 45: Content-Driven Project Addition**
     - **Validates: Requirements 21.5**
     - Test that new markdown files are parsed and included without code changes
-  - [ ]\* 2.4 Write property test for content field support
+  - [x]\* 2.4 Write property test for content field support
     - **Property 46: Content Field Support**
     - **Validates: Requirements 21.6**
     - Test that all standard fields (title, description, technologies, images, links) are supported
-  - [ ] 2.5 Generate JSON Resume format
+  - [x] 2.5 Generate JSON Resume format
     - Create `lib/json-resume.ts` to generate JSON Resume schema
     - Export `/public/resume.json` at build time
     - Include all sections: basics, work, education, skills, languages
     - _Requirements: 20.6_
 
-- [ ] 3. Internationalization (i18n) setup
-  - [ ] 3.1 Install and configure next-intl
+- [x] 3. Internationalization (i18n) setup
+  - [x] 3.1 Install and configure next-intl
     - Install `next-intl` package
     - Create middleware for locale detection and routing
     - Configure supported locales: pt-BR (default), en, es
     - Set up `app/[locale]/` directory structure
     - _Requirements: 11.1, 11.2_
-  - [ ] 3.2 Create translation files for all languages
+  - [x] 3.2 Create translation files for all languages
     - Create `messages/pt-BR.json`, `messages/en.json`, `messages/es.json`
     - Define translation keys for all UI text: navigation, hero, sections, forms, buttons
     - Ensure complete coverage across all language files
     - _Requirements: 11.7_
-  - [ ]\* 3.3 Write property test for translation coverage
+  - [x]\* 3.3 Write property test for translation coverage
     - **Property 24: Complete Translation Coverage**
     - **Validates: Requirements 11.7**
     - Test that all translation keys exist in all language files with non-empty values
-  - [ ] 3.4 Implement language detection and persistence
+  - [x] 3.4 Implement language detection and persistence
     - Create `hooks/useLanguage.ts` for language state management
     - Detect browser language from Accept-Language header
     - Implement fallback to pt-BR for unsupported languages
     - Persist language preference to localStorage
     - _Requirements: 11.2, 11.3, 11.4, 11.6_
-  - [ ]\* 3.5 Write property test for language detection
+  - [x]\* 3.5 Write property test for language detection
     - **Property 20: Browser Language Detection**
     - **Validates: Requirements 11.2**
     - Test that Accept-Language header is correctly parsed
-  - [ ]\* 3.6 Write property test for language persistence
+  - [x]\* 3.6 Write property test for language persistence
     - **Property 23: Language Preference Persistence**
     - **Validates: Requirements 11.6**
     - Test round-trip: select language → save → reload → language restored
-  - [ ] 3.7 Create LanguageSelector component
+  - [x] 3.7 Create LanguageSelector component
     - Build dropdown component with flag icons for pt-BR, en, es
     - Handle language switching with next-intl navigation
     - Display current language
     - _Requirements: 11.5_
 
 - [ ] 4. Theme system and dark mode
-  - [ ] 4.1 Create theme context and provider
+  - [x] 4.1 Create theme context and provider
     - Create `hooks/useTheme.ts` with theme state management
     - Implement system preference detection via `prefers-color-scheme`
     - Add theme persistence to localStorage
     - Apply `dark` class to `<html>` element
     - _Requirements: 17.1, 17.2, 17.4, 17.7_
-  - [ ] 4.2 Implement FOUC prevention
+  - [x] 4.2 Implement FOUC prevention
     - Add inline script in `<head>` to apply theme before render
     - Check localStorage and system preference synchronously
     - _Requirements: 17.2_
-  - [ ]\* 4.3 Write property test for system theme detection
+  - [x]\* 4.3 Write property test for system theme detection
     - **Property 29: System Theme Detection**
     - **Validates: Requirements 17.2**
     - Test that prefers-color-scheme is correctly detected and applied
-  - [ ]\* 4.4 Write property test for theme persistence
+  - [x]\* 4.4 Write property test for theme persistence
     - **Property 32: Theme Preference Persistence**
     - **Validates: Requirements 17.7**
     - Test round-trip: select theme → save → reload → theme restored
-  - [ ] 4.5 Create ThemeToggle component
+  - [x] 4.5 Create ThemeToggle component
     - Build toggle button with sun/moon icons
     - Handle theme switching without page reload
     - Add smooth transition animations
     - Ensure visible on all pages
     - _Requirements: 17.5, 17.6, 17.8_
-  - [ ]\* 4.6 Write property test for theme toggle functionality
+  - [x]\* 4.6 Write property test for theme toggle functionality
     - **Property 31: Theme Toggle Switches Themes**
     - **Validates: Requirements 17.6**
     - Test that clicking toggle switches between light and dark
-  - [ ] 4.7 Apply dark mode styles to all components
+  - [x] 4.7 Apply dark mode styles to all components
     - Add `dark:` variants to all Tailwind classes
     - Ensure WCAG AA contrast in dark mode
     - Test all UI components in both themes
