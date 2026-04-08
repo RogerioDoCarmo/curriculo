@@ -57,7 +57,7 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
           }}
         />
       </head>
-      <body className={`${inter.className} bg-background text-foreground`}>
+      <body className={`${inter.className} bg-background text-foreground`} suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <main className="min-h-screen">{children}</main>
