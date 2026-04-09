@@ -276,7 +276,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that browser back/forward navigation restores appropriate section
     - Test that all major sections support deep linking
 
-- [ ] 7. Hero section and career path selection
+- [x] 7. Hero section and career path selection
   - [x] 7.1 Create Hero component
     - Display developer name and professional title
     - Add animated introduction
@@ -308,11 +308,11 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Implement expandable details for each experience
     - Calculate and display duration for each experience
     - _Requirements: 1.3, 1.4_
-  - [ ]\* 7.6 Write property test for career path content display
+  - [x]\* 7.6 Write property test for career path content display
     - **Property 1: Career Path Selection Displays Correct Content**
     - **Validates: Requirements 1.3, 1.4**
     - Test that selecting a path displays all associated content
-  - [ ]\* 7.5 Write property test for career path content display
+  - [x]\* 7.5 Write property test for career path content display
     - **Property 1: Career Path Selection Displays Correct Content**
     - **Validates: Requirements 1.3, 1.4**
     - Test that selecting a path displays all associated content
@@ -322,19 +322,19 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Implement search/filter functionality
     - Ensure responsive grid layout
     - _Requirements: 1.5_
-  - [ ]\* 7.7 Write property test for skills categorization
+  - [x]\* 7.7 Write property test for skills categorization
     - **Property 2: Skills Organized by Category**
     - **Validates: Requirements 1.5**
     - Test that skills are grouped under category headings
 
-- [ ] 8. Projects portfolio section
+- [x] 8. Projects portfolio section
   - [x] 8.1 Create ProjectsSection component
     - Display projects in responsive grid layout
     - Show project cards with title, description, technologies, image
     - Implement filtering by technology
     - Support featured projects
     - _Requirements: 2.1, 2.2, 2.3_
-  - [ ]\* 8.2 Write property test for complete project rendering
+  - [x]\* 8.2 Write property test for complete project rendering
     - **Property 4: Complete Project Rendering**
     - **Validates: Requirements 2.1, 2.2, 2.3**
     - Test that all non-empty project fields are rendered
@@ -344,11 +344,11 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Include links to live demo and repository
     - Add close button and keyboard navigation
     - _Requirements: 2.4, 2.5_
-  - [ ]\* 8.4 Write property test for project links
+  - [x]\* 8.4 Write property test for project links
     - **Property 5: Project Links Rendered When Present**
     - **Validates: Requirements 2.5**
     - Test that projects with URLs have clickable links
-  - [ ]\* 8.5 Write property test for project details expansion
+  - [x]\* 8.5 Write property test for project details expansion
     - **Property 6: Project Details Expansion**
     - **Validates: Requirements 2.4**
     - Test that clicking project reveals additional details
@@ -358,19 +358,19 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add responsive srcset for different viewport sizes
     - Include alt text for all images
     - _Requirements: 4.5, 6.3, 9.1_
-  - [ ]\* 8.7 Write property test for lazy loading
+  - [x]\* 8.7 Write property test for lazy loading
     - **Property 12: Lazy Loading for Below-Fold Images**
     - **Validates: Requirements 6.3**
     - Test that images below fold have loading="lazy"
 
-- [ ] 9. Contact form
+- [x] 9. Contact form
   - [x] 9.1 Create ContactForm component with react-hook-form
     - Build form with fields: name, email, message
     - Implement client-side validation with Zod schema
     - Display inline error messages
     - Add submit button with loading state
     - _Requirements: 3.2, 3.3_
-  - [ ]\* 9.2 Write property test for form validation
+  - [x]\* 9.2 Write property test for form validation
     - **Property 7: Contact Form Accepts Valid Input**
     - **Property 8: Contact Form Validates Required Fields**
     - **Validates: Requirements 3.2, 3.3**
@@ -381,11 +381,11 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Handle success and error responses
     - Display confirmation message on success
     - _Requirements: 3.4, 3.5_
-  - [ ]\* 9.4 Write property test for submission confirmation
+  - [x]\* 9.4 Write property test for submission confirmation
     - **Property 9: Successful Submission Shows Confirmation**
     - **Validates: Requirements 3.5**
     - Test that successful submission displays confirmation message
-  - [ ]\* 9.5 Write integration test for contact form flow
+  - [x]\* 9.5 Write integration test for contact form flow
     - Test complete flow: fill form → submit → see confirmation
     - Test error handling for API failures
     - Test form reset after successful submission
