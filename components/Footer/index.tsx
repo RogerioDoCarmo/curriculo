@@ -78,7 +78,7 @@ const LANGUAGE_LINKS = [
   { label: "Español (es)", href: "/es" },
 ];
 
-export default function Footer({ locale }: FooterProps) {
+export default function Footer({ locale: _locale }: FooterProps) {
   const t = useTranslations();
   const year = new Date().getFullYear();
 
