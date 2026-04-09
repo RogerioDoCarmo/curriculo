@@ -118,7 +118,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Display current language
     - _Requirements: 11.5_
 
-- [ ] 4. Theme system and dark mode
+- [x] 4. Theme system and dark mode
   - [x] 4.1 Create theme context and provider
     - Create `hooks/useTheme.ts` with theme state management
     - Implement system preference detection via `prefers-color-scheme`
@@ -153,30 +153,32 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test all UI components in both themes
     - _Requirements: 17.10_
 
+## Checkpoint 2
+
 - [ ] 5. Core UI components
-  - [ ] 5.1 Create Button component with variants
+  - [x] 5.1 Create Button component with variants
     - Implement variants: primary, secondary, ghost
     - Implement sizes: sm, md, lg
     - Add loading and disabled states
     - Include focus indicators for accessibility
     - _Requirements: 9.4_
-  - [ ]\* 5.2 Write unit tests for Button component
+  - [x]\* 5.2 Write unit tests for Button component
     - Test all variants and sizes render correctly
     - Test disabled and loading states
     - Test click handlers
-  - [ ] 5.3 Create Card component
+  - [x] 5.3 Create Card component
     - Implement container with consistent styling
     - Support optional title prop
     - Add hover effects
     - Ensure responsive behavior
     - _Requirements: 4.4_
-  - [ ] 5.4 Create Modal component
+  - [x] 5.4 Create Modal component
     - Implement overlay with backdrop
     - Add focus trap for accessibility
     - Support ESC key and backdrop click to close
     - Include ARIA attributes (role="dialog", aria-modal)
     - _Requirements: 9.5_
-  - [ ] 5.5 Create HighlightedText component
+  - [x] 5.5 Create HighlightedText component
     - Implement text highlighting functionality
     - Accept `text` (full content) and `highlight` (substring to bold)
     - Find and bold all occurrences of highlight text
@@ -185,12 +187,12 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Ensure accessibility with proper semantic markup
     - Add unit tests for various scenarios
     - _Requirements: 1.6, 9.5_
-  - [ ]\* 5.6 Write unit tests for Modal component
+  - [x]\* 5.6 Write unit tests for Modal component
     - Test open/close functionality
     - Test ESC key closes modal
     - Test backdrop click closes modal
     - Test focus trap
-  - [ ]\* 5.7 Write unit tests for HighlightedText component
+  - [x]\* 5.7 Write unit tests for HighlightedText component
     - Test basic highlighting functionality
     - Test multiple occurrences are highlighted
     - Test case-insensitive matching
@@ -198,13 +200,13 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test empty strings handling
 
 - [ ] 6. Layout components
-  - [ ] 6.1 Create RootLayout with theme and language providers
+  - [x] 6.1 Create RootLayout with theme and language providers
     - Implement `app/[locale]/layout.tsx`
     - Wrap with ThemeProvider and next-intl provider
     - Add metadata generation for SEO
     - Load fonts (system fonts or Google Fonts)
     - _Requirements: 7.1, 11.1_
-  - [ ] 6.2 Create Header component with responsive navigation and anchor support
+  - [x] 6.2 Create Header component with responsive navigation and anchor support
     - Build horizontal navbar for desktop (≥768px)
     - Implement left sidebar navigation for mobile (<768px)
     - Include LanguageSelector and ThemeToggle
@@ -220,7 +222,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Handle browser back/forward navigation correctly
     - Ensure sidebar is accessible (keyboard navigation, ARIA labels)
     - _Requirements: 4.1, 4.2, 4.3, 17.5, 24.1-24.10_
-  - [ ] 6.3 Create Footer component
+  - [x] 6.3 Create Footer component
     - Display social media links (LinkedIn, GitHub, Twitter)
     - Add copyright notice
     - Create text-based sitemap with organized sections: About, Projects, Experience, Skills, Contact, Languages
@@ -228,7 +230,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add links to all major sections and pages
     - Ensure all links are keyboard accessible
     - _Requirements: 3.1, 7.5_
-  - [ ] 6.4 Create BackToTopButton component
+  - [x] 6.4 Create BackToTopButton component
     - Implement floating button in bottom-right corner
     - Add scroll detection (show after 300px scroll)
     - Implement smooth scroll to top on click (500-800ms)
@@ -238,17 +240,17 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add ARIA labels for screen readers
     - Hide button in print media
     - _Requirements: 22.1-22.10_
-  - [ ]\* 6.5 Write integration test for responsive navigation
+  - [x]\* 6.5 Write integration test for responsive navigation
     - Test mobile menu appears at < 768px
     - Test desktop nav appears at >= 1024px
     - Test hamburger menu functionality
-  - [ ]\* 6.6 Write unit tests for BackToTopButton
+  - [x]\* 6.6 Write unit tests for BackToTopButton
     - Test button appears after scrolling threshold
     - Test button hidden at top of page
     - Test smooth scroll functionality
     - Test keyboard accessibility
     - Test theme compatibility
-  - [ ] 6.7 Create useAnchorNavigation hook
+  - [x] 6.7 Create useAnchorNavigation hook
     - Implement hook that manages URL hash-based navigation
     - Track active section based on scroll position using Intersection Observer
     - Update URL hash without page reload using History API
@@ -256,18 +258,18 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Integrate with Next.js router for locale-aware URLs (e.g., `/en/#projects`)
     - Support all major sections: home, projects, experience, skills, contact, tech-stack
     - _Requirements: 24.1-24.10_
-  - [ ]\* 6.8 Write unit tests for useAnchorNavigation hook
+  - [x]\* 6.8 Write unit tests for useAnchorNavigation hook
     - Test URL hash updates when navigating to sections
     - Test active section detection based on scroll position
     - Test browser history navigation (back/forward)
     - Test locale-aware URL handling
     - Test smooth scrolling behavior
-  - [ ]\* 6.9 Write property test for URL anchor navigation
+  - [x]\* 6.9 Write property test for URL anchor navigation
     - **Property 49: URL Updates on Section Navigation**
     - **Validates: Requirements 24.1, 24.2**
     - Test that clicking navigation items updates URL with correct section anchor
     - Test that scrolling to sections updates URL to reflect current visible section
-  - [ ]\* 6.10 Write property test for deep linking and history navigation
+  - [x]\* 6.10 Write property test for deep linking and history navigation
     - **Property 50: Deep Linking and History Navigation**
     - **Validates: Requirements 24.3, 24.4, 24.8**
     - Test that loading URL with section anchor scrolls to correct section

@@ -44,7 +44,7 @@ module.exports = {
         ring: "hsl(var(--ring))",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
         mono: ["Fira Code", "monospace"],
       },
       animation: {
