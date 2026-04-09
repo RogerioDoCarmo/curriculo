@@ -277,23 +277,23 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that all major sections support deep linking
 
 - [ ] 7. Hero section and career path selection
-  - [ ] 7.1 Create Hero component
+  - [x] 7.1 Create Hero component
     - Display developer name and professional title
     - Add animated introduction
     - Include call-to-action button
     - Ensure responsive layout
     - _Requirements: 1.1_
-  - [ ] 7.2 Create CareerPathSelector component
+  - [x] 7.2 Create CareerPathSelector component
     - Build toggle/tab interface for Professional vs Academic
     - Implement smooth transition between paths
     - Persist selection to sessionStorage
     - Allow switching without page reload
     - _Requirements: 1.2, 1.7_
-  - [ ]\* 7.3 Write property test for career path switching
+  - [x]\* 7.3 Write property test for career path switching
     - **Property 3: Career Path Switching Without Reload**
     - **Validates: Requirements 1.7**
     - Test that switching paths doesn't trigger page navigation
-  - [ ] 7.4 Create Timeline component
+  - [x] 7.4 Create Timeline component
     - Build visual timeline with vertical line and circular markers
     - Support different marker styles for event types (education, work, achievement)
     - Implement smooth animations on scroll
@@ -301,7 +301,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Create content cards for each timeline item
     - Ensure accessibility with proper ARIA labels
     - _Requirements: 1.3, 1.4, 9.5_
-  - [ ] 7.5 Create ExperienceSection component with Timeline
+  - [x] 7.5 Create ExperienceSection component with Timeline
     - Display experiences based on selected career path using Timeline component
     - Show organization, role, location, dates, description, achievements
     - Highlight important milestones (degrees, promotions, major achievements)
@@ -316,7 +316,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Property 1: Career Path Selection Displays Correct Content**
     - **Validates: Requirements 1.3, 1.4**
     - Test that selecting a path displays all associated content
-  - [ ] 7.6 Create SkillsSection component
+  - [x] 7.6 Create SkillsSection component
     - Display skills organized by category
     - Show skill level indicators (optional)
     - Implement search/filter functionality
@@ -328,7 +328,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that skills are grouped under category headings
 
 - [ ] 8. Projects portfolio section
-  - [ ] 8.1 Create ProjectsSection component
+  - [x] 8.1 Create ProjectsSection component
     - Display projects in responsive grid layout
     - Show project cards with title, description, technologies, image
     - Implement filtering by technology
@@ -338,7 +338,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Property 4: Complete Project Rendering**
     - **Validates: Requirements 2.1, 2.2, 2.3**
     - Test that all non-empty project fields are rendered
-  - [ ] 8.3 Implement project detail modal
+  - [x] 8.3 Implement project detail modal
     - Show expanded project information on click
     - Display full description, screenshots, technologies
     - Include links to live demo and repository
@@ -352,7 +352,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Property 6: Project Details Expansion**
     - **Validates: Requirements 2.4**
     - Test that clicking project reveals additional details
-  - [ ] 8.6 Optimize project images
+  - [x] 8.6 Optimize project images
     - Use Next.js Image component for optimization
     - Implement lazy loading for below-fold images
     - Add responsive srcset for different viewport sizes
@@ -364,7 +364,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that images below fold have loading="lazy"
 
 - [ ] 9. Contact form
-  - [ ] 9.1 Create ContactForm component with react-hook-form
+  - [x] 9.1 Create ContactForm component with react-hook-form
     - Build form with fields: name, email, message
     - Implement client-side validation with Zod schema
     - Display inline error messages
@@ -375,7 +375,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Property 8: Contact Form Validates Required Fields**
     - **Validates: Requirements 3.2, 3.3**
     - Test that valid inputs are accepted and invalid inputs are rejected
-  - [ ] 9.3 Integrate Formspree for form submission
+  - [x] 9.3 Integrate Formspree for form submission
     - Set up Formspree account and get form endpoint
     - Implement form submission with fetch API
     - Handle success and error responses
