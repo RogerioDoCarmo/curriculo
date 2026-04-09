@@ -2,6 +2,22 @@
 
 A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
+## Development Progress
+
+This project follows an incremental development approach with checkpoints to validate progress:
+
+| Checkpoint   | Tag                   | Status         | Description                            |
+| ------------ | --------------------- | -------------- | -------------------------------------- |
+| Checkpoint 1 | `v0.1.0-checkpoint-1` | ✅ Complete    | Project setup and core infrastructure  |
+| Checkpoint 2 | `v0.2.0-checkpoint-2` | ✅ Complete    | Content management, i18n, theme system |
+| Checkpoint 3 | `v0.3.0-checkpoint-3` | ✅ Complete    | Core UI components, layout, forms      |
+| Checkpoint 4 | _(validation only)_   | ✅ Complete    | Core functionality validation          |
+| Checkpoint 5 | `v0.5.0-checkpoint-5` | ✅ Complete    | Firebase integration                   |
+| Checkpoint 6 | TBD                   | 🔄 In Progress | SEO, accessibility, responsive design  |
+| Checkpoint 7 | TBD                   | ⏳ Pending     | Final testing and deployment           |
+
+See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implementation plan.
+
 ## Features
 
 - **Multi-Language Support**: Brazilian Portuguese (pt-BR), English (en), Spanish (es)
