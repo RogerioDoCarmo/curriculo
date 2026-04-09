@@ -7,12 +7,129 @@ import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import "../globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
-export const metadata: Metadata = {
-  title: "Personal Resume Website",
-  description: "A modern, responsive personal resume website",
+// ─── Locale-specific metadata config ─────────────────────────────────────────
+
+const SITE_URL = "https://rogeriodocarmo.com";
+
+const metadataByLocale: Record<
+  SupportedLocale,
+  { title: string; description: string; keywords: string[] }
+> = {
+  "pt-BR": {
+    title: "Rogério do Carmo | Desenvolvedor React Native Mobile",
+    description:
+      "Portfólio e currículo de Rogério do Carmo, especialista em desenvolvimento de aplicações mobile multiplataforma com React Native para clientes enterprise.",
+    keywords: [
+      "React Native",
+      "Desenvolvedor Mobile",
+      "TypeScript",
+      "JavaScript",
+      "iOS",
+      "Android",
+      "Portfólio",
+      "Currículo",
+      "Desenvolvedor Frontend",
+    ],
+  },
+  en: {
+    title: "Rogério do Carmo | Mobile React Native Developer",
+    description:
+      "Portfolio and resume of Rogério do Carmo, specialist in building cross-platform mobile applications with React Native for enterprise clients.",
+    keywords: [
+      "React Native",
+      "Mobile Developer",
+      "TypeScript",
+      "JavaScript",
+      "iOS",
+      "Android",
+      "Portfolio",
+      "Resume",
+      "Frontend Developer",
+    ],
+  },
+  es: {
+    title: "Rogério do Carmo | Desarrollador React Native Mobile",
+    description:
+      "Portafolio y currículum de Rogério do Carmo, especialista en desarrollo de aplicaciones móviles multiplataforma con React Native para clientes enterprise.",
+    keywords: [
+      "React Native",
+      "Desarrollador Mobile",
+      "TypeScript",
+      "JavaScript",
+      "iOS",
+      "Android",
+      "Portafolio",
+      "Currículum",
+      "Desarrollador Frontend",
+    ],
+  },
 };
+
+// ─── Dynamic metadata generation ─────────────────────────────────────────────
+
+interface GenerateMetadataProps {
+  params: { locale: string };
+}
+
+export async function generateMetadata({
+  params: { locale },
+}: GenerateMetadataProps): Promise<Metadata> {
+  const safeLocale = SUPPORTED_LOCALES.includes(locale as SupportedLocale)
+    ? (locale as SupportedLocale)
+    : "pt-BR";
+
+  const { title, description, keywords } = metadataByLocale[safeLocale];
+  const canonicalUrl = safeLocale === "pt-BR" ? SITE_URL : `${SITE_URL}/${safeLocale}`;
+
+  return {
+    title,
+    description,
+    keywords,
+    authors: [{ name: "Rogério do Carmo", url: SITE_URL }],
+    creator: "Rogério do Carmo",
+    metadataBase: new URL(SITE_URL),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        "pt-BR": SITE_URL,
+        en: `${SITE_URL}/en`,
+        es: `${SITE_URL}/es`,
+      },
+    },
+    openGraph: {
+      type: "website",
+      url: canonicalUrl,
+      title,
+      description,
+      siteName: "Rogério do Carmo",
+      locale: safeLocale,
+      alternateLocale: SUPPORTED_LOCALES.filter((l) => l !== safeLocale),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      creator: "@rogeriodocarmo",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+    },
+  };
+}
 
 /** Generate static params for all supported locales. */
 export function generateStaticParams() {
@@ -57,7 +174,10 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
           }}
         />
       </head>
-      <body className={`${inter.className} bg-background text-foreground`} suppressHydrationWarning>
+      <body
+        className={`${inter.variable} font-sans bg-background text-foreground`}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <main className="min-h-screen">{children}</main>
