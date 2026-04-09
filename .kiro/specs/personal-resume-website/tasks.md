@@ -4,6 +4,18 @@
 
 This implementation plan breaks down the personal resume website into discrete, incremental coding tasks following **Test-Driven Development (TDD)** methodology. The site is a static Next.js 14 application with TypeScript, featuring multi-language support, dark mode, Firebase integration, comprehensive testing, and CI/CD automation. Each task builds on previous work, with checkpoints to validate progress.
 
+## Checkpoint Tracking
+
+| Checkpoint   | Tag                   | Tasks       | Status         | Description                                        |
+| ------------ | --------------------- | ----------- | -------------- | -------------------------------------------------- |
+| Checkpoint 1 | `v0.1.0-checkpoint-1` | Task 1      | ✅ Complete    | Project setup and core infrastructure              |
+| Checkpoint 2 | `v0.2.0-checkpoint-2` | Tasks 2-4   | ✅ Complete    | Content management, i18n, theme system             |
+| Checkpoint 3 | `v0.3.0-checkpoint-3` | Tasks 5-9   | ✅ Complete    | Core UI components, layout, forms                  |
+| Checkpoint 4 | Task 10               | Task 10     | ✅ Complete    | Core functionality validation (no tag created)     |
+| Checkpoint 5 | `v0.5.0-checkpoint-5` | Task 11     | ✅ Complete    | Firebase integration                               |
+| Checkpoint 6 | TBD                   | Tasks 12-17 | 🔄 In Progress | SEO, accessibility, print, exit intent, responsive |
+| Checkpoint 7 | TBD                   | Tasks 18-26 | ⏳ Pending     | Tech stack, testing, CI/CD, deployment             |
+
 ## TDD Workflow Requirements
 
 **CRITICAL: All implementation MUST follow strict TDD methodology:**
@@ -153,7 +165,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test all UI components in both themes
     - _Requirements: 17.10_
 
-## Checkpoint 2
+## Checkpoint 2 - Core UI Components (v0.2.0-checkpoint-2)
 
 - [ ] 5. Core UI components
   - [x] 5.1 Create Button component with variants
@@ -390,9 +402,10 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test error handling for API failures
     - Test form reset after successful submission
 
-- [x] 10. Checkpoint - Core functionality complete
+- [x] 10. Checkpoint 4 - Core functionality complete (v0.3.0-checkpoint-3)
   - Ensure all tests pass, verify core features work (navigation, content display, forms)
   - Ask the user if questions arise
+  - **Note**: This was tagged as checkpoint-3 but represents the 4th major milestone
 
 - [x] 11. Firebase integration
   - [x] 11.1 Set up Firebase project and install SDKs
@@ -598,7 +611,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Validates: Requirements 4.5**
     - Test that images use appropriate sources for viewport size
 
-- [ ] 17. Checkpoint - Features complete
+- [ ] 17. Checkpoint 6 - Features complete
   - Ensure all tests pass, verify all features work end-to-end
   - Test on multiple devices and browsers
   - Ask the user if questions arise
@@ -831,7 +844,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test error reporting
     - _Requirements: 10.5_
 
-- [ ] 25. Final checkpoint and deployment
+- [ ] 25. Checkpoint 7 - Final checkpoint and deployment
   - Ensure all tests pass with 90%+ coverage
   - Verify SonarQube quality gate passes
   - Test all features on staging deployment
