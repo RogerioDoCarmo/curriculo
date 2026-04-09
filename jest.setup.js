@@ -4,6 +4,8 @@ require("@testing-library/jest-dom");
 // Suppress React 18 act() warnings in tests
 // These warnings are expected when testing components with async state updates
 const originalError = console.error;
+const originalWarn = console.warn;
+
 beforeAll(() => {
   console.error = (...args) => {
     if (
@@ -15,8 +17,22 @@ beforeAll(() => {
     }
     originalError.call(console, ...args);
   };
+
+  // Suppress expected error-logging warnings during tests
+  // These warnings are intentionally triggered to test error handling resilience
+  console.warn = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      (args[0].includes("[ErrorLogging] Sentry capture failed") ||
+        args[0].includes("[ErrorLogging] Firebase Analytics capture failed"))
+    ) {
+      return;
+    }
+    originalWarn.call(console, ...args);
+  };
 });
 
 afterAll(() => {
   console.error = originalError;
+  console.warn = originalWarn;
 });
