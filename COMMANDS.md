@@ -43,6 +43,35 @@ npx prettier --write .      # Format all files in project
 
 ## Git Workflow
 
+### Standard Workflow (with validation)
+
+**CRITICAL**: Always validate changes before committing:
+
+```bash
+# 1. Check what changed
+git status
+
+# 2. Run tests to validate changes
+npm run test:coverage
+
+# 3. Check for linting issues
+npm run lint
+
+# 4. Check formatting
+npm run format:check
+
+# 5. If all validations pass, stage changes
+git add .
+
+# 6. Commit with conventional format
+git commit -m "type: message"
+
+# 7. Push to remote
+git push origin branch-name
+```
+
+### Git Commands Reference
+
 ```bash
 git status                           # Check current status
 git add .                            # Stage all changes
@@ -54,6 +83,19 @@ git branch -d branch-name            # Delete merged branch (safe - prevents dat
 ```
 
 **Important**: Always use `-d` (lowercase) when deleting branches. This is the safe option that prevents deleting unmerged work. Never use `-D` (uppercase) as it force-deletes branches even if they contain unmerged changes.
+
+### Commit Message Format
+
+Follow conventional commit format:
+
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `test:` - Adding or updating tests
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, etc.)
+- `refactor:` - Code refactoring
+- `perf:` - Performance improvements
+- `chore:` - Maintenance tasks
 
 ## Package Management
 

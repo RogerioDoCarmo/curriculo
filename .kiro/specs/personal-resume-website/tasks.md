@@ -390,44 +390,44 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test error handling for API failures
     - Test form reset after successful submission
 
-- [ ] 10. Checkpoint - Core functionality complete
+- [x] 10. Checkpoint - Core functionality complete
   - Ensure all tests pass, verify core features work (navigation, content display, forms)
   - Ask the user if questions arise
 
-- [ ] 11. Firebase integration
-  - [ ] 11.1 Set up Firebase project and install SDKs
+- [x] 11. Firebase integration
+  - [x] 11.1 Set up Firebase project and install SDKs
     - Create Firebase project in Firebase Console
     - Install `firebase` package
     - Create `lib/firebase.ts` with Firebase initialization
     - Add Firebase config to environment variables
     - _Requirements: 10.1, 10.2_
-  - [ ] 11.2 Implement Firebase Analytics
+  - [x] 11.2 Implement Firebase Analytics
     - Initialize Analytics in `lib/firebase.ts`
     - Create `lib/analytics.ts` with tracking functions
     - Implement `trackPageView()`, `trackEvent()`, `trackContactFormSubmission()`, `trackProjectClick()`, `trackLanguageChange()`, `trackThemeToggle()`, `trackCareerPathSelection()`
     - Add analytics calls throughout the application
     - _Requirements: 10.1, 10.2, 10.3, 10.4_
-  - [ ]\* 11.3 Write property test for analytics events
+  - [x]\* 11.3 Write property test for analytics events
     - **Property 18: Analytics Events for User Actions**
     - **Validates: Requirements 10.3, 10.4**
     - Test that tracked actions send analytics events
-  - [ ] 11.4 Implement error logging with Firebase and Sentry
+  - [x] 11.4 Implement error logging with Firebase and Sentry
     - Install `@sentry/nextjs` package
     - Configure Sentry in `sentry.client.config.ts`
     - Create `logError()` function that logs to both Firebase Analytics and Sentry
     - Add error boundaries with error logging
     - _Requirements: 10.5_
-  - [ ]\* 11.5 Write property test for error logging
+  - [x]\* 11.5 Write property test for error logging
     - **Property 19: Errors Logged to Monitoring Service**
     - **Validates: Requirements 10.5**
     - Test that runtime errors are captured and logged
-  - [ ] 11.6 Implement Firebase Cloud Messaging (FCM)
+  - [x] 11.6 Implement Firebase Cloud Messaging (FCM)
     - Create service worker `public/firebase-messaging-sw.js`
     - Create `lib/notifications.ts` with `requestNotificationPermission()` and `setupForegroundNotifications()`
     - Create NotificationPrompt component
     - Add PWA manifest for notification support
     - _Requirements: 10.1_
-  - [ ]\* 11.7 Write unit tests for notification permission flow
+  - [x]\* 11.7 Write unit tests for notification permission flow
     - Test permission request handling
     - Test foreground notification display
     - Test notification dismissal
