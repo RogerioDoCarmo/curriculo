@@ -1,6 +1,6 @@
 /**
- * Sentry client-side configuration.
- * This file is automatically loaded by @sentry/nextjs for browser error tracking.
+ * Sentry server-side configuration.
+ * This file is automatically loaded by @sentry/nextjs for server error tracking.
  *
  * Requirements: 10.5
  */
