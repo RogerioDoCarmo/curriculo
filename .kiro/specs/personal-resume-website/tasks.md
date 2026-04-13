@@ -742,6 +742,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Trigger on push to main branch
     - Run tests before deployment
     - Deploy to Vercel on success
+    - **Send push notification on successful deployment** (using Firebase Admin SDK)
     - _Requirements: 8.2, 16.9_
   - [ ] 21.5 Configure Vercel project
     - Connect GitHub repository to Vercel

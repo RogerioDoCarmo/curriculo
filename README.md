@@ -33,6 +33,7 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 - **Analytics**: Firebase Analytics and Vercel Analytics integration
 - **Error Monitoring**: Firebase Crashlytics and Sentry integration
 - **Push Notifications**: Firebase Cloud Messaging for new content
+- **Deployment Notifications**: Automated push notifications on successful deployments (via Firebase Admin SDK in CI/CD)
 - **URL Anchor Navigation**: Deep linking to specific sections
 - **Tech Stack Explanation**: Simple explanations of technologies used
 
