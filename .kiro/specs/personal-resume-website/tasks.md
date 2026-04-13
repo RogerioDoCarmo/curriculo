@@ -445,45 +445,45 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test foreground notification display
     - Test notification dismissal
 
-- [ ] 12. SEO and structured data
-  - [ ] 12.1 Create SEO metadata utilities
+- [x] 12. SEO and structured data
+  - [x] 12.1 Create SEO metadata utilities
     - Create `lib/seo.ts` with metadata generation functions
     - Implement meta tags: title, description, keywords
     - Add Open Graph tags for social sharing
     - Add Twitter Card tags
     - _Requirements: 7.1, 7.2_
-  - [ ] 12.2 Generate sitemap.xml
+  - [x] 12.2 Generate sitemap.xml
     - Create `app/sitemap.ts` to generate sitemap
     - Include all pages and locales
     - Add lastmod, changefreq, priority
     - Include alternate language links
     - _Requirements: 7.3_
-  - [ ] 12.3 Create robots.txt
+  - [x] 12.3 Create robots.txt
     - Create `app/robots.ts` to generate robots.txt
     - Allow all user agents
     - Include sitemap URL
     - _Requirements: 7.4_
-  - [ ] 12.4 Implement Schema.org structured data
+  - [x] 12.4 Implement Schema.org structured data
     - Create `lib/structured-data.ts` with JSON-LD generation
     - Implement Person schema with all properties
     - Implement WebSite schema
     - Embed structured data in page head
     - _Requirements: 20.1, 20.2, 20.7_
-  - [ ]\* 12.5 Write property test for structured data completeness
+  - [x]\* 12.5 Write property test for structured data completeness
     - **Property 41: Structured Data Completeness**
     - **Validates: Requirements 20.2**
     - Test that Person schema includes all essential properties
 
-  - [ ] 12.6 Add semantic HTML and microdata
+  - [x] 12.6 Add semantic HTML and microdata
     - Use semantic HTML5 elements: article, section, header, nav, main, footer
     - Add proper heading hierarchy (h1 → h2 → h3)
     - Include microdata/RDFa for work experience
     - _Requirements: 7.5, 20.3, 20.8, 20.9_
-  - [ ]\* 12.7 Write property test for semantic HTML structure
+  - [x]\* 12.7 Write property test for semantic HTML structure
     - **Property 13: Semantic HTML Structure**
     - **Validates: Requirements 7.5, 20.3**
     - Test that pages use semantic elements instead of generic divs
-  - [ ]\* 12.8 Write property test for heading hierarchy
+  - [x]\* 12.8 Write property test for heading hierarchy
     - **Property 15: Proper Heading Hierarchy**
     - **Validates: Requirements 9.2, 20.8**
     - Test that headings follow logical hierarchy without skipped levels

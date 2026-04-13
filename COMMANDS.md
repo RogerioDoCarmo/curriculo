@@ -45,7 +45,9 @@ npx prettier --write .      # Format all files in project
 
 ### Standard Workflow (with validation)
 
-**CRITICAL**: Always validate changes before committing:
+**CRITICAL**: Always validate changes before committing. This is the standard behavior for this project.
+
+**AI Agent Behavior**: When Kiro completes implementation tasks, it will PAUSE before the commit phase and wait for user validation. The user will run tests and checks manually to ensure everything works as expected.
 
 ```bash
 # 1. Check what changed
@@ -69,6 +71,40 @@ git commit -m "type: message"
 # 7. Push to remote
 git push origin branch-name
 ```
+
+**Why this approach?**
+
+- Ensures user has full control over what gets committed
+- Allows user to run additional manual tests if needed
+- Prevents automated commits of potentially broken code
+- Gives user opportunity to review changes before they're permanent
+
+### Checkpoint Workflow (for major milestones)
+
+**IMPORTANT**: After completing checkpoint tasks, pause for user validation before committing:
+
+```bash
+# 1. Complete checkpoint tasks (Kiro implements features)
+
+# 2. PAUSE - User validates changes manually
+#    - Run tests: npm test
+#    - Check dev server: npm run dev
+#    - Review code changes
+#    - Test features in browser
+
+# 3. After user approval, proceed with commit workflow
+git status
+npm run test:coverage
+npm run lint
+npm run format:check
+git add .
+git commit -m "feat: checkpoint X - description"
+git push origin branch-name
+
+# 4. Create PR, merge, and tag release
+```
+
+**Rationale**: Checkpoints represent significant milestones. User validation ensures quality and catches issues before they're committed to the repository.
 
 ### Git Commands Reference
 

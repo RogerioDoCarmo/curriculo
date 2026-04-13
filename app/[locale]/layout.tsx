@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, unstable_setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { generateStructuredDataScript } from "@/lib/structured-data";
 import "../globals.css";
 
 const inter = Inter({
@@ -153,6 +154,9 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
   // Load messages for the current locale
   const messages = await getMessages();
 
+  // Generate structured data for SEO
+  const { personSchema, webSiteSchema } = generateStructuredDataScript(locale);
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -173,6 +177,10 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
             `.trim(),
           }}
         />
+        {/* Schema.org structured data for Person */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
+        {/* Schema.org structured data for WebSite */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
       </head>
       <body
         className={`${inter.variable} font-sans bg-background text-foreground`}
