@@ -18,12 +18,16 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
   unstable_setRequestLocale(locale);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold text-center">Personal Resume Website</h1>
-      <p className="mt-4 text-muted-foreground text-center">
-        A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind
-        CSS.
-      </p>
-    </div>
+    <article className="flex min-h-screen flex-col items-center justify-center p-8">
+      <header>
+        <h1 className="text-4xl font-bold text-center">Personal Resume Website</h1>
+      </header>
+      <section className="mt-4">
+        <p className="text-muted-foreground text-center">
+          A modern, responsive personal resume website built with Next.js 14, TypeScript, and
+          Tailwind CSS.
+        </p>
+      </section>
+    </article>
   );
 }
