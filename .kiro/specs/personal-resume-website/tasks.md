@@ -521,28 +521,28 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test both light and dark modes
     - _Requirements: 9.3, 17.9_
 
-- [ ] 14. Print and PDF optimization
-  - [ ] 14.1 Create print stylesheet
+- [x] 14. Print and PDF optimization
+  - [x] 14.1 Create print stylesheet
     - Implement `styles/print.css` with @media print rules
     - Hide non-essential elements: nav, theme toggle, buttons
     - Apply print-friendly typography (serif fonts, black on white)
     - Set page margins and size (letter/A4)
     - _Requirements: 18.2, 18.3, 18.9_
-  - [ ]\* 14.2 Write property test for print mode element hiding
+  - [x]\* 14.2 Write property test for print mode element hiding
     - **Property 35: Print Mode Hides Non-Essential Elements**
     - **Validates: Requirements 18.2**
     - Test that non-essential elements are hidden in print media
-  - [ ] 14.3 Implement page break controls
+  - [x] 14.3 Implement page break controls
     - Add page-break-after: avoid to headings
     - Add page-break-inside: avoid to sections
     - Ensure headings stay with content
     - _Requirements: 18.4, 18.5_
-  - [ ] 14.4 Expand collapsed content for print
+  - [x] 14.4 Expand collapsed content for print
     - Ensure all details/accordion content is visible in print
     - Display all project information
     - Show full URLs for links
     - _Requirements: 18.7, 18.8_
-  - [ ]\* 14.5 Write property test for print content expansion
+  - [x]\* 14.5 Write property test for print content expansion
     - **Property 36: Print Mode Expands Collapsed Content**
     - **Validates: Requirements 18.7**
     - Test that collapsible content is expanded in print media
