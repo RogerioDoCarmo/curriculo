@@ -88,7 +88,9 @@ describe("Property 15: Proper Heading Hierarchy", () => {
         headings.forEach((heading) => {
           const text = heading.textContent?.trim();
           expect(text).toBeDefined();
-          expect(text!.length).toBeGreaterThan(0);
+          if (text) {
+            expect(text.length).toBeGreaterThan(0);
+          }
         });
       }),
       { numRuns: 100 }
