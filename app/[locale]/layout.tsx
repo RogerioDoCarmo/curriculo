@@ -7,6 +7,7 @@ import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { generateStructuredDataScript } from "@/lib/structured-data";
 import "../globals.css";
+import "../../styles/print.css";
 
 const inter = Inter({
   subsets: ["latin"],
