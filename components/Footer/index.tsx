@@ -142,7 +142,7 @@ export default function Footer({ locale: _locale }: FooterProps) {
           </div>
 
           {/* Connect */}
-          <div>
+          <div className="social-links print:hidden">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
               Connect
             </h2>

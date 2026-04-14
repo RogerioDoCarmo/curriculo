@@ -1,56 +1,53 @@
-/* Print-specific styles for PDF export and printing */
-@media print {
-  /* Page setup - letter/A4 with minimum 0.5in margins */
-  @page {
-    size: A4;
-    margin: 0.5in;
-  }
+/**
+ * Print Stylesheet
+ *
+ * Optimizes the website for printing and PDF export.
+ * Requirements: 18.1-18.10
+ */
 
-  /* Hide non-essential UI elements */
+@media print {
+  /* Hide non-essential elements */
   nav,
-  header nav,
   .theme-toggle,
   .language-selector,
-  .back-to-top,
   .exit-intent-modal,
-  .hamburger-menu,
-  .sidebar-overlay,
+  footer .social-links,
   button:not(.print-visible),
-  [data-print="hidden"] {
+  header {
     display: none !important;
   }
 
-  /* Print-friendly typography */
-  body {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 11pt;
-    line-height: 1.5;
-    color: #000000 !important;
-    background: #ffffff !important;
-  }
-
-  /* Ensure all text is black on white for grayscale printing */
+  /* Reset to print-friendly styles */
   * {
-    color: #000000 !important;
-    background: transparent !important;
+    background: white !important;
+    color: black !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
 
-  /* Links: show URL after link text */
-  a[href]::after {
-    content: " (" attr(href) ")";
-    font-size: 9pt;
-    color: #444444 !important;
+  /* Typography for print */
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 12pt;
+    line-height: 1.5;
   }
 
-  /* Don't show URL for internal anchor links */
-  a[href^="#"]::after,
-  a[href^="javascript:"]::after {
-    content: "";
+  h1 {
+    font-size: 24pt;
+    font-weight: bold;
   }
 
-  /* Page break controls */
+  h2 {
+    font-size: 18pt;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 14pt;
+    font-weight: bold;
+  }
+
+  /* Page breaks */
   h1,
   h2,
   h3,
@@ -59,6 +56,18 @@
   h6 {
     page-break-after: avoid;
     page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+  }
+
+  section,
+  article,
+  .card,
+  .project-card,
+  .experience-item,
+  .skill-category {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   /* Keep headings with their content */
@@ -66,53 +75,71 @@
   h2 + *,
   h3 + * {
     page-break-before: avoid;
+    break-before: avoid;
   }
 
-  /* Avoid breaking inside sections */
-  section,
-  article,
-  .card,
-  .experience-item,
-  .project-card,
-  .skill-category {
-    page-break-inside: avoid;
+  /* Avoid orphans and widows */
+  p {
+    orphans: 3;
+    widows: 3;
   }
 
-  /* Single-column layout for print */
-  .grid,
-  .flex {
-    display: block !important;
+  /* Margins for standard paper */
+  @page {
+    margin: 0.5in;
+    size: letter; /* or A4 */
   }
 
-  /* Expand collapsed/interactive content */
-  details,
-  [data-collapsed="true"] {
-    display: block !important;
+  /* Expand collapsed content */
+  details {
+    display: block;
   }
 
-  summary {
-    display: block !important;
+  details summary {
+    display: none;
   }
 
-  details > *:not(summary) {
-    display: block !important;
+  details[open] > *:not(summary) {
+    display: block;
   }
 
-  /* Ensure images print correctly */
-  img {
-    max-width: 100% !important;
-    page-break-inside: avoid;
+  /* Print URLs for links */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
   }
 
-  /* Contact info formatting */
+  /* Contact information prominent */
   .contact-info {
+    border-top: 2px solid black;
+    padding-top: 12pt;
+    margin-top: 12pt;
+  }
+
+  /* Single-column layout */
+  .grid {
     display: block !important;
   }
 
-  /* Remove animations */
-  *,
-  *::before,
-  *::after {
+  .grid > * {
+    width: 100% !important;
+    margin-bottom: 12pt;
+  }
+
+  /* Remove fixed positioning */
+  * {
+    position: static !important;
+  }
+
+  /* Ensure sufficient contrast for grayscale printing */
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  /* Remove animations and transitions */
+  * {
     animation: none !important;
     transition: none !important;
   }
