@@ -334,10 +334,12 @@ describe("Property 2: Skills Organized by Category", () => {
               if (seen.has(skill.name)) {
                 // Same skill name in two categories — this is allowed by the type,
                 // but we verify the category assignment is consistent within a category
-                const prevCat = seen.get(skill.name)!;
+                const prevCat = seen.get(skill.name);
                 // If same name appears in different categories, that's fine structurally
                 // The key property: within a category, all skills belong to that category
-                expect(typeof prevCat).toBe("string");
+                if (prevCat) {
+                  expect(typeof prevCat).toBe("string");
+                }
               } else {
                 seen.set(skill.name, cat.category);
               }
