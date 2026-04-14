@@ -30,7 +30,7 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
   }
 
   return (
-    <div className={`relative inline-flex items-center ${className}`}>
+    <div className={`relative inline-flex items-center print:hidden ${className}`}>
       <label htmlFor="language-selector" className="sr-only">
         {/* Accessible label — visible only to screen readers */}
         Select language
