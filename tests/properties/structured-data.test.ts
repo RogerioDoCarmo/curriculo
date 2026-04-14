@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fc from "fast-check";
 import { generatePersonSchema, generateWebSiteSchema } from "@/lib/structured-data";
 
@@ -18,7 +19,7 @@ describe("Property 41: Structured Data Completeness", () => {
   it("should include all essential Person schema properties for all locales", () => {
     fc.assert(
       fc.property(fc.constantFrom(...locales), (locale) => {
-        const personSchema = generatePersonSchema(locale);
+        const personSchema = generatePersonSchema(locale) as any;
 
         // Verify required schema properties
         expect(personSchema["@context"]).toBe("https://schema.org");
@@ -44,16 +45,20 @@ describe("Property 41: Structured Data Completeness", () => {
         // Verify social links (sameAs)
         expect(personSchema.sameAs).toBeDefined();
         expect(Array.isArray(personSchema.sameAs)).toBe(true);
-        expect(personSchema.sameAs!.length).toBeGreaterThan(0);
-        personSchema.sameAs!.forEach((link) => {
-          expect(typeof link).toBe("string");
-          expect(link).toMatch(/^https?:\/\//);
-        });
+        if (personSchema.sameAs) {
+          expect(personSchema.sameAs.length).toBeGreaterThan(0);
+          personSchema.sameAs.forEach((link: string) => {
+            expect(typeof link).toBe("string");
+            expect(link).toMatch(/^https?:\/\//);
+          });
+        }
 
         // Verify skills (knowsAbout)
         expect(personSchema.knowsAbout).toBeDefined();
         expect(Array.isArray(personSchema.knowsAbout)).toBe(true);
-        expect(personSchema.knowsAbout!.length).toBeGreaterThan(0);
+        if (personSchema.knowsAbout) {
+          expect(personSchema.knowsAbout.length).toBeGreaterThan(0);
+        }
 
         // Verify contact information
         expect(personSchema.email).toBeDefined();
@@ -70,7 +75,7 @@ describe("Property 41: Structured Data Completeness", () => {
   it("should include all essential WebSite schema properties for all locales", () => {
     fc.assert(
       fc.property(fc.constantFrom(...locales), (locale) => {
-        const webSiteSchema = generateWebSiteSchema(locale);
+        const webSiteSchema = generateWebSiteSchema(locale) as any;
 
         // Verify required schema properties
         expect(webSiteSchema["@context"]).toBe("https://schema.org");
@@ -92,7 +97,9 @@ describe("Property 41: Structured Data Completeness", () => {
         // Verify language support
         expect(webSiteSchema.inLanguage).toBeDefined();
         expect(Array.isArray(webSiteSchema.inLanguage)).toBe(true);
-        expect(webSiteSchema.inLanguage!.length).toBeGreaterThan(0);
+        if (webSiteSchema.inLanguage) {
+          expect(webSiteSchema.inLanguage.length).toBeGreaterThan(0);
+        }
 
         // Verify author
         expect(webSiteSchema.author).toBeDefined();
@@ -106,7 +113,7 @@ describe("Property 41: Structured Data Completeness", () => {
   it("should have consistent data across all locales", () => {
     fc.assert(
       fc.property(fc.constantFrom(...locales), (locale) => {
-        const personSchema = generatePersonSchema(locale);
+        const personSchema = generatePersonSchema(locale) as any;
 
         // URL should be consistent across locales
         expect(personSchema.url).toBe("https://rogeriodocarmo.com");
