@@ -48,6 +48,18 @@
   "backToTop": {
     "label": "Voltar ao topo"
   },
+  "exitIntent": {
+    "title": "Antes de ir...",
+    "headline": "Antes de ir...",
+    "subtitle": "Gostaria de se conectar ou baixar meu currículo?",
+    "downloadResume": "Baixar Currículo (PDF)",
+    "downloadResumeAriaLabel": "Baixar currículo em formato PDF",
+    "connectLinkedIn": "Conectar no LinkedIn",
+    "connectLinkedInAriaLabel": "Conectar comigo no LinkedIn",
+    "starGitHub": "Favoritar no GitHub",
+    "starGitHubAriaLabel": "Favoritar repositório no GitHub",
+    "footerNote": "Obrigado pela visita!"
+  },
   "common": {
     "loading": "Carregando...",
     "error": "Ocorreu um erro",
