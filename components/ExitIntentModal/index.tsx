@@ -47,28 +47,28 @@ export default function ExitIntentModal({
   // Track analytics when modal is shown
   useEffect(() => {
     if (showModal && typeof window !== "undefined") {
-      // Analytics tracking would go here
-      console.log("Exit intent modal shown");
+      // TODO: Integrate with analytics service (Firebase Analytics, etc.)
+      // trackEvent('exit_intent_modal_shown');
     }
   }, [showModal]);
 
   const handleDownloadResume = () => {
-    // Track download event
-    console.log("Resume download clicked");
+    // TODO: Track download event with analytics
+    // trackEvent('exit_intent_resume_download');
     window.open(resumeUrl, "_blank");
     dismissModal();
   };
 
   const handleConnectLinkedIn = () => {
-    // Track LinkedIn click
-    console.log("LinkedIn connect clicked");
+    // TODO: Track LinkedIn click with analytics
+    // trackEvent('exit_intent_linkedin_click');
     window.open(linkedInUrl, "_blank");
     dismissModal();
   };
 
   const handleStarGitHub = () => {
-    // Track GitHub star click
-    console.log("GitHub star clicked");
+    // TODO: Track GitHub star click with analytics
+    // trackEvent('exit_intent_github_click');
     window.open(githubUrl, "_blank");
     dismissModal();
   };
