@@ -48,6 +48,18 @@
   "backToTop": {
     "label": "Back to top"
   },
+  "exitIntent": {
+    "title": "Before you go...",
+    "headline": "Before you go...",
+    "subtitle": "Would you like to connect or download my resume?",
+    "downloadResume": "Download Resume (PDF)",
+    "downloadResumeAriaLabel": "Download resume in PDF format",
+    "connectLinkedIn": "Connect on LinkedIn",
+    "connectLinkedInAriaLabel": "Connect with me on LinkedIn",
+    "starGitHub": "Star on GitHub",
+    "starGitHubAriaLabel": "Star repository on GitHub",
+    "footerNote": "Thanks for visiting!"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

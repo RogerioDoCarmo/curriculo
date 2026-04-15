@@ -547,35 +547,35 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Validates: Requirements 18.7**
     - Test that collapsible content is expanded in print media
 
-- [ ] 15. Exit intent detection
-  - [ ] 15.1 Create useExitIntent hook
+- [x] 15. Exit intent detection
+  - [x] 15.1 Create useExitIntent hook
     - Implement mouse movement tracking
     - Detect cursor at top edge with upward velocity
     - Track time on page
     - Respect minimum time threshold (5 seconds)
     - Disable on mobile viewports (< 768px)
     - _Requirements: 19.1, 19.2, 19.7, 19.9_
-  - [ ]\* 15.2 Write property test for exit intent detection
+  - [x]\* 15.2 Write property test for exit intent detection
     - **Property 37: Exit Intent Detection Tracks Mouse Movement**
     - **Property 38: Exit Intent Triggers at Threshold**
     - **Validates: Requirements 19.1, 19.2**
     - Test that mouse movement is tracked and threshold triggers detection
-  - [ ]\* 15.3 Write property test for minimum time requirement
+  - [x]\* 15.3 Write property test for minimum time requirement
     - **Property 40: Exit Intent Respects Minimum Time**
     - **Validates: Requirements 19.9**
     - Test that detection doesn't trigger before minimum time
-  - [ ] 15.4 Create ExitIntentModal component
+  - [x] 15.4 Create ExitIntentModal component
     - Build modal with custom content
     - Include headline "Before you go..."
     - Add actions: download resume, connect on LinkedIn, star GitHub
     - Implement close button and backdrop dismiss
     - Show only once per session
     - _Requirements: 19.3, 19.4, 19.5, 19.10_
-  - [ ]\* 15.5 Write property test for session-based display
+  - [x]\* 15.5 Write property test for session-based display
     - **Property 39: Exit Intent Modal Shows Once Per Session**
     - **Validates: Requirements 19.3, 19.5**
     - Test that modal only displays once per session
-  - [ ]\* 15.6 Write unit tests for exit intent hook
+  - [x]\* 15.6 Write unit tests for exit intent hook
     - Test that hook doesn't trigger before minimum time
     - Test that hook triggers at threshold after minimum time
     - Test that hook is disabled on mobile
