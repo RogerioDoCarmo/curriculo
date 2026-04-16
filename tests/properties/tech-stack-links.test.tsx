@@ -48,11 +48,15 @@ describe("Property 27: Tech Stack Documentation Links", () => {
   });
 
   it("should have valid HTTP/HTTPS URLs for all technologies", () => {
+    interface TechEntry {
+      url: string;
+    }
+
     fc.assert(
       fc.property(fc.constantFrom(...languages), ({ messages }) => {
         const technologies = messages.techStack?.technologies || {};
 
-        Object.values(technologies).forEach((tech) => {
+        Object.values(technologies as Record<string, TechEntry>).forEach((tech) => {
           // URL should start with http:// or https://
           expect(tech.url).toMatch(/^https?:\/\/.+/);
 
@@ -141,10 +145,14 @@ describe("Property 27: Tech Stack Documentation Links", () => {
       "daringfireball.net", // Markdown
     ];
 
+    interface TechEntry {
+      url: string;
+    }
+
     languages.forEach(({ messages }) => {
       const technologies = messages.techStack?.technologies || {};
 
-      Object.entries(technologies).forEach(([_key, tech]) => {
+      Object.entries(technologies as Record<string, TechEntry>).forEach(([_key, tech]) => {
         const url = new URL(tech.url);
         const domain = url.hostname.replace("www.", "");
 
