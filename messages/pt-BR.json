@@ -65,5 +65,118 @@
     "error": "Ocorreu um erro",
     "close": "Fechar",
     "learnMore": "Saiba mais"
+  },
+  "techStack": {
+    "title": "Tecnologias Utilizadas",
+    "subtitle": "Ferramentas e tecnologias usadas para construir este site",
+    "categories": {
+      "framework": "Framework e Tecnologias Principais",
+      "styling": "Estilização e Design",
+      "content": "Gerenciamento de Conteúdo",
+      "internationalization": "Internacionalização",
+      "testing": "Testes e Qualidade",
+      "analytics": "Análise e Monitoramento",
+      "deployment": "Implantação e Hospedagem"
+    },
+    "technologies": {
+      "nextjs": {
+        "name": "Next.js",
+        "description": "Um framework React que torna a construção de sites mais rápida e fácil",
+        "why": "Escolhido por sua excelente performance e experiência do desenvolvedor",
+        "benefits": "Carregamento rápido de páginas, melhorias automáticas, implantação fácil",
+        "url": "https://nextjs.org"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "description": "Uma ferramenta de estilização que ajuda a criar designs bonitos rapidamente",
+        "why": "Escolhido para desenvolvimento rápido e design consistente",
+        "benefits": "Código limpo, design responsivo, fácil personalização",
+        "url": "https://tailwindcss.com"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "description": "Uma linguagem que adiciona verificação de tipos ao JavaScript para prevenir erros",
+        "why": "Escolhido para melhorar a qualidade do código e prevenir bugs",
+        "benefits": "Menos erros, melhor autocompletar, código mais confiável",
+        "url": "https://www.typescriptlang.org"
+      },
+      "markdown": {
+        "name": "Markdown",
+        "description": "Uma forma simples de escrever e formatar conteúdo",
+        "why": "Escolhido para facilitar atualizações de conteúdo sem programação",
+        "benefits": "Sintaxe simples, amigável ao controle de versão, portável",
+        "url": "https://daringfireball.net/projects/markdown"
+      },
+      "nextIntl": {
+        "name": "next-intl",
+        "description": "Uma ferramenta que traduz o site para múltiplos idiomas",
+        "why": "Escolhido para suporte multilíngue sem complicações",
+        "benefits": "Traduções fáceis, detecção automática de idioma, amigável para SEO",
+        "url": "https://next-intl-docs.vercel.app"
+      },
+      "jest": {
+        "name": "Jest",
+        "description": "Uma ferramenta de testes que garante que o código funciona corretamente",
+        "why": "Escolhido por suas capacidades abrangentes de teste",
+        "benefits": "Testes rápidos, boas mensagens de erro, amplamente adotado",
+        "url": "https://jestjs.io"
+      },
+      "playwright": {
+        "name": "Playwright",
+        "description": "Uma ferramenta que testa o site automaticamente em diferentes navegadores",
+        "why": "Escolhido para garantir compatibilidade entre navegadores",
+        "benefits": "Testes confiáveis, suporta múltiplos navegadores, fácil de usar",
+        "url": "https://playwright.dev"
+      },
+      "firebase": {
+        "name": "Firebase",
+        "description": "Uma plataforma que rastreia o uso do site e envia notificações",
+        "why": "Escolhido por recursos poderosos de análise e engajamento",
+        "benefits": "Dados em tempo real, fácil integração, serviço confiável",
+        "url": "https://firebase.google.com"
+      },
+      "sentry": {
+        "name": "Sentry",
+        "description": "Uma ferramenta que detecta e relata erros no site automaticamente",
+        "why": "Escolhido para monitoramento proativo de erros",
+        "benefits": "Detecção rápida de problemas, relatórios detalhados, alertas em tempo real",
+        "url": "https://sentry.io"
+      },
+      "vercel": {
+        "name": "Vercel",
+        "description": "Um serviço de hospedagem que torna o site rápido e disponível mundialmente",
+        "why": "Escolhido por excelente performance e implantações automáticas",
+        "benefits": "CDN global, HTTPS automático, configuração zero",
+        "url": "https://vercel.com"
+      },
+      "formspree": {
+        "name": "Formspree",
+        "description": "Um serviço que processa envios de formulários de contato",
+        "why": "Escolhido para gerenciamento simples de formulários sem backend",
+        "benefits": "Configuração fácil, proteção contra spam, entrega confiável",
+        "url": "https://formspree.io"
+      },
+      "storybook": {
+        "name": "Storybook",
+        "description": "Uma ferramenta que documenta e testa componentes de interface isoladamente",
+        "why": "Escolhido para melhor documentação e desenvolvimento de componentes",
+        "benefits": "Componentes isolados, documentação visual, fácil teste",
+        "url": "https://storybook.js.org"
+      },
+      "githubActions": {
+        "name": "GitHub Actions",
+        "description": "Um sistema que automatiza testes e implantações quando o código muda",
+        "why": "Escolhido para integração e entrega contínuas",
+        "benefits": "Automação completa, integrado ao GitHub, configuração flexível",
+        "url": "https://github.com/features/actions"
+      },
+      "sonarqube": {
+        "name": "SonarQube",
+        "description": "Uma ferramenta que analisa a qualidade e segurança do código",
+        "why": "Escolhido para manter altos padrões de qualidade de código",
+        "benefits": "Detecta bugs cedo, identifica vulnerabilidades, melhora manutenibilidade",
+        "url": "https://www.sonarqube.org"
+      }
+    }
   }
 }
