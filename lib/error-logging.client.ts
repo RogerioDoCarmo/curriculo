@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Client-side only error logging module.
  * Use this in client components to avoid importing Sentry server code.

@@ -189,7 +189,9 @@ describe("Property 5: Project Links Rendered When Present", () => {
           expect(rendered.hasLiveLink).toBe(true);
           expect(rendered.liveUrl).toBe(project.liveUrl);
           expect(typeof rendered.liveUrl).toBe("string");
-          expect(rendered.liveUrl!.length).toBeGreaterThan(0);
+          if (rendered.liveUrl) {
+            expect(rendered.liveUrl.length).toBeGreaterThan(0);
+          }
         }
       ),
       { numRuns: 50 }
@@ -205,7 +207,9 @@ describe("Property 5: Project Links Rendered When Present", () => {
           expect(rendered.hasRepoLink).toBe(true);
           expect(rendered.repoUrl).toBe(project.repoUrl);
           expect(typeof rendered.repoUrl).toBe("string");
-          expect(rendered.repoUrl!.length).toBeGreaterThan(0);
+          if (rendered.repoUrl) {
+            expect(rendered.repoUrl.length).toBeGreaterThan(0);
+          }
         }
       ),
       { numRuns: 50 }

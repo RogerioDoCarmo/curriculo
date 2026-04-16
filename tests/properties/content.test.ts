@@ -137,7 +137,9 @@ describe("Property 45: Content-Driven Project Addition", () => {
           // The project we added must appear in the results
           const found = projects.find((p) => p.id === frontmatter.id);
           expect(found).toBeDefined();
-          expect(found!.title).toBe(frontmatter.title);
+          if (found) {
+            expect(found.title).toBe(frontmatter.title);
+          }
         } finally {
           fs.rmSync(tmpDir, { recursive: true, force: true });
         }
@@ -172,28 +174,30 @@ describe("Property 46: Content Field Support", () => {
 
           expect(project).toBeDefined();
 
-          // All standard fields must be present and correctly typed
-          expect(typeof project!.id).toBe("string");
-          expect(typeof project!.title).toBe("string");
-          expect(typeof project!.description).toBe("string");
-          expect(Array.isArray(project!.technologies)).toBe(true);
-          expect(Array.isArray(project!.images)).toBe(true);
-          expect(typeof project!.featured).toBe("boolean");
-          expect(typeof project!.date).toBe("string");
+          if (project) {
+            // All standard fields must be present and correctly typed
+            expect(typeof project.id).toBe("string");
+            expect(typeof project.title).toBe("string");
+            expect(typeof project.description).toBe("string");
+            expect(Array.isArray(project.technologies)).toBe(true);
+            expect(Array.isArray(project.images)).toBe(true);
+            expect(typeof project.featured).toBe("boolean");
+            expect(typeof project.date).toBe("string");
 
-          // Values must match what was written
-          expect(project!.title).toBe(frontmatter.title);
-          expect(project!.description).toBe(frontmatter.description);
-          expect(project!.featured).toBe(frontmatter.featured);
-          expect(project!.technologies).toEqual(frontmatter.technologies);
-          expect(project!.images).toEqual(frontmatter.images);
+            // Values must match what was written
+            expect(project.title).toBe(frontmatter.title);
+            expect(project.description).toBe(frontmatter.description);
+            expect(project.featured).toBe(frontmatter.featured);
+            expect(project.technologies).toEqual(frontmatter.technologies);
+            expect(project.images).toEqual(frontmatter.images);
 
-          // Optional URL fields
-          if (frontmatter.liveUrl !== undefined) {
-            expect(project!.liveUrl).toBe(frontmatter.liveUrl);
-          }
-          if (frontmatter.repoUrl !== undefined) {
-            expect(project!.repoUrl).toBe(frontmatter.repoUrl);
+            // Optional URL fields
+            if (frontmatter.liveUrl !== undefined) {
+              expect(project.liveUrl).toBe(frontmatter.liveUrl);
+            }
+            if (frontmatter.repoUrl !== undefined) {
+              expect(project.repoUrl).toBe(frontmatter.repoUrl);
+            }
           }
         } finally {
           fs.rmSync(tmpDir, { recursive: true, force: true });
