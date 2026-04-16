@@ -2,6 +2,75 @@
 
 This document summarizes the code quality improvements made to the test suite and provides guidelines to prevent similar issues in the future.
 
+## Date: 2026-04-15
+
+## Issues Fixed
+
+### 1. Console Statements in Production Code
+
+#### Problem
+
+ESLint warns about `console.log()` statements in production code (rule: `no-console`). Console statements should not be used for debugging or logging in production code.
+
+#### Files Fixed
+
+- `components/ExitIntentModal/index.tsx`
+
+#### Solution
+
+Replace `console.log()` with TODO comments for future analytics integration:
+
+```typescript
+// Before (WRONG - ESLint warning)
+const handleClick = () => {
+  console.log("Button clicked");
+  doSomething();
+};
+
+// After (CORRECT - TODO comment)
+const handleClick = () => {
+  // TODO: Track button click with analytics
+  // trackEvent('button_click', { buttonId: 'cta' });
+  doSomething();
+};
+```
+
+#### Allowed Console Methods
+
+Only `console.error()` and `console.warn()` are allowed for error/warning logging:
+
+```typescript
+// ✅ Allowed - Error logging
+try {
+  await riskyOperation();
+} catch (error) {
+  console.error("Operation failed:", error);
+  logErrorToService(error);
+}
+
+// ✅ Allowed - Warning logging
+if (!isValid) {
+  console.warn("Invalid configuration detected");
+}
+
+// ❌ Not allowed - Debug logging
+console.log("Debug info:", data);
+console.debug("Debugging:", value);
+```
+
+#### Development-Only Logging
+
+If you need logging during development:
+
+```typescript
+// ✅ Conditional logging for development only
+if (process.env.NODE_ENV === "development") {
+  console.log("Dev info:", data);
+}
+```
+
+---
+
 ## Date: 2026-04-14
 
 ## Issues Fixed
@@ -141,6 +210,20 @@ Before committing new test code:
 - [ ] Type assertions documented and justified
 - [ ] All tests pass: `npm test`
 - [ ] No ESLint warnings: `npm run lint`
+- [ ] TypeScript compiles: `npx tsc --noEmit`
+
+## Checklist for Production Code
+
+Before committing production code:
+
+- [ ] No `console.log()` or `console.debug()` statements
+- [ ] Analytics/logging uses proper service integration or TODO comments
+- [ ] `console.error()` and `console.warn()` are intentional and necessary
+- [ ] No non-null assertions (`!`) used
+- [ ] All optional properties checked before access
+- [ ] All tests pass: `npm test`
+- [ ] No ESLint warnings: `npm run lint`
+- [ ] Code formatted: `npm run format`
 - [ ] TypeScript compiles: `npx tsc --noEmit`
 
 ## Impact
