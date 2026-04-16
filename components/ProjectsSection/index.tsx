@@ -147,9 +147,9 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.description}
         </p>
         <div className="flex flex-wrap gap-1">
-          {project.technologies.slice(0, 4).map((tech) => (
+          {project.technologies.slice(0, 4).map((tech, index) => (
             <span
-              key={tech}
+              key={tech || `tech-${index}`}
               className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-400"
             >
               {tech}
