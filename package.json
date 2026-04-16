@@ -30,6 +30,7 @@
     "fast-check": "^3.x",
     "firebase": "^10.14.1",
     "gray-matter": "^4.x",
+    "lucide-react": "^1.8.0",
     "next": "14.x",
     "next-intl": "^3.x",
     "postcss": "^8.x",

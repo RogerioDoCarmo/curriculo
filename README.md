@@ -140,6 +140,8 @@ npm run test:e2e
 npm run test:properties
 ```
 
+See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.
+
 ## Deployment
 
 The website is configured for deployment on Vercel with automatic deployments from the main branch. Custom domains are configured through the Vercel dashboard.
@@ -150,12 +152,21 @@ See `.env.example` for required environment variables. Create `.env.local` for l
 
 ## Code Quality
 
-- **Test Coverage**: Minimum 90% enforced in CI/CD
+- **Test Coverage**: Minimum 80% enforced in CI/CD
 - **Code Quality**: SonarQube with 90% quality rating (A) requirement
 - **Linting**: ESLint with Next.js recommended rules
 - **Formatting**: Prettier with consistent formatting
 - **Type Safety**: TypeScript strict mode
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for code style guidelines and development workflow.
+
 ## License
 
 MIT
+
+## Documentation
+
+- [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
+- [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
+- [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log

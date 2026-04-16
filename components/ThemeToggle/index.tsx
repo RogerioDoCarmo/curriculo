@@ -39,6 +39,7 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
         transition-colors duration-200
         hover:bg-accent hover:text-accent-foreground
         focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+        print:hidden
         ${className}
       `}
     >

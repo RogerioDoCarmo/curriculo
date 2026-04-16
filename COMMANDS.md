@@ -43,6 +43,27 @@ npx prettier --write .      # Format all files in project
 
 ## Git Workflow
 
+### Branch Strategy (Git Flow)
+
+This project uses a **Git Flow** branching strategy with two main branches:
+
+- **`main`** - Production-ready code (protected, requires PR)
+- **`develop`** - Integration branch for ongoing development (base for feature branches)
+
+**Workflow:**
+
+```
+main (production) ← PR ← develop (integration) ← PR ← feature/task-name (development)
+```
+
+**Rules:**
+
+1. **Feature branches** are created from `develop`
+2. **Feature PRs** merge into `develop`
+3. **Release PRs** merge from `develop` into `main`
+4. **`main` branch** is protected - no direct commits allowed
+5. **Tags** are created on `main` for releases
+
 ### Standard Workflow (with validation)
 
 **CRITICAL**: Always validate changes before committing. This is the standard behavior for this project.
@@ -108,14 +129,45 @@ git push origin branch-name
 
 ### Git Commands Reference
 
+#### Feature Development Workflow
+
+```bash
+# 1. Start new feature from develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/task-name
+
+# 2. Make changes and commit
+git add .
+git commit -m "feat: description"
+
+# 3. Push feature branch
+git push origin feature/task-name
+
+# 4. Create PR to develop (via GitHub)
+# 5. After PR merge, update local develop
+git checkout develop
+git pull origin develop
+git branch -d feature/task-name
+
+# 6. When ready for production release
+git checkout develop
+git pull origin develop
+# Create PR from develop to main (via GitHub)
+# After merge, create release tag on main
+```
+
+#### Common Git Commands
+
 ```bash
 git status                           # Check current status
 git add .                            # Stage all changes
 git commit -m "type: message"        # Commit with message
 git push origin branch-name          # Push to remote
 git checkout -b feature/name         # Create new branch
-git pull origin main                 # Pull latest changes from main
+git pull origin develop              # Pull latest changes from develop
 git branch -d branch-name            # Delete merged branch (safe - prevents data loss)
+git fetch --prune                    # Remove deleted remote branches from local
 ```
 
 **Important**: Always use `-d` (lowercase) when deleting branches. This is the safe option that prevents deleting unmerged work. Never use `-D` (uppercase) as it force-deletes branches even if they contain unmerged changes.

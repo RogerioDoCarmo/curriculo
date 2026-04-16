@@ -48,10 +48,135 @@
   "backToTop": {
     "label": "Volver arriba"
   },
+  "exitIntent": {
+    "title": "Antes de irte...",
+    "headline": "Antes de irte...",
+    "subtitle": "¿Te gustaría conectar o descargar mi currículum?",
+    "downloadResume": "Descargar Currículum (PDF)",
+    "downloadResumeAriaLabel": "Descargar currículum en formato PDF",
+    "connectLinkedIn": "Conectar en LinkedIn",
+    "connectLinkedInAriaLabel": "Conectar conmigo en LinkedIn",
+    "starGitHub": "Favorito en GitHub",
+    "starGitHubAriaLabel": "Marcar repositorio como favorito en GitHub",
+    "footerNote": "¡Gracias por tu visita!"
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "close": "Cerrar",
     "learnMore": "Saber más"
+  },
+  "techStack": {
+    "title": "Tecnologías Utilizadas",
+    "subtitle": "Tecnologías usadas para construir este sitio web",
+    "categories": {
+      "framework": "Framework y Tecnologías Principales",
+      "styling": "Estilización y Diseño",
+      "content": "Gestión de Contenido",
+      "internationalization": "Internacionalización",
+      "testing": "Pruebas y Calidad",
+      "analytics": "Análisis y Monitoreo",
+      "deployment": "Despliegue y Alojamiento"
+    },
+    "technologies": {
+      "nextjs": {
+        "name": "Next.js",
+        "description": "Un framework de React que hace que construir sitios web sea más rápido y fácil",
+        "why": "Elegido por su excelente rendimiento y experiencia del desarrollador",
+        "benefits": "Carga rápida de páginas, mejoras automáticas, despliegue fácil",
+        "url": "https://nextjs.org"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "description": "Una herramienta de estilización que ayuda a crear diseños hermosos rápidamente",
+        "why": "Elegido para desarrollo rápido y diseño consistente",
+        "benefits": "Código limpio, diseño responsivo, fácil personalización",
+        "url": "https://tailwindcss.com"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "description": "Un lenguaje que agrega verificación de tipos a JavaScript para prevenir errores",
+        "why": "Elegido para mejorar la calidad del código y prevenir bugs",
+        "benefits": "Menos errores, mejor autocompletado, código más confiable",
+        "url": "https://www.typescriptlang.org"
+      },
+      "markdown": {
+        "name": "Markdown",
+        "description": "Una forma simple de escribir y formatear contenido",
+        "why": "Elegido para facilitar actualizaciones de contenido sin programación",
+        "benefits": "Sintaxis simple, amigable con control de versiones, portable",
+        "url": "https://daringfireball.net/projects/markdown"
+      },
+      "nextIntl": {
+        "name": "next-intl",
+        "description": "Una herramienta que traduce el sitio web a múltiples idiomas",
+        "why": "Elegido para soporte multilingüe sin complicaciones",
+        "benefits": "Traducciones fáciles, detección automática de idioma, amigable para SEO",
+        "url": "https://next-intl-docs.vercel.app"
+      },
+      "jest": {
+        "name": "Jest",
+        "description": "Una herramienta de pruebas que asegura que el código funciona correctamente",
+        "why": "Elegido por sus capacidades integrales de prueba",
+        "benefits": "Pruebas rápidas, buenos mensajes de error, ampliamente adoptado",
+        "url": "https://jestjs.io"
+      },
+      "playwright": {
+        "name": "Playwright",
+        "description": "Una herramienta que prueba el sitio web automáticamente en diferentes navegadores",
+        "why": "Elegido para garantizar compatibilidad entre navegadores",
+        "benefits": "Pruebas confiables, soporta múltiples navegadores, fácil de usar",
+        "url": "https://playwright.dev"
+      },
+      "firebase": {
+        "name": "Firebase",
+        "description": "Una plataforma que rastrea el uso del sitio web y envía notificaciones",
+        "why": "Elegido por características poderosas de análisis y compromiso",
+        "benefits": "Datos en tiempo real, fácil integración, servicio confiable",
+        "url": "https://firebase.google.com"
+      },
+      "sentry": {
+        "name": "Sentry",
+        "description": "Una herramienta que detecta y reporta errores en el sitio web automáticamente",
+        "why": "Elegido para monitoreo proactivo de errores",
+        "benefits": "Detección rápida de problemas, informes detallados, alertas en tiempo real",
+        "url": "https://sentry.io"
+      },
+      "vercel": {
+        "name": "Vercel",
+        "description": "Un servicio de alojamiento que hace que el sitio web sea rápido y esté disponible mundialmente",
+        "why": "Elegido por excelente rendimiento y despliegues automáticos",
+        "benefits": "CDN global, HTTPS automático, configuración cero",
+        "url": "https://vercel.com"
+      },
+      "formspree": {
+        "name": "Formspree",
+        "description": "Un servicio que procesa envíos de formularios de contacto",
+        "why": "Elegido para manejo simple de formularios sin backend",
+        "benefits": "Configuración fácil, protección contra spam, entrega confiable",
+        "url": "https://formspree.io"
+      },
+      "storybook": {
+        "name": "Storybook",
+        "description": "Una herramienta que documenta y prueba componentes de interfaz de forma aislada",
+        "why": "Elegido para mejor documentación y desarrollo de componentes",
+        "benefits": "Componentes aislados, documentación visual, pruebas fáciles",
+        "url": "https://storybook.js.org"
+      },
+      "githubActions": {
+        "name": "GitHub Actions",
+        "description": "Un sistema que automatiza pruebas y despliegue cuando el código cambia",
+        "why": "Elegido para integración y entrega continuas",
+        "benefits": "Automatización completa, integrado con GitHub, configuración flexible",
+        "url": "https://github.com/features/actions"
+      },
+      "sonarqube": {
+        "name": "SonarQube",
+        "description": "Una herramienta que analiza la calidad y seguridad del código",
+        "why": "Elegido para mantener altos estándares de calidad de código",
+        "benefits": "Detecta bugs temprano, identifica vulnerabilidades, mejora mantenibilidad",
+        "url": "https://www.sonarqube.org"
+      }
+    }
   }
 }

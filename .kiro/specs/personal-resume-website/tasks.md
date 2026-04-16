@@ -488,94 +488,94 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Validates: Requirements 9.2, 20.8**
     - Test that headings follow logical hierarchy without skipped levels
 
-- [ ] 13. Accessibility implementation
-  - [ ] 13.1 Add alt text to all images
+- [x] 13. Accessibility implementation
+  - [x] 13.1 Add alt text to all images
     - Ensure all img elements have descriptive alt attributes
     - Use role="presentation" for decorative images
     - _Requirements: 9.1_
-  - [ ]\* 13.2 Write property test for image alt text
+  - [x]\* 13.2 Write property test for image alt text
     - **Property 14: All Images Have Alt Text**
     - **Validates: Requirements 9.1**
     - Test that all img elements have alt or role="presentation"
-  - [ ] 13.3 Implement focus indicators for interactive elements
+  - [x] 13.3 Implement focus indicators for interactive elements
     - Add visible focus styles to all buttons, links, inputs
     - Use Tailwind's focus: variants
     - Ensure sufficient contrast for focus indicators
     - _Requirements: 9.4_
-  - [ ]\* 13.4 Write property test for focus indicators
+  - [x]\* 13.4 Write property test for focus indicators
     - **Property 16: Focusable Elements Have Focus Indicators**
     - **Validates: Requirements 9.4**
     - Test that interactive elements have focus styles defined
-  - [ ] 13.5 Add ARIA labels to interactive elements
+  - [x] 13.5 Add ARIA labels to interactive elements
     - Add aria-label to icon buttons and image links
     - Add aria-labelledby where appropriate
     - Ensure form inputs have associated labels
     - _Requirements: 9.5_
-  - [ ]\* 13.6 Write property test for accessible labels
+  - [x]\* 13.6 Write property test for accessible labels
     - **Property 17: Interactive Elements Have Accessible Labels**
     - **Validates: Requirements 9.5**
     - Test that elements without visible text have ARIA labels
-  - [ ] 13.7 Verify color contrast ratios
+  - [x] 13.7 Verify color contrast ratios
     - Use WebAIM Contrast Checker to verify WCAG AA compliance
     - Ensure 4.5:1 minimum contrast for all text
     - Test both light and dark modes
     - _Requirements: 9.3, 17.9_
 
-- [ ] 14. Print and PDF optimization
-  - [ ] 14.1 Create print stylesheet
+- [x] 14. Print and PDF optimization
+  - [x] 14.1 Create print stylesheet
     - Implement `styles/print.css` with @media print rules
     - Hide non-essential elements: nav, theme toggle, buttons
     - Apply print-friendly typography (serif fonts, black on white)
     - Set page margins and size (letter/A4)
     - _Requirements: 18.2, 18.3, 18.9_
-  - [ ]\* 14.2 Write property test for print mode element hiding
+  - [x]\* 14.2 Write property test for print mode element hiding
     - **Property 35: Print Mode Hides Non-Essential Elements**
     - **Validates: Requirements 18.2**
     - Test that non-essential elements are hidden in print media
-  - [ ] 14.3 Implement page break controls
+  - [x] 14.3 Implement page break controls
     - Add page-break-after: avoid to headings
     - Add page-break-inside: avoid to sections
     - Ensure headings stay with content
     - _Requirements: 18.4, 18.5_
-  - [ ] 14.4 Expand collapsed content for print
+  - [x] 14.4 Expand collapsed content for print
     - Ensure all details/accordion content is visible in print
     - Display all project information
     - Show full URLs for links
     - _Requirements: 18.7, 18.8_
-  - [ ]\* 14.5 Write property test for print content expansion
+  - [x]\* 14.5 Write property test for print content expansion
     - **Property 36: Print Mode Expands Collapsed Content**
     - **Validates: Requirements 18.7**
     - Test that collapsible content is expanded in print media
 
-- [ ] 15. Exit intent detection
-  - [ ] 15.1 Create useExitIntent hook
+- [x] 15. Exit intent detection
+  - [x] 15.1 Create useExitIntent hook
     - Implement mouse movement tracking
     - Detect cursor at top edge with upward velocity
     - Track time on page
     - Respect minimum time threshold (5 seconds)
     - Disable on mobile viewports (< 768px)
     - _Requirements: 19.1, 19.2, 19.7, 19.9_
-  - [ ]\* 15.2 Write property test for exit intent detection
+  - [x]\* 15.2 Write property test for exit intent detection
     - **Property 37: Exit Intent Detection Tracks Mouse Movement**
     - **Property 38: Exit Intent Triggers at Threshold**
     - **Validates: Requirements 19.1, 19.2**
     - Test that mouse movement is tracked and threshold triggers detection
-  - [ ]\* 15.3 Write property test for minimum time requirement
+  - [x]\* 15.3 Write property test for minimum time requirement
     - **Property 40: Exit Intent Respects Minimum Time**
     - **Validates: Requirements 19.9**
     - Test that detection doesn't trigger before minimum time
-  - [ ] 15.4 Create ExitIntentModal component
+  - [x] 15.4 Create ExitIntentModal component
     - Build modal with custom content
     - Include headline "Before you go..."
     - Add actions: download resume, connect on LinkedIn, star GitHub
     - Implement close button and backdrop dismiss
     - Show only once per session
     - _Requirements: 19.3, 19.4, 19.5, 19.10_
-  - [ ]\* 15.5 Write property test for session-based display
+  - [x]\* 15.5 Write property test for session-based display
     - **Property 39: Exit Intent Modal Shows Once Per Session**
     - **Validates: Requirements 19.3, 19.5**
     - Test that modal only displays once per session
-  - [ ]\* 15.6 Write unit tests for exit intent hook
+  - [x]\* 15.6 Write unit tests for exit intent hook
     - Test that hook doesn't trigger before minimum time
     - Test that hook triggers at threshold after minimum time
     - Test that hook is disabled on mobile
@@ -617,7 +617,7 @@ This implementation plan breaks down the personal resume website into discrete, 
   - Ask the user if questions arise
 
 - [ ] 18. Tech Stack explanation section
-  - [ ] 18.1 Create TechStackSection component
+  - [x] 18.1 Create TechStackSection component
     - Build component to display technologies used in the website
     - Organize by category: Framework, Styling, Content, Testing, Analytics, Deployment, Monitoring
     - Display technology name, logo/icon, simple description
@@ -625,29 +625,29 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Ensure responsive grid/card layout
     - Make accessible with proper heading structure and ARIA labels
     - _Requirements: 23.1, 23.2, 23.5, 23.8, 23.9_
-  - [ ]\* 18.2 Write unit tests for TechStackSection
+  - [x]\* 18.2 Write unit tests for TechStackSection
     - Test that all technology items are displayed
     - Test that categories are organized correctly
     - Test that descriptions are non-technical and understandable
     - Test responsive layout behavior
     - Test accessibility features
-  - [ ] 18.3 Create TechStackItem data and translations
+  - [x] 18.3 Create TechStackItem data and translations
     - Create data file with all technologies used in the project
     - Include: Next.js, Tailwind CSS, Markdown/Gray-matter, next-intl, Jest, Playwright, Firebase Analytics, Firebase Crashlytics, FCM, Vercel, Sentry, Formspree, Storybook, GitHub Actions, SonarQube
     - Add simple descriptions in all supported languages (pt-BR, en, es)
     - Add "Why chosen" explanations for each technology
     - Add "Benefits" list for each technology
     - _Requirements: 23.3, 23.7_
-  - [ ]\* 18.4 Write property test for translation coverage
+  - [x]\* 18.4 Write property test for translation coverage
     - **Property 26: Tech Stack Translation Coverage**
     - **Validates: Requirements 23.7**
     - Test that all tech stack explanations exist in all language files
-  - [ ] 18.5 Add visual elements and links
+  - [x] 18.5 Add visual elements and links
     - Add technology logos/icons for visual recognition
     - Add links to official documentation for each technology
     - Ensure links open in new tab with proper attributes
     - _Requirements: 23.6, 23.10_
-  - [ ]\* 18.6 Write property test for documentation links
+  - [x]\* 18.6 Write property test for documentation links
     - **Property 27: Tech Stack Documentation Links**
     - **Validates: Requirements 23.10**
     - Test that technologies with documentation have clickable links
