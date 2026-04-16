@@ -114,6 +114,124 @@ Our ESLint configuration enforces:
 - `no-var`: **error** - Never use `var`
 - `no-console`: **warn** - Avoid console.log (except warn/error)
 
+### Console Statements
+
+#### ❌ Never use `console.log()` in production code
+
+ESLint will warn about console statements. Instead:
+
+**For debugging during development:**
+
+```typescript
+// Remove before committing
+console.log("Debug info:", data);
+```
+
+**For planned logging/analytics:**
+
+```typescript
+// ✅ Use TODO comments for future integration
+const handleAction = () => {
+  // TODO: Integrate with analytics service (Firebase Analytics, etc.)
+  // trackEvent('button_clicked', { buttonId: 'submit' });
+
+  performAction();
+};
+```
+
+**For error logging:**
+
+```typescript
+// ✅ console.error and console.warn are allowed
+try {
+  await riskyOperation();
+} catch (error) {
+  console.error("Operation failed:", error);
+  // Also log to monitoring service
+  logError(error);
+}
+```
+
+**For development-only logging:**
+
+```typescript
+// ✅ Conditional logging for development
+if (process.env.NODE_ENV === "development") {
+  console.log("Dev info:", data);
+}
+```
+
+#### Common Patterns
+
+**Analytics Integration:**
+
+```typescript
+// ❌ Bad - console.log in production code
+const handleClick = () => {
+  console.log("Button clicked");
+  doSomething();
+};
+
+// ✅ Good - TODO comment for future integration
+const handleClick = () => {
+  // TODO: Track button click with analytics
+  // trackEvent('button_click', { buttonId: 'cta' });
+  doSomething();
+};
+
+// ✅ Better - Implement analytics immediately
+const handleClick = () => {
+  trackEvent("button_click", { buttonId: "cta" });
+  doSomething();
+};
+```
+
+**Debugging:**
+
+```typescript
+// ❌ Bad - Leaving debug logs
+const processData = (data: Data[]) => {
+  console.log("Processing:", data);
+  return data.map(transform);
+};
+
+// ✅ Good - Remove debug logs before commit
+const processData = (data: Data[]) => {
+  return data.map(transform);
+};
+
+// ✅ Good - Use proper debugging tools
+const processData = (data: Data[]) => {
+  // Use debugger statement or IDE breakpoints instead
+  return data.map(transform);
+};
+```
+
+**Error Handling:**
+
+```typescript
+// ✅ console.error is acceptable for error logging
+const handleError = (error: Error) => {
+  console.error("Error occurred:", error);
+  logErrorToService(error); // Also log to monitoring service
+};
+
+// ✅ console.warn is acceptable for warnings
+if (!isValid) {
+  console.warn("Invalid configuration detected");
+}
+```
+
+#### Pre-commit Checklist
+
+Before committing, verify:
+
+- [ ] No `console.log()` statements in production code
+- [ ] No `console.debug()` statements
+- [ ] `console.error()` and `console.warn()` are intentional
+- [ ] Run `npm run lint` - should show no console warnings
+- [ ] Analytics/logging uses proper service integration or TODO comments
+
 ### Styling
 
 - Use Tailwind CSS utility classes for styling
