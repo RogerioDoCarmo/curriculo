@@ -65,5 +65,118 @@
     "error": "An error occurred",
     "close": "Close",
     "learnMore": "Learn more"
+  },
+  "techStack": {
+    "title": "Tech Stack",
+    "subtitle": "Technologies used to build this website",
+    "categories": {
+      "framework": "Framework & Core Technologies",
+      "styling": "Styling & Design",
+      "content": "Content Management",
+      "internationalization": "Internationalization",
+      "testing": "Testing & Quality",
+      "analytics": "Analytics & Monitoring",
+      "deployment": "Deployment & Hosting"
+    },
+    "technologies": {
+      "nextjs": {
+        "name": "Next.js",
+        "description": "A React framework that makes building websites faster and easier",
+        "why": "Chosen for its excellent performance and developer experience",
+        "benefits": "Fast page loads, automatic improvements, easy deployment",
+        "url": "https://nextjs.org"
+      },
+      "tailwind": {
+        "name": "Tailwind CSS",
+        "description": "A styling tool that helps create beautiful designs quickly",
+        "why": "Chosen for rapid development and consistent design",
+        "benefits": "Clean code, responsive design, easy customization",
+        "url": "https://tailwindcss.com"
+      },
+      "typescript": {
+        "name": "TypeScript",
+        "description": "A language that adds type checking to JavaScript to prevent errors",
+        "why": "Chosen to improve code quality and prevent bugs",
+        "benefits": "Fewer errors, better autocomplete, more reliable code",
+        "url": "https://www.typescriptlang.org"
+      },
+      "markdown": {
+        "name": "Markdown",
+        "description": "A simple way to write and format content",
+        "why": "Chosen for easy content updates without coding",
+        "benefits": "Simple syntax, version control friendly, portable",
+        "url": "https://daringfireball.net/projects/markdown"
+      },
+      "nextIntl": {
+        "name": "next-intl",
+        "description": "A tool that translates the website into multiple languages",
+        "why": "Chosen for seamless multi-language support",
+        "benefits": "Easy translations, automatic language detection, SEO friendly",
+        "url": "https://next-intl-docs.vercel.app"
+      },
+      "jest": {
+        "name": "Jest",
+        "description": "A testing tool that ensures code works correctly",
+        "why": "Chosen for comprehensive testing capabilities",
+        "benefits": "Fast tests, good error messages, wide adoption",
+        "url": "https://jestjs.io"
+      },
+      "playwright": {
+        "name": "Playwright",
+        "description": "A tool that automatically tests the website across different browsers",
+        "why": "Chosen to ensure cross-browser compatibility",
+        "benefits": "Reliable tests, supports multiple browsers, easy to use",
+        "url": "https://playwright.dev"
+      },
+      "firebase": {
+        "name": "Firebase",
+        "description": "A platform that tracks website usage and sends notifications",
+        "why": "Chosen for powerful analytics and engagement features",
+        "benefits": "Real-time data, easy integration, reliable service",
+        "url": "https://firebase.google.com"
+      },
+      "sentry": {
+        "name": "Sentry",
+        "description": "A tool that detects and reports errors in the website automatically",
+        "why": "Chosen for proactive error monitoring",
+        "benefits": "Quick issue detection, detailed reports, real-time alerts",
+        "url": "https://sentry.io"
+      },
+      "vercel": {
+        "name": "Vercel",
+        "description": "A hosting service that makes the website fast and available worldwide",
+        "why": "Chosen for excellent performance and automatic deployments",
+        "benefits": "Global CDN, automatic HTTPS, zero configuration",
+        "url": "https://vercel.com"
+      },
+      "formspree": {
+        "name": "Formspree",
+        "description": "A service that processes contact form submissions",
+        "why": "Chosen for simple form handling without a backend",
+        "benefits": "Easy setup, spam protection, reliable delivery",
+        "url": "https://formspree.io"
+      },
+      "storybook": {
+        "name": "Storybook",
+        "description": "A tool that documents and tests UI components in isolation",
+        "why": "Chosen for better component documentation and development",
+        "benefits": "Isolated components, visual documentation, easy testing",
+        "url": "https://storybook.js.org"
+      },
+      "githubActions": {
+        "name": "GitHub Actions",
+        "description": "A system that automates testing and deployment when code changes",
+        "why": "Chosen for continuous integration and delivery",
+        "benefits": "Full automation, integrated with GitHub, flexible configuration",
+        "url": "https://github.com/features/actions"
+      },
+      "sonarqube": {
+        "name": "SonarQube",
+        "description": "A tool that analyzes code quality and security",
+        "why": "Chosen to maintain high code quality standards",
+        "benefits": "Catches bugs early, identifies vulnerabilities, improves maintainability",
+        "url": "https://www.sonarqube.org"
+      }
+    }
   }
 }
