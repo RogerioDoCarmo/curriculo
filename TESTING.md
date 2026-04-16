@@ -157,6 +157,92 @@ const slugArb = fc
 
 ## Common Issues and Solutions
 
+### Issue: `toBeInTheDocument` not recognized by TypeScript
+
+**Problem**: "Property 'toBeInTheDocument' does not exist on type 'JestMatchers\<HTMLElement\>'"
+
+**Solution**: Add `@testing-library/jest-dom` to the `types` array in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"]
+  }
+}
+```
+
+This tells TypeScript to always include the jest-dom type augmentations, which extend `JestMatchers` with DOM-specific matchers like `toBeInTheDocument`, `toHaveAttribute`, `toHaveTextContent`, etc.
+
+### Issue: Unused destructured variables in `forEach` callbacks
+
+**Problem**: "X is defined but never used. Allowed unused args must match /^\_/u"
+
+**Solution**: Either omit the unused variable from destructuring, or prefix it with `_`:
+
+```typescript
+// If you don't need `code` at all — just omit it
+languages.forEach(({ messages }) => { ... });
+
+// If you need to keep it for clarity — prefix with underscore
+languages.forEach(({ _code, messages }) => { ... });
+
+// Same rule applies to Object.entries() callbacks
+Object.entries(technologies).forEach(([_key, tech]) => { ... });
+```
+
+### Issue: `any` type on `messages` parameter
+
+**Problem**: "Unexpected any. Specify a different type."
+
+**Solution**: Use `AbstractIntlMessages` from `next-intl` when typing a messages parameter:
+
+```typescript
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
+
+const renderComponent = (locale: string, messages: AbstractIntlMessages) => {
+  return render(
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <MyComponent />
+    </NextIntlClientProvider>
+  );
+};
+```
+
+### Issue: Missing message keys cause `MISSING_MESSAGE` errors in tests
+
+**Problem**: `IntlError: MISSING_MESSAGE: Could not resolve 'techStack.technologies.sonarqube.url'`
+
+**Solution**: The test mock must include **all** keys the component actually uses. If the component has hardcoded tech keys (e.g. in a `TECH_CATEGORIES` constant), the mock messages must cover every one of them — including any fields added later (like `url`).
+
+Check the component source for a mapping like:
+
+```typescript
+const TECH_CATEGORIES = {
+  framework: ["nextjs", "typescript"],
+  deployment: ["vercel", "sonarqube"],
+  // ...
+} as const;
+```
+
+Then ensure your test mock has an entry for **every** key listed there, with **every** field the component reads:
+
+```typescript
+const messages = {
+  techStack: {
+    technologies: {
+      sonarqube: {
+        name: "SonarQube",
+        description: "...",
+        why: "...",
+        benefits: "...",
+        url: "https://www.sonarqube.org", // don't forget new fields
+      },
+      // ... all other keys
+    },
+  },
+};
+```
+
 ### Issue: ESLint Warning on `<img>` in Test Mocks
 
 **Problem**: IDE shows warning "Using `<img>` could result in slower LCP..."
