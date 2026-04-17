@@ -8,6 +8,7 @@ These are the most frequently used commands during development:
 
 ```bash
 npm run dev                  # Start development server (http://localhost:3000)
+npm run storybook            # Start Storybook component explorer (http://localhost:6006)
 npm run test:coverage        # Run tests with coverage report
 npm run test:e2e             # Run E2E tests with Playwright
 npm run lint                 # Run ESLint to check code quality
@@ -22,6 +23,7 @@ npx prettier --write .       # Auto-fix all formatting issues
 npm run dev          # Start development server (http://localhost:3000)
 npm run build        # Build for production (static export)
 npm run start        # Start production server (preview build)
+npm run storybook    # Start Storybook component explorer (http://localhost:6006)
 ```
 
 ## Testing
