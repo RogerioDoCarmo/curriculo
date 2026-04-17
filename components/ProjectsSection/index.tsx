@@ -67,9 +67,9 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
         </p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((project) => (
+          {filtered.map((project, index) => (
             <ProjectCard
-              key={project.id}
+              key={`${project.id}-${index}`}
               project={project}
               onClick={() => setSelectedProject(project)}
             />
@@ -125,7 +125,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
             src={firstImage}
             alt={`${project.title} screenshot 1`}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
             loading="lazy"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -149,7 +149,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         <div className="flex flex-wrap gap-1">
           {project.technologies.slice(0, 4).map((tech, index) => (
             <span
-              key={tech || `tech-${index}`}
+              key={`${project.id}-tech-${index}`}
               className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-400"
             >
               {tech}
@@ -209,9 +209,9 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           Technologies
         </h4>
         <div className="flex flex-wrap gap-2">
-          {project.technologies.map((tech) => (
+          {project.technologies.map((tech, index) => (
             <span
-              key={tech}
+              key={`${project.id}-tech-${index}`}
               className="rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300"
             >
               {tech}
