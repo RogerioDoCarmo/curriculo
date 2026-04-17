@@ -39,6 +39,7 @@ const config = {
       statements: 80, // Temporarily lowered from 85% due to Firebase placeholder config
     },
   },
+  coverageReporters: ["text", "lcov", "json-summary"],
 };
 
 module.exports = config;
