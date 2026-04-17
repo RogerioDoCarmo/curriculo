@@ -9,6 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "serve": "npx serve@latest out -l 3000",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "test": "jest",

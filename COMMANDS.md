@@ -9,6 +9,7 @@ These are the most frequently used commands during development:
 ```bash
 npm run dev                  # Start development server (http://localhost:3000)
 npm run test:coverage        # Run tests with coverage report
+npm run test:e2e             # Run E2E tests with Playwright
 npm run lint                 # Run ESLint to check code quality
 npm run format:check         # Check code formatting without fixing
 
@@ -28,6 +29,7 @@ npm run start        # Start production server (preview build)
 ```bash
 npm test                    # Run all tests
 npm run test:coverage       # Run tests with coverage report
+npm run test:e2e            # Run E2E tests with Playwright
 npm test -- --watch         # Run tests in watch mode
 npm test -- path/to/test    # Run specific test file
 ```
