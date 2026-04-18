@@ -10,6 +10,7 @@ SonarQube Cloud provides:
 - **Security Scanning**: Identify security hotspots and vulnerabilities
 - **Coverage Tracking**: Monitor test coverage trends
 - **Quality Gates**: Enforce quality standards before merging
+- **PR Decoration**: Automatic quality gate status on pull requests
 
 ## Prerequisites
 

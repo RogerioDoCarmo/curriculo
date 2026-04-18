@@ -243,15 +243,7 @@ jobs:
         run: npm run test:coverage
 
       - name: SonarQube Scan
-        # SonarSource/sonarqube-scan-action@v6
-        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: SonarQube Quality Gate check
-        # SonarSource/sonarqube-quality-gate-action@master
-        uses: SonarSource/sonarqube-quality-gate-action@cb3ed20f9fec62b4c3b8ad9e77656c6adaade913
-        timeout-minutes: 5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
