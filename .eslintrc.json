@@ -3,15 +3,9 @@
   // See CONTRIBUTING.md for code style guidelines
   // See TESTING.md for testing patterns
   // See .kiro/docs/test-patterns.md for quick reference
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:storybook/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -30,18 +24,9 @@
     "no-console": [
       "warn",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ]
   },
-  "ignorePatterns": [
-    "node_modules/",
-    ".next/",
-    "out/",
-    "coverage/",
-    "storybook-static/"
-  ]
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "coverage/", "storybook-static/"]
 }
