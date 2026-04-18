@@ -86,7 +86,7 @@ export const WithoutTitle: Story = {
  * Interactive modal with open/close button
  */
 export const Interactive: Story = {
-  render: () => {
+  render: function InteractiveModal() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
