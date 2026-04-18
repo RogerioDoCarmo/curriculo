@@ -139,7 +139,11 @@ describe("Property 1: Career Path Selection Displays Correct Content", () => {
   // Arbitraries for experience data
   const experienceArb = (type: CareerPath): fc.Arbitrary<Experience> =>
     fc.record({
-      id: fc.string({ minLength: 1, maxLength: 20 }).filter((s) => s.trim().length > 0),
+      // Prefix IDs with type to ensure professional and academic IDs never overlap
+      id: fc
+        .string({ minLength: 1, maxLength: 20 })
+        .filter((s) => s.trim().length > 0)
+        .map((s) => `${type}-${s}`),
       type: fc.constant(type),
       organization: fc.string({ minLength: 1, maxLength: 50 }).filter((s) => s.trim().length > 0),
       role: fc.string({ minLength: 1, maxLength: 50 }).filter((s) => s.trim().length > 0),
