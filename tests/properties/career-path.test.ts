@@ -208,7 +208,7 @@ describe("Property 1: Career Path Selection Displays Correct Content", () => {
           // The two sets must be disjoint (no overlap)
           const professionalIds = new Set(professional.map((e) => e.id));
           const academicIds = new Set(academic.map((e) => e.id));
-          const intersection = [...professionalIds].filter((id) => academicIds.has(id));
+          const intersection = Array.from(professionalIds).filter((id) => academicIds.has(id));
           expect(intersection.length).toBe(0);
         }
       ),

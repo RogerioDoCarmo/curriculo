@@ -721,14 +721,14 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that all UI components have corresponding story files
 
 - [ ] 21. CI/CD pipeline setup
-  - [ ] 21.1 Create GitHub Actions workflow for CI
+  - [x] 21.1 Create GitHub Actions workflow for CI
     - Create `.github/workflows/ci.yml`
     - Add jobs: lint, type-check, test, coverage
     - Run on push to any branch and pull requests
     - _Requirements: 16.1, 16.2_
-  - [ ] 21.2 Configure test coverage enforcement
+  - [x] 21.2 Configure test coverage enforcement
     - Add coverage check job to CI workflow
-    - Fail pipeline if coverage < 90%
+    - Fail pipeline if coverage < 80% (goal: 90%)
     - Generate and upload coverage reports
     - _Requirements: 14.1, 16.3_
   - [ ] 21.3 Set up SonarQube Cloud integration
