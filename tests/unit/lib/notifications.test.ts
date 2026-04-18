@@ -107,12 +107,16 @@ describe("Notification Utilities", () => {
 
     it("returns granted without token when VAPID key is missing", async () => {
       setupNotificationMock("granted");
-      delete process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+      const originalVapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+      process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY = "";
 
       const result = await requestNotificationPermission();
 
       expect(result.status).toBe("granted");
       expect(result.token).toBeUndefined();
+
+      // Restore original value
+      process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY = originalVapidKey;
     });
 
     it("handles token retrieval errors gracefully", async () => {
