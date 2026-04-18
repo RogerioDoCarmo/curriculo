@@ -8,7 +8,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { requestNotificationPermission } from "@/lib/notifications";
+import { requestNotificationPermission, subscribeToTopic } from "@/lib/notifications";
 
 type PromptState = "idle" | "visible" | "dismissed";
 
@@ -29,7 +29,12 @@ export default function NotificationPrompt() {
 
   async function handleAllow() {
     setState("dismissed");
-    await requestNotificationPermission();
+    const result = await requestNotificationPermission();
+
+    // Subscribe to deployments topic if permission was granted
+    if (result.status === "granted") {
+      await subscribeToTopic("deployments");
+    }
   }
 
   function handleDismiss() {
