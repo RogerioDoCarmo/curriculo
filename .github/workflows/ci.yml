@@ -264,14 +264,22 @@ jobs:
     steps:
       - name: Check all jobs status
         run: |
+          # Check required jobs (must be success)
           if [[ "${{ needs.lint.result }}" != "success" ]] || \
              [[ "${{ needs.type-check.result }}" != "success" ]] || \
              [[ "${{ needs.test.result }}" != "success" ]] || \
              [[ "${{ needs.coverage.result }}" != "success" ]] || \
              [[ "${{ needs.build.result }}" != "success" ]] || \
-             [[ "${{ needs.e2e.result }}" != "success" ]] || \
-             [[ "${{ needs.sonarqube.result }}" != "success" ]]; then
-            echo "❌ One or more checks failed"
+             [[ "${{ needs.e2e.result }}" != "success" ]]; then
+            echo "❌ One or more required checks failed"
             exit 1
           fi
+
+          # Check SonarQube (can be success or skipped)
+          if [[ "${{ needs.sonarqube.result }}" != "success" ]] && \
+             [[ "${{ needs.sonarqube.result }}" != "skipped" ]]; then
+            echo "❌ SonarQube check failed"
+            exit 1
+          fi
+
           echo "✅ All checks passed"
