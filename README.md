@@ -1,5 +1,9 @@
 # Personal Resume Website
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=RogerioDoCarmo_curriculo)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+
 A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
 ## Development Progress
