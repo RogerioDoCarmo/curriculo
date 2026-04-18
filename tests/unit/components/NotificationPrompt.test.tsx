@@ -13,9 +13,11 @@ import userEvent from "@testing-library/user-event";
 
 // Mock notifications lib
 const mockRequestNotificationPermission = jest.fn();
+const mockSubscribeToTopic = jest.fn();
 jest.mock("@/lib/notifications", () => ({
   requestNotificationPermission: mockRequestNotificationPermission,
   setupForegroundNotifications: jest.fn(() => () => {}),
+  subscribeToTopic: mockSubscribeToTopic,
 }));
 
 import NotificationPrompt from "@/components/NotificationPrompt";
@@ -89,6 +91,7 @@ describe("NotificationPrompt Component", () => {
         status: "granted",
         token: "mock-token",
       });
+      mockSubscribeToTopic.mockResolvedValueOnce(true);
 
       render(<NotificationPrompt />);
       act(() => jest.advanceTimersByTime(10_000));
@@ -102,9 +105,52 @@ describe("NotificationPrompt Component", () => {
       expect(mockRequestNotificationPermission).toHaveBeenCalledTimes(1);
     });
 
+    it("subscribes to deployments topic when permission is granted", async () => {
+      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      mockRequestNotificationPermission.mockResolvedValueOnce({
+        status: "granted",
+        token: "mock-token",
+      });
+      mockSubscribeToTopic.mockResolvedValueOnce(true);
+
+      render(<NotificationPrompt />);
+      act(() => jest.advanceTimersByTime(10_000));
+
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole("button", { name: /allow/i }));
+
+      await waitFor(() => {
+        expect(mockSubscribeToTopic).toHaveBeenCalledWith("deployments");
+      });
+    });
+
+    it("does not subscribe to topic when permission is denied", async () => {
+      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      mockRequestNotificationPermission.mockResolvedValueOnce({
+        status: "denied",
+      });
+
+      render(<NotificationPrompt />);
+      act(() => jest.advanceTimersByTime(10_000));
+
+      await waitFor(() => {
+        expect(screen.getByRole("dialog")).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole("button", { name: /allow/i }));
+
+      await waitFor(() => {
+        expect(mockSubscribeToTopic).not.toHaveBeenCalled();
+      });
+    });
+
     it("hides the prompt after clicking Allow", async () => {
       const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
       mockRequestNotificationPermission.mockResolvedValueOnce({ status: "granted" });
+      mockSubscribeToTopic.mockResolvedValueOnce(true);
 
       render(<NotificationPrompt />);
       act(() => jest.advanceTimersByTime(10_000));
