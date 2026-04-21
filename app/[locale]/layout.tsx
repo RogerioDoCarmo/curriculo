@@ -149,7 +149,7 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
     notFound();
   }
 
-  // Enable static rendering
+  // Enable static rendering for this locale
   unstable_setRequestLocale(locale);
 
   // Load messages for the current locale
