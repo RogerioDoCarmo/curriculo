@@ -16,6 +16,7 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
     notFound();
   }
 
+  // Enable static rendering for this locale
   unstable_setRequestLocale(locale);
 
   return (
