@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import LanguageSelector from "./index";
+import ThemeToggle from "../ThemeToggle";
 import type { SupportedLocale } from "@/types/index";
 
 /**
@@ -143,16 +144,11 @@ export const WithExplanation: Story = {
  * Language selector combined with theme toggle
  */
 export const WithThemeToggle: Story = {
-  render: () => {
-    // Import ThemeToggle dynamically to avoid circular dependencies
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const ThemeToggle = require("../ThemeToggle").default;
-    return (
-      <div className="flex items-center gap-3 p-4 border border-border rounded-lg">
-        <LanguageSelector currentLocale={"pt-BR" as SupportedLocale} />
-        <div className="w-px h-6 bg-border" />
-        <ThemeToggle />
-      </div>
-    );
-  },
+  render: () => (
+    <div className="flex items-center gap-3 p-4 border border-border rounded-lg">
+      <LanguageSelector currentLocale={"pt-BR" as SupportedLocale} />
+      <div className="w-px h-6 bg-border" />
+      <ThemeToggle />
+    </div>
+  ),
 };
