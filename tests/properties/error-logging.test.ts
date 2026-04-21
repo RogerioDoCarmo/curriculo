@@ -75,13 +75,15 @@ describe("Property 19: Errors Logged to Monitoring Service", () => {
       );
     });
 
-    it("always logs to Firebase Analytics for any Error", () => {
-      fc.assert(
-        fc.property(
+    it("always logs to Firebase Analytics for any Error", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           fc.string({ minLength: 1, maxLength: 200 }).filter((s) => s.trim().length > 0),
-          (message) => {
+          async (message) => {
             jest.clearAllMocks();
             logError(new Error(message));
+            // Wait for async Firebase Analytics call
+            await new Promise((resolve) => setTimeout(resolve, 10));
             expect(mockLogEvent).toHaveBeenCalledTimes(1);
             expect(mockLogEvent).toHaveBeenCalledWith(
               expect.anything(),
@@ -146,9 +148,11 @@ describe("Property 19: Errors Logged to Monitoring Service", () => {
       );
     });
 
-    it("fatal errors set fatal=true in Firebase Analytics event", () => {
+    it("fatal errors set fatal=true in Firebase Analytics event", async () => {
       jest.clearAllMocks();
       logError(new Error("fatal error"), { level: "fatal" });
+      // Wait for async Firebase Analytics call
+      await new Promise((resolve) => setTimeout(resolve, 10));
       expect(mockLogEvent).toHaveBeenCalledWith(
         expect.anything(),
         "exception",
@@ -156,13 +160,15 @@ describe("Property 19: Errors Logged to Monitoring Service", () => {
       );
     });
 
-    it("non-fatal errors set fatal=false in Firebase Analytics event", () => {
-      fc.assert(
-        fc.property(
+    it("non-fatal errors set fatal=false in Firebase Analytics event", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           fc.constantFrom("error" as const, "warning" as const, "info" as const),
-          (level) => {
+          async (level) => {
             jest.clearAllMocks();
             logError(new Error("non-fatal"), { level });
+            // Wait for async Firebase Analytics call
+            await new Promise((resolve) => setTimeout(resolve, 10));
             expect(mockLogEvent).toHaveBeenCalledWith(
               expect.anything(),
               "exception",
@@ -190,13 +196,15 @@ describe("Property 19: Errors Logged to Monitoring Service", () => {
       );
     });
 
-    it("logWarning always logs to Firebase Analytics", () => {
-      fc.assert(
-        fc.property(
+    it("logWarning always logs to Firebase Analytics", async () => {
+      await fc.assert(
+        fc.asyncProperty(
           fc.string({ minLength: 1, maxLength: 200 }).filter((s) => s.trim().length > 0),
-          (message) => {
+          async (message) => {
             jest.clearAllMocks();
             logWarning(message);
+            // Wait for async Firebase Analytics call
+            await new Promise((resolve) => setTimeout(resolve, 10));
             expect(mockLogEvent).toHaveBeenCalledTimes(1);
           }
         ),
