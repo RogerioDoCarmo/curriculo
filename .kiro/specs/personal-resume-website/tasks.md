@@ -698,24 +698,24 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test modal doesn't appear on mobile
     - Test modal only shows once per session
     - _Requirements: 19.2, 19.3, 19.7_
-  - [ ]\* 19.9 Write E2E test for print/PDF output
+  - [x]\* 19.9 Write E2E test for print/PDF output
     - Test print styles hide non-essential elements
     - Test PDF generation
     - _Requirements: 18.2_
 
 - [ ] 20. Storybook setup and component documentation
-  - [ ] 20.1 Install and configure Storybook
+  - [x] 20.1 Install and configure Storybook
     - Run `npx storybook@latest init`
     - Configure Storybook for Next.js and Tailwind
     - Set up `.storybook/main.ts` and `.storybook/preview.ts`
     - _Requirements: 13.1_
-  - [ ] 20.2 Create stories for all UI components
+  - [x] 20.2 Create stories for all UI components
     - Write stories for Button, Card, Modal, ThemeToggle, LanguageSelector
     - Document all variants and states
     - Add JSDoc comments for prop documentation
     - Include realistic usage examples
     - _Requirements: 13.1, 13.2, 13.3, 13.4_
-  - [ ]\* 20.3 Write property test for component documentation
+  - [x]\* 20.3 Write property test for component documentation
     - **Property 25: Component Documentation Completeness**
     - **Validates: Requirements 13.1**
     - Test that all UI components have corresponding story files
@@ -731,115 +731,115 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Fail pipeline if coverage < 80% (goal: 90%)
     - Generate and upload coverage reports
     - _Requirements: 14.1, 16.3_
-  - [ ] 21.3 Set up SonarQube Cloud integration
+  - [x] 21.3 Set up SonarQube Cloud integration
     - Create SonarQube Cloud account and project
     - Create `sonar-project.properties` configuration
     - Add SonarQube analysis job to CI workflow
     - Configure quality gate: 90% rating (A), zero critical issues
     - _Requirements: 16.5, 16.6, 16.7, 16.8_
-  - [ ] 21.4 Create deployment workflow
+  - [x] 21.4 Create deployment workflow
     - Create `.github/workflows/deploy.yml`
     - Trigger on push to main branch
     - Run tests before deployment
     - Deploy to Vercel on success
     - **Send push notification on successful deployment** (using Firebase Admin SDK)
     - _Requirements: 8.2, 16.9_
-  - [ ] 21.5 Configure Vercel project
+  - [x] 21.5 Configure Vercel project
     - Connect GitHub repository to Vercel
     - Configure build settings: `npm run build`
     - Set up environment variables for Firebase, Formspree, Sentry
     - Configure custom domains
     - _Requirements: 8.1, 8.3, 8.4_
-  - [ ] 21.6 Set up domain configuration
+  - [x] 21.6 Set up domain configuration
     - Configure DNS for all four domains in Hostinger
     - Point domains to Vercel: rogeriodocarmo.com, rogeriodocarmo.com.br, rogeriodocarmo.xyz, rogeriodocarmo.online
     - Verify HTTPS certificates
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 8.3_
-  - [ ]\* 21.7 Write property test for multi-domain consistency
+  - [x]\* 21.7 Write property test for multi-domain consistency
     - **Property 11: Multi-Domain Content Consistency**
     - **Validates: Requirements 5.5**
     - Test that all domains serve identical content
 
 - [ ] 22. Performance optimization
-  - [ ] 22.1 Implement code splitting and lazy loading
+  - [x] 22.1 Implement code splitting and lazy loading
     - Use dynamic imports for heavy components
     - Lazy load below-fold images
     - Split JavaScript bundles
     - _Requirements: 6.3, 6.4_
-  - [ ] 22.2 Optimize bundle size
+  - [x] 22.2 Optimize bundle size
     - Analyze bundle with `@next/bundle-analyzer`
     - Remove unused dependencies
     - Ensure gzipped JS bundle < 200KB
     - _Requirements: 6.4_
-  - [ ] 22.3 Implement static generation optimizations
+  - [~] 22.3 Implement static generation optimizations
     - Pre-render all pages at build time
     - Generate static HTML for all locales
     - Optimize images with Next.js Image component
     - _Requirements: 6.1, 6.2, 21.9_
-  - [ ]\* 22.4 Write property test for static content generation
+  - [~]\* 22.4 Write property test for static content generation
     - **Property 47: Static Content Generation**
     - **Property 48: No Runtime Content API Calls**
     - **Validates: Requirements 21.9, 21.10**
     - Test that content is served from static files without API calls
-  - [ ]\* 22.5 Run Lighthouse audits
+  - [~]\* 22.5 Run Lighthouse audits
     - Test First Contentful Paint < 1.5s
     - Test Time to Interactive < 3s
     - Test Performance score >= 90
     - _Requirements: 6.1, 6.2, 6.5_
 
 - [ ] 23. Version control and documentation
-  - [ ] 23.1 Create comprehensive README
+  - [~] 23.1 Create comprehensive README
     - Document project overview and architecture
     - Include setup instructions
     - Add development commands
     - Document deployment process
     - Include tech stack and design decisions
     - _Requirements: 15.2_
-  - [ ] 23.2 Set up Git repository and branch protection
+  - [~] 23.2 Set up Git repository and branch protection
     - Initialize Git repository
     - Create `.gitignore` for Node.js/Next.js
     - Push to GitHub
     - Configure branch protection for main branch
     - Require pull request reviews
     - _Requirements: 15.1, 15.4_
-  - [ ] 23.3 Add LICENSE file
+  - [~] 23.3 Add LICENSE file
     - Choose appropriate license (MIT recommended)
     - Add LICENSE file to repository
     - _Requirements: 15.5_
-  - [ ] 23.4 Configure semantic commit messages
+  - [~] 23.4 Configure semantic commit messages
     - Document conventional commit format
     - Add commitlint configuration (optional)
     - _Requirements: 15.3_
-  - [ ] 23.5 Add inline code comments
+  - [~] 23.5 Add inline code comments
     - Document complex logic and business rules
     - Add JSDoc comments to functions
     - Explain non-obvious implementation decisions
     - _Requirements: 12.2_
 
 - [ ] 24. Content population and final polish
-  - [ ] 24.1 Add real content to markdown files
+  - [~] 24.1 Add real content to markdown files
     - Populate professional experience entries
     - Populate academic experience entries
     - Add real project data with descriptions and images
     - Add skills organized by category
     - _Requirements: 1.3, 1.4, 2.1, 2.2_
-  - [ ] 24.2 Add professional images and assets
+  - [~] 24.2 Add professional images and assets
     - Add profile photo
     - Add project screenshots
     - Add favicon and app icons
     - Optimize all images
     - _Requirements: 2.2_
-  - [ ] 24.3 Configure Firebase project with real credentials
+  - [~] 24.3 Configure Firebase project with real credentials
     - Set up production Firebase project
     - Configure Analytics, Crashlytics, FCM
     - Add production environment variables
     - _Requirements: 10.1_
-  - [ ] 24.4 Configure Formspree with real email
+  - [~] 24.4 Configure Formspree with real email
     - Set up Formspree account
     - Configure form endpoint
     - Test email delivery
     - _Requirements: 3.4_
-  - [ ] 24.5 Configure Sentry for production
+  - [~] 24.5 Configure Sentry for production
     - Set up Sentry project
     - Add production DSN to environment variables
     - Test error reporting
@@ -855,22 +855,22 @@ This implementation plan breaks down the personal resume website into discrete, 
   - Ask the user if questions arise before production deployment
 
 - [ ] 26. Production deployment
-  - [ ] 26.1 Deploy to production via Vercel
+  - [~] 26.1 Deploy to production via Vercel
     - Merge to main branch to trigger deployment
     - Verify deployment succeeds
     - Test production site on all domains
     - _Requirements: 8.1, 8.2_
-  - [ ] 26.2 Verify all integrations in production
+  - [~] 26.2 Verify all integrations in production
     - Test Firebase Analytics tracking
     - Test contact form submission
     - Test error logging to Sentry
     - Test FCM notifications
     - _Requirements: 10.1, 10.3, 10.5_
-  - [ ] 26.3 Submit sitemap to search engines
+  - [~] 26.3 Submit sitemap to search engines
     - Submit sitemap to Google Search Console
     - Submit sitemap to Bing Webmaster Tools
     - _Requirements: 7.3_
-  - [ ] 26.4 Final verification
+  - [~] 26.4 Final verification
     - Test all 21 requirements in production
     - Verify accessibility with screen reader
     - Test print/PDF output

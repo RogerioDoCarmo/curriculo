@@ -1,8 +1,7 @@
 import { unstable_setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
-import ExitIntentModal from "@/components/ExitIntentModal";
-import TechStackSection from "@/components/TechStackSection";
+import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
 
 interface HomePageProps {
   params: { locale: string };
@@ -33,11 +32,11 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
         </section>
       </article>
 
-      {/* Tech Stack Section */}
-      <TechStackSection />
+      {/* Tech Stack Section - Lazy loaded for code splitting */}
+      <LazyTechStackSection />
 
-      {/* Exit Intent Modal - Shows when user tries to leave */}
-      <ExitIntentModal
+      {/* Exit Intent Modal - Lazy loaded, client-side only */}
+      <LazyExitIntentModal
         enabled={true}
         resumeUrl="/resume.pdf"
         linkedInUrl="https://linkedin.com/in/rogeriodocarmo"
