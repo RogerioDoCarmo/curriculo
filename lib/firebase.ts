@@ -1,12 +1,13 @@
 /**
  * Firebase initialization module.
  * Initializes Firebase app, Analytics, and provides access to Firebase services.
+ * Uses dynamic imports for tree-shaking and code splitting.
  *
  * Requirements: 10.1, 10.2
  */
 
-import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
-import { getAnalytics, type Analytics } from "firebase/analytics";
+import type { FirebaseApp } from "firebase/app";
+import type { Analytics } from "firebase/analytics";
 
 // ─── Firebase Config ──────────────────────────────────────────────────────────
 
@@ -28,9 +29,11 @@ let analytics: Analytics | null = null;
 /**
  * Returns the Firebase app instance, initializing it if necessary.
  * Uses singleton pattern to avoid duplicate app initialization.
+ * Dynamically imports Firebase to reduce initial bundle size.
  */
-export function getFirebaseApp(): FirebaseApp {
+export async function getFirebaseApp(): Promise<FirebaseApp> {
   if (!app) {
+    const { initializeApp, getApps } = await import("firebase/app");
     const existingApps = getApps();
     app = existingApps.length > 0 ? existingApps[0] : initializeApp(firebaseConfig);
   }
@@ -41,14 +44,16 @@ export function getFirebaseApp(): FirebaseApp {
  * Returns the Firebase Analytics instance.
  * Only available in browser environments.
  * Returns null in SSR/Node.js environments or when config is missing.
+ * Dynamically imports Firebase Analytics to reduce initial bundle size.
  */
-export function getFirebaseAnalytics(): Analytics | null {
+export async function getFirebaseAnalytics(): Promise<Analytics | null> {
   if (typeof window === "undefined") return null;
   if (!process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID) return null;
 
   if (!analytics) {
     try {
-      const firebaseApp = getFirebaseApp();
+      const firebaseApp = await getFirebaseApp();
+      const { getAnalytics } = await import("firebase/analytics");
       analytics = getAnalytics(firebaseApp);
     } catch (error) {
       console.warn("[Firebase] Analytics initialization failed:", error);
