@@ -220,7 +220,7 @@ jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
-    needs: [ test, coverage ]
+    needs: [test, coverage]
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' ||
       github.ref == 'refs/heads/develop'
 
@@ -250,7 +250,7 @@ jobs:
   status-check:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [ lint, type-check, test, coverage, build, e2e, sonarqube ]
+    needs: [lint, type-check, test, coverage, build, e2e, sonarqube]
     if: always()
 
     steps:

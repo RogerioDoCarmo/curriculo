@@ -176,12 +176,12 @@ Solution: _________________________________________
 
 Check propagation status for each domain:
 
-| Domain                | Status     | Checked At   | Notes          |
-| --------------------- | ---------- | ------------ | -------------- |
-| rogeriodocarmo.com    | ⏳ Pending | ****\_\_**** | ******\_****** |
-| rogeriodocarmo.com.br | ⏳ Pending | ****\_\_**** | ******\_****** |
-| rogeriodocarmo.xyz    | ⏳ Pending | ****\_\_**** | ******\_****** |
-| rogeriodocarmo.online | ⏳ Pending | ****\_\_**** | ******\_****** |
+| Domain                | Status     | Checked At       | Notes              |
+| --------------------- | ---------- | ---------------- | ------------------ |
+| rogeriodocarmo.com    | ⏳ Pending | \***\*\_\_\*\*** | **\*\***\_**\*\*** |
+| rogeriodocarmo.com.br | ⏳ Pending | \***\*\_\_\*\*** | **\*\***\_**\*\*** |
+| rogeriodocarmo.xyz    | ⏳ Pending | \***\*\_\_\*\*** | **\*\***\_**\*\*** |
+| rogeriodocarmo.online | ⏳ Pending | \***\*\_\_\*\*** | **\*\***\_**\*\*** |
 
 **Status Legend:**
 
@@ -248,9 +248,9 @@ _______________________________________________
 - [ ] Task 21.6 marked as complete in tasks.md
 - [ ] Ready to proceed to Task 21.7
 
-**Completed By:** ********\_\_\_********
-**Date:** ********\_\_\_********
-**Time Taken:** ********\_\_\_********
+**Completed By:** **\*\*\*\***\_\_\_**\*\*\*\***
+**Date:** **\*\*\*\***\_\_\_**\*\*\*\***
+**Time Taken:** **\*\*\*\***\_\_\_**\*\*\*\***
 
 ---
 
