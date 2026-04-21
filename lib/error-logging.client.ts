@@ -54,21 +54,23 @@ export function logErrorClient(error: unknown, context?: ErrorContext): void {
     console.warn("[ErrorLogging] Sentry capture failed:", sentryError);
   }
 
-  // Log to Firebase Analytics
-  try {
-    const analyticsInstance = getFirebaseAnalytics();
-    if (analyticsInstance) {
-      logEvent(analyticsInstance, "exception", {
-        description: normalizedError.message,
-        fatal: level === "fatal",
-      });
-      console.log("[ErrorLogging] ✅ Sent to Firebase Analytics");
-    } else {
-      console.warn("[ErrorLogging] Firebase Analytics not available");
+  // Log to Firebase Analytics (async, fire-and-forget)
+  (async () => {
+    try {
+      const analyticsInstance = await getFirebaseAnalytics();
+      if (analyticsInstance) {
+        logEvent(analyticsInstance, "exception", {
+          description: normalizedError.message,
+          fatal: level === "fatal",
+        });
+        console.log("[ErrorLogging] ✅ Sent to Firebase Analytics");
+      } else {
+        console.warn("[ErrorLogging] Firebase Analytics not available");
+      }
+    } catch (analyticsError) {
+      console.warn("[ErrorLogging] Firebase Analytics capture failed:", analyticsError);
     }
-  } catch (analyticsError) {
-    console.warn("[ErrorLogging] Firebase Analytics capture failed:", analyticsError);
-  }
+  })();
 
   // Always log to console in development
   if (process.env.NODE_ENV === "development") {
