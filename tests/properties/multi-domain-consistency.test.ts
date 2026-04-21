@@ -129,11 +129,12 @@ describe("Property 11: Multi-Domain Content Consistency", () => {
 
         // Filter successful fetches
         const successful = results
-          .filter(
-            (r): r is PromiseFulfilledResult<{ domain: string; content: string }> =>
-              r.status === "fulfilled"
-          )
-          .map((r) => r.value);
+          .filter((r) => r.status === "fulfilled")
+          .map(
+            (r) =>
+              (r as PromiseFulfilledResult<{ domain: (typeof DOMAINS)[number]; content: string }>)
+                .value
+          );
 
         // If less than 2 domains are accessible, skip this test
         if (successful.length < 2) {
