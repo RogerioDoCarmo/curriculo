@@ -132,6 +132,7 @@ export async function subscribeToTopic(topic: string): Promise<boolean> {
       localStorage.setItem("fcm_topic_subscriptions", JSON.stringify(subscriptions));
     }
 
+    // eslint-disable-next-line no-console
     console.log(`[FCM] Subscribed to topic: ${topic}`);
     return true;
   } catch (error) {
@@ -153,6 +154,7 @@ export async function unsubscribeFromTopic(topic: string): Promise<boolean> {
     const filtered = subscriptions.filter((t) => t !== topic);
     localStorage.setItem("fcm_topic_subscriptions", JSON.stringify(filtered));
 
+    // eslint-disable-next-line no-console
     console.log(`[FCM] Unsubscribed from topic: ${topic}`);
     return true;
   } catch (error) {
