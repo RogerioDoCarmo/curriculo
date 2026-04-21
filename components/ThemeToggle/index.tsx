@@ -3,16 +3,34 @@
 /**
  * ThemeToggle component — button to switch between light and dark modes.
  *
+ * Features:
  * - Sun icon (☀️) in dark mode (clicking switches to light)
  * - Moon icon (🌙) in light mode (clicking switches to dark)
  * - Smooth transition via Tailwind transition-colors duration-200
+ * - Persists theme preference to localStorage
+ * - Detects system preference on first load
+ * - Keyboard accessible with focus indicators
  *
  * Requirements: 17.5, 17.6, 17.8
+ *
+ * @example
+ * ```tsx
+ * <ThemeToggle />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <ThemeToggle className="shadow-lg" />
+ * ```
  */
 
 import { useTheme } from "@/hooks/useTheme";
 
+/**
+ * ThemeToggle component props
+ */
 interface ThemeToggleProps {
+  /** Additional CSS classes to apply to the button */
   className?: string;
 }
 

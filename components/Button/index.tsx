@@ -2,14 +2,25 @@
 
 import React, { ReactNode } from "react";
 
+/**
+ * Button component props
+ */
 interface ButtonProps {
+  /** Visual style of the button: primary (main CTA), secondary (alternative action), or ghost (subtle action) */
   variant: "primary" | "secondary" | "ghost";
+  /** Size of the button: sm (small), md (medium), or lg (large) */
   size: "sm" | "md" | "lg";
+  /** Content to display inside the button */
   children: ReactNode;
+  /** Click handler function */
   onClick?: () => void;
+  /** Whether the button is disabled and cannot be clicked */
   disabled?: boolean;
+  /** Whether the button shows a loading spinner */
   loading?: boolean;
+  /** Additional CSS classes to apply */
   className?: string;
+  /** HTML button type attribute */
   type?: "button" | "submit" | "reset";
 }
 
@@ -28,6 +39,26 @@ const sizeClasses: Record<ButtonProps["size"], string> = {
   lg: "lg px-6 py-3 text-lg",
 };
 
+/**
+ * Button component with multiple variants and sizes.
+ *
+ * Supports three visual styles (primary, secondary, ghost) and three sizes (sm, md, lg).
+ * Includes loading and disabled states with proper accessibility attributes.
+ *
+ * @example
+ * ```tsx
+ * <Button variant="primary" size="md" onClick={handleClick}>
+ *   Click Me
+ * </Button>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Button variant="secondary" size="lg" loading>
+ *   Loading...
+ * </Button>
+ * ```
+ */
 export default function Button({
   variant,
   size,

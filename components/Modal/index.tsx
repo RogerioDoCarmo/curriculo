@@ -2,13 +2,40 @@
 
 import React, { ReactNode, useEffect, useId, useRef } from "react";
 
+/**
+ * Modal component props
+ */
 interface ModalProps {
+  /** Whether the modal is currently open */
   isOpen: boolean;
+  /** Function called when the modal should be closed */
   onClose: () => void;
+  /** Content to display inside the modal */
   children: ReactNode;
+  /** Optional title displayed at the top of the modal */
   title?: string;
 }
 
+/**
+ * Modal component with overlay, focus trap, and keyboard navigation.
+ *
+ * Features:
+ * - ESC key closes modal
+ * - Backdrop click closes modal
+ * - Focus trap keeps focus inside modal
+ * - Proper ARIA attributes for accessibility
+ * - Supports both light and dark themes
+ *
+ * @example
+ * ```tsx
+ * const [isOpen, setIsOpen] = useState(false);
+ *
+ * <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Confirm Action">
+ *   <p>Are you sure you want to proceed?</p>
+ *   <Button onClick={() => setIsOpen(false)}>Confirm</Button>
+ * </Modal>
+ * ```
+ */
 export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
