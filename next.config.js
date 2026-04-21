@@ -1,4 +1,7 @@
 const createNextIntlPlugin = require("next-intl/plugin");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
@@ -19,4 +22,4 @@ const nextConfig = {
   // Users will navigate to /en, /es, or /pt-BR directly
 };
 
-module.exports = withNextIntl(nextConfig);
+module.exports = withBundleAnalyzer(withNextIntl(nextConfig));

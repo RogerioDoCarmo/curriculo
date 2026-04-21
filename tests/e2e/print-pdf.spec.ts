@@ -23,6 +23,13 @@ test.describe("Print and PDF Output", () => {
   });
 
   test("should hide non-essential elements in print media", async ({ page }) => {
+    /**
+     * Validates Requirement 18.2:
+     * WHEN printing or generating PDF_Export, THE Print_Stylesheet SHALL hide
+     * non-essential UI elements including navigation menus, Theme_Toggle, and
+     * interactive controls
+     */
+
     // Emulate print media
     await page.emulateMedia({ media: "print" });
 
@@ -43,6 +50,41 @@ test.describe("Print and PDF Output", () => {
       return window.getComputedStyle(el).display;
     });
     expect(display).not.toBe("none");
+
+    // Verify non-essential elements are hidden (Requirement 18.2)
+    // Check for navigation elements
+    const nav = page.locator("nav");
+    if ((await nav.count()) > 0) {
+      const navDisplay = await nav.first().evaluate((el) => {
+        return window.getComputedStyle(el).display;
+      });
+      // Navigation should be hidden in print mode
+      expect(navDisplay).toBe("none");
+    }
+
+    // Check for theme toggle button
+    const themeToggle = page.locator(
+      'button[aria-label*="theme" i], button[aria-label*="dark" i], button[aria-label*="light" i]'
+    );
+    if ((await themeToggle.count()) > 0) {
+      const themeToggleDisplay = await themeToggle.first().evaluate((el) => {
+        return window.getComputedStyle(el).display;
+      });
+      // Theme toggle should be hidden in print mode
+      expect(themeToggleDisplay).toBe("none");
+    }
+
+    // Check for language selector
+    const languageSelector = page.locator(
+      'button[aria-label*="language" i], select[aria-label*="language" i]'
+    );
+    if ((await languageSelector.count()) > 0) {
+      const languageSelectorDisplay = await languageSelector.first().evaluate((el) => {
+        return window.getComputedStyle(el).display;
+      });
+      // Language selector should be hidden in print mode
+      expect(languageSelectorDisplay).toBe("none");
+    }
   });
 
   test("should apply print-friendly typography", async ({ page }) => {

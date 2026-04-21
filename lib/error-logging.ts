@@ -6,7 +6,6 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import { logEvent } from "firebase/analytics";
 import { getFirebaseAnalytics } from "./firebase";
 
 // ─── Error Context ────────────────────────────────────────────────────────────
@@ -48,18 +47,21 @@ export function logError(error: unknown, context?: ErrorContext): void {
     console.warn("[ErrorLogging] Sentry capture failed:", sentryError);
   }
 
-  // Log to Firebase Analytics
-  try {
-    const analyticsInstance = getFirebaseAnalytics();
-    if (analyticsInstance) {
-      logEvent(analyticsInstance, "exception", {
-        description: normalizedError.message,
-        fatal: level === "fatal",
-      });
+  // Log to Firebase Analytics (async, fire-and-forget)
+  (async () => {
+    try {
+      const analyticsInstance = await getFirebaseAnalytics();
+      if (analyticsInstance) {
+        const { logEvent } = await import("firebase/analytics");
+        logEvent(analyticsInstance, "exception", {
+          description: normalizedError.message,
+          fatal: level === "fatal",
+        });
+      }
+    } catch (analyticsError) {
+      console.warn("[ErrorLogging] Firebase Analytics capture failed:", analyticsError);
     }
-  } catch (analyticsError) {
-    console.warn("[ErrorLogging] Firebase Analytics capture failed:", analyticsError);
-  }
+  })();
 
   // Always log to console in development
   if (process.env.NODE_ENV === "development") {
