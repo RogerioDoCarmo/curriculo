@@ -145,6 +145,7 @@ export const WithExplanation: Story = {
 export const WithThemeToggle: Story = {
   render: () => {
     // Import ThemeToggle dynamically to avoid circular dependencies
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const ThemeToggle = require("../ThemeToggle").default;
     return (
       <div className="flex items-center gap-3 p-4 border border-border rounded-lg">
