@@ -1,11 +1,37 @@
 import React, { ReactNode } from "react";
 
+/**
+ * Card component props
+ */
 interface CardProps {
+  /** Optional title displayed at the top of the card */
   title?: string;
+  /** Content to display inside the card */
   children: ReactNode;
+  /** Additional CSS classes to apply */
   className?: string;
 }
 
+/**
+ * Card component provides a container with consistent styling.
+ *
+ * Features hover effects, optional title, and supports both light and dark themes.
+ * Useful for displaying projects, experience items, or any grouped content.
+ *
+ * @example
+ * ```tsx
+ * <Card title="Project Title">
+ *   <p>Project description goes here</p>
+ * </Card>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Card>
+ *   <p>Card without a title</p>
+ * </Card>
+ * ```
+ */
 export default function Card({ title, children, className = "" }: CardProps) {
   return (
     <div

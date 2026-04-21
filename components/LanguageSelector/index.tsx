@@ -3,7 +3,25 @@
 /**
  * LanguageSelector component — dropdown for switching between supported locales.
  *
+ * Features:
+ * - Supports Brazilian Portuguese (pt-BR), English (en), and Spanish (es)
+ * - Flag icons for visual recognition
+ * - Persists language preference to localStorage
+ * - Detects browser language on first visit
+ * - Keyboard accessible with proper ARIA labels
+ * - Integrates with next-intl for internationalization
+ *
  * Requirements: 11.5
+ *
+ * @example
+ * ```tsx
+ * <LanguageSelector currentLocale="pt-BR" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <LanguageSelector currentLocale="en" className="shadow-lg" />
+ * ```
  */
 
 import { useLanguage } from "@/hooks/useLanguage";
@@ -16,8 +34,13 @@ const LOCALE_META: Record<SupportedLocale, { flag: string; label: string }> = {
   es: { flag: "🇪🇸", label: "Español" },
 };
 
+/**
+ * LanguageSelector component props
+ */
 interface LanguageSelectorProps {
+  /** Currently selected locale */
   currentLocale: SupportedLocale;
+  /** Additional CSS classes to apply */
   className?: string;
 }
 
