@@ -1,11 +1,12 @@
 /**
  * Firebase Cloud Messaging (FCM) notification utilities.
  * Handles push notification permission and foreground message handling.
+ * Uses dynamic imports for code splitting and reduced initial bundle size.
  *
  * Requirements: 10.1
  */
 
-import { getMessaging, getToken, onMessage, type Messaging } from "firebase/messaging";
+import type { Messaging } from "firebase/messaging";
 import { getFirebaseApp, isFirebaseConfigured } from "./firebase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -23,14 +24,16 @@ export interface FCMMessage {
 
 let messagingInstance: Messaging | null = null;
 
-function getMessagingInstance(): Messaging | null {
+async function getMessagingInstance(): Promise<Messaging | null> {
   if (typeof window === "undefined") return null;
   if (!isFirebaseConfigured()) return null;
   if (!("Notification" in window)) return null;
 
   if (!messagingInstance) {
     try {
-      messagingInstance = getMessaging(getFirebaseApp());
+      const app = await getFirebaseApp();
+      const { getMessaging } = await import("firebase/messaging");
+      messagingInstance = getMessaging(app);
     } catch (error) {
       console.warn("[FCM] Messaging initialization failed:", error);
       return null;
@@ -67,9 +70,10 @@ export async function requestNotificationPermission(): Promise<{
   }
 
   try {
-    const messaging = getMessagingInstance();
+    const messaging = await getMessagingInstance();
     if (!messaging) return { status: "granted" };
 
+    const { getToken } = await import("firebase/messaging");
     const token = await getToken(messaging, { vapidKey });
     return { status: "granted", token };
   } catch (error) {
@@ -82,12 +86,13 @@ export async function requestNotificationPermission(): Promise<{
  * Sets up a foreground message handler.
  * Returns an unsubscribe function.
  */
-export function setupForegroundNotifications(
+export async function setupForegroundNotifications(
   onMessageReceived: (message: FCMMessage) => void
-): () => void {
-  const messaging = getMessagingInstance();
+): Promise<() => void> {
+  const messaging = await getMessagingInstance();
   if (!messaging) return () => {};
 
+  const { onMessage } = await import("firebase/messaging");
   const unsubscribe = onMessage(messaging, (payload) => {
     onMessageReceived({
       title: payload.notification?.title,

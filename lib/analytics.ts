@@ -1,11 +1,11 @@
 /**
  * Firebase Analytics tracking functions.
  * Provides typed wrappers for all analytics events used in the application.
+ * Uses dynamic imports for code splitting and reduced initial bundle size.
  *
  * Requirements: 10.1, 10.2, 10.3, 10.4
  */
 
-import { logEvent } from "firebase/analytics";
 import { getFirebaseAnalytics } from "./firebase";
 import type { CareerPath, SectionId, SupportedLocale, Theme } from "@/types/index";
 
@@ -28,11 +28,17 @@ export const ANALYTICS_EVENTS = {
 
 /**
  * Logs an analytics event. Silently no-ops if Analytics is unavailable.
+ * Dynamically imports logEvent to reduce initial bundle size.
  */
-function trackEvent(eventName: string, params?: Record<string, string | number | boolean>): void {
+async function trackEvent(
+  eventName: string,
+  params?: Record<string, string | number | boolean>
+): Promise<void> {
   try {
-    const analyticsInstance = getFirebaseAnalytics();
+    const analyticsInstance = await getFirebaseAnalytics();
     if (!analyticsInstance) return;
+
+    const { logEvent } = await import("firebase/analytics");
     logEvent(analyticsInstance, eventName, params);
   } catch (error) {
     console.warn(`[Analytics] Failed to track event "${eventName}":`, error);
