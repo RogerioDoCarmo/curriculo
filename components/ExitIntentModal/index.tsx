@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
+import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 import { useExitIntent } from "@/hooks/useExitIntent";
 
 interface ExitIntentModalProps {
@@ -151,6 +152,18 @@ export default function ExitIntentModal({
 
         {/* Footer note */}
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">{t("footerNote")}</p>
+
+        {/* Email capture */}
+        <div className="border-t border-border pt-4">
+          <p className="text-sm text-center text-gray-600 dark:text-gray-400 mb-3">
+            Or leave your email and I&apos;ll reach out:
+          </p>
+          <EmailSubscribeForm
+            placeholder="your@email.com"
+            buttonLabel="Contact me"
+            successMessage="Got it! I'll be in touch soon."
+          />
+        </div>
       </div>
     </Modal>
   );
