@@ -776,12 +776,12 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Generate static HTML for all locales
     - Optimize images with Next.js Image component
     - _Requirements: 6.1, 6.2, 21.9_
-  - [~]\* 22.4 Write property test for static content generation
+  - [ ]\* 22.4 Write property test for static content generation
     - **Property 47: Static Content Generation**
     - **Property 48: No Runtime Content API Calls**
     - **Validates: Requirements 21.9, 21.10**
     - Test that content is served from static files without API calls
-  - [~]\* 22.5 Run Lighthouse audits
+  - [ ]\* 22.5 Run Lighthouse audits
     - Test First Contentful Paint < 1.5s
     - Test Time to Interactive < 3s
     - Test Performance score >= 90
