@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import type { CareerPath } from "@/types/index";
 
 interface CareerPathSelectorProps {
-  onSelect: (path: CareerPath) => void;
-  selected: CareerPath;
+  readonly onSelect: (path: CareerPath) => void;
+  readonly selected: CareerPath;
 }
 
 const SESSION_KEY = "careerPath";

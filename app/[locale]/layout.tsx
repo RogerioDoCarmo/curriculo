@@ -76,7 +76,7 @@ const metadataByLocale: Record<
 // ─── Dynamic metadata generation ─────────────────────────────────────────────
 
 interface GenerateMetadataProps {
-  params: { locale: string };
+  readonly params: { locale: string };
 }
 
 export async function generateMetadata({
@@ -139,8 +139,8 @@ export function generateStaticParams() {
 }
 
 interface LocaleLayoutProps {
-  children: React.ReactNode;
-  params: { locale: string };
+  readonly children: React.ReactNode;
+  readonly params: { locale: string };
 }
 
 export default async function LocaleLayout({ children, params: { locale } }: LocaleLayoutProps) {

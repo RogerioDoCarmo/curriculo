@@ -12,19 +12,25 @@ import { useState } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+function validateEmail(value: string): string {
+  if (!value.trim()) return "Email is required";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email";
+  return "";
+}
+
 interface EmailSubscribeFormProps {
   /** Placeholder text for the email input */
-  placeholder?: string;
+  readonly placeholder?: string;
   /** Submit button label */
-  buttonLabel?: string;
+  readonly buttonLabel?: string;
   /** Success message shown after submission */
-  successMessage?: string;
+  readonly successMessage?: string;
   /** Additional CSS classes for the wrapper */
-  className?: string;
+  readonly className?: string;
   /** When true, renders a message textarea below the email input */
-  showMessage?: boolean;
+  readonly showMessage?: boolean;
   /** Placeholder for the message textarea */
-  messagePlaceholder?: string;
+  readonly messagePlaceholder?: string;
 }
 
 export default function EmailSubscribeForm({
@@ -39,12 +45,6 @@ export default function EmailSubscribeForm({
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [status, setStatus] = useState<Status>("idle");
-
-  function validateEmail(value: string): string {
-    if (!value.trim()) return "Email is required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email";
-    return "";
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

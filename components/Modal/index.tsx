@@ -7,13 +7,13 @@ import React, { ReactNode, useEffect, useId, useRef } from "react";
  */
 interface ModalProps {
   /** Whether the modal is currently open */
-  isOpen: boolean;
+  readonly isOpen: boolean;
   /** Function called when the modal should be closed */
-  onClose: () => void;
+  readonly onClose: () => void;
   /** Content to display inside the modal */
-  children: ReactNode;
+  readonly children: ReactNode;
   /** Optional title displayed at the top of the modal */
-  title?: string;
+  readonly title?: string;
 }
 
 /**

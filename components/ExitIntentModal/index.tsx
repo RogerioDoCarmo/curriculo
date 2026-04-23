@@ -25,10 +25,10 @@ import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 import { useExitIntent } from "@/hooks/useExitIntent";
 
 interface ExitIntentModalProps {
-  enabled?: boolean;
-  resumeUrl?: string;
-  linkedInUrl?: string;
-  githubUrl?: string;
+  readonly enabled?: boolean;
+  readonly resumeUrl?: string;
+  readonly linkedInUrl?: string;
+  readonly githubUrl?: string;
 }
 
 export default function ExitIntentModal({

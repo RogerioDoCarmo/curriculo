@@ -89,8 +89,8 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 interface ThemeProviderProps {
-  children: ReactNode;
-  defaultTheme?: Theme;
+  readonly children: ReactNode;
+  readonly defaultTheme?: Theme;
 }
 
 /**
