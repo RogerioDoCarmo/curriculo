@@ -3,9 +3,9 @@
 import React from "react";
 
 interface HeroProps {
-  name: string;
-  title: string;
-  locale: string;
+  readonly name: string;
+  readonly title: string;
+  readonly locale: string;
 }
 
 export default function Hero({ name, title }: HeroProps) {

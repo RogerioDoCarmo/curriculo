@@ -5,7 +5,7 @@ import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components
 import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 
 interface HomePageProps {
-  params: { locale: string };
+  readonly params: { locale: string };
 }
 
 export function generateStaticParams() {

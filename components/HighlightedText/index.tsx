@@ -1,9 +1,9 @@
 import React from "react";
 
 interface HighlightedTextProps {
-  text: string;
-  highlight: string;
-  className?: string;
+  readonly text: string;
+  readonly highlight: string;
+  readonly className?: string;
 }
 
 export default function HighlightedText({ text, highlight, className }: HighlightedTextProps) {
