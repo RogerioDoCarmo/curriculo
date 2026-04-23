@@ -10,16 +10,30 @@ const nextConfig = {
   output: "export", // Static export for Vercel
   images: {
     unoptimized: true, // Required for static export
+    // Define device sizes for responsive images
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // Define image sizes for different layouts
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Supported formats
+    formats: ["image/webp"],
   },
-  trailingSlash: true, // Better compatibility
+  trailingSlash: true, // Better compatibility with static hosting
   eslint: {
     ignoreDuringBuilds: true, // We'll run ESLint separately in CI
   },
   typescript: {
     ignoreBuildErrors: true, // We'll run TypeScript checks separately in CI
   },
-  // For static export with i18n, we need to disable locale detection
-  // Users will navigate to /en, /es, or /pt-BR directly
+  // Optimize production builds
+  swcMinify: true, // Use SWC for faster minification
+  // Compress output
+  compress: true,
+  // Generate ETags for better caching
+  generateEtags: true,
+  // Power by header
+  poweredByHeader: false, // Remove X-Powered-By header for security
+  // React strict mode for better development experience
+  reactStrictMode: true,
 };
 
 module.exports = withBundleAnalyzer(withNextIntl(nextConfig));

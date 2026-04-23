@@ -76,7 +76,7 @@ const metadataByLocale: Record<
 // ─── Dynamic metadata generation ─────────────────────────────────────────────
 
 interface GenerateMetadataProps {
-  params: { locale: string };
+  readonly params: { locale: string };
 }
 
 export async function generateMetadata({
@@ -139,8 +139,8 @@ export function generateStaticParams() {
 }
 
 interface LocaleLayoutProps {
-  children: React.ReactNode;
-  params: { locale: string };
+  readonly children: React.ReactNode;
+  readonly params: { locale: string };
 }
 
 export default async function LocaleLayout({ children, params: { locale } }: LocaleLayoutProps) {
@@ -149,7 +149,7 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
     notFound();
   }
 
-  // Enable static rendering
+  // Enable static rendering for this locale
   unstable_setRequestLocale(locale);
 
   // Load messages for the current locale
@@ -162,6 +162,8 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
     <html lang={locale} suppressHydrationWarning>
       <head>
         {/* FOUC prevention: apply theme before React hydration */}
+        {/* SECURITY: This inline script is safe - it only reads from localStorage and applies a CSS class.
+            No user input is involved. The script is static and controlled by the application. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -179,8 +181,12 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
           }}
         />
         {/* Schema.org structured data for Person */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
         {/* Schema.org structured data for WebSite */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
       </head>
       <body

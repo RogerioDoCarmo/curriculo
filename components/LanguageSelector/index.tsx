@@ -39,9 +39,9 @@ const LOCALE_META: Record<SupportedLocale, { flag: string; label: string }> = {
  */
 interface LanguageSelectorProps {
   /** Currently selected locale */
-  currentLocale: SupportedLocale;
+  readonly currentLocale: SupportedLocale;
   /** Additional CSS classes to apply */
-  className?: string;
+  readonly className?: string;
 }
 
 export default function LanguageSelector({ currentLocale, className = "" }: LanguageSelectorProps) {
