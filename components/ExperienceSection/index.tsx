@@ -5,9 +5,9 @@ import type { CareerPath, Experience, TimelineItem } from "@/types/index";
 import Timeline from "@/components/Timeline";
 
 interface ExperienceSectionProps {
-  careerPath: CareerPath;
-  experiences: Experience[];
-  locale: string;
+  readonly careerPath: CareerPath;
+  readonly experiences: Experience[];
+  readonly locale: string;
 }
 
 /** Format a date string (YYYY-MM-DD or YYYY-MM) to a human-readable month/year. */

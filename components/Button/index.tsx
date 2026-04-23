@@ -7,21 +7,21 @@ import React, { ReactNode } from "react";
  */
 interface ButtonProps {
   /** Visual style of the button: primary (main CTA), secondary (alternative action), or ghost (subtle action) */
-  variant: "primary" | "secondary" | "ghost";
+  readonly variant: "primary" | "secondary" | "ghost";
   /** Size of the button: sm (small), md (medium), or lg (large) */
-  size: "sm" | "md" | "lg";
+  readonly size: "sm" | "md" | "lg";
   /** Content to display inside the button */
-  children: ReactNode;
+  readonly children: ReactNode;
   /** Click handler function */
-  onClick?: () => void;
+  readonly onClick?: () => void;
   /** Whether the button is disabled and cannot be clicked */
-  disabled?: boolean;
+  readonly disabled?: boolean;
   /** Whether the button shows a loading spinner */
-  loading?: boolean;
+  readonly loading?: boolean;
   /** Additional CSS classes to apply */
-  className?: string;
+  readonly className?: string;
   /** HTML button type attribute */
-  type?: "button" | "submit" | "reset";
+  readonly type?: "button" | "submit" | "reset";
 }
 
 const variantClasses: Record<ButtonProps["variant"], string> = {

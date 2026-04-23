@@ -2,9 +2,10 @@ import { unstable_setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
 import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
+import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 
 interface HomePageProps {
-  params: { locale: string };
+  readonly params: { locale: string };
 }
 
 export function generateStaticParams() {
@@ -16,6 +17,7 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
     notFound();
   }
 
+  // Enable static rendering for this locale
   unstable_setRequestLocale(locale);
 
   return (
@@ -34,6 +36,29 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
 
       {/* Tech Stack Section - Lazy loaded for code splitting */}
       <LazyTechStackSection />
+
+      {/* Email capture section at the bottom of the page */}
+      <section
+        id="stay-in-touch"
+        aria-labelledby="stay-in-touch-title"
+        className="py-16 px-4 sm:px-6 lg:px-8 border-t border-border"
+      >
+        <div className="mx-auto max-w-md text-center">
+          <h2 id="stay-in-touch-title" className="text-2xl font-bold text-foreground mb-2">
+            Stay in touch
+          </h2>
+          <p className="text-muted-foreground mb-6 text-sm">
+            Leave your email and I&apos;ll reach out about opportunities or collaborations.
+          </p>
+          <EmailSubscribeForm
+            placeholder="your@email.com"
+            buttonLabel="Send"
+            successMessage="Thanks! I'll be in touch soon."
+            showMessage={true}
+            messagePlaceholder="Write a message, ask a question, or just say hi..."
+          />
+        </div>
+      </section>
 
       {/* Exit Intent Modal - Lazy loaded, client-side only */}
       <LazyExitIntentModal

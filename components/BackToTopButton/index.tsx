@@ -16,8 +16,8 @@
 import { useState, useEffect } from "react";
 
 interface BackToTopButtonProps {
-  className?: string;
-  threshold?: number;
+  readonly className?: string;
+  readonly threshold?: number;
 }
 
 export default function BackToTopButton({ className = "", threshold = 300 }: BackToTopButtonProps) {

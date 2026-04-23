@@ -27,38 +27,58 @@ Object.defineProperty(window, "matchMedia", {
   })),
 });
 
-// Suppress React 18 act() warnings in tests
-// These warnings are expected when testing components with async state updates
+// Suppress noisy but expected console output during tests
 const originalError = console.error;
 const originalWarn = console.warn;
+const originalLog = console.log;
 
 beforeAll(() => {
+  // Suppress React 18 act() warnings and FCM/Firebase errors
   console.error = (...args) => {
-    if (
-      typeof args[0] === "string" &&
-      args[0].includes("Warning: An update to") &&
-      args[0].includes("was not wrapped in act")
-    ) {
-      return;
+    if (typeof args[0] === "string") {
+      const msg = args[0];
+      if (
+        (msg.includes("Warning: An update to") && msg.includes("was not wrapped in act")) ||
+        msg.includes("[FCM]") ||
+        msg.includes("[Firebase]") ||
+        msg.includes("[ErrorLogging]")
+      ) {
+        return;
+      }
     }
     originalError.call(console, ...args);
   };
 
-  // Suppress expected error-logging warnings during tests
-  // These warnings are intentionally triggered to test error handling resilience
+  // Suppress expected service warnings (FCM, Firebase, Analytics, ErrorLogging, domain checks)
   console.warn = (...args) => {
-    if (
-      typeof args[0] === "string" &&
-      (args[0].includes("[ErrorLogging] Sentry capture failed") ||
-        args[0].includes("[ErrorLogging] Firebase Analytics capture failed"))
-    ) {
-      return;
+    if (typeof args[0] === "string") {
+      const msg = args[0];
+      if (
+        msg.includes("[FCM]") ||
+        msg.includes("[Firebase]") ||
+        msg.includes("[Analytics]") ||
+        msg.includes("[ErrorLogging]") ||
+        msg.includes("⚠️  Only") ||
+        msg.includes("⚠️  Domain") ||
+        msg.includes("⚠️  Skipping")
+      ) {
+        return;
+      }
     }
     originalWarn.call(console, ...args);
+  };
+
+  // Suppress expected FCM info logs
+  console.log = (...args) => {
+    if (typeof args[0] === "string" && args[0].includes("[FCM]")) {
+      return;
+    }
+    originalLog.call(console, ...args);
   };
 });
 
 afterAll(() => {
   console.error = originalError;
   console.warn = originalWarn;
+  console.log = originalLog;
 });

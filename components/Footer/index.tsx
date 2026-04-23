@@ -9,7 +9,7 @@
 import { useTranslations } from "next-intl";
 
 interface FooterProps {
-  locale: string;
+  readonly locale: string;
 }
 
 const SOCIAL_LINKS = [
