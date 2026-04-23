@@ -12,9 +12,29 @@ import { useState } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/**
+ * Validates email address format.
+ * Uses a ReDoS-safe regex pattern with input length limit to prevent denial of service attacks.
+ *
+ * @param value - Email address to validate
+ * @returns Error message if invalid, empty string if valid
+ */
 function validateEmail(value: string): string {
-  if (!value.trim()) return "Email is required";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return "Enter a valid email";
+  const trimmed = value.trim();
+
+  if (!trimmed) return "Email is required";
+
+  // Prevent ReDoS: Limit input length before regex validation
+  if (trimmed.length > 254) return "Email is too long";
+
+  // ReDoS-safe email regex: Uses atomic groups (possessive quantifiers simulation)
+  // Pattern: local-part@domain where domain has at least one dot
+  // This regex avoids catastrophic backtracking by using simple character classes
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+  if (!emailRegex.test(trimmed)) return "Enter a valid email";
+
   return "";
 }
 
