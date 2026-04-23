@@ -1,9 +1,9 @@
+/* Import print styles - must precede all other statements */
+@import "../styles/print.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import print styles */
-@import "../styles/print.css";
 
 @layer base {
   :root {

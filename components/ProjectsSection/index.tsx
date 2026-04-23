@@ -6,8 +6,8 @@ import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 
 interface ProjectsSectionProps {
-  projects: Project[];
-  locale: string;
+  readonly projects: Project[];
+  readonly locale: string;
 }
 
 export default function ProjectsSection({ projects, locale: _locale }: ProjectsSectionProps) {
@@ -92,8 +92,8 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
 // ─── ProjectCard ─────────────────────────────────────────────────────────────
 
 interface ProjectCardProps {
-  project: Project;
-  onClick: () => void;
+  readonly project: Project;
+  readonly onClick: () => void;
 }
 
 function ProjectCard({ project, onClick }: ProjectCardProps) {
@@ -169,7 +169,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
 // ─── ProjectDetail (modal content) ───────────────────────────────────────────
 
 interface ProjectDetailProps {
-  project: Project;
+  readonly project: Project;
 }
 
 function ProjectDetail({ project }: ProjectDetailProps) {

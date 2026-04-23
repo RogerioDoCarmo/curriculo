@@ -17,7 +17,7 @@ import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
 import type { SupportedLocale } from "@/types/index";
 
 interface HeaderProps {
-  locale: string;
+  readonly locale: string;
 }
 
 const NAV_SECTIONS = ["home", "projects", "experience", "skills", "contact", "tech-stack"] as const;

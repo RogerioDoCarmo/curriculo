@@ -2,7 +2,7 @@ import React from "react";
 import type { TimelineItem, TimelineItemType } from "@/types/index";
 
 interface TimelineProps {
-  items: TimelineItem[];
+  readonly items: TimelineItem[];
 }
 
 const typeColors: Record<TimelineItemType, string> = {

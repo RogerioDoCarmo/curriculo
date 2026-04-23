@@ -24,6 +24,7 @@
     "build-storybook": "storybook build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "commitlint": "commitlint --edit",
     "prepare": "husky"
   },
   "dependencies": {

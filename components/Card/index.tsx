@@ -5,11 +5,11 @@ import React, { ReactNode } from "react";
  */
 interface CardProps {
   /** Optional title displayed at the top of the card */
-  title?: string;
+  readonly title?: string;
   /** Content to display inside the card */
-  children: ReactNode;
+  readonly children: ReactNode;
   /** Additional CSS classes to apply */
-  className?: string;
+  readonly className?: string;
 }
 
 /**

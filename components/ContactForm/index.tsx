@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import type { ContactFormData } from "@/types/index";
 
 interface ContactFormProps {
-  locale: string;
+  readonly locale: string;
 }
 
 function isValidEmail(email: string): boolean {
