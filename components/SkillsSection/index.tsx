@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import type { SkillCategory, SkillLevel } from "@/types/index";
 
 interface SkillsSectionProps {
-  skills: SkillCategory[];
-  locale: string;
+  readonly skills: SkillCategory[];
+  readonly locale: string;
 }
 
 const levelColors: Record<SkillLevel, string> = {

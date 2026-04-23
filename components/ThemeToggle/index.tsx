@@ -31,7 +31,7 @@ import { useTheme } from "@/hooks/useTheme";
  */
 interface ThemeToggleProps {
   /** Additional CSS classes to apply to the button */
-  className?: string;
+  readonly className?: string;
 }
 
 export default function ThemeToggle({ className = "" }: ThemeToggleProps) {

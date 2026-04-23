@@ -11,9 +11,9 @@ import React from "react";
 import { logError } from "@/lib/error-logging";
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  component?: string;
+  readonly children: React.ReactNode;
+  readonly fallback?: React.ReactNode;
+  readonly component?: string;
 }
 
 interface ErrorBoundaryState {
