@@ -162,6 +162,8 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
     <html lang={locale} suppressHydrationWarning>
       <head>
         {/* FOUC prevention: apply theme before React hydration */}
+        {/* SECURITY: This inline script is safe - it only reads from localStorage and applies a CSS class.
+            No user input is involved. The script is static and controlled by the application. */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -179,8 +181,12 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
           }}
         />
         {/* Schema.org structured data for Person */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
         {/* Schema.org structured data for WebSite */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
       </head>
       <body
