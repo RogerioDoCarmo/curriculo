@@ -58,13 +58,29 @@
     "connectLinkedInAriaLabel": "Connect with me on LinkedIn",
     "starGitHub": "Star on GitHub",
     "starGitHubAriaLabel": "Star repository on GitHub",
-    "footerNote": "Thanks for visiting!"
+    "footerNote": "Thanks for visiting!",
+    "emailPrompt": "Or leave your email and I'll reach out:",
+    "emailPlaceholder": "your@email.com",
+    "emailButton": "Contact me",
+    "emailSuccess": "Got it! I'll be in touch soon."
   },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
     "close": "Close",
     "learnMore": "Learn more"
+  },
+  "homepage": {
+    "title": "Personal Resume Website",
+    "description": "A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind CSS.",
+    "stayInTouch": {
+      "title": "Stay in touch",
+      "subtitle": "Leave your email and I'll reach out about opportunities or collaborations.",
+      "placeholder": "your@email.com",
+      "buttonLabel": "Send",
+      "successMessage": "Thanks! I'll be in touch soon.",
+      "messagePlaceholder": "Write a message, ask a question, or just say hi..."
+    }
   },
   "techStack": {
     "title": "Tech Stack",

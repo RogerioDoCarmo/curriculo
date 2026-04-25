@@ -58,13 +58,29 @@
     "connectLinkedInAriaLabel": "Conectar comigo no LinkedIn",
     "starGitHub": "Favoritar no GitHub",
     "starGitHubAriaLabel": "Favoritar repositório no GitHub",
-    "footerNote": "Obrigado pela visita!"
+    "footerNote": "Obrigado pela visita!",
+    "emailPrompt": "Ou deixe seu e-mail e entrarei em contato:",
+    "emailPlaceholder": "seu@email.com",
+    "emailButton": "Entrar em contato",
+    "emailSuccess": "Recebido! Entrarei em contato em breve."
   },
   "common": {
     "loading": "Carregando...",
     "error": "Ocorreu um erro",
     "close": "Fechar",
     "learnMore": "Saiba mais"
+  },
+  "homepage": {
+    "title": "Site de Currículo Pessoal",
+    "description": "Um site de currículo pessoal moderno e responsivo construído com Next.js 14, TypeScript e Tailwind CSS.",
+    "stayInTouch": {
+      "title": "Mantenha Contato",
+      "subtitle": "Deixe seu e-mail e entrarei em contato sobre oportunidades ou colaborações.",
+      "placeholder": "seu@email.com",
+      "buttonLabel": "Enviar",
+      "successMessage": "Obrigado! Entrarei em contato em breve.",
+      "messagePlaceholder": "Escreva uma mensagem, faça uma pergunta ou apenas diga olá..."
+    }
   },
   "techStack": {
     "title": "Tecnologias Utilizadas",
