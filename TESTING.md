@@ -27,6 +27,16 @@ Located in `tests/properties/`, these use `fast-check` to test properties that s
 
 Located in `tests/e2e/`, these use Playwright to test the full application flow.
 
+### Lighthouse Performance Tests
+
+Located in `tests/lighthouse/`, these use Lighthouse CLI to validate performance requirements:
+
+- First Contentful Paint (FCP) < 1.5s
+- Time to Interactive (TTI) < 3s
+- Performance Score >= 90
+
+See [tests/lighthouse/README.md](tests/lighthouse/README.md) for detailed documentation.
+
 ## Testing Patterns
 
 ### Mocking Next.js Image Component
@@ -405,6 +415,9 @@ npm test -- --coverage
 
 # Run only property-based tests
 npm run test:properties
+
+# Run Lighthouse performance tests
+npm run test:lighthouse
 ```
 
 ## Test Coverage Requirements
