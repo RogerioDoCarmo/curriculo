@@ -21,7 +21,22 @@ Runs Lighthouse CLI against the production build and validates:
 
 ## Running the Tests
 
-### Prerequisites
+### Quick Start (All-in-One Command)
+
+```bash
+npm run test:lighthouse:full
+```
+
+This command automatically:
+
+1. Builds the production site
+2. Starts the server
+3. Runs Lighthouse tests
+4. Cleans up the server process
+
+### Manual Control (For Debugging)
+
+**CRITICAL**: Lighthouse tests MUST run against the production build, NOT the development server.
 
 1. Build the production site:
 
@@ -29,16 +44,24 @@ Runs Lighthouse CLI against the production build and validates:
    npm run build
    ```
 
-2. Start a local server:
+2. Start a local server (in a separate terminal):
 
    ```bash
    npm run serve
    ```
 
 3. In a separate terminal, run the Lighthouse tests:
+
    ```bash
    npm run test:lighthouse
    ```
+
+**Why production build is required:**
+
+- Development server (`npm run dev`) includes hot-reload, source maps, and debugging tools
+- These significantly degrade performance: TTI ~11s, Score ~43 ❌
+- Production build is optimized: TTI ~2.4s, Score ~98 ✅
+- Lighthouse tests will fail if run against dev server
 
 ### Environment Variables
 

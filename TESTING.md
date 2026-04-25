@@ -416,9 +416,16 @@ npm test -- --coverage
 # Run only property-based tests
 npm run test:properties
 
-# Run Lighthouse performance tests
-npm run test:lighthouse
+# Run Lighthouse performance tests (all-in-one command)
+npm run test:lighthouse:full
+
+# Run Lighthouse manually (for debugging)
+npm run build        # Build first
+npm run serve        # Serve production build (separate terminal)
+npm run test:lighthouse  # Run tests
 ```
+
+**IMPORTANT**: Lighthouse tests must run against the production build (`npm run serve`), not the development server (`npm run dev`). The dev server has poor performance metrics due to hot-reload and debugging tools. Use `test:lighthouse:full` for convenience.
 
 ## Test Coverage Requirements
 

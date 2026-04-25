@@ -18,6 +18,7 @@
     "test:integration": "jest --testPathPattern=integration",
     "test:e2e": "playwright test",
     "test:lighthouse": "jest --testPathPattern=lighthouse",
+    "test:lighthouse:full": "npm run build && npm run serve & sleep 5 && npm run test:lighthouse; kill $!",
     "test:properties": "jest --testPathPattern=properties",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
