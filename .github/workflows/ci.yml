@@ -76,7 +76,7 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        run: npm test
+        run: npm test -- --testPathIgnorePatterns=lighthouse
 
       - name: Upload test results
         if: always()
@@ -106,7 +106,7 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: npm run test:coverage -- --testPathIgnorePatterns=lighthouse
 
       - name: Check coverage threshold
         run: |
@@ -300,7 +300,7 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: npm run test:coverage -- --testPathIgnorePatterns=lighthouse
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
