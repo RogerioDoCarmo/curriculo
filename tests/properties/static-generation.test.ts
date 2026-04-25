@@ -61,9 +61,10 @@ function containsRuntimeFetchCalls(htmlContent: string): boolean {
 
 /**
  * Extracts all script tags from HTML content.
+ * Uses a more robust regex that handles script end tags with attributes or whitespace.
  */
 function extractScriptTags(htmlContent: string): string[] {
-  const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+  const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script(?:\s+[^>]*)?\s*>/gi;
   const scripts: string[] = [];
   let match;
 
