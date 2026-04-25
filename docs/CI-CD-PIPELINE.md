@@ -203,9 +203,15 @@ If Lighthouse tests fail in CI:
    npm run test:lighthouse
    ```
 3. Common issues:
+   - **Running against dev server**: Tests MUST run against production build (`npm run serve`), not dev server (`npm run dev`)
    - Server not starting properly (check port 3000 availability)
    - Build artifacts missing (ensure Build job succeeded)
    - Performance regression (check bundle size, lazy loading)
+
+**Performance Comparison:**
+
+- Dev server: TTI ~11s, Score ~43 ❌ (tests will fail)
+- Production build: TTI ~2.4s, Score ~98 ✅ (tests will pass)
 
 ### Coverage Below Threshold
 

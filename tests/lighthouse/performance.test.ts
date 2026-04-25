@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Lighthouse Performance Tests
  *
@@ -9,6 +10,10 @@
  * - Lighthouse Performance Score >= 90
  *
  * Tests run against the production build (out/ directory) served locally.
+ *
+ * CRITICAL: These tests MUST run against the production build, NOT the dev server.
+ * - Production build: npm run build && npm run serve (TTI ~2.4s, Score ~98)
+ * - Dev server: npm run dev (TTI ~11s, Score ~43) - TESTS WILL FAIL
  */
 
 import { execSync } from "child_process";
