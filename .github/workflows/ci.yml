@@ -223,6 +223,57 @@ jobs:
           name: test-videos
           path: test-results/
 
+  lighthouse:
+    name: Lighthouse Performance Tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: out/
+
+      - name: Start server in background
+        run: |
+          npm run serve &
+          echo $! > server.pid
+          sleep 5
+
+      - name: Wait for server to be ready
+        run: |
+          timeout 30 bash -c 'until curl -f http://localhost:3000; do sleep 1; done'
+
+      - name: Run Lighthouse tests
+        run: npm run test:lighthouse
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) || true
+          fi
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: lighthouse-report.json
+
   sonarqube:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
@@ -259,7 +310,7 @@ jobs:
   status-check:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [ lint, type-check, test, coverage, build, e2e, sonarqube ]
+    needs: [ lint, type-check, test, coverage, build, e2e, lighthouse, sonarqube ]
     if: always()
 
     steps:
@@ -271,7 +322,8 @@ jobs:
              [[ "${{ needs.test.result }}" != "success" ]] || \
              [[ "${{ needs.coverage.result }}" != "success" ]] || \
              [[ "${{ needs.build.result }}" != "success" ]] || \
-             [[ "${{ needs.e2e.result }}" != "success" ]]; then
+             [[ "${{ needs.e2e.result }}" != "success" ]] || \
+             [[ "${{ needs.lighthouse.result }}" != "success" ]]; then
             echo "❌ One or more required checks failed"
             exit 1
           fi
