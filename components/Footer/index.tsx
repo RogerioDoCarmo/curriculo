@@ -15,7 +15,7 @@ interface FooterProps {
 const SOCIAL_LINKS = [
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/rogeriodocarmo",
+    href: "https://www.linkedin.com/in/rogeriodocarmo/",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ const SOCIAL_LINKS = [
   },
   {
     name: "GitHub",
-    href: "https://github.com/rogeriodocarmo",
+    href: "https://github.com/RogerioDoCarmo/curriculo",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
