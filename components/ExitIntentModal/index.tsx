@@ -156,12 +156,12 @@ export default function ExitIntentModal({
         {/* Email capture */}
         <div className="border-t border-border pt-4">
           <p className="text-sm text-center text-gray-600 dark:text-gray-400 mb-3">
-            Or leave your email and I&apos;ll reach out:
+            {t("emailPrompt")}
           </p>
           <EmailSubscribeForm
-            placeholder="your@email.com"
-            buttonLabel="Contact me"
-            successMessage="Got it! I'll be in touch soon."
+            placeholder={t("emailPlaceholder")}
+            buttonLabel={t("emailButton")}
+            successMessage={t("emailSuccess")}
           />
         </div>
       </div>

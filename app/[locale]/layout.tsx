@@ -26,9 +26,13 @@ const metadataByLocale: Record<
   "pt-BR": {
     title: "Rogério do Carmo | Desenvolvedor React Native Mobile",
     description:
-      "Portfólio e currículo de Rogério do Carmo, especialista em desenvolvimento de aplicações mobile multiplataforma com React Native para clientes enterprise.",
+      "Portifólio e currículo de Rogério do Carmo, especialista em desenvolvimento de aplicações mobile multiplataforma com React Native.",
     keywords: [
       "React Native",
+      "React",
+      "React JS",
+      "Java",
+      "Kotlin",
       "Desenvolvedor Mobile",
       "TypeScript",
       "JavaScript",
@@ -42,9 +46,13 @@ const metadataByLocale: Record<
   en: {
     title: "Rogério do Carmo | Mobile React Native Developer",
     description:
-      "Portfolio and resume of Rogério do Carmo, specialist in building cross-platform mobile applications with React Native for enterprise clients.",
+      "Portfolio and resume of Rogério do Carmo, specialist in cross-platform mobile application development with React Native.",
     keywords: [
       "React Native",
+      "React",
+      "React JS",
+      "Java",
+      "Kotlin",
       "Mobile Developer",
       "TypeScript",
       "JavaScript",
@@ -58,9 +66,13 @@ const metadataByLocale: Record<
   es: {
     title: "Rogério do Carmo | Desarrollador React Native Mobile",
     description:
-      "Portafolio y currículum de Rogério do Carmo, especialista en desarrollo de aplicaciones móviles multiplataforma con React Native para clientes enterprise.",
+      "Portafolio y currículum de Rogério do Carmo, especialista en desarrollo de aplicaciones móviles multiplataforma con React Native.",
     keywords: [
       "React Native",
+      "React",
+      "React JS",
+      "Java",
+      "Kotlin",
       "Desarrollador Mobile",
       "TypeScript",
       "JavaScript",
