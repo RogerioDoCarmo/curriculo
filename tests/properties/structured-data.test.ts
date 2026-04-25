@@ -119,8 +119,8 @@ describe("Property 41: Structured Data Completeness", () => {
         expect(personSchema.url).toBe("https://rogeriodocarmo.com");
 
         // Social links should be consistent
-        expect(personSchema.sameAs).toContain("https://github.com/rogeriodocarmo");
-        expect(personSchema.sameAs).toContain("https://linkedin.com/in/rogeriodocarmo");
+        expect(personSchema.sameAs).toContain("https://github.com/RogerioDoCarmo/curriculo");
+        expect(personSchema.sameAs).toContain("https://www.linkedin.com/in/rogeriodocarmo/");
 
         // Skills should be consistent (language-independent)
         expect(personSchema.knowsAbout).toContain("JavaScript");
