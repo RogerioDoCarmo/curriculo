@@ -11,6 +11,7 @@ npm run dev                  # Start development server (http://localhost:3000)
 npm run storybook            # Start Storybook component explorer (http://localhost:6006)
 npm run test:coverage        # Run tests with coverage report
 npm run test:e2e             # Run E2E tests with Playwright
+npm run test:lighthouse      # Run Lighthouse performance audits
 npm run lint                 # Run ESLint to check code quality
 npm run format:check         # Check code formatting without fixing
 
@@ -32,8 +33,27 @@ npm run storybook    # Start Storybook component explorer (http://localhost:6006
 npm test                    # Run all tests
 npm run test:coverage       # Run tests with coverage report
 npm run test:e2e            # Run E2E tests with Playwright
+npm run test:lighthouse     # Run Lighthouse performance audits (requires build + serve)
 npm test -- --watch         # Run tests in watch mode
 npm test -- path/to/test    # Run specific test file
+```
+
+### Lighthouse Performance Tests
+
+Lighthouse tests validate performance requirements (FCP < 1.5s, TTI < 3s, Score >= 90):
+
+```bash
+# 1. Build production site
+npm run build
+
+# 2. Start local server (in separate terminal)
+npm run serve
+
+# 3. Run Lighthouse tests
+npm run test:lighthouse
+
+# Optional: Test production URL
+LIGHTHOUSE_URL=https://rogeriodocarmo.com npm run test:lighthouse
 ```
 
 ## Code Quality

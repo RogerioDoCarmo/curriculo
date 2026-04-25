@@ -142,6 +142,9 @@ npm run test:e2e
 
 # Run property-based tests
 npm run test:properties
+
+# Run Lighthouse performance tests
+npm run test:lighthouse
 ```
 
 See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.

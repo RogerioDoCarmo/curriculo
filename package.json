@@ -17,6 +17,7 @@
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest --testPathPattern=integration",
     "test:e2e": "playwright test",
+    "test:lighthouse": "jest --testPathPattern=lighthouse",
     "test:properties": "jest --testPathPattern=properties",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
