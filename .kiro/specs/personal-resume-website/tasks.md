@@ -877,6 +877,43 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify SEO metadata and structured data
     - _Requirements: All_
 
+- [ ] 27. Downloadable PDF Resume
+  - [ ] 27.1 Create public directory structure for resume files
+    - Create `/public/resumes/` directory to store PDF files
+    - Add `.gitkeep` to ensure directory is tracked
+    - Document directory structure in README
+    - _Requirements: 19.4_
+  - [ ] 27.2 Add PDF resume files for all supported locales
+    - Add `resume-pt-BR.pdf` for Portuguese resume
+    - Add `resume-en.pdf` for English resume
+    - Add `resume-es.pdf` for Spanish resume
+    - Ensure PDFs are optimized for web (compressed, searchable)
+    - _Requirements: 19.4, 11.1_
+  - [ ] 27.3 Update ExitIntentModal to use locale-specific resume URLs
+    - Modify ExitIntentModal to accept locale parameter
+    - Update resumeUrl to point to locale-specific PDF: `/resumes/resume-{locale}.pdf`
+    - Ensure download triggers properly in all browsers
+    - Add analytics tracking for resume downloads
+    - _Requirements: 19.4, 10.3_
+  - [ ]\* 27.4 Write unit tests for locale-specific resume URLs
+    - Test that correct resume URL is generated for each locale
+    - Test that download button has correct href attribute
+    - Test that analytics event is triggered on download
+  - [ ] 27.5 Update page.tsx to pass locale to ExitIntentModal
+    - Pass current locale from page context to ExitIntentModal
+    - Ensure locale is correctly propagated
+    - Test with all supported locales (pt-BR, en, es)
+    - _Requirements: 11.1, 19.4_
+  - [ ]\* 27.6 Write integration test for resume download flow
+    - Test that clicking download button opens correct PDF for each locale
+    - Test that PDF files are accessible and downloadable
+    - Test fallback behavior if PDF doesn't exist
+  - [ ] 27.7 Add resume download link to Footer component
+    - Add "Download Resume" link to footer
+    - Make it locale-aware (downloads correct language version)
+    - Ensure link is accessible and keyboard navigable
+    - _Requirements: 19.4, 9.4_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
