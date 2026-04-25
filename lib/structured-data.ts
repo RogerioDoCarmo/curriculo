@@ -43,8 +43,8 @@ export function generatePersonSchema(locale: string): WithContext<Person> {
     description: data.description,
     url: "https://rogeriodocarmo.com",
     sameAs: [
-      "https://github.com/rogeriodocarmo",
-      "https://linkedin.com/in/rogeriodocarmo",
+      "https://github.com/RogerioDoCarmo/curriculo",
+      "https://www.linkedin.com/in/rogeriodocarmo/",
       "https://twitter.com/rogeriodocarmo",
     ],
     knowsAbout: [

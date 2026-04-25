@@ -34,8 +34,8 @@ interface ExitIntentModalProps {
 export default function ExitIntentModal({
   enabled = true,
   resumeUrl = "/resume.pdf",
-  linkedInUrl = "https://linkedin.com/in/rogeriodocarmo",
-  githubUrl = "https://github.com/RogerioDoCarmo",
+  linkedInUrl = "https://www.linkedin.com/in/rogeriodocarmo/",
+  githubUrl = "https://github.com/RogerioDoCarmo/curriculo",
 }: ExitIntentModalProps) {
   const t = useTranslations("exitIntent");
 

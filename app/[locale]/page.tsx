@@ -64,8 +64,8 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
       <LazyExitIntentModal
         enabled={true}
         resumeUrl="/resume.pdf"
-        linkedInUrl="https://linkedin.com/in/rogeriodocarmo"
-        githubUrl="https://github.com/RogerioDoCarmo"
+        linkedInUrl="https://www.linkedin.com/in/rogeriodocarmo/"
+        githubUrl="https://github.com/RogerioDoCarmo/curriculo"
       />
     </>
   );
