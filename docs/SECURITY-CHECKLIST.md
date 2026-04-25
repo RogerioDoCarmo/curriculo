@@ -103,6 +103,50 @@ npm audit
   npm audit fix
   ```
 
+### Known Issues (Documented)
+
+#### Next.js 14.2.35 Vulnerabilities (Non-Critical for Static Export)
+
+**Status**: Documented, Low Priority  
+**Severity**: HIGH (in general), LOW (for this project)  
+**Affected Version**: next@14.2.35
+
+**Vulnerabilities**:
+
+- DoS via Image Optimizer remotePatterns configuration
+- HTTP request deserialization DoS with React Server Components
+- HTTP request smuggling in rewrites
+- Unbounded next/image disk cache growth
+- Denial of Service with Server Components
+
+**Why Low Priority for This Project**:
+
+- Application uses static export (`output: 'export'`)
+- No server-side runtime or Image Optimizer
+- No Server Components (only Client Components)
+- No rewrites configuration
+- No self-hosted deployment with Next.js server
+- Static files served via CDN (Vercel)
+
+**Mitigation**:
+
+- No vulnerable features are used in this application
+- Regular monitoring of security advisories
+- Static export eliminates server-side attack vectors
+
+**Planned Resolution**:
+
+- Upgrade to Next.js 15/16 in future release (breaking change)
+- Requires testing and potential code updates
+- Target: v0.2.0 release
+
+#### PostCSS Vulnerability (FIXED ✅)
+
+**Status**: Fixed in commit 269abf7  
+**Version**: Updated from 8.5.8 to 8.5.10  
+**Severity**: MEDIUM  
+**CVE**: XSS via Unescaped `</style>` in CSS Stringify Output
+
 ---
 
 ## What's Safe to Be Public (No Action Needed)
