@@ -142,7 +142,16 @@ npm run test:e2e
 
 # Run property-based tests
 npm run test:properties
+
+# Run Lighthouse performance tests (all-in-one: builds, serves, tests)
+npm run test:lighthouse:full
+
+# Run Lighthouse tests manually (requires production build)
+npm run build && npm run serve  # Terminal 1
+npm run test:lighthouse         # Terminal 2
 ```
+
+**Note**: Lighthouse tests must run against the production build (`npm run serve`), not the dev server (`npm run dev`). Use `test:lighthouse:full` for convenience.
 
 See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.
 
