@@ -43,7 +43,10 @@ test.describe("Print and PDF Output", () => {
     expect(isPrintMedia).toBe(true);
 
     // Verify main content (main article with heading) is still visible
-    const mainArticle = page.locator("article").filter({ hasText: "Personal Resume Website" });
+    // Text varies by locale
+    const mainArticle = page.locator("article").filter({
+      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
+    });
     await expect(mainArticle).toBeVisible();
 
     const display = await mainArticle.evaluate((el) => {
@@ -173,8 +176,10 @@ test.describe("Print and PDF Output", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(500);
 
-    // Verify article content is visible
-    const mainArticle = page.locator("article").filter({ hasText: "Personal Resume Website" });
+    // Verify article content is visible (text varies by locale)
+    const mainArticle = page.locator("article").filter({
+      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
+    });
     await expect(mainArticle).toBeVisible();
 
     const display = await mainArticle.evaluate((el) => {
@@ -200,8 +205,13 @@ test.describe("Print and PDF Output", () => {
     await page.emulateMedia({ media: "print" });
     await page.waitForTimeout(500);
 
-    // Verify article and sections are visible
-    const mainArticle = page.locator("article").filter({ hasText: "Personal Resume Website" });
+    // Verify article and sections are visible (text varies by locale)
+    const mainArticle = page
+      .locator("article")
+      .filter({
+        hasText:
+          /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
+      });
     await expect(mainArticle).toBeVisible();
 
     const sections = page.locator("section");
