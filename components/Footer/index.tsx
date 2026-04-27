@@ -12,6 +12,30 @@ interface FooterProps {
   readonly locale: string;
 }
 
+// Feature flag: Set to true when locale-specific PDFs are available
+const USE_LOCALE_SPECIFIC_PDFS = false;
+
+/**
+ * Get the resume URL based on locale
+ * @param locale - Current locale (pt-BR, en, es)
+ * @returns Resume PDF URL
+ */
+function getResumeUrl(locale: string): string {
+  if (!USE_LOCALE_SPECIFIC_PDFS) {
+    // Use single PDF for all locales
+    return "/resumes/resume.pdf";
+  }
+
+  // Use locale-specific PDFs
+  const localeMap: Record<string, string> = {
+    "pt-BR": "/resumes/resume-pt-BR.pdf",
+    en: "/resumes/resume-en.pdf",
+    es: "/resumes/resume-es.pdf",
+  };
+
+  return localeMap[locale] || "/resumes/resume.pdf";
+}
+
 const SOCIAL_LINKS = [
   {
     name: "LinkedIn",
@@ -78,9 +102,10 @@ const LANGUAGE_LINKS = [
   { label: "Español (es)", href: "/es" },
 ];
 
-export default function Footer({ locale: _locale }: FooterProps) {
+export default function Footer({ locale }: FooterProps) {
   const t = useTranslations();
   const year = new Date().getFullYear();
+  const resumeUrl = getResumeUrl(locale);
 
   return (
     <footer
@@ -147,6 +172,37 @@ export default function Footer({ locale: _locale }: FooterProps) {
               Connect
             </h2>
             <ul className="space-y-2">
+              {/* Resume Download Link */}
+              <li>
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Download resume in PDF format"
+                  className="
+                    inline-flex items-center gap-2 text-sm
+                    hover:text-primary-600 dark:hover:text-primary-400
+                    transition-colors duration-200
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Download Resume</span>
+                </a>
+              </li>
               {SOCIAL_LINKS.map(({ name, href, icon }) => (
                 <li key={name}>
                   <a
