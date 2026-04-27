@@ -21,8 +21,8 @@ export default defineConfig({
   // Test execution settings
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 1 : 0, // Reduced from 2 to 1
+  workers: process.env.CI ? 2 : undefined, // Increased from 1 to 2 for parallel execution
 
   // Reporter configuration
   reporter: [
@@ -39,39 +39,54 @@ export default defineConfig({
     // Collect trace on first retry
     trace: "on-first-retry",
 
-    // Screenshot on failure
+    // Screenshot on failure only
     screenshot: "only-on-failure",
 
-    // Video on failure
+    // Video on failure only
     video: "retain-on-failure",
+
+    // Faster navigation timeout
+    navigationTimeout: 15 * 1000, // 15s instead of default 30s
+
+    // Faster action timeout
+    actionTimeout: 10 * 1000, // 10s instead of default 30s
   },
 
   // Test projects for different browsers and devices
-  projects: [
-    // Desktop browsers
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
-
-    // Mobile browsers
-    {
-      name: "mobile-chrome",
-      use: { ...devices["Pixel 5"] },
-    },
-    {
-      name: "mobile-safari",
-      use: { ...devices["iPhone 12"] },
-    },
-  ],
+  // In CI: Run only Chromium for PRs, full matrix for main/develop
+  // Locally: Run all browsers
+  projects:
+    process.env.CI && process.env.GITHUB_EVENT_NAME === "pull_request"
+      ? [
+          // PR builds: Chromium only for speed
+          {
+            name: "chromium",
+            use: { ...devices["Desktop Chrome"] },
+          },
+        ]
+      : [
+          // Main/develop builds and local: Full browser matrix
+          {
+            name: "chromium",
+            use: { ...devices["Desktop Chrome"] },
+          },
+          {
+            name: "firefox",
+            use: { ...devices["Desktop Firefox"] },
+          },
+          {
+            name: "webkit",
+            use: { ...devices["Desktop Safari"] },
+          },
+          {
+            name: "mobile-chrome",
+            use: { ...devices["Pixel 5"] },
+          },
+          {
+            name: "mobile-safari",
+            use: { ...devices["iPhone 12"] },
+          },
+        ],
 
   // Web server configuration for local development
   webServer: {

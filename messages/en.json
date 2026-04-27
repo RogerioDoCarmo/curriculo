@@ -49,7 +49,7 @@
     "label": "Back to top"
   },
   "exitIntent": {
-    "title": "Before you go...",
+    "title": "Hey, wait!",
     "headline": "Before you go...",
     "subtitle": "Would you like to connect or download my resume?",
     "downloadResume": "Download Resume (PDF)",

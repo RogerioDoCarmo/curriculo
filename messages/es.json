@@ -49,7 +49,7 @@
     "label": "Volver arriba"
   },
   "exitIntent": {
-    "title": "Antes de irte...",
+    "title": "¡Oye, espera!",
     "headline": "Antes de irte...",
     "subtitle": "¿Te gustaría conectar o descargar mi currículum?",
     "downloadResume": "Descargar Currículum (PDF)",

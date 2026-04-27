@@ -17,8 +17,13 @@ test.describe("Basic Navigation", () => {
     // es: "Rogério do Carmo | Desarrollador React Native Mobile"
     await expect(page).toHaveTitle(/Rogério do Carmo/i);
 
-    // Verify main heading is visible
-    const heading = page.getByRole("heading", { name: /personal resume website/i });
+    // Verify main heading is visible (varies by locale)
+    // pt-BR: "Site de Currículo Pessoal"
+    // en: "Personal Resume Website"
+    // es: "Sitio Web de Currículum Personal"
+    const heading = page.getByRole("heading", {
+      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
+    });
     await expect(heading).toBeVisible();
   });
 
@@ -29,17 +34,23 @@ test.describe("Basic Navigation", () => {
     const header = page.locator("article header");
     await expect(header).toBeVisible();
 
-    // Verify heading is accessible
+    // Verify heading is accessible (varies by locale)
     const heading = page.getByRole("heading", { level: 1 });
     await expect(heading).toBeVisible();
-    await expect(heading).toHaveText("Personal Resume Website");
+    // Text varies by locale: pt-BR, en, es
+    await expect(heading).toHaveText(
+      /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/
+    );
   });
 
   test("should display content sections", async ({ page }) => {
     await page.goto("/");
 
     // Verify main article exists (the one with the main heading)
-    const mainArticle = page.locator("article").filter({ hasText: "Personal Resume Website" });
+    // Text varies by locale
+    const mainArticle = page.locator("article").filter({
+      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
+    });
     await expect(mainArticle).toBeVisible();
 
     // Verify description section inside article
@@ -56,8 +67,10 @@ test.describe("Basic Navigation", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    // Verify page loads on mobile
-    const heading = page.getByRole("heading", { name: /personal resume website/i });
+    // Verify page loads on mobile (text varies by locale)
+    const heading = page.getByRole("heading", {
+      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
+    });
     await expect(heading).toBeVisible();
   });
 
@@ -66,8 +79,10 @@ test.describe("Basic Navigation", () => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto("/");
 
-    // Verify page loads on tablet
-    const heading = page.getByRole("heading", { name: /personal resume website/i });
+    // Verify page loads on tablet (text varies by locale)
+    const heading = page.getByRole("heading", {
+      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
+    });
     await expect(heading).toBeVisible();
   });
 
@@ -76,8 +91,10 @@ test.describe("Basic Navigation", () => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto("/");
 
-    // Verify page loads on desktop
-    const heading = page.getByRole("heading", { name: /personal resume website/i });
+    // Verify page loads on desktop (text varies by locale)
+    const heading = page.getByRole("heading", {
+      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
+    });
     await expect(heading).toBeVisible();
   });
 

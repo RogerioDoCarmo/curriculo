@@ -184,4 +184,76 @@ describe("Footer", () => {
       expect(screen.getByText(/connect/i)).toBeInTheDocument();
     });
   });
+
+  // -------------------------------------------------------------------------
+  // Resume download link (Task 27.7)
+  // -------------------------------------------------------------------------
+  it("renders resume download link", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toBeInTheDocument();
+    });
+  });
+
+  it("resume download link points to correct PDF for pt-BR locale", async () => {
+    renderFooter("pt-BR");
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+    });
+  });
+
+  it("resume download link points to correct PDF for English locale", async () => {
+    renderFooter("en");
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+    });
+  });
+
+  it("resume download link points to correct PDF for Spanish locale", async () => {
+    renderFooter("es");
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+    });
+  });
+
+  it("resume download link opens in new tab", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toHaveAttribute("target", "_blank");
+      expect(resumeLink).toHaveAttribute("rel", "noopener noreferrer");
+    });
+  });
+
+  it("resume download link has proper aria-label for accessibility", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume in pdf format/i });
+      expect(resumeLink).toBeInTheDocument();
+      expect(resumeLink).toHaveAttribute("aria-label", "Download resume in PDF format");
+    });
+  });
+
+  it("resume download link has download icon with aria-hidden", async () => {
+    const { container } = renderFooter();
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      const svg = resumeLink.querySelector("svg");
+      expect(svg).toBeInTheDocument();
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+    });
+  });
+
+  it("resume download link is keyboard accessible", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const resumeLink = screen.getByRole("link", { name: /download resume/i });
+      expect(resumeLink).toHaveAttribute("href");
+      expect(resumeLink.getAttribute("href")).not.toBe("");
+    });
+  });
 });
