@@ -877,42 +877,86 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify SEO metadata and structured data
     - _Requirements: All_
 
-- [ ] 27. Downloadable PDF Resume
-  - [ ] 27.1 Create public directory structure for resume files
+- [x] 27. Downloadable PDF Resume
+  - [x] 27.1 Create public directory structure for resume files
     - Create `/public/resumes/` directory to store PDF files
     - Add `.gitkeep` to ensure directory is tracked
     - Document directory structure in README
     - _Requirements: 19.4_
-  - [ ] 27.2 Add PDF resume files for all supported locales
+  - [x] 27.2 Add PDF resume files for all supported locales
     - Add `resume-pt-BR.pdf` for Portuguese resume
     - Add `resume-en.pdf` for English resume
     - Add `resume-es.pdf` for Spanish resume
     - Ensure PDFs are optimized for web (compressed, searchable)
     - _Requirements: 19.4, 11.1_
-  - [ ] 27.3 Update ExitIntentModal to use locale-specific resume URLs
+  - [x] 27.3 Update ExitIntentModal to use locale-specific resume URLs
     - Modify ExitIntentModal to accept locale parameter
     - Update resumeUrl to point to locale-specific PDF: `/resumes/resume-{locale}.pdf`
     - Ensure download triggers properly in all browsers
     - Add analytics tracking for resume downloads
     - _Requirements: 19.4, 10.3_
-  - [ ]\* 27.4 Write unit tests for locale-specific resume URLs
+  - [x]\* 27.4 Write unit tests for locale-specific resume URLs
     - Test that correct resume URL is generated for each locale
     - Test that download button has correct href attribute
     - Test that analytics event is triggered on download
-  - [ ] 27.5 Update page.tsx to pass locale to ExitIntentModal
+  - [x] 27.5 Update page.tsx to pass locale to ExitIntentModal
     - Pass current locale from page context to ExitIntentModal
     - Ensure locale is correctly propagated
     - Test with all supported locales (pt-BR, en, es)
     - _Requirements: 11.1, 19.4_
-  - [ ]\* 27.6 Write integration test for resume download flow
+  - [x]\* 27.6 Write integration test for resume download flow
     - Test that clicking download button opens correct PDF for each locale
     - Test that PDF files are accessible and downloadable
     - Test fallback behavior if PDF doesn't exist
-  - [ ] 27.7 Add resume download link to Footer component
+  - [x] 27.7 Add resume download link to Footer component
     - Add "Download Resume" link to footer
     - Make it locale-aware (downloads correct language version)
     - Ensure link is accessible and keyboard navigable
     - _Requirements: 19.4, 9.4_
+
+- [ ] 28. Firebase Remote Config for Feature Flags
+  - [ ] 28.1 Set up Firebase Remote Config
+    - Install Firebase Remote Config SDK (if not already included)
+    - Initialize Remote Config in `lib/firebase.ts`
+    - Configure default values for feature flags
+    - Set up Remote Config fetch and activation strategy
+    - _Requirements: 10.1_
+  - [ ] 28.2 Create feature flag management utilities
+    - Create `lib/feature-flags.ts` with Remote Config integration
+    - Implement `getFeatureFlag()` function to retrieve flag values
+    - Implement `useFeatureFlag()` hook for React components
+    - Add caching mechanism to minimize Remote Config fetches
+    - Handle offline/fallback scenarios gracefully
+    - _Requirements: 10.1_
+  - [ ]\* 28.3 Write unit tests for feature flag utilities
+    - Test Remote Config initialization
+    - Test feature flag retrieval with various data types (boolean, string, number)
+    - Test caching behavior
+    - Test fallback to default values when Remote Config unavailable
+    - Test error handling for network failures
+  - [ ] 28.4 Migrate USE_LOCALE_SPECIFIC_PDFS to Remote Config
+    - Replace hardcoded `USE_LOCALE_SPECIFIC_PDFS` constant with Remote Config flag
+    - Update ExitIntentModal to use `useFeatureFlag('use_locale_specific_pdfs')`
+    - Update Footer component to use `useFeatureFlag('use_locale_specific_pdfs')`
+    - Set default value to `false` (current behavior)
+    - _Requirements: 19.4, 10.1_
+  - [ ]\* 28.5 Write integration tests for Remote Config feature flags
+    - Test that components respond to feature flag changes
+    - Test that resume URLs update when flag is toggled
+    - Test that default behavior works when Remote Config is unavailable
+    - Test that flag changes don't require code deployment
+  - [ ] 28.6 Configure Remote Config in Firebase Console
+    - Create `use_locale_specific_pdfs` parameter in Firebase Console
+    - Set default value to `false`
+    - Document how to toggle the flag in production
+    - Add monitoring/analytics for flag usage
+    - _Requirements: 10.1_
+  - [ ] 28.7 Add documentation for feature flag management
+    - Document how to add new feature flags
+    - Document how to test feature flags locally
+    - Document how to toggle flags in Firebase Console
+    - Add troubleshooting guide for Remote Config issues
+    - _Requirements: 15.2_
 
 ## Notes
 
