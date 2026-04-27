@@ -13,7 +13,11 @@ export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
-function HomePageContent() {
+interface HomePageContentProps {
+  readonly locale: string;
+}
+
+function HomePageContent({ locale }: HomePageContentProps) {
   const t = useTranslations("homepage");
 
   return (
@@ -54,7 +58,7 @@ function HomePageContent() {
       {/* Exit Intent Modal - Lazy loaded, client-side only */}
       <LazyExitIntentModal
         enabled={true}
-        resumeUrl="/resume.pdf"
+        locale={locale}
         linkedInUrl="https://www.linkedin.com/in/rogeriodocarmo/"
         githubUrl="https://github.com/RogerioDoCarmo/curriculo"
       />
@@ -70,5 +74,5 @@ export default function HomePage({ params: { locale } }: HomePageProps) {
   // Enable static rendering for this locale
   unstable_setRequestLocale(locale);
 
-  return <HomePageContent />;
+  return <HomePageContent locale={locale} />;
 }
