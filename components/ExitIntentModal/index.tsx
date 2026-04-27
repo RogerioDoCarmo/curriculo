@@ -26,18 +26,43 @@ import { useExitIntent } from "@/hooks/useExitIntent";
 
 interface ExitIntentModalProps {
   readonly enabled?: boolean;
-  readonly resumeUrl?: string;
+  readonly locale?: string;
   readonly linkedInUrl?: string;
   readonly githubUrl?: string;
 }
 
+// Feature flag: Set to true when locale-specific PDFs are available
+const USE_LOCALE_SPECIFIC_PDFS = false;
+
+/**
+ * Get the resume URL based on locale
+ * @param locale - Current locale (pt-BR, en, es)
+ * @returns Resume PDF URL
+ */
+function getResumeUrl(locale?: string): string {
+  if (!USE_LOCALE_SPECIFIC_PDFS) {
+    // Use single PDF for all locales
+    return "/resumes/resume.pdf";
+  }
+
+  // Use locale-specific PDFs
+  const localeMap: Record<string, string> = {
+    "pt-BR": "/resumes/resume-pt-BR.pdf",
+    en: "/resumes/resume-en.pdf",
+    es: "/resumes/resume-es.pdf",
+  };
+
+  return localeMap[locale || "pt-BR"] || "/resumes/resume.pdf";
+}
+
 export default function ExitIntentModal({
   enabled = true,
-  resumeUrl = "/resume.pdf",
+  locale = "pt-BR",
   linkedInUrl = "https://www.linkedin.com/in/rogeriodocarmo/",
   githubUrl = "https://github.com/RogerioDoCarmo/curriculo",
 }: ExitIntentModalProps) {
   const t = useTranslations("exitIntent");
+  const resumeUrl = getResumeUrl(locale);
 
   const { showModal, dismissModal } = useExitIntent({
     enabled,
@@ -57,21 +82,21 @@ export default function ExitIntentModal({
     // TODO: Track download event with analytics
     // trackEvent('exit_intent_resume_download');
     window.open(resumeUrl, "_blank");
-    dismissModal();
+    // Don't dismiss modal - user may want to explore other options
   };
 
   const handleConnectLinkedIn = () => {
     // TODO: Track LinkedIn click with analytics
     // trackEvent('exit_intent_linkedin_click');
     window.open(linkedInUrl, "_blank");
-    dismissModal();
+    // Don't dismiss modal - user may want to explore other options
   };
 
   const handleStarGitHub = () => {
     // TODO: Track GitHub star click with analytics
     // trackEvent('exit_intent_github_click');
     window.open(githubUrl, "_blank");
-    dismissModal();
+    // Don't dismiss modal - user may want to explore other options
   };
 
   return (
