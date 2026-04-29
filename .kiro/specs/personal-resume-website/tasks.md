@@ -1135,18 +1135,24 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify integration test passes
     - Ensure test coverage is maintained
     - _Test file: tests/integration/responsive-layout.test.tsx_
-  - [ ] 31.8 Update jest.config.js if needed
-    - Review and update `transformIgnorePatterns` for next-intl ESM modules
-    - Add any additional ESM module handling configuration
-    - Test that all previously skipped tests now pass
+  - [ ] 31.8 Remove test exclusions from jest.config.js
+    - Remove `testPathIgnorePatterns` entries for the 6 test files from `jest.config.js`
+    - Keep only standard exclusions (node_modules, etc.)
+    - Verify configuration is clean
     - _Configuration file: jest.config.js_
-  - [ ] 31.9 Run full test suite and verify coverage
+  - [ ] 31.9 Restore CI workflow test commands
+    - Update `.github/workflows/ci.yml` test commands to remove test file exclusions
+    - Change `--testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"` back to `--testPathIgnorePatterns=lighthouse`
+    - Update both `npm test` and `npm run test:coverage` commands (3 occurrences total)
+    - Verify CI runs all test suites
+    - _Configuration file: .github/workflows/ci.yml_
+  - [ ] 31.10 Run full test suite and verify coverage
     - Run `npm run test:coverage` to verify all tests pass
     - Ensure 90%+ test coverage is maintained
     - Verify no test suites are skipped
     - Document any remaining issues
     - _Requirements: 14.1, 14.2, 14.3_
-  - [ ] 31.10 Update documentation
+  - [ ] 31.11 Update documentation
     - Remove next-intl ESM issue from `NEXTJS-16-UPGRADE-STATUS.md`
     - Update `README.md` if needed
     - Document the resolution in commit message
