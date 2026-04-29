@@ -1,7 +1,7 @@
 ---
 id: portfolio-website
 title: Personal Resume Website
-description: Website de currículo pessoal com Next.js 14
+description: Website de currículo pessoal com Next.js 16
 featured: true
 date: 2024-03-01
 technologies:

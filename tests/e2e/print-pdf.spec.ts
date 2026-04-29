@@ -206,12 +206,9 @@ test.describe("Print and PDF Output", () => {
     await page.waitForTimeout(500);
 
     // Verify article and sections are visible (text varies by locale)
-    const mainArticle = page
-      .locator("article")
-      .filter({
-        hasText:
-          /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
-      });
+    const mainArticle = page.locator("article").filter({
+      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
+    });
     await expect(mainArticle).toBeVisible();
 
     const sections = page.locator("section");

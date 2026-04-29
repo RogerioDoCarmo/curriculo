@@ -18,7 +18,7 @@ const TestPage = () => (
     </header>
     <section className="mt-4">
       <p className="text-muted-foreground text-center">
-        A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind
+        A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind
         CSS.
       </p>
     </section>
