@@ -81,9 +81,9 @@
 
 ---
 
-## ✅ CI/CD Pipeline Fix
+## ✅ CI/CD Pipeline Fixes
 
-### Issue
+### Issue 1: Peer Dependency Conflicts
 
 CI/CD pipeline was failing with peer dependency conflicts:
 
@@ -91,18 +91,30 @@ CI/CD pipeline was failing with peer dependency conflicts:
 - Project uses eslint@8.57.1
 - `npm ci` doesn't use `--legacy-peer-deps` by default
 
-### Solution
-
-Updated all GitHub Actions workflows to use `npm ci --legacy-peer-deps`:
+**Solution**: Updated all GitHub Actions workflows to use `npm ci --legacy-peer-deps`
 
 - `.github/workflows/ci.yml` (8 occurrences)
 - `.github/workflows/deploy.yml` (2 occurrences)
 - `.github/workflows/e2e-full.yml` (1 occurrence)
 
-### Commit
+**Commit**: `aea7c9e` - "fix(ci): add --legacy-peer-deps flag to all npm ci commands"
 
-- **Hash**: `aea7c9e`
-- **Message**: "fix(ci): add --legacy-peer-deps flag to all npm ci commands"
+### Issue 2: Node.js Version Requirement
+
+E2E tests were failing with Node.js version error:
+
+- Next.js 16 requires Node.js >=20.9.0
+- CI workflows were using Node.js 18.20.8
+- Error: "You are using Node.js 18.20.8. For Next.js, Node.js version '>=20.9.0' is required."
+
+**Solution**: Upgraded all workflows to Node.js 20
+
+- `.github/workflows/ci.yml` (8 jobs)
+- `.github/workflows/deploy.yml` (3 jobs)
+- `.github/workflows/e2e-full.yml` (1 job)
+- Updated `package.json` engines field to `"node": ">=20.9.0"`
+
+**Commit**: `bb3a144` - "fix(ci): upgrade Node.js to version 20 for Next.js 16 compatibility"
 
 ---
 
