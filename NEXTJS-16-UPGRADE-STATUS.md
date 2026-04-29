@@ -81,6 +81,31 @@
 
 ---
 
+## ✅ CI/CD Pipeline Fix
+
+### Issue
+
+CI/CD pipeline was failing with peer dependency conflicts:
+
+- eslint-config-next@16.2.4 requires eslint@>=9.0.0
+- Project uses eslint@8.57.1
+- `npm ci` doesn't use `--legacy-peer-deps` by default
+
+### Solution
+
+Updated all GitHub Actions workflows to use `npm ci --legacy-peer-deps`:
+
+- `.github/workflows/ci.yml` (8 occurrences)
+- `.github/workflows/deploy.yml` (2 occurrences)
+- `.github/workflows/e2e-full.yml` (1 occurrence)
+
+### Commit
+
+- **Hash**: `aea7c9e`
+- **Message**: "fix(ci): add --legacy-peer-deps flag to all npm ci commands"
+
+---
+
 ## 🎉 UPGRADE COMPLETE
 
 All required tasks have been completed successfully. The application is now running on Next.js 16.2.4 with all security vulnerabilities fixed.
