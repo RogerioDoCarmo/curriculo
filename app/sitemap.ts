@@ -1,5 +1,8 @@
 import { MetadataRoute } from "next";
 
+// Required for static export in Next.js 16
+export const dynamic = "force-static";
+
 /**
  * Generate sitemap for all pages and locales
  * Includes alternate language links for each page

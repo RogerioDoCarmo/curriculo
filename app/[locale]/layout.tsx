@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, unstable_setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import Script from "next/script";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { generateStructuredDataScript } from "@/lib/structured-data";
@@ -88,12 +89,12 @@ const metadataByLocale: Record<
 // ─── Dynamic metadata generation ─────────────────────────────────────────────
 
 interface GenerateMetadataProps {
-  readonly params: { locale: string };
+  readonly params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({
-  params: { locale },
-}: GenerateMetadataProps): Promise<Metadata> {
+export async function generateMetadata({ params }: GenerateMetadataProps): Promise<Metadata> {
+  const { locale } = await params;
+
   const safeLocale = SUPPORTED_LOCALES.includes(locale as SupportedLocale)
     ? (locale as SupportedLocale)
     : "pt-BR";
@@ -152,17 +153,19 @@ export function generateStaticParams() {
 
 interface LocaleLayoutProps {
   readonly children: React.ReactNode;
-  readonly params: { locale: string };
+  readonly params: Promise<{ locale: string }>;
 }
 
-export default async function LocaleLayout({ children, params: { locale } }: LocaleLayoutProps) {
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale } = await params;
+
   // Validate locale
   if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
     notFound();
   }
 
   // Enable static rendering for this locale
-  unstable_setRequestLocale(locale);
+  setRequestLocale(locale);
 
   // Load messages for the current locale
   const messages = await getMessages();
@@ -173,10 +176,25 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
+        {/* Schema.org structured data for Person */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
+        {/* Schema.org structured data for WebSite */}
+        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
+            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
+      </head>
+      <body
+        className={`${inter.variable} font-sans bg-background text-foreground`}
+        suppressHydrationWarning
+      >
         {/* FOUC prevention: apply theme before React hydration */}
         {/* SECURITY: This inline script is safe - it only reads from localStorage and applies a CSS class.
             No user input is involved. The script is static and controlled by the application. */}
-        <script
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
 (function() {
@@ -192,19 +210,6 @@ export default async function LocaleLayout({ children, params: { locale } }: Loc
             `.trim(),
           }}
         />
-        {/* Schema.org structured data for Person */}
-        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
-            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
-        {/* Schema.org structured data for WebSite */}
-        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
-            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
-      </head>
-      <body
-        className={`${inter.variable} font-sans bg-background text-foreground`}
-        suppressHydrationWarning
-      >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <main className="min-h-screen">{children}</main>

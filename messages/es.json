@@ -72,7 +72,7 @@
   },
   "homepage": {
     "title": "Sitio Web de Currículum Personal",
-    "description": "Un sitio web de currículum personal moderno y responsivo construido con Next.js 14, TypeScript y Tailwind CSS.",
+    "description": "Un sitio web de currículum personal moderno y responsivo construido con Next.js 16, TypeScript y Tailwind CSS.",
     "stayInTouch": {
       "title": "Mantente en contacto",
       "subtitle": "Deja tu correo electrónico y me pondré en contacto sobre oportunidades o colaboraciones.",
@@ -85,6 +85,11 @@
   "techStack": {
     "title": "Tecnologías Utilizadas",
     "subtitle": "Tecnologías usadas para construir este sitio web",
+    "labels": {
+      "why": "Por qué:",
+      "benefits": "Beneficios:",
+      "learnMore": "Más información"
+    },
     "categories": {
       "framework": "Framework y Tecnologías Principales",
       "styling": "Estilización y Diseño",

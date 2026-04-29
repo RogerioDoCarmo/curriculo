@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [ chromium, firefox, webkit, mobile-chrome, mobile-safari ]
+        browser: [chromium, firefox, webkit, mobile-chrome, mobile-safari]
 
     steps:
       - name: Checkout code
