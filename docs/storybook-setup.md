@@ -70,7 +70,7 @@ Builds static Storybook site in `storybook-static/`
 
 ### Next.js Support
 
-- Full Next.js 14 compatibility
+- Full Next.js 16 compatibility
 - Image component support
 - Routing support
 - Environment variables support
