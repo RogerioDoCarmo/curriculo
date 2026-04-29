@@ -132,6 +132,21 @@ Test and coverage jobs were failing because 6 excluded test files were still bei
 
 **Commit**: `13baf5b` - "fix(ci): exclude 6 test files with next-intl ESM issues from CI test runs"
 
+### Issue 4: Vercel Deployment Failure
+
+Vercel deployment was failing with the same peer dependency error:
+
+- Vercel uses `npm ci` without `--legacy-peer-deps` by default
+- Same eslint-config-next@16.2.4 peer dependency conflict
+- Error: "Could not resolve dependency: peer eslint@'>=9.0.0' from eslint-config-next@16.2.4"
+
+**Solution**: Created vercel.json configuration file
+
+- Added `installCommand` with `--legacy-peer-deps` flag
+- Ensures Vercel uses same install command as CI/CD pipeline
+
+**Commit**: `4b1176c` - "fix(vercel): add --legacy-peer-deps to install command"
+
 ---
 
 ## 🎉 UPGRADE COMPLETE
