@@ -97,7 +97,7 @@ export const HighlightPhrase: Story = {
  */
 export const LongText: Story = {
   args: {
-    text: "A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind CSS. The site features multi-language support, dark mode, Firebase integration, comprehensive testing, and CI/CD automation.",
+    text: "A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS. The site features multi-language support, dark mode, Firebase integration, comprehensive testing, and CI/CD automation.",
     highlight: "Next.js",
   },
 };

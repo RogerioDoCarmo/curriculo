@@ -56,7 +56,7 @@ export const WithRichContent: Story = {
     children: (
       <div>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          A modern, responsive personal resume website built with Next.js 14, TypeScript, and
+          A modern, responsive personal resume website built with Next.js 16, TypeScript, and
           Tailwind CSS.
         </p>
         <div className="flex gap-2">
