@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import Script from "next/script";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { generateStructuredDataScript } from "@/lib/structured-data";
@@ -125,12 +124,21 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
       siteName: "Rogério do Carmo",
       locale: safeLocale,
       alternateLocale: SUPPORTED_LOCALES.filter((l) => l !== safeLocale),
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       creator: "@rogeriodocarmo",
+      images: ["/og-image.png"],
     },
     robots: {
       index: true,
@@ -184,17 +192,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
             The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
-      </head>
-      <body
-        className={`${inter.variable} font-sans bg-background text-foreground`}
-        suppressHydrationWarning
-      >
         {/* FOUC prevention: apply theme before React hydration */}
         {/* SECURITY: This inline script is safe - it only reads from localStorage and applies a CSS class.
             No user input is involved. The script is static and controlled by the application. */}
-        <Script
-          id="theme-script"
-          strategy="beforeInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `
 (function() {
@@ -210,6 +211,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             `.trim(),
           }}
         />
+      </head>
+      <body
+        className={`${inter.variable} font-sans bg-background text-foreground`}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <main className="min-h-screen">{children}</main>
