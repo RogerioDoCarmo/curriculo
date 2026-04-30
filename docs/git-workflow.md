@@ -1,8 +1,8 @@
 # Git Workflow Guide
 
-**⚠️ IMPORTANT: The `main` and `develop` branches are PROTECTED!**
+## Overview
 
-Always create feature branches for new work. Never commit directly to `main` or `develop`.
+This project uses a **protected branch workflow** to ensure code quality and prevent accidental commits to main branches.
 
 ## Branch Protection Rules
 
@@ -11,168 +11,352 @@ Always create feature branches for new work. Never commit directly to `main` or 
 - **`main`** - Production branch (protected)
 - **`develop`** - Development branch (protected)
 
-### Why Branches Are Protected
+### What "Protected" Means
 
-1. Ensures code review before merging
-2. Runs CI/CD checks before merge
-3. Maintains code quality standards
-4. Prevents accidental direct commits
-5. Enforces pull request workflow
+- ❌ Cannot push directly to these branches
+- ❌ Cannot force push
+- ✅ Must create Pull Requests
+- ✅ Must pass CI/CD checks
+- ✅ May require code review (depending on settings)
 
-## Correct Workflow
+---
 
-### 1. Starting New Work
+## Standard Workflow
 
-**❌ WRONG:**
+### 1. Check Current Branch
+
+**ALWAYS check your current branch before making changes:**
 
 ```bash
-git checkout main
-git add .
-git commit -m "Add feature"  # This will fail!
+git branch --show-current
 ```
 
-**✅ CORRECT:**
+**Expected output**: Should be a feature branch (e.g., `feature/my-feature`)
+
+**If you see `main` or `develop`**: STOP! Create a feature branch first.
+
+### 2. Create Feature Branch
+
+If you're on `main` or `develop`, create a feature branch:
 
 ```bash
-# Always create a feature branch first
-git checkout main
-git pull --no-rebase origin main
+# From main or develop
 git checkout -b feature/your-feature-name
 ```
 
-### 2. Feature Branch Naming Convention
+**Branch naming conventions:**
 
-Use descriptive names with prefixes:
+- `feature/` - New features (e.g., `feature/seo-submission-task`)
+- `fix/` - Bug fixes (e.g., `fix/contact-form-validation`)
+- `docs/` - Documentation updates (e.g., `docs/update-readme`)
+- `refactor/` - Code refactoring (e.g., `refactor/simplify-auth`)
+- `test/` - Test additions/updates (e.g., `test/add-unit-tests`)
+- `chore/` - Maintenance tasks (e.g., `chore/update-dependencies`)
 
-- `feature/` - New features
-  - Example: `feature/task-21.6-domain-configuration`
-  - Example: `feature/add-contact-form`
+### 3. Make Your Changes
 
-- `fix/` - Bug fixes
-  - Example: `fix/broken-navigation`
-  - Example: `fix/typescript-errors`
-
-- `docs/` - Documentation only
-  - Example: `docs/update-readme`
-  - Example: `docs/api-documentation`
-
-- `test/` - Test additions/fixes
-  - Example: `test/add-unit-tests`
-  - Example: `test/fix-failing-tests`
-
-- `refactor/` - Code refactoring
-  - Example: `refactor/simplify-auth`
-  - Example: `refactor/optimize-performance`
-
-### 3. Making Changes
+Work on your feature branch:
 
 ```bash
-# Make your changes
+# Edit files
 # ...
 
+# Check status
+git status
+
 # Stage changes
-git add .
+git add <files>
 
-# Commit with descriptive message
-git commit -m "feat: add domain configuration documentation
-
-- Add comprehensive setup guide
-- Add progress checklist
-- Add quick reference card"
-
-# Push to remote
-git push -u origin feature/your-feature-name
+# Commit with conventional commit message
+git commit -m "feat: add new feature"
 ```
 
-### 4. Creating Pull Request
+### 4. Push Feature Branch
+
+Push your feature branch to remote:
+
+```bash
+# First push (sets up tracking)
+git push -u origin feature/your-feature-name
+
+# Subsequent pushes
+git push
+```
+
+### 5. Create Pull Request
 
 1. Go to GitHub repository
-2. Click "Compare & pull request"
+2. Click "Compare & pull request" (appears after push)
 3. Select base branch:
    - For features: `develop`
    - For hotfixes: `main`
-4. Fill in PR description
-5. Wait for CI checks to pass
-6. Request review (if required)
-7. Merge when approved
+4. Fill in PR template:
+   - Title: Clear, descriptive
+   - Description: What, why, how
+   - Link related issues
+5. Click "Create pull request"
 
-### 5. After Merge
+### 6. Wait for CI/CD Checks
+
+Your PR will trigger automated checks:
+
+- ✅ Lint
+- ✅ Type Check
+- ✅ Tests
+- ✅ Coverage
+- ✅ Build
+- ✅ E2E Tests
+- ✅ Lighthouse
+- ✅ SonarQube
+
+**All checks must pass before merging.**
+
+### 7. Address Review Feedback
+
+If reviewers request changes:
 
 ```bash
-# Switch back to main/develop
-git checkout main
-git pull --no-rebase origin main
+# Make changes on your feature branch
+git add <files>
+git commit -m "fix: address review feedback"
+git push
+```
 
-# Delete local feature branch
+The PR will automatically update.
+
+### 8. Merge Pull Request
+
+Once approved and all checks pass:
+
+1. Click "Merge pull request" on GitHub
+2. Choose merge strategy:
+   - **Squash and merge** (recommended for clean history)
+   - **Merge commit** (preserves all commits)
+   - **Rebase and merge** (linear history)
+3. Confirm merge
+4. Delete branch on GitHub (optional but recommended)
+
+### 9. Update Local Branches
+
+After PR is merged:
+
+```bash
+# Switch to develop
+git checkout develop
+
+# Pull latest changes
+git pull origin develop
+
+# If merged to main, also update main
+git checkout main
+git pull origin main
+
+# Delete local feature branch (optional)
 git branch -d feature/your-feature-name
 
-# Delete remote feature branch (optional, GitHub can do this automatically)
+# Delete remote feature branch (if not done on GitHub)
 git push origin --delete feature/your-feature-name
 ```
 
+---
+
 ## Common Scenarios
 
-### Scenario 1: Accidentally Committed to Main
+### Scenario 1: Accidentally on Main
 
-**If you haven't pushed yet:**
+**Problem**: You made changes on `main` branch
+
+**Solution**:
 
 ```bash
-# Undo the commit
-git reset HEAD~1
+# Check current branch
+git branch --show-current
+# Output: main
+
+# Stash your changes
+git stash
 
 # Create feature branch
-git checkout -b feature/your-feature-name
+git checkout -b feature/my-feature
 
-# Re-add and commit
+# Apply stashed changes
+git stash pop
+
+# Now commit on feature branch
 git add .
-git commit -m "Your commit message"
-git push -u origin feature/your-feature-name
+git commit -m "feat: my changes"
+git push -u origin feature/my-feature
 ```
 
-**If you already pushed:**
+### Scenario 2: Forgot to Create Feature Branch
+
+**Problem**: You already committed to `main` or `develop`
+
+**Solution**:
 
 ```bash
-# This will fail because main is protected
-# Contact repository admin to force push (not recommended)
-# Better: Create a revert commit via PR
+# Create feature branch from current position
+git checkout -b feature/my-feature
+
+# Force update main/develop to match remote (discards local commits)
+git checkout main
+git reset --hard origin/main
+
+# Switch back to feature branch
+git checkout feature/my-feature
+
+# Your commits are now on the feature branch
+git push -u origin feature/my-feature
 ```
 
-### Scenario 2: Need to Update Feature Branch with Latest Main
+### Scenario 3: Need to Update Feature Branch with Latest Changes
+
+**Problem**: Your feature branch is behind `develop`
+
+**Solution**:
 
 ```bash
 # On your feature branch
-git checkout feature/your-feature-name
+git checkout feature/my-feature
 
 # Fetch latest changes
 git fetch origin
 
-# Merge main into your feature branch
-git merge origin/main
+# Rebase on develop (recommended)
+git rebase origin/develop
 
-# Or rebase (if no conflicts expected)
-git rebase origin/main
+# Or merge develop into your branch
+git merge origin/develop
 
-# Push updated branch
-git push origin feature/your-feature-name
+# Push (may need force push if rebased)
+git push --force-with-lease
 ```
 
-### Scenario 3: Multiple People Working on Same Feature
+### Scenario 4: Merge Conflicts
+
+**Problem**: Your PR has merge conflicts
+
+**Solution**:
 
 ```bash
-# Pull latest changes from feature branch
-git checkout feature/shared-feature
-git pull --no-rebase origin feature/shared-feature
+# On your feature branch
+git checkout feature/my-feature
 
-# Make your changes
-# ...
+# Fetch and merge develop
+git fetch origin
+git merge origin/develop
 
-# Push your changes
-git push origin feature/shared-feature
+# Resolve conflicts in your editor
+# Look for <<<<<<< HEAD markers
+
+# After resolving, stage files
+git add <resolved-files>
+
+# Complete merge
+git commit -m "fix: resolve merge conflicts"
+
+# Push
+git push
 ```
 
-## Commit Message Conventions
+### Scenario 5: Want to Undo Last Commit
 
-Follow conventional commits format:
+**Problem**: You committed something wrong
+
+**Solution**:
+
+```bash
+# Undo last commit, keep changes
+git reset --soft HEAD~1
+
+# Make corrections
+git add <files>
+git commit -m "feat: corrected version"
+
+# If already pushed, force push (use with caution!)
+git push --force-with-lease
+```
+
+---
+
+## Best Practices
+
+### Do's ✅
+
+- ✅ **Always check current branch** before making changes
+- ✅ **Create feature branches** for all work
+- ✅ **Use descriptive branch names** (e.g., `feature/add-seo-task`)
+- ✅ **Write clear commit messages** (follow Conventional Commits)
+- ✅ **Keep PRs focused** (one feature/fix per PR)
+- ✅ **Update your branch** regularly with latest changes
+- ✅ **Run tests locally** before pushing
+- ✅ **Delete merged branches** to keep repo clean
+- ✅ **Pull latest changes** after merging PRs
+
+### Don'ts ❌
+
+- ❌ **Never commit directly to `main` or `develop`**
+- ❌ **Never force push to protected branches**
+- ❌ **Don't create PRs with failing tests**
+- ❌ **Don't merge your own PRs** (unless you're the only developer)
+- ❌ **Don't leave stale branches** (delete after merge)
+- ❌ **Don't commit sensitive data** (API keys, passwords)
+- ❌ **Don't commit large binary files** (use Git LFS if needed)
+- ❌ **Don't rewrite public history** (avoid force push on shared branches)
+
+---
+
+## Quick Reference
+
+### Check Current Branch
+
+```bash
+git branch --show-current
+```
+
+### Create Feature Branch
+
+```bash
+git checkout -b feature/my-feature
+```
+
+### Stage and Commit
+
+```bash
+git add .
+git commit -m "feat: add feature"
+```
+
+### Push Feature Branch
+
+```bash
+git push -u origin feature/my-feature
+```
+
+### Update Local Branches
+
+```bash
+git checkout develop
+git pull origin develop
+git checkout main
+git pull origin main
+```
+
+### Delete Feature Branch
+
+```bash
+# Local
+git branch -d feature/my-feature
+
+# Remote
+git push origin --delete feature/my-feature
+```
+
+---
+
+## Commit Message Format
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 <type>(<scope>): <subject>
@@ -184,140 +368,150 @@ Follow conventional commits format:
 
 ### Types
 
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation only
-- `style:` - Code style changes (formatting, etc.)
-- `refactor:` - Code refactoring
-- `test:` - Adding or updating tests
-- `chore:` - Maintenance tasks
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+- `perf`: Performance improvements
 
 ### Examples
 
 ```bash
-# Feature
-git commit -m "feat: add domain configuration guides"
+# Simple feature
+git commit -m "feat(seo): add sitemap submission task"
 
-# Bug fix
-git commit -m "fix: resolve TypeScript errors in notification tests"
+# Bug fix with scope
+git commit -m "fix(auth): validate email format"
 
-# Documentation
-git commit -m "docs: update README with setup instructions"
+# Documentation update
+git commit -m "docs: update git workflow guide"
 
-# Multiple changes
-git commit -m "feat: implement FCM topic subscription
+# Breaking change
+git commit -m "feat(api): change authentication method
 
-- Add subscribeToTopic function
-- Add unsubscribeFromTopic function
-- Update NotificationPrompt component
-- Add comprehensive unit tests"
+BREAKING CHANGE: JWT tokens now required for all API calls"
 ```
-
-## Branch Lifecycle
-
-```
-main (protected)
-  ↓
-develop (protected)
-  ↓
-feature/your-feature ← Work here!
-  ↓
-Pull Request → develop
-  ↓
-Pull Request → main
-```
-
-## Quick Reference
-
-### Create Feature Branch
-
-```bash
-git checkout main
-git pull --no-rebase origin main
-git checkout -b feature/task-name
-```
-
-### Commit and Push
-
-```bash
-git add .
-git commit -m "type: description"
-git push -u origin feature/task-name
-```
-
-### Update from Main
-
-```bash
-git fetch origin
-git merge origin/main
-```
-
-### Clean Up After Merge
-
-```bash
-git checkout main
-git pull --no-rebase origin main
-git branch -d feature/task-name
-```
-
-## Troubleshooting
-
-### "Updates were rejected because the tip of your current branch is behind"
-
-```bash
-# Pull latest changes first
-git pull --no-rebase origin feature/your-feature-name
-
-# Then push
-git push origin feature/your-feature-name
-```
-
-### "You are not allowed to push code to protected branches"
-
-```bash
-# You're trying to push to main/develop directly
-# Create a feature branch instead:
-git checkout -b feature/your-feature-name
-git push -u origin feature/your-feature-name
-```
-
-### "Your branch and 'origin/main' have diverged"
-
-```bash
-# If on feature branch, merge main
-git merge origin/main
-
-# If on main (shouldn't happen), pull
-git pull --no-rebase origin main
-```
-
-## Best Practices
-
-1. ✅ **Always create feature branches**
-2. ✅ **Pull before creating new branch**
-3. ✅ **Use descriptive branch names**
-4. ✅ **Write clear commit messages**
-5. ✅ **Keep commits focused and atomic**
-6. ✅ **Push regularly to backup work**
-7. ✅ **Delete branches after merge**
-8. ✅ **Keep feature branches short-lived**
-
-## Never Do This
-
-1. ❌ **Never commit directly to main**
-2. ❌ **Never commit directly to develop**
-3. ❌ **Never force push to protected branches**
-4. ❌ **Never merge without CI checks passing**
-5. ❌ **Never push sensitive data (keys, passwords)**
-6. ❌ **Never commit large binary files**
-7. ❌ **Never rewrite public history**
-
-## Related Documentation
-
-- [GitHub Flow](https://guides.github.com/introduction/flow/)
-- [Conventional Commits](https://www.conventionalcommits.org/)
-- [Git Best Practices](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project)
 
 ---
 
-**Remember: When in doubt, create a feature branch!**
+## CI/CD Pipeline
+
+### Automated Checks
+
+Every PR triggers these checks:
+
+| Check          | Description           | Must Pass |
+| -------------- | --------------------- | --------- |
+| **Lint**       | ESLint code quality   | ✅ Yes    |
+| **Type Check** | TypeScript validation | ✅ Yes    |
+| **Test**       | Unit tests            | ✅ Yes    |
+| **Coverage**   | Test coverage (71%+)  | ✅ Yes    |
+| **Build**      | Production build      | ✅ Yes    |
+| **E2E**        | End-to-end tests      | ✅ Yes    |
+| **Lighthouse** | Performance tests     | ✅ Yes    |
+| **SonarQube**  | Code quality analysis | ✅ Yes    |
+
+### If Checks Fail
+
+1. **Review the error logs** in GitHub Actions
+2. **Fix the issues** on your feature branch
+3. **Commit and push** the fixes
+4. **Wait for checks** to run again
+
+---
+
+## Branch Protection Settings
+
+### Current Settings (GitHub)
+
+**Main Branch**:
+
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass
+- ✅ Require branches to be up to date
+- ✅ Include administrators (no one can bypass)
+
+**Develop Branch**:
+
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass
+- ✅ Require branches to be up to date
+
+### To View/Update Settings
+
+1. Go to GitHub repository
+2. Click **Settings** → **Branches**
+3. View **Branch protection rules**
+
+---
+
+## Troubleshooting
+
+### Error: "Protected branch update failed"
+
+**Cause**: Trying to push directly to `main` or `develop`
+
+**Solution**: Create a feature branch and PR instead
+
+```bash
+git checkout -b feature/my-feature
+git push -u origin feature/my-feature
+```
+
+### Error: "Updates were rejected"
+
+**Cause**: Your branch is behind the remote
+
+**Solution**: Pull latest changes first
+
+```bash
+git pull origin feature/my-feature
+# Or if you want to rebase
+git pull --rebase origin feature/my-feature
+```
+
+### Error: "Merge conflicts"
+
+**Cause**: Your changes conflict with other changes
+
+**Solution**: Resolve conflicts manually
+
+```bash
+# Update your branch
+git fetch origin
+git merge origin/develop
+
+# Resolve conflicts in editor
+# Stage resolved files
+git add <files>
+git commit -m "fix: resolve merge conflicts"
+git push
+```
+
+---
+
+## Additional Resources
+
+- [Git Documentation](https://git-scm.com/doc)
+- [GitHub Flow Guide](https://guides.github.com/introduction/flow/)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
+
+---
+
+## Questions?
+
+If you have questions about the Git workflow:
+
+1. Check this guide first
+2. Review [CONTRIBUTING.md](../CONTRIBUTING.md)
+3. Search existing issues
+4. Create a new issue with the `question` label
+
+---
+
+**Last Updated**: 2026-04-30
+**Version**: 1.0.0
