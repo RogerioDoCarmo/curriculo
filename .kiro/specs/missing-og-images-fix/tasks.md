@@ -1,0 +1,71 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration test
+  - **Property 1: Bug Condition** - Open Graph and Twitter Images Missing
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the bug exists
+  - **Scoped PBT Approach**: Test all three locales (pt-BR, en, es) to ensure the bug is consistent across locales
+  - Test that `generateMetadata` returns metadata where `openGraph.images` is undefined for all locales
+  - Test that `generateMetadata` returns metadata where `twitter.images` is undefined for all locales
+  - The test assertions should match the Expected Behavior Properties from design:
+    - After fix: `openGraph.images` should be an array with url, width, height, and alt properties
+    - After fix: `twitter.images` should be an array with the image URL
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found to understand root cause (e.g., "metadata.openGraph.images is undefined instead of array")
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 1.1, 1.2, 1.3, 1.4_
+
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Existing Metadata Unchanged
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for all existing metadata properties
+  - Capture current values for: title, description, keywords, authors, creator, metadataBase, alternates, openGraph (type, url, title, description, siteName, locale, alternateLocale), twitter (card, title, description, creator), robots
+  - Write property-based tests capturing observed behavior patterns from Preservation Requirements
+  - Property-based testing generates many test cases for stronger guarantees
+  - Test all three locales (pt-BR, en, es) to ensure preservation across locales
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.4_
+
+- [x] 3. Fix for missing Open Graph and Twitter Card images
+  - [x] 3.1 Implement the fix in app/[locale]/layout.tsx
+    - Add `images` property to `openGraph` object (after line 115)
+    - Include array with single image object: `{ url: "/og-image.png", width: 1200, height: 630, alt: title }`
+    - Add `images` property to `twitter` object (after line 121)
+    - Include array with single string: `["/og-image.png"]`
+    - Ensure proper TypeScript typing (Next.js Metadata type)
+    - Follow existing code style and formatting
+    - _Bug_Condition: isBugCondition(metadata) where metadata.openGraph.images IS UNDEFINED OR metadata.twitter.images IS UNDEFINED_
+    - _Expected_Behavior: metadata.openGraph.images is array with url="/og-image.png", width=1200, height=630, alt=title AND metadata.twitter.images is array with "/og-image.png"_
+    - _Preservation: All existing metadata properties (title, description, keywords, authors, creator, metadataBase, alternates, openGraph.type/url/title/description/siteName/locale/alternateLocale, twitter.card/title/description/creator, robots) remain unchanged_
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 2.3, 2.4, 3.1, 3.2, 3.3, 3.4_
+
+  - [x] 3.2 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Open Graph and Twitter Images Present
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - Verify `openGraph.images` array exists with correct url, width, height, and alt for all locales
+    - Verify `twitter.images` array exists with correct url for all locales
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+
+  - [x] 3.3 Verify preservation tests still pass
+    - **Property 2: Preservation** - Existing Metadata Unchanged
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all existing metadata properties still have the same values after fix
+    - Confirm locale-specific metadata generation still works correctly
+    - Confirm SEO metadata and robots settings remain unchanged
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - Run all tests (bug condition + preservation)
+  - Verify no TypeScript errors in app/[locale]/layout.tsx
+  - Verify the fix is minimal and only adds the `images` properties
+  - Ask the user if questions arise
