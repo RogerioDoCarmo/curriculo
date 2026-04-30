@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Lazy-loaded component definitions for code splitting
  *
@@ -5,6 +7,9 @@
  * to enable code splitting and improve initial page load performance.
  *
  * Requirements: 6.3, 6.4
+ *
+ * Note: Marked as 'use client' for Next.js 16 compatibility
+ * (ssr: false in dynamic imports requires Client Component)
  */
 
 import dynamic from "next/dynamic";
@@ -118,8 +123,10 @@ export const LazySkillsSection = dynamic(() => import("@/components/SkillsSectio
 
 /**
  * NotificationPrompt - Client-side only notification permission prompt
+ * Note: Commented out due to Next.js 16 restriction on ssr: false in Server Components
+ * If needed, move this to a separate client-side file
  */
-export const LazyNotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), {
-  ssr: false,
-  loading: () => null,
-});
+// export const LazyNotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), {
+//   ssr: false,
+//   loading: () => null,
+// });

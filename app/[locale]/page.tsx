@@ -1,4 +1,4 @@
-import { unstable_setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
@@ -6,7 +6,7 @@ import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components
 import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 
 interface HomePageProps {
-  readonly params: { locale: string };
+  readonly params: Promise<{ locale: string }>;
 }
 
 export function generateStaticParams() {
@@ -66,13 +66,15 @@ function HomePageContent({ locale }: HomePageContentProps) {
   );
 }
 
-export default function HomePage({ params: { locale } }: HomePageProps) {
+export default async function HomePage({ params }: HomePageProps) {
+  const { locale } = await params;
+
   if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
     notFound();
   }
 
   // Enable static rendering for this locale
-  unstable_setRequestLocale(locale);
+  setRequestLocale(locale);
 
   return <HomePageContent locale={locale} />;
 }

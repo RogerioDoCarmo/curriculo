@@ -14,9 +14,9 @@ The personal resume website is a static, performance-optimized web application b
 
 ### Tech Stack Decisions
 
-#### Framework: Next.js 14 (App Router)
+#### Framework: Next.js 16 (App Router)
 
-- **Rationale**: Next.js provides excellent static site generation (SSG), built-in image optimization, automatic code splitting, and strong SEO support. The App Router offers better performance and developer experience.
+- **Rationale**: Next.js provides excellent static site generation (SSG), built-in image optimization, automatic code splitting, and strong SEO support. The App Router offers better performance and developer experience. Next.js 16 includes Turbopack for 10x faster builds.
 - **Static Export**: Use `output: 'export'` to generate pure static files for Vercel deployment
 - **Alternatives Considered**: Gatsby (more complex, slower builds), Create React App (lacks SSG features), Astro (less React ecosystem support)
 

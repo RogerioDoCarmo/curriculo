@@ -18,14 +18,9 @@ const nextConfig = {
     formats: ["image/webp"],
   },
   trailingSlash: true, // Better compatibility with static hosting
-  eslint: {
-    ignoreDuringBuilds: true, // We'll run ESLint separately in CI
-  },
   typescript: {
     ignoreBuildErrors: true, // We'll run TypeScript checks separately in CI
   },
-  // Optimize production builds
-  swcMinify: true, // Use SWC for faster minification
   // Compress output
   compress: true,
   // Generate ETags for better caching
