@@ -26,6 +26,67 @@ Thank you for contributing to this project! This guide will help you understand 
 
 ## Development Workflow
 
+### ⚠️ CRITICAL: Branch Protection Rules
+
+**The `main` and `develop` branches are protected and require pull requests.**
+
+**NEVER commit directly to `main` or `develop`!**
+
+Always follow this workflow:
+
+1. **Check current branch** before making changes:
+
+   ```bash
+   git branch --show-current
+   ```
+
+2. **If on `main` or `develop`**, create a feature branch:
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make your changes** on the feature branch
+
+4. **Commit and push** to the feature branch:
+
+   ```bash
+   git add .
+   git commit -m "feat: your changes"
+   git push -u origin feature/your-feature-name
+   ```
+
+5. **Create a Pull Request** on GitHub
+
+6. **After PR is merged**, update your local branches:
+
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout develop
+   git pull origin develop
+   ```
+
+7. **Delete the feature branch** (optional):
+   ```bash
+   git branch -d feature/your-feature-name
+   git push origin --delete feature/your-feature-name
+   ```
+
+### Git Workflow Diagram
+
+```
+main (protected)
+  ↓
+develop (protected)
+  ↓
+feature/your-feature ← Work here!
+  ↓
+Pull Request → develop
+  ↓
+Pull Request → main
+```
+
 ### Branch Naming
 
 - `feature/` - New features
