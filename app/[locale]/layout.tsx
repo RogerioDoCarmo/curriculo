@@ -125,12 +125,21 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
       siteName: "Rogério do Carmo",
       locale: safeLocale,
       alternateLocale: SUPPORTED_LOCALES.filter((l) => l !== safeLocale),
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
       creator: "@rogeriodocarmo",
+      images: ["/og-image.png"],
     },
     robots: {
       index: true,
