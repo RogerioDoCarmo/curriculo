@@ -1158,6 +1158,101 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document the resolution in commit message
     - _Close out the known issue_
 
+- [ ] 32. Submit sitemap and robots.txt to search engines (SEO optimization)
+  - [ ] 32.1 Verify sitemap.xml and robots.txt are accessible
+    - Visit `https://rogeriodocarmo.com/sitemap.xml` and verify it loads correctly
+    - Visit `https://rogeriodocarmo.com/robots.txt` and verify it loads correctly
+    - Verify sitemap includes all pages and locales (pt-BR, en, es)
+    - Verify robots.txt includes sitemap URL
+    - Test on all four domains:
+      - `https://rogeriodocarmo.com`
+      - `https://rogeriodocarmo.com.br`
+      - `https://rogeriodocarmo.xyz`
+      - `https://rogeriodocarmo.online`
+    - _Requirements: 7.3, 7.4_
+  - [ ] 32.2 Submit sitemap to Google Search Console
+    - Go to [Google Search Console](https://search.google.com/search-console)
+    - Add property for `https://rogeriodocarmo.com` (if not already added)
+    - Verify domain ownership using one of these methods:
+      - HTML file upload (recommended for static sites)
+      - HTML meta tag in `<head>`
+      - Google Analytics tracking code
+      - Google Tag Manager
+      - DNS TXT record
+    - Navigate to "Sitemaps" in left sidebar
+    - Enter sitemap URL: `https://rogeriodocarmo.com/sitemap.xml`
+    - Click "Submit"
+    - Verify sitemap is processed successfully (may take a few hours)
+    - Repeat for all four domains (add each as separate property)
+    - _Requirements: 7.3_
+  - [ ] 32.3 Submit sitemap to Bing Webmaster Tools
+    - Go to [Bing Webmaster Tools](https://www.bing.com/webmasters)
+    - Add site: `https://rogeriodocarmo.com` (if not already added)
+    - Verify site ownership using one of these methods:
+      - XML file upload
+      - Meta tag in `<head>`
+      - CNAME record in DNS
+    - Navigate to "Sitemaps" section
+    - Enter sitemap URL: `https://rogeriodocarmo.com/sitemap.xml`
+    - Click "Submit"
+    - Verify sitemap is processed successfully
+    - Repeat for all four domains
+    - _Requirements: 7.3_
+  - [ ] 32.4 Submit sitemap to Yandex Webmaster (optional, for Russian audience)
+    - Go to [Yandex Webmaster](https://webmaster.yandex.com/)
+    - Add site: `https://rogeriodocarmo.com`
+    - Verify site ownership
+    - Navigate to "Indexing" → "Sitemap files"
+    - Add sitemap URL: `https://rogeriodocarmo.com/sitemap.xml`
+    - Click "Add"
+    - _Optional: Only if targeting Russian-speaking audience_
+  - [ ] 32.5 Verify indexing status in Google Search Console
+    - Wait 24-48 hours after sitemap submission
+    - Go to Google Search Console → "Coverage" or "Pages"
+    - Check "Valid" pages count (should match sitemap page count)
+    - Check for any errors or warnings
+    - Verify all locales are indexed (pt-BR, en, es)
+    - Check "Enhancements" for any issues with structured data
+    - _Requirements: 7.3, 20.1_
+  - [ ] 32.6 Verify indexing status in Bing Webmaster Tools
+    - Wait 24-48 hours after sitemap submission
+    - Go to Bing Webmaster Tools → "Site Explorer"
+    - Check indexed pages count
+    - Review "URL Inspection" for any crawl errors
+    - Verify all locales are indexed
+    - _Requirements: 7.3_
+  - [ ] 32.7 Test site search visibility
+    - Google search: `site:rogeriodocarmo.com`
+    - Verify all pages appear in search results
+    - Check that meta descriptions and titles are correct
+    - Verify structured data appears in search results (rich snippets)
+    - Bing search: `site:rogeriodocarmo.com`
+    - Verify pages appear in Bing search results
+    - _Requirements: 7.1, 7.2, 20.1_
+  - [ ] 32.8 Set up URL inspection and monitoring
+    - In Google Search Console, use "URL Inspection" tool to test specific pages
+    - Request indexing for important pages (homepage, projects, experience)
+    - Set up email notifications for crawl errors
+    - In Bing Webmaster Tools, set up email alerts for issues
+    - Monitor "Coverage" reports weekly for the first month
+    - _Requirements: 7.3_
+  - [ ] 32.9 Document submission details
+    - Create `docs/SEO-SUBMISSION-LOG.md` with:
+      - Submission dates for each search engine
+      - Verification methods used
+      - Sitemap URLs submitted
+      - Initial indexing status
+      - Any issues encountered and resolutions
+    - Add credentials/access info to password manager (if applicable)
+    - Document monitoring schedule and responsibilities
+    - _Requirements: 15.2_
+  - [ ] 32.10 Set up Google Analytics and Search Console integration (optional)
+    - Link Google Analytics property to Search Console
+    - Enable Search Console data in Google Analytics
+    - Set up custom reports for organic search traffic
+    - Monitor search queries and click-through rates
+    - _Requirements: 10.1, 10.3_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
