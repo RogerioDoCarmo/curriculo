@@ -4,7 +4,7 @@
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=RogerioDoCarmo_curriculo)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 
-A modern, responsive personal resume website built with Next.js 14, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
 ## Development Progress
 
@@ -43,7 +43,7 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router) with TypeScript
+- **Framework**: Next.js 16 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + CSS Modules
 - **Content**: Markdown files with Gray-matter parsing
 - **Internationalization**: next-intl

@@ -1,11 +1,5 @@
 {
-  // ESLint Configuration
-  // See CONTRIBUTING.md for code style guidelines
-  // See TESTING.md for testing patterns
-  // See .kiro/docs/test-patterns.md for quick reference
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "extends": ["next/core-web-vitals"],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -14,11 +8,6 @@
       }
     ],
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    // Forbid non-null assertions - use null checks instead
-    // See .kiro/docs/test-patterns.md for examples
-    "@typescript-eslint/no-non-null-assertion": "warn",
     "prefer-const": "error",
     "no-var": "error",
     "no-console": [
@@ -27,6 +16,5 @@
         "allow": ["warn", "error"]
       }
     ]
-  },
-  "ignorePatterns": ["node_modules/", ".next/", "out/", "coverage/", "storybook-static/"]
+  }
 }

@@ -93,13 +93,17 @@ export default function TechStackSection() {
 
                         {/* Why Chosen */}
                         <div className="mb-3">
-                          <p className="text-sm font-medium text-foreground mb-1">Why:</p>
+                          <p className="text-sm font-medium text-foreground mb-1">
+                            {t("labels.why")}
+                          </p>
                           <p className="text-sm text-muted-foreground">{tech.why}</p>
                         </div>
 
                         {/* Benefits */}
                         <div className="mb-4">
-                          <p className="text-sm font-medium text-foreground mb-1">Benefits:</p>
+                          <p className="text-sm font-medium text-foreground mb-1">
+                            {t("labels.benefits")}
+                          </p>
                           <p className="text-sm text-muted-foreground">{tech.benefits}</p>
                         </div>
 
@@ -115,9 +119,9 @@ export default function TechStackSection() {
                             focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded
                             transition-colors duration-200
                           "
-                          aria-label={`Learn more about ${tech.name} (opens in new tab)`}
+                          aria-label={`${t("labels.learnMore")} ${tech.name} (opens in new tab)`}
                         >
-                          Learn more
+                          {t("labels.learnMore")}
                           <ExternalLink className="w-4 h-4" aria-hidden="true" />
                         </a>
                       </article>

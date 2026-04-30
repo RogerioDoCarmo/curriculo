@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [ chromium, firefox, webkit, mobile-chrome, mobile-safari ]
+        browser: [chromium, firefox, webkit, mobile-chrome, mobile-safari]
 
     steps:
       - name: Checkout code
@@ -32,11 +32,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps ${{ matrix.browser == 'mobile-chrome' &&

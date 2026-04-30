@@ -81,21 +81,21 @@ export default function ExitIntentModal({
   const handleDownloadResume = () => {
     // TODO: Track download event with analytics
     // trackEvent('exit_intent_resume_download');
-    window.open(resumeUrl, "_blank");
+    window.open(resumeUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleConnectLinkedIn = () => {
     // TODO: Track LinkedIn click with analytics
     // trackEvent('exit_intent_linkedin_click');
-    window.open(linkedInUrl, "_blank");
+    window.open(linkedInUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleStarGitHub = () => {
     // TODO: Track GitHub star click with analytics
     // trackEvent('exit_intent_github_click');
-    window.open(githubUrl, "_blank");
+    window.open(githubUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
