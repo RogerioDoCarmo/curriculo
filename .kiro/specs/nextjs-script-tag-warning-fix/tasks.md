@@ -1,0 +1,81 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration test
+  - **Property 1: Bug Condition** - Console Warning for Raw Script Tags
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the console warning exists
+  - **Scoped PBT Approach**: For this deterministic bug, scope the property to the concrete failing case: raw `<script>` tags in React component JSX
+  - Test that loading the application in development mode produces console warnings about script tags
+  - The test assertions should match the Expected Behavior Properties from design: no console warnings about script tags
+  - Create a test that:
+    - Starts the Next.js development server
+    - Loads the application in a headless browser
+    - Captures console warnings
+    - Asserts that warnings matching "Encountered a script tag while rendering React component" are present
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found: exact warning messages, number of warnings (should be 3: theme script + 2 Schema.org scripts)
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 1.1, 1.2_
+
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Theme Application and FOUC Prevention
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for theme application functionality:
+    - Load page with localStorage theme='dark' → dark class applied to document.documentElement
+    - Load page with localStorage theme='light' → no dark class applied
+    - Load page with no localStorage but system prefers dark → dark class applied
+    - Load page with localStorage blocked → page renders without crashing
+  - Write property-based tests capturing observed behavior patterns from Preservation Requirements:
+    - Property: For all theme preferences (dark, light, null, invalid), theme application logic works correctly
+    - Property: For all localStorage states (available, blocked, quota exceeded), error handling prevents crashes
+    - Property: For all system preferences (dark, light), fallback detection works correctly
+    - Property: Theme is applied before React hydration (no FOUC)
+  - Property-based testing generates many test cases for stronger guarantees
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+
+- [x] 3. Fix for Next.js Script Tag Warning
+  - [x] 3.1 Implement the fix
+    - Add import statement: `import Script from 'next/script';` at the top of `app/[locale]/layout.tsx`
+    - Replace theme FOUC prevention script (lines 196-204) with `<Script id="theme-init" strategy="beforeInteractive">{...}</Script>`
+    - Replace Person Schema.org script (line 189) with `<Script id="person-schema" type="application/ld+json" strategy="beforeInteractive">{personSchema}</Script>`
+    - Replace WebSite Schema.org script (line 192) with `<Script id="website-schema" type="application/ld+json" strategy="beforeInteractive">{webSiteSchema}</Script>`
+    - Remove ESLint disable comment (line 195): `{/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}`
+    - Preserve security comments documenting XSS prevention and controlled data sources
+    - _Bug_Condition: isBugCondition(input) where input.type === 'script' AND input is rendered inside React component JSX AND Next.js version >= 16.0.0_
+    - _Expected_Behavior: No console warnings about script tags while maintaining theme application timing (beforeInteractive strategy)_
+    - _Preservation: Theme application logic, FOUC prevention, error handling, Schema.org scripts, suppressHydrationWarning attributes_
+    - _Requirements: 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 3.3, 3.4, 3.5_
+
+  - [x] 3.2 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - No Console Warnings
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior (no console warnings)
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed - no console warnings)
+    - _Requirements: Expected Behavior Properties from design (2.1, 2.2)_
+
+  - [x] 3.3 Verify preservation tests still pass
+    - **Property 2: Preservation** - Theme Application and FOUC Prevention
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all tests still pass after fix:
+      - Theme application with localStorage preferences
+      - System preference fallback
+      - Error handling for localStorage access
+      - FOUC prevention timing
+      - Schema.org scripts rendering
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - Run all tests (bug condition + preservation)
+  - Verify no console warnings in development mode
+  - Verify theme application works correctly (no FOUC)
+  - Verify Schema.org scripts are present in page source
+  - Ensure all tests pass, ask the user if questions arise
