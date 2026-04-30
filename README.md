@@ -173,7 +173,21 @@ See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best pra
 
 ## Deployment
 
-The website is configured for deployment on Vercel with automatic deployments from the main branch. Custom domains are configured through the Vercel dashboard.
+The website is deployed on Vercel with automatic deployments from the main branch. The site is accessible through **11 custom domains**, all pointing to the same deployment:
+
+- **rogeriodocarmo.com** (primary)
+- rogeriodocarmo.io
+- rogeriodocarmo.info
+- rogeriodocarmo.click
+- rogeriodocarmo.shop
+- rogeriodocarmo.org
+- rogeriodocarmo.net
+- rogeriodocarmo.tech
+- rogeriodocarmo.com.br
+- rogeriodocarmo.online
+- rogeriodocarmo.xyz
+
+See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
 
 ### Environment Variables
 
@@ -198,5 +212,7 @@ MIT
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
+- [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
+- [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log

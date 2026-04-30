@@ -9,11 +9,18 @@ This guide provides step-by-step instructions for submitting your sitemap and ro
 Before submitting to search engines, verify:
 
 - ✅ Site is deployed to production
-- ✅ All four domains are working:
-  - https://rogeriodocarmo.com
+- ✅ All eleven domains are working:
+  - https://rogeriodocarmo.com (primary)
+  - https://rogeriodocarmo.io
+  - https://rogeriodocarmo.info
+  - https://rogeriodocarmo.click
+  - https://rogeriodocarmo.shop
+  - https://rogeriodocarmo.org
+  - https://rogeriodocarmo.net
+  - https://rogeriodocarmo.tech
   - https://rogeriodocarmo.com.br
-  - https://rogeriodocarmo.xyz
   - https://rogeriodocarmo.online
+  - https://rogeriodocarmo.xyz
 - ✅ Sitemap is accessible: `/sitemap.xml`
 - ✅ Robots.txt is accessible: `/robots.txt`
 
@@ -28,16 +35,30 @@ Before submitting to search engines, verify:
 ### Your Sitemap URLs
 
 - Primary: `https://rogeriodocarmo.com/sitemap.xml`
+- IO: `https://rogeriodocarmo.io/sitemap.xml`
+- Info: `https://rogeriodocarmo.info/sitemap.xml`
+- Click: `https://rogeriodocarmo.click/sitemap.xml`
+- Shop: `https://rogeriodocarmo.shop/sitemap.xml`
+- Org: `https://rogeriodocarmo.org/sitemap.xml`
+- Net: `https://rogeriodocarmo.net/sitemap.xml`
+- Tech: `https://rogeriodocarmo.tech/sitemap.xml`
 - Brazil: `https://rogeriodocarmo.com.br/sitemap.xml`
-- XYZ: `https://rogeriodocarmo.xyz/sitemap.xml`
 - Online: `https://rogeriodocarmo.online/sitemap.xml`
+- XYZ: `https://rogeriodocarmo.xyz/sitemap.xml`
 
 ### Your Robots.txt URLs
 
 - Primary: `https://rogeriodocarmo.com/robots.txt`
+- IO: `https://rogeriodocarmo.io/robots.txt`
+- Info: `https://rogeriodocarmo.info/robots.txt`
+- Click: `https://rogeriodocarmo.click/robots.txt`
+- Shop: `https://rogeriodocarmo.shop/robots.txt`
+- Org: `https://rogeriodocarmo.org/robots.txt`
+- Net: `https://rogeriodocarmo.net/robots.txt`
+- Tech: `https://rogeriodocarmo.tech/robots.txt`
 - Brazil: `https://rogeriodocarmo.com.br/robots.txt`
-- XYZ: `https://rogeriodocarmo.xyz/robots.txt`
 - Online: `https://rogeriodocarmo.online/robots.txt`
+- XYZ: `https://rogeriodocarmo.xyz/robots.txt`
 
 ---
 
@@ -51,7 +72,7 @@ Before submitting to search engines, verify:
    - Homepage (3 locales: `/`, `/en`, `/es`)
    - All routes for each locale
 4. Verify `lastmod`, `changefreq`, and `priority` are set
-5. Repeat for all four domains
+5. Repeat for all eleven domains
 
 ### Check Robots.txt
 
@@ -65,7 +86,7 @@ Before submitting to search engines, verify:
    Sitemap: https://rogeriodocarmo.com/sitemap.xml
    ```
 
-3. Repeat for all four domains
+3. Repeat for all eleven domains
 
 ---
 
@@ -115,10 +136,17 @@ Choose one of these verification methods:
 
 Add each domain as a separate property:
 
-- `https://rogeriodocarmo.com` ✅
+- `https://rogeriodocarmo.com` ✅ (primary)
+- `https://rogeriodocarmo.io`
+- `https://rogeriodocarmo.info`
+- `https://rogeriodocarmo.click`
+- `https://rogeriodocarmo.shop`
+- `https://rogeriodocarmo.org`
+- `https://rogeriodocarmo.net`
+- `https://rogeriodocarmo.tech`
 - `https://rogeriodocarmo.com.br`
-- `https://rogeriodocarmo.xyz`
 - `https://rogeriodocarmo.online`
+- `https://rogeriodocarmo.xyz`
 
 ---
 
@@ -411,11 +439,11 @@ Use this checklist to track your progress:
 - [ ] Added property in Google Search Console for primary domain
 - [ ] Verified ownership in Google Search Console
 - [ ] Submitted sitemap to Google Search Console
-- [ ] Added properties for all 4 domains in Google Search Console
+- [ ] Added properties for all 11 domains in Google Search Console
 - [ ] Added site in Bing Webmaster Tools for primary domain
 - [ ] Verified ownership in Bing Webmaster Tools
 - [ ] Submitted sitemap to Bing Webmaster Tools
-- [ ] Added all 4 domains in Bing Webmaster Tools
+- [ ] Added all 11 domains in Bing Webmaster Tools
 - [ ] (Optional) Submitted to Yandex Webmaster
 - [ ] Set up email notifications in Google Search Console
 - [ ] Set up email notifications in Bing Webmaster Tools
