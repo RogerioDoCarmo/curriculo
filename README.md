@@ -99,6 +99,22 @@ npm install
 yarn install
 ```
 
+### ⚠️ Important: Branch Protection
+
+**The `main` and `develop` branches are protected.**
+
+Always create a feature branch before making changes:
+
+```bash
+# Check current branch
+git branch --show-current
+
+# Create feature branch (if on main/develop)
+git checkout -b feature/your-feature-name
+```
+
+See [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) for complete Git workflow guide.
+
 ### Development Server
 
 ```bash
@@ -181,5 +197,6 @@ MIT
 
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
+- [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
