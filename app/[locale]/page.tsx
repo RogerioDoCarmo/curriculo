@@ -1,7 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
-import { LazyTechStackSection } from "@/lib/lazy-components";
 import { getExperiences, getProjects, getSkills } from "@/lib/content";
 import HomePageContent from "./HomePageContent";
 

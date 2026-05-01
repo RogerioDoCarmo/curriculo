@@ -7,6 +7,10 @@ import Script from "next/script";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { generateStructuredDataScript } from "@/lib/structured-data";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import ClientNotificationWrapper from "@/components/ClientNotificationWrapper";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -210,7 +214,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <main className="min-h-screen">{children}</main>
+            <ErrorBoundary component="RootLayout">
+              <Header locale={locale} />
+              <main className="min-h-screen">{children}</main>
+              <Footer locale={locale} />
+              <ClientNotificationWrapper />
+            </ErrorBoundary>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
