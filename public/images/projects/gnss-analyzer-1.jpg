@@ -1,0 +1,16 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#059669"/>
+  <g transform="translate(400, 300)">
+    <!-- GPS/Location icon -->
+    <circle cx="0" cy="0" r="60" fill="none" stroke="white" stroke-width="3" opacity="0.9"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="white" stroke-width="3" opacity="0.7"/>
+    <circle cx="0" cy="0" r="20" fill="none" stroke="white" stroke-width="3" opacity="0.5"/>
+    <circle cx="0" cy="0" r="8" fill="white" opacity="0.9"/>
+    <!-- Crosshair -->
+    <line x1="-80" y1="0" x2="-65" y2="0" stroke="white" stroke-width="2" opacity="0.8"/>
+    <line x1="65" y1="0" x2="80" y2="0" stroke="white" stroke-width="2" opacity="0.8"/>
+    <line x1="0" y1="-80" x2="0" y2="-65" stroke="white" stroke-width="2" opacity="0.8"/>
+    <line x1="0" y1="65" x2="0" y2="80" stroke="white" stroke-width="2" opacity="0.8"/>
+  </g>
+  <text x="400" y="500" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle" opacity="0.8">GNSS Logger Analyzer</text>
+</svg>
