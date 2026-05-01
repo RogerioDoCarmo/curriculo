@@ -40,7 +40,7 @@ export default async function HomePage({ params }: HomePageProps) {
       heroTitle={t("hero.title")}
       heroGreeting={heroT("greeting")}
       heroCtaText={heroT("cta")}
-      heroContactText={t("contact.title")}
+      heroContactText={heroT("contact")}
       contactTitle={t("contact.title")}
       contactSubtitle={t("contact.subtitle")}
       experiences={experiences}
