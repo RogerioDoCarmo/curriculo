@@ -75,6 +75,13 @@
   "homepage": {
     "title": "Sitio Web de Currículum Personal",
     "description": "Un sitio web de currículum personal moderno y responsivo construido con Next.js 16, TypeScript y Tailwind CSS.",
+    "hero": {
+      "title": "Desarrollador Frontend Mobile React Native"
+    },
+    "contact": {
+      "title": "Ponte en Contacto",
+      "subtitle": "¿Tienes un proyecto en mente o quieres charlar? ¡Envíame un mensaje!"
+    },
     "stayInTouch": {
       "title": "Mantente en contacto",
       "subtitle": "Deja tu correo electrónico y me pondré en contacto sobre oportunidades o colaboraciones.",

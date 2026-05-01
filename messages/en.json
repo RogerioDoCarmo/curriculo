@@ -75,6 +75,13 @@
   "homepage": {
     "title": "Personal Resume Website",
     "description": "A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS.",
+    "hero": {
+      "title": "Frontend Mobile React Native Developer"
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "subtitle": "Have a project in mind or want to chat? Send me a message!"
+    },
     "stayInTouch": {
       "title": "Stay in touch",
       "subtitle": "Leave your email and I'll reach out about opportunities or collaborations.",
