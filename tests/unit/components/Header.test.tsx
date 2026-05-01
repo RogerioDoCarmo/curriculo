@@ -255,6 +255,16 @@ describe("Header — responsive navigation", () => {
     expect(themeToggle).toBeInTheDocument();
   });
 
+  it("renders Linktree icon link in the header", () => {
+    renderHeader();
+
+    const linktree = screen.getByRole("link", { name: /linktree profile/i });
+    expect(linktree).toBeInTheDocument();
+    expect(linktree).toHaveAttribute("href", "https://linktr.ee/rogeriodocarmo");
+    expect(linktree).toHaveAttribute("target", "_blank");
+    expect(linktree).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
   // -------------------------------------------------------------------------
   // 7. Navigation links: Home, Projects, Experience, Skills, Contact, Tech Stack
   // -------------------------------------------------------------------------
