@@ -32,7 +32,19 @@
     "message": "Message",
     "submit": "Send Message",
     "success": "Message sent successfully!",
-    "error": "Failed to send message. Please try again."
+    "error": "Failed to send message. Please try again.",
+    "sending": "Sending...",
+    "nameRequired": "Name is required",
+    "nameMinLength": "Name must be at least 2 characters",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Email must be a valid email address",
+    "messageRequired": "Message is required",
+    "messageMinLength": "Message must be at least 10 characters",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "your@email.com",
+    "messagePlaceholder": "Your message (at least 10 characters)",
+    "formAriaLabel": "Contact form",
+    "orUseForm": "Or use the form below to send me a message"
   },
   "theme": {
     "toggle": "Toggle theme",

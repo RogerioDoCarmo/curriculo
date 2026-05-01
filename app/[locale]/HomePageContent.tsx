@@ -73,7 +73,7 @@ export default function HomePageContent({
             {contactTitle}
           </h2>
           <p className="text-center text-gray-600 dark:text-gray-300 mb-8">{contactSubtitle}</p>
-          <ContactForm />
+          <ContactForm locale={locale} />
         </div>
       </section>
 
