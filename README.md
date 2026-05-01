@@ -1,9 +1,32 @@
 # Personal Resume Website
 
+<!-- Build & Deployment Status -->
+
 [![CI](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml/badge.svg)](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml)
+[![Vercel](https://deploy-badge.vercel.app/?url=https://rogeriodocarmo.com&name=Vercel)](https://rogeriodocarmo.com)
+
+<!-- Code Quality -->
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=RogerioDoCarmo_curriculo)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
-[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
+
+<!-- Tech Stack -->
+
+[![Next.js](https://img.shields.io/badge/Next.js-16.2.4-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+
+<!-- Project Info -->
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js)](https://nodejs.org/)
+[![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
+[![Last Commit](https://img.shields.io/github/last-commit/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/commits/main)
 
 A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
@@ -212,6 +235,7 @@ MIT
 
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
+- [docs/BADGES.md](./docs/BADGES.md) - **Explanation of all quality badges** (16 badges)
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
