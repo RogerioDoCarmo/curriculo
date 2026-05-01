@@ -228,9 +228,11 @@ git rebase origin/develop
 # Or merge develop into your branch
 git merge origin/develop
 
-# Push (may need force push if rebased)
-git push --force-with-lease
+# Push changes
+git push
 ```
+
+**Note**: Avoid rebasing if your branch has already been pushed and others might be working on it. If you must rebase a pushed branch, use `git push --force-with-lease` (safer than `--force`) and communicate with your team first.
 
 ### Scenario 4: Merge Conflicts
 
@@ -273,9 +275,25 @@ git reset --soft HEAD~1
 git add <files>
 git commit -m "feat: corrected version"
 
-# If already pushed, force push (use with caution!)
-git push --force-with-lease
+# Push new commit
+git push
 ```
+
+**Better Alternative**: Instead of undoing commits, create a new commit with the fix. This preserves history and avoids force push:
+
+```bash
+# Make corrections
+git add <files>
+git commit -m "fix: correct previous commit"
+git push
+```
+
+**If you absolutely must force push** (e.g., fixing sensitive data):
+
+- Use `--force-with-lease` (safer than `--force`)
+- Only do this on branches you own
+- Communicate with your team first
+- Never force push to `main` or `develop`
 
 ---
 
@@ -296,13 +314,26 @@ git push --force-with-lease
 ### Don'ts ❌
 
 - ❌ **Never commit directly to `main` or `develop`**
-- ❌ **Never force push to protected branches**
+- ❌ **Never force push to protected branches** (`main`, `develop`)
+- ❌ **Avoid force push on feature branches** - prefer new commits to preserve history
 - ❌ **Don't create PRs with failing tests**
 - ❌ **Don't merge your own PRs** (unless you're the only developer)
 - ❌ **Don't leave stale branches** (delete after merge)
 - ❌ **Don't commit sensitive data** (API keys, passwords)
 - ❌ **Don't commit large binary files** (use Git LFS if needed)
-- ❌ **Don't rewrite public history** (avoid force push on shared branches)
+- ❌ **Don't rewrite public history** - avoid force push, prefer new commits
+
+**When Force Push Might Be Necessary**:
+
+- Removing accidentally committed secrets (use `--force-with-lease`)
+- Fixing commit messages before anyone else has pulled
+- Only on branches you own and haven't shared
+
+**Always prefer**:
+
+- Creating new commits instead of amending
+- Merging instead of rebasing on shared branches
+- Communicating with team before any force push
 
 ---
 
