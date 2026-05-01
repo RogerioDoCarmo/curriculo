@@ -30,7 +30,14 @@ export function useAnchorNavigation(sections: string[]): {
       if (sectionId !== "" && !sections.includes(sectionId)) return;
       setCurrentSection(sectionId);
       if (typeof window !== "undefined") {
+        // Update URL hash
         window.history.pushState(null, "", "#" + sectionId);
+
+        // Scroll to the section
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       }
     },
     [sections]
@@ -50,6 +57,14 @@ export function useAnchorNavigation(sections: string[]): {
       const section = hash.startsWith("#") ? hash.slice(1) : hash;
       if (sections.includes(section) || section === "") {
         setCurrentSection(section);
+
+        // Scroll to the section when navigating via browser back/forward
+        if (section) {
+          const element = document.getElementById(section);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
       }
     };
 

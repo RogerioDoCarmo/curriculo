@@ -1,9 +1,8 @@
-import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
-import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
-import EmailSubscribeForm from "@/components/EmailSubscribeForm";
+import { getExperiences, getProjects, getSkills } from "@/lib/content";
+import HomePageContent from "./HomePageContent";
 
 interface HomePageProps {
   readonly params: Promise<{ locale: string }>;
@@ -11,59 +10,6 @@ interface HomePageProps {
 
 export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
-}
-
-interface HomePageContentProps {
-  readonly locale: string;
-}
-
-function HomePageContent({ locale }: HomePageContentProps) {
-  const t = useTranslations("homepage");
-
-  return (
-    <>
-      <article className="flex min-h-screen flex-col items-center justify-center p-8">
-        <header>
-          <h1 className="text-4xl font-bold text-center">{t("title")}</h1>
-        </header>
-        <section className="mt-4">
-          <p className="text-muted-foreground text-center">{t("description")}</p>
-        </section>
-      </article>
-
-      {/* Tech Stack Section - Lazy loaded for code splitting */}
-      <LazyTechStackSection />
-
-      {/* Email capture section at the bottom of the page */}
-      <section
-        id="stay-in-touch"
-        aria-labelledby="stay-in-touch-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 border-t border-border"
-      >
-        <div className="mx-auto max-w-md text-center">
-          <h2 id="stay-in-touch-title" className="text-2xl font-bold text-foreground mb-2">
-            {t("stayInTouch.title")}
-          </h2>
-          <p className="text-muted-foreground mb-6 text-sm">{t("stayInTouch.subtitle")}</p>
-          <EmailSubscribeForm
-            placeholder={t("stayInTouch.placeholder")}
-            buttonLabel={t("stayInTouch.buttonLabel")}
-            successMessage={t("stayInTouch.successMessage")}
-            showMessage={true}
-            messagePlaceholder={t("stayInTouch.messagePlaceholder")}
-          />
-        </div>
-      </section>
-
-      {/* Exit Intent Modal - Lazy loaded, client-side only */}
-      <LazyExitIntentModal
-        enabled={true}
-        locale={locale}
-        linkedInUrl="https://www.linkedin.com/in/rogeriodocarmo/"
-        githubUrl="https://github.com/RogerioDoCarmo/curriculo"
-      />
-    </>
-  );
 }
 
 export default async function HomePage({ params }: HomePageProps) {
@@ -76,5 +22,29 @@ export default async function HomePage({ params }: HomePageProps) {
   // Enable static rendering for this locale
   setRequestLocale(locale);
 
-  return <HomePageContent locale={locale} />;
+  // Get translations
+  const t = await getTranslations("homepage");
+  const heroT = await getTranslations("hero");
+
+  // Load all content
+  const [experiences, projects, skills] = await Promise.all([
+    getExperiences(),
+    getProjects(),
+    getSkills(),
+  ]);
+
+  return (
+    <HomePageContent
+      locale={locale}
+      heroTitle={t("hero.title")}
+      heroGreeting={heroT("greeting")}
+      heroCtaText={heroT("cta")}
+      heroContactText={heroT("contact")}
+      contactTitle={t("contact.title")}
+      contactSubtitle={t("contact.subtitle")}
+      experiences={experiences}
+      projects={projects}
+      skills={skills}
+    />
+  );
 }

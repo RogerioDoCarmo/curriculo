@@ -96,6 +96,10 @@ interface ThemeProviderProps {
 /**
  * ThemeProvider — wraps the app and provides theme context.
  * Must be used as a client component.
+ *
+ * Note: The theme class is applied via inline script in layout.tsx before React hydration
+ * to prevent FOUC. This may cause a hydration warning which is suppressed via
+ * suppressHydrationWarning on the html/body tags.
  */
 export function ThemeProvider({ children, defaultTheme }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme ?? "light");

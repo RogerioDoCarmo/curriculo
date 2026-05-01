@@ -16,8 +16,30 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fc from "fast-check";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
 import type { Project } from "@/types/index";
+
+// Helper to render with intl provider
+function renderWithIntl(component: React.ReactElement) {
+  const messages: AbstractIntlMessages = {
+    projects: {
+      title: "Projects",
+      filterPlaceholder: "Filter by technology",
+      viewProject: "View Project",
+      viewDetails: "View details for",
+      liveDemo: "Live Demo",
+      sourceCode: "Source Code",
+      closeModal: "Close modal",
+    },
+  };
+
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {component}
+    </NextIntlClientProvider>
+  );
+}
 
 // Mock next/image to capture sizes attribute
 jest.mock("next/image", () => ({
@@ -71,7 +93,7 @@ describe("Property 10: Responsive Image Optimization", () => {
           { minLength: 1, maxLength: 5 }
         ),
         (projects: Project[]) => {
-          const { container } = render(<ProjectsSection projects={projects} locale="en" />);
+          const { container } = renderWithIntl(<ProjectsSection projects={projects} locale="en" />);
 
           // Find all img elements in project cards (not in modal)
           const images = container.querySelectorAll("img");
@@ -110,7 +132,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     // Find the project card image
     const cardImage = container.querySelector('img[alt*="screenshot 1"]');
@@ -139,7 +161,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     // Click on the project card to open modal
     const projectCard = screen.getByRole("button", { name: /view details for test project/i });
@@ -178,7 +200,7 @@ describe("Property 10: Responsive Image Optimization", () => {
           { minLength: 1, maxLength: 3 }
         ),
         (projects: Project[]) => {
-          const { container } = render(<ProjectsSection projects={projects} locale="en" />);
+          const { container } = renderWithIntl(<ProjectsSection projects={projects} locale="en" />);
 
           const images = container.querySelectorAll("img");
 
@@ -220,7 +242,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     // Should render without errors
     expect(container).toBeTruthy();
@@ -241,7 +263,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     const cardImage = container.querySelector('img[alt*="screenshot 1"]');
     expect(cardImage).toBeInTheDocument();
@@ -273,7 +295,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       },
     ];
 
-    const { container } = render(<ProjectsSection projects={projects} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={projects} locale="en" />);
 
     // Find all project card images (first image of each project)
     const cardImages = container.querySelectorAll('img[alt*="screenshot 1"]');
