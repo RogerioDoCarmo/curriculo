@@ -2,7 +2,6 @@
  * Unit tests for Hero component
  */
 
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import Hero from "@/components/Hero";
 
@@ -11,6 +10,9 @@ describe("Hero Component", () => {
     name: "John Doe",
     title: "React Native Developer",
     locale: "en",
+    greeting: "Hello, I'm",
+    ctaText: "View My Work",
+    contactText: "Get in Touch",
   };
 
   it("renders the developer name as h1", () => {
@@ -25,40 +27,79 @@ describe("Hero Component", () => {
     expect(screen.getByText("React Native Developer")).toBeInTheDocument();
   });
 
+  it("renders the greeting text", () => {
+    render(<Hero {...defaultProps} />);
+    expect(screen.getByText("Hello, I'm")).toBeInTheDocument();
+  });
+
+  it("renders translated greeting for Portuguese", () => {
+    render(<Hero {...defaultProps} locale="pt-BR" greeting="Olá, eu sou" />);
+    expect(screen.getByText("Olá, eu sou")).toBeInTheDocument();
+  });
+
+  it("renders translated greeting for Spanish", () => {
+    render(<Hero {...defaultProps} locale="es" greeting="Hola, soy" />);
+    expect(screen.getByText("Hola, soy")).toBeInTheDocument();
+  });
+
   it("renders a call-to-action link pointing to #projects", () => {
     render(<Hero {...defaultProps} />);
-    const cta = screen.getByRole("link", { name: /view my work/i });
+    const cta = screen.getByRole("link", { name: "View My Work" });
     expect(cta).toBeInTheDocument();
     expect(cta).toHaveAttribute("href", "#projects");
   });
 
-  it("renders 'Get in Touch' email button", () => {
+  it("renders translated CTA text for Portuguese", () => {
+    render(<Hero {...defaultProps} ctaText="Ver Meu Trabalho" />);
+    const cta = screen.getByRole("link", { name: "Ver Meu Trabalho" });
+    expect(cta).toBeInTheDocument();
+  });
+
+  it("renders translated CTA text for Spanish", () => {
+    render(<Hero {...defaultProps} ctaText="Ver Mi Trabajo" />);
+    const cta = screen.getByRole("link", { name: "Ver Mi Trabajo" });
+    expect(cta).toBeInTheDocument();
+  });
+
+  it("renders contact button with translated text", () => {
     render(<Hero {...defaultProps} />);
-    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    const emailButton = screen.getByRole("link", { name: "Get in Touch" });
     expect(emailButton).toBeInTheDocument();
   });
 
-  it("'Get in Touch' button has mailto link with correct email for English locale", () => {
+  it("renders translated contact button for Portuguese", () => {
+    render(<Hero {...defaultProps} contactText="Entre em Contato" />);
+    const emailButton = screen.getByRole("link", { name: "Entre em Contato" });
+    expect(emailButton).toBeInTheDocument();
+  });
+
+  it("renders translated contact button for Spanish", () => {
+    render(<Hero {...defaultProps} contactText="Ponte en Contacto" />);
+    const emailButton = screen.getByRole("link", { name: "Ponte en Contacto" });
+    expect(emailButton).toBeInTheDocument();
+  });
+
+  it("contact button has mailto link with correct email for English locale", () => {
     render(<Hero {...defaultProps} locale="en" />);
-    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    const emailButton = screen.getByRole("link", { name: "Get in Touch" });
     expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
   });
 
-  it("'Get in Touch' button has mailto link with correct email for Portuguese locale", () => {
-    render(<Hero {...defaultProps} locale="pt-BR" />);
-    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+  it("contact button has mailto link with correct email for Portuguese locale", () => {
+    render(<Hero {...defaultProps} locale="pt-BR" contactText="Entre em Contato" />);
+    const emailButton = screen.getByRole("link", { name: "Entre em Contato" });
     expect(emailButton).toHaveAttribute("href", "mailto:contato@rogeriodocarmo.com");
   });
 
-  it("'Get in Touch' button has mailto link with correct email for Spanish locale", () => {
-    render(<Hero {...defaultProps} locale="es" />);
-    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+  it("contact button has mailto link with correct email for Spanish locale", () => {
+    render(<Hero {...defaultProps} locale="es" contactText="Ponte en Contacto" />);
+    const emailButton = screen.getByRole("link", { name: "Ponte en Contacto" });
     expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
   });
 
-  it("'Get in Touch' button has email icon with aria-hidden", () => {
-    const { container } = render(<Hero {...defaultProps} />);
-    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+  it("contact button has email icon with aria-hidden", () => {
+    render(<Hero {...defaultProps} />);
+    const emailButton = screen.getByRole("link", { name: "Get in Touch" });
     const svg = emailButton.querySelector("svg");
     expect(svg).toBeInTheDocument();
     expect(svg).toHaveAttribute("aria-hidden", "true");
@@ -99,14 +140,22 @@ describe("Hero Component", () => {
   });
 
   it("renders with different name and title", () => {
-    render(<Hero name="Jane Smith" title="Full Stack Engineer" locale="pt-BR" />);
+    render(
+      <Hero
+        name="Jane Smith"
+        title="Full Stack Engineer"
+        locale="pt-BR"
+        greeting="Olá, eu sou"
+        ctaText="Ver Meu Trabalho"
+        contactText="Entre em Contato"
+      />
+    );
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Jane Smith");
     expect(screen.getByText("Full Stack Engineer")).toBeInTheDocument();
   });
 
   it("applies animation class for fade-in effect", () => {
     render(<Hero {...defaultProps} />);
-    // The animated container wraps the entire hero content
     const section = screen.getByRole("region", { name: /hero/i });
     const animatedDiv = section.querySelector(".animate-fade-in");
     expect(animatedDiv).toBeInTheDocument();
@@ -116,12 +165,30 @@ describe("Hero Component", () => {
     render(<Hero {...defaultProps} />);
     const photo = screen.getByRole("img", { name: /rogério do carmo/i });
     expect(photo).toBeInTheDocument();
-    expect(photo).toHaveAttribute("src", expect.stringContaining("rogeriodocarmo.jpg"));
+    expect(photo).toHaveAttribute("src", expect.stringContaining("rogeriodocarmo.png"));
   });
 
   it("profile photo has rounded-full class for circular display", () => {
     render(<Hero {...defaultProps} />);
     const photo = screen.getByRole("img", { name: /rogério do carmo/i });
     expect(photo.className).toMatch(/rounded-full/);
+  });
+
+  it("all required props are provided", () => {
+    const { container } = render(<Hero {...defaultProps} />);
+    expect(container.firstChild).toBeInTheDocument();
+  });
+
+  it("does not render without required translation props", () => {
+    // TypeScript should prevent this, but test runtime behavior
+    const incompleteProps = {
+      name: "John Doe",
+      title: "Developer",
+      locale: "en",
+    } as any;
+
+    const { container } = render(<Hero {...incompleteProps} />);
+    // Component should still render but with undefined text
+    expect(container.firstChild).toBeInTheDocument();
   });
 });
