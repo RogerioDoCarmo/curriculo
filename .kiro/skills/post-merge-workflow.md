@@ -69,6 +69,21 @@ git tag -a <version> -m "<release-notes>"
 git push --tags
 ```
 
+**Automated GitHub Release**: Pushing the tag triggers `.github/workflows/release.yml` which automatically creates the GitHub Release using the tag message. No manual action required!
+
+### 6. Verify GitHub Release (Automated)
+
+The GitHub Actions workflow will automatically:
+
+- Extract release notes from git tag message
+- Create GitHub Release with proper formatting
+- Add technical details and changelog links
+- Publish the release
+
+**Timeline**: Release created within 1-2 minutes after pushing the tag.
+
+**Verification**: Check `https://github.com/<owner>/<repo>/releases`
+
 ## Tag Naming Convention
 
 Follow semantic versioning:
@@ -108,38 +123,135 @@ v<version> - <Title>
 - Previous: <previous-tag>
 ```
 
+## GitHub Release Template
+
+**Title**: `v<version> - <Short Descriptive Title>`
+
+**Description**:
+
+```markdown
+## 🚀 <Main Feature/Change>
+
+Brief overview paragraph explaining what this release introduces.
+
+## ✨ What's New
+
+### <Feature Name>
+
+Description of the feature and what it does.
+
+**Usage**: How to use it
+
+**What it does**:
+
+1. ✅ Step 1
+2. ✅ Step 2
+3. ✅ Step 3
+
+### Files Added/Changed
+
+#### `path/to/file.md` (X lines)
+
+- Description of what this file contains
+- Key features or sections
+
+## 💡 Benefits
+
+- ✅ **Benefit 1**: Description
+- ✅ **Benefit 2**: Description
+- ✅ **Benefit 3**: Description
+
+## 📋 Example Workflow
+
+**Before** (old way):
+\`\`\`bash
+
+# Old commands
+
+\`\`\`
+
+**After** (new way):
+\`\`\`
+
+# New simplified approach
+
+\`\`\`
+
+## 🔗 Integration
+
+How this integrates with existing project conventions and documentation.
+
+## 📊 Metrics
+
+- **Metric 1**: Value with ✅/❌ indicator
+- **Metric 2**: Value with ✅/❌ indicator
+
+## 🔧 Technical Details
+
+**Commit**: <commit-hash>  
+**Previous Release**: [v<prev>](link-to-previous-release)  
+**Files Changed**: X files, Y insertions
+
+## 📚 Documentation
+
+- [Doc 1](link) - Description
+- [Doc 2](link) - Description
+
+---
+
+**Full Changelog**: [v<prev>...v<current>](github-compare-link)
+```
+
+## Known Issues
+
+- <Issue description>
+
+## Related
+
+- Commit: <commit-hash>
+- Previous: <previous-tag>
+
+```
+
 ## Example Release Notes
 
 ```
+
 v0.18.0 - Next.js 16.2.4 Upgrade + Documentation Standards
 
 ## Next.js 16.2.4 Upgrade (Task 29)
 
 ### Security & Performance
+
 - Upgraded from Next.js 14.x to 16.2.4
 - Build time: ✅ 22% faster (3.2s → 2.5s)
 - Bundle size: ✅ 1.6% smaller (185KB → 182KB)
 - Lighthouse Score: ✅ +1 point (92 → 93)
 
 ### Compatibility
+
 - next-intl 4.9.2 fully compatible
 - Test suite: 88/91 passing (97%)
 
 ## Documentation Standards
 
 ### Performance Metrics Convention
+
 - Standardized with ✅/❌ indicators
 - Created documentation-conventions.md
 
 ## Files Changed
+
 - NEXTJS-16-UPGRADE-SUMMARY.md (created)
 - README.md (updated)
 - CONTRIBUTING.md (updated)
 
 ## Related
+
 - Commit: cacec59
 - Previous: v0.17.0
-```
+
+````
 
 ## Tips
 
@@ -157,7 +269,7 @@ If you encounter issues:
 
 ```bash
 git branch -D <branch-name>  # Force delete (use with caution)
-```
+````
 
 **Tag already exists**:
 
