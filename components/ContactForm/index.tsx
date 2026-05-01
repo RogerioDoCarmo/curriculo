@@ -122,6 +122,42 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
     <section id="contact" aria-label="Contact form" className="py-8">
       <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">Get in Touch</h2>
 
+      {/* Professional Email Note */}
+      <div className="mb-6 rounded-lg border border-primary-200 bg-primary-50 p-4 dark:border-primary-800 dark:bg-primary-900/20">
+        <div className="flex items-start gap-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mt-0.5 flex-shrink-0 text-primary-600 dark:text-primary-400"
+            aria-hidden="true"
+          >
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m2 7 10 7 10-7" />
+          </svg>
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Professional Email
+            </p>
+            <a
+              href={`mailto:${_locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com"}`}
+              className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+            >
+              {_locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com"}
+            </a>
+            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+              Or use the form below to send me a message
+            </p>
+          </div>
+        </div>
+      </div>
+
       <form
         onSubmit={handleSubmit}
         noValidate

@@ -244,8 +244,17 @@ git fetch origin develop
 # Rebase on develop
 git rebase origin/develop
 
-# Force push (only if not shared with others)
-git push --force-with-lease origin feature/task-name
+# Push changes
+git push origin feature/task-name
+```
+
+**Important**: Only rebase if your branch hasn't been pushed yet, or if you're the only one working on it. If you must push after rebasing, use `--force-with-lease` and communicate with your team first.
+
+**Better Alternative**: Use merge instead of rebase for shared branches:
+
+```bash
+git merge origin/develop
+git push origin feature/task-name
 ```
 
 ### Merge conflict resolution
@@ -285,7 +294,17 @@ git push origin feature/task-name
 7. ✅ **Use PRs for code review** even for solo projects
 8. ✅ **Tag releases on main** for version tracking
 9. ❌ **Never commit directly to main** - always use PRs
-10. ❌ **Never force push to shared branches** - use `--force-with-lease` if needed
+10. ❌ **Never force push to shared branches** - prefer new commits to preserve history
+11. ✅ **Use `--force-with-lease` only when absolutely necessary** and communicate with team
+
+**Force Push Guidelines**:
+
+- Avoid force push whenever possible
+- Prefer creating new commits over rewriting history
+- Only force push on branches you own and haven't shared
+- Use `--force-with-lease` (safer than `--force`) if you must
+- Never force push to `main` or `develop`
+- Communicate with team before any force push
 
 ## Resources
 

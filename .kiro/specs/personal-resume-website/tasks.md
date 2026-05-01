@@ -1277,6 +1277,629 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Monitor search queries and click-through rates
     - _Requirements: 10.1, 10.3_
 
+- [ ] 33. Fix GitHub Dependabot security vulnerabilities
+  - [ ] 33.1 Review Dependabot security alerts
+    - Go to GitHub repository → Security → Dependabot alerts
+    - Review all 12 vulnerabilities:
+      - 1 critical severity
+      - 3 high severity
+      - 6 moderate severity
+      - 2 low severity
+    - Document each vulnerability:
+      - Package name and version
+      - Vulnerability type (e.g., XSS, DoS, RCE)
+      - Affected functionality
+      - Recommended fix version
+      - Impact on project
+    - Create `docs/SECURITY-VULNERABILITIES.md` with findings
+    - _Security: Critical for production deployment_
+  - [ ] 33.2 Update dependencies to fix critical and high severity issues
+    - Update packages with critical severity vulnerabilities first
+    - Update packages with high severity vulnerabilities
+    - Run `npm audit` to verify fixes
+    - Check for breaking changes in updated packages
+    - Update package.json with new versions
+    - Run `npm install` to update package-lock.json
+    - _Security: Addresses 4 critical/high severity issues_
+  - [ ] 33.3 Update dependencies to fix moderate severity issues
+    - Update packages with moderate severity vulnerabilities
+    - Run `npm audit` to verify fixes
+    - Check for breaking changes
+    - Test application functionality after updates
+    - _Security: Addresses 6 moderate severity issues_
+  - [ ] 33.4 Update dependencies to fix low severity issues
+    - Update packages with low severity vulnerabilities
+    - Run `npm audit` to verify all issues resolved
+    - Verify `npm audit` shows 0 vulnerabilities
+    - _Security: Addresses 2 low severity issues_
+  - [ ] 33.5 Test application after dependency updates
+    - Run full test suite: `npm test`
+    - Verify all 91 tests still pass (or fix broken tests)
+    - Run E2E tests: `npm run test:e2e`
+    - Run type checking: `npm run type-check`
+    - Test build: `npm run build`
+    - Verify static export generates correctly
+    - Test on all locales (pt-BR, en, es)
+    - _Requirements: 14.1, 14.2, 14.3_
+  - [ ] 33.6 Update CI/CD pipeline for security scanning
+    - Verify GitHub Actions workflows still pass
+    - Add `npm audit` check to CI pipeline (if not already present)
+    - Configure Dependabot auto-merge for patch updates (optional)
+    - Set up Dependabot security update notifications
+    - _Requirements: 16.1, 16.2_
+  - [ ] 33.7 Run Lighthouse audits after updates
+    - Run `npm run test:lighthouse`
+    - Verify Performance score >= 90 (currently 93)
+    - Verify no regressions in metrics:
+      - First Contentful Paint < 1.5s (currently 1.3s)
+      - Time to Interactive < 3s (currently 2.7s)
+      - Bundle size similar or smaller (currently 182KB gzipped)
+    - Document any performance changes
+    - _Requirements: 6.1, 6.2, 6.5_
+  - [ ] 33.8 Update security documentation
+    - Update `docs/SECURITY-CHECKLIST.md` with:
+      - Date of security audit
+      - Vulnerabilities fixed
+      - Updated package versions
+      - Verification steps taken
+    - Update `docs/SECURITY-VULNERABILITIES.md` with resolution status
+    - Document any remaining known issues (if any)
+    - Add security update to CHANGELOG.md
+    - _Requirements: 15.2_
+  - [ ] 33.9 Deploy and verify in production
+    - Deploy updated application to Vercel
+    - Verify deployment succeeds
+    - Test production site on all 11 domains
+    - Verify no runtime errors in browser console
+    - Check Sentry for any new errors
+    - Monitor Firebase Analytics for any issues
+    - _Requirements: 8.1, 8.2, 10.5_
+  - [ ] 33.10 Set up automated security monitoring
+    - Enable Dependabot security updates in GitHub settings
+    - Configure Dependabot to create PRs for security updates
+    - Set up email notifications for new vulnerabilities
+    - Schedule monthly security audits (`npm audit`)
+    - Document security update process in `docs/SECURITY-CHECKLIST.md`
+    - _Security: Proactive vulnerability management_
+
+- [ ] 34. Fix Sentry error logging integration
+  - [ ] 34.1 Verify Sentry configuration and credentials
+    - Check if Sentry DSN is correctly set in `.env.local`
+    - Verify `NEXT_PUBLIC_SENTRY_DSN` environment variable in Vercel
+    - Check Sentry project exists and is active in Sentry dashboard
+    - Verify Sentry organization and project settings
+    - Review Sentry SDK version in package.json (`@sentry/nextjs`)
+    - _Requirements: 10.5_
+  - [ ] 34.2 Review Sentry configuration files
+    - Check `sentry.client.config.ts` (or `.js`) exists and is correct
+    - Check `sentry.server.config.ts` (or `.js`) exists and is correct
+    - Check `sentry.edge.config.ts` (or `.js`) if using Edge runtime
+    - Verify `next.config.js` has Sentry webpack plugin configuration
+    - Review Sentry initialization options (environment, release, tracesSampleRate)
+    - _Requirements: 10.5_
+  - [ ] 34.3 Test Sentry error logging locally
+    - Create a test error in development environment
+    - Trigger the error and verify it appears in Sentry dashboard
+    - Test different error types:
+      - Runtime errors (throw new Error)
+      - Unhandled promise rejections
+      - React error boundaries
+      - API route errors
+    - Verify error context includes useful information (user, environment, breadcrumbs)
+    - _Requirements: 10.5_
+  - [ ] 34.4 Check Sentry integration with Next.js 16
+    - Verify `@sentry/nextjs` is compatible with Next.js 16.2.4
+    - Check Sentry documentation for Next.js 16 compatibility
+    - Update `@sentry/nextjs` to latest compatible version if needed
+    - Review breaking changes in Sentry SDK updates
+    - Test with Next.js App Router (app directory)
+    - _Requirements: 10.5, 21.1_
+  - [ ] 34.5 Verify Sentry source maps upload
+    - Check if source maps are being uploaded to Sentry
+    - Verify `sentry-cli` is configured correctly
+    - Check `.sentryclirc` file exists with auth token
+    - Verify Sentry auth token in Vercel environment variables
+    - Test source map upload during build: `npm run build`
+    - Verify stack traces in Sentry show original source code (not minified)
+    - _Requirements: 10.5_
+  - [ ] 34.6 Test Sentry in production environment
+    - Deploy application to Vercel
+    - Trigger a test error in production
+    - Verify error appears in Sentry dashboard within 1-2 minutes
+    - Check error includes:
+      - Stack trace with source maps
+      - User context (if available)
+      - Environment (production)
+      - Release version
+      - Breadcrumbs (user actions before error)
+    - _Requirements: 10.5, 8.2_
+  - [ ] 34.7 Review and update error logging code
+    - Check `lib/error-logging.ts` (or similar) exists
+    - Verify `logError()` function uses Sentry correctly
+    - Review error boundaries in React components
+    - Check API route error handling uses Sentry
+    - Verify async error handling (try/catch with Sentry)
+    - Add Sentry context where useful (user info, custom tags)
+    - _Requirements: 10.5_
+  - [ ] 34.8 Set up Sentry alerts and notifications
+    - Configure Sentry alert rules for critical errors
+    - Set up email notifications for new issues
+    - Configure Sentry integrations (Slack, email, etc.)
+    - Set up issue assignment rules
+    - Configure alert frequency and thresholds
+    - _Requirements: 10.5_
+  - [ ] 34.9 Test Sentry performance monitoring (optional)
+    - Verify performance monitoring is enabled in Sentry config
+    - Check `tracesSampleRate` is set appropriately (e.g., 0.1 for 10%)
+    - Test transaction tracking for page loads
+    - Verify API route performance is tracked
+    - Review performance data in Sentry dashboard
+    - _Optional: Performance monitoring feature_
+  - [ ] 34.10 Document Sentry setup and troubleshooting
+    - Update `docs/SECURITY-CHECKLIST.md` with Sentry verification steps
+    - Create `docs/SENTRY-SETUP.md` with:
+      - Configuration instructions
+      - Environment variables required
+      - Testing procedures
+      - Troubleshooting common issues
+      - Alert configuration
+    - Document how to test error logging
+    - Add Sentry dashboard URL to documentation
+    - _Requirements: 15.2_
+
+- [ ] 35. Implement comprehensive Firebase Analytics tracking for user insights
+  - [ ] 35.1 Audit current analytics implementation
+    - Review `lib/analytics.ts` for existing tracking functions
+    - Check which events are currently tracked
+    - Identify gaps in tracking coverage
+    - Review Firebase Analytics dashboard for current data
+    - Document current tracking implementation
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.2 Design comprehensive event tracking strategy
+    - Define event taxonomy and naming conventions
+    - Map all user interactions to track:
+      - Page views (all routes and locales)
+      - Navigation clicks (header, footer, back-to-top)
+      - Section scrolls (projects, experience, skills, contact)
+      - External link clicks (social media, project links)
+      - Form interactions (contact form)
+      - Language changes
+      - Theme toggles
+      - Career path selection
+      - Project detail views
+      - Resume downloads
+      - Exit intent modal interactions
+    - Define custom parameters for each event
+    - Create event tracking documentation
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.3 Implement page view tracking
+    - Track page views with custom parameters:
+      - Page path
+      - Page title
+      - Locale (pt-BR, en, es)
+      - Referrer
+      - User agent
+    - Track virtual page views for single-page navigation
+    - Track section visibility (when sections scroll into view)
+    - Implement scroll depth tracking (25%, 50%, 75%, 100%)
+    - _Requirements: 10.3_
+  - [ ] 35.4 Implement navigation tracking
+    - Track header navigation clicks:
+      - Menu item clicked
+      - Destination section
+      - Current section
+      - Locale
+    - Track footer navigation clicks
+    - Track back-to-top button clicks
+    - Track mobile menu open/close
+    - Track anchor navigation (URL hash changes)
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.5 Implement content interaction tracking
+    - Track project interactions:
+      - Project card clicks
+      - Project detail modal opens
+      - Project link clicks (demo, repository)
+      - Project technology filter usage
+    - Track experience section interactions:
+      - Career path selection (professional/academic)
+      - Experience item expansions
+      - Timeline interactions
+    - Track skills section interactions:
+      - Skill category views
+      - Skill search/filter usage
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.6 Implement form and conversion tracking
+    - Track contact form interactions:
+      - Form field focus events
+      - Form validation errors
+      - Form submission attempts
+      - Form submission success
+      - Form submission failures
+    - Track resume download events:
+      - Download button clicks
+      - Locale-specific resume downloads
+      - Exit intent modal resume downloads
+    - Track external link clicks:
+      - Social media links (LinkedIn, GitHub, Twitter)
+      - Project external links
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.7 Implement user preference tracking
+    - Track language changes:
+      - From locale
+      - To locale
+      - Change method (selector, browser detection)
+    - Track theme changes:
+      - From theme (light/dark)
+      - To theme
+      - Change method (toggle, system preference)
+    - Track career path selection:
+      - Selected path (professional/academic)
+      - Session persistence
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.8 Implement engagement and timing tracking
+    - Track time on page/section:
+      - Total session duration
+      - Time spent per section
+      - Time to first interaction
+    - Track engagement metrics:
+      - Scroll depth
+      - Number of interactions
+      - Bounce rate indicators
+    - Track exit intent triggers:
+      - Exit intent detected
+      - Modal shown
+      - Modal action taken (download, connect, dismiss)
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.9 Set up custom dimensions and user properties
+    - Configure custom dimensions in Firebase:
+      - User locale preference
+      - User theme preference
+      - User career path preference
+      - Device type (mobile, tablet, desktop)
+      - Browser type
+    - Set user properties for segmentation:
+      - Preferred language
+      - Preferred theme
+      - First visit date
+      - Total visits
+      - Last visit date
+    - _Requirements: 10.3_
+  - [ ] 35.10 Create Firebase Analytics dashboard and reports
+    - Set up custom dashboards in Firebase Analytics:
+      - Overview dashboard (page views, users, sessions)
+      - Navigation flow dashboard
+      - Content engagement dashboard
+      - Conversion funnel dashboard (contact form, resume downloads)
+      - User preferences dashboard (language, theme, career path)
+    - Configure custom reports:
+      - Most viewed sections
+      - Most clicked projects
+      - Language distribution
+      - Theme preference distribution
+      - Device and browser distribution
+    - Set up audience segments for analysis
+    - _Requirements: 10.3_
+  - [ ] 35.11 Implement analytics event testing
+    - Create test utilities for analytics events
+    - Write unit tests for analytics tracking functions
+    - Test event firing in development environment
+    - Verify events appear in Firebase DebugView
+    - Test custom parameters are captured correctly
+    - Test user properties are set correctly
+    - _Requirements: 10.3, 14.1_
+  - [ ] 35.12 Test analytics in production
+    - Deploy analytics implementation to production
+    - Use Firebase DebugView to verify events in real-time
+    - Test all tracked interactions:
+      - Navigate through all sections
+      - Change language and theme
+      - Submit contact form
+      - Download resume
+      - Click external links
+      - Trigger exit intent modal
+    - Verify events appear in Firebase Analytics dashboard (24-48 hour delay)
+    - _Requirements: 10.3, 8.2_
+  - [ ] 35.13 Set up analytics alerts and monitoring
+    - Configure Firebase Analytics alerts:
+      - Sudden drop in page views
+      - Spike in form submission errors
+      - Unusual traffic patterns
+    - Set up BigQuery export for advanced analysis (optional)
+    - Configure Google Analytics 4 integration (optional)
+    - Set up weekly analytics reports
+    - _Requirements: 10.3_
+  - [ ] 35.14 Document analytics implementation and usage
+    - Create `docs/ANALYTICS-TRACKING.md` with:
+      - Complete list of tracked events
+      - Event parameters and user properties
+      - Dashboard and report descriptions
+      - How to add new tracking events
+      - Testing procedures
+      - Privacy considerations
+    - Update `docs/SECURITY-CHECKLIST.md` with analytics verification
+    - Document how to interpret analytics data
+    - Add Firebase Analytics dashboard URL
+    - _Requirements: 15.2_
+  - [ ] 35.15 Analyze initial data and optimize
+    - Wait 2-4 weeks for data collection
+    - Analyze user behavior patterns:
+      - Most popular sections
+      - Common navigation paths
+      - Language preferences
+      - Device distribution
+      - Engagement metrics
+    - Identify optimization opportunities:
+      - Sections with low engagement
+      - High exit pages
+      - Form abandonment points
+      - Popular content to highlight
+    - Create action plan based on insights
+    - _Requirements: 10.3, 10.4_
+
+- [ ] 36. Configure Firebase Crashlytics for error tracking and monitoring
+  - [ ] 36.1 Set up Firebase Crashlytics in Firebase Console
+    - Go to Firebase Console → Project Settings
+    - Navigate to Crashlytics section
+    - Enable Crashlytics for the project
+    - Review Crashlytics data retention settings
+    - Configure crash reporting settings
+    - Note Crashlytics app ID for configuration
+    - _Requirements: 10.5_
+  - [ ] 36.2 Install and configure Firebase Crashlytics SDK
+    - Install Firebase Crashlytics package: `npm install firebase`
+    - Verify Firebase SDK version compatibility with Next.js 16
+    - Update `lib/firebase.ts` to initialize Crashlytics
+    - Configure Crashlytics for web platform
+    - Set up Crashlytics initialization in app layout
+    - Verify Crashlytics is initialized before app renders
+    - _Requirements: 10.1, 10.5_
+  - [ ] 36.3 Implement automatic crash reporting
+    - Configure global error handlers:
+      - Window error event listener
+      - Unhandled promise rejection handler
+      - React error boundaries
+    - Integrate Crashlytics with error boundaries:
+      - Create ErrorBoundary component with Crashlytics
+      - Wrap app with ErrorBoundary
+      - Log component stack traces to Crashlytics
+    - Configure automatic crash collection
+    - Set crash reporting opt-in/opt-out (GDPR compliance)
+    - _Requirements: 10.5_
+  - [ ] 36.4 Implement custom error logging
+    - Create `lib/crashlytics.ts` with helper functions:
+      - `logError(error, context)` - Log errors with context
+      - `logMessage(message, level)` - Log custom messages
+      - `setUserIdentifier(userId)` - Set user ID for tracking
+      - `setCustomKey(key, value)` - Add custom metadata
+      - `recordError(error)` - Record non-fatal errors
+    - Integrate with existing error handling code
+    - Add Crashlytics logging to try/catch blocks
+    - Log API errors and network failures
+    - _Requirements: 10.5_
+  - [ ] 36.5 Add custom keys and user attributes
+    - Set custom keys for debugging:
+      - User locale (pt-BR, en, es)
+      - User theme (light, dark)
+      - Career path selection (professional, academic)
+      - Device type (mobile, tablet, desktop)
+      - Browser type and version
+      - Page/route where error occurred
+    - Set user attributes:
+      - User ID (if authenticated)
+      - Session ID
+      - First visit date
+      - Total visits
+    - Add custom keys before error logging
+    - _Requirements: 10.5_
+  - [ ] 36.6 Implement breadcrumb logging
+    - Log user actions as breadcrumbs:
+      - Page navigation
+      - Button clicks
+      - Form interactions
+      - API calls
+      - State changes
+    - Create breadcrumb helper functions
+    - Add breadcrumbs to critical user flows:
+      - Contact form submission flow
+      - Resume download flow
+      - Language/theme change flow
+    - Limit breadcrumb history (last 50-100 events)
+    - _Requirements: 10.5_
+  - [ ] 36.7 Configure crash-free users and stability metrics
+    - Set up crash-free users tracking
+    - Configure stability score calculation
+    - Set up crash velocity alerts
+    - Define acceptable crash rate thresholds
+    - Configure crash grouping and deduplication
+    - _Requirements: 10.5_
+  - [ ] 36.8 Test Crashlytics in development
+    - Force a test crash to verify Crashlytics works:
+      - Create test button to throw error
+      - Trigger test crash
+      - Verify crash appears in Firebase Console
+    - Test non-fatal error logging
+    - Test custom keys and breadcrumbs
+    - Verify error context is captured correctly
+    - Test error boundary integration
+    - _Requirements: 10.5_
+  - [ ] 36.9 Test Crashlytics in production
+    - Deploy Crashlytics implementation to production
+    - Monitor Crashlytics dashboard for incoming crashes
+    - Trigger test errors in production (controlled):
+      - Test non-fatal error logging
+      - Verify custom keys are captured
+      - Verify breadcrumbs are recorded
+    - Verify crash reports include:
+      - Stack traces
+      - Device information
+      - Custom keys
+      - Breadcrumbs
+      - User attributes
+    - _Requirements: 10.5, 8.2_
+  - [ ] 36.10 Set up Crashlytics alerts and notifications
+    - Configure Crashlytics alert rules:
+      - New crash types detected
+      - Crash rate exceeds threshold
+      - Stability score drops below threshold
+      - Regression in crash-free users
+    - Set up email notifications for critical crashes
+    - Configure Slack integration (optional)
+    - Set up daily/weekly crash reports
+    - Define alert recipients and escalation
+    - _Requirements: 10.5_
+  - [ ] 36.11 Integrate Crashlytics with CI/CD
+    - Upload source maps to Crashlytics for better stack traces
+    - Configure Crashlytics CLI for build integration
+    - Add Crashlytics verification to CI pipeline
+    - Set up automatic crash reporting for production builds
+    - Configure release tracking in Crashlytics
+    - Tag releases with version numbers
+    - _Requirements: 10.5, 16.1_
+  - [ ] 36.12 Create Crashlytics dashboard and monitoring
+    - Set up custom Crashlytics dashboard:
+      - Crash-free users percentage
+      - Crash velocity (crashes per hour/day)
+      - Top crashes by occurrence
+      - Crashes by device/browser
+      - Crashes by app version
+    - Configure crash priority and severity
+    - Set up crash triage workflow
+    - Define crash resolution process
+    - _Requirements: 10.5_
+  - [ ] 36.13 Compare Crashlytics with Sentry
+    - Analyze overlap between Crashlytics and Sentry
+    - Determine if both are needed or choose one:
+      - Crashlytics: Better Firebase integration, free
+      - Sentry: More features, better source maps, paid
+    - Document pros/cons of each solution
+    - Decide on primary error tracking tool
+    - Configure dual logging if keeping both
+    - _Requirements: 10.5_
+  - [ ] 36.14 Document Crashlytics implementation
+    - Create `docs/CRASHLYTICS-SETUP.md` with:
+      - Configuration instructions
+      - Custom error logging guide
+      - Custom keys and breadcrumbs usage
+      - Testing procedures
+      - Alert configuration
+      - Dashboard usage guide
+    - Update `docs/SECURITY-CHECKLIST.md` with Crashlytics verification
+    - Document crash triage and resolution process
+    - Add Crashlytics dashboard URL
+    - _Requirements: 15.2_
+  - [ ] 36.15 Monitor and optimize crash reporting
+    - Monitor Crashlytics for 2-4 weeks
+    - Analyze crash patterns:
+      - Most common crashes
+      - Crashes by device/browser
+      - Crashes by app version
+      - User impact (affected users)
+    - Prioritize and fix critical crashes
+    - Optimize error logging (reduce noise)
+    - Improve error messages and context
+    - Track crash-free users improvement over time
+    - _Requirements: 10.5_
+
+- [ ] 37. Configure Firebase Admin SDK and Vercel deployment environment variables
+  - [ ] 37.1 Set up Firebase Admin SDK credentials
+    - Go to Firebase Console → Project Settings → Service Accounts
+    - Click "Generate new private key" to download service account JSON
+    - Store the JSON file securely (DO NOT commit to repository)
+    - Extract required credentials from JSON:
+      - `project_id`
+      - `private_key`
+      - `client_email`
+    - Document credential storage location (password manager, secure vault)
+    - _Requirements: 10.1, 10.5_
+  - [ ] 37.2 Configure Firebase Admin SDK environment variables locally
+    - Add Firebase Admin SDK variables to `.env.local`:
+      - `FIREBASE_ADMIN_PROJECT_ID`
+      - `FIREBASE_ADMIN_PRIVATE_KEY` (escape newlines: `\n`)
+      - `FIREBASE_ADMIN_CLIENT_EMAIL`
+    - Update `.env.example` with placeholder values
+    - Test Firebase Admin SDK initialization locally
+    - Verify admin operations work (e.g., sending FCM notifications)
+    - _Requirements: 10.1, 10.5_
+  - [ ] 37.3 Configure Vercel deployment environment variables
+    - Go to Vercel Dashboard → Project Settings → Environment Variables
+    - Add Firebase Admin SDK variables for all environments:
+      - Production: `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_PRIVATE_KEY`, `FIREBASE_ADMIN_CLIENT_EMAIL`
+      - Preview: Same values as production (or separate Firebase project)
+      - Development: Same values as production (or separate Firebase project)
+    - Add other required environment variables:
+      - `NEXT_PUBLIC_FIREBASE_API_KEY`
+      - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+      - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+      - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+      - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+      - `NEXT_PUBLIC_FIREBASE_APP_ID`
+      - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`
+      - `NEXT_PUBLIC_SENTRY_DSN`
+      - `NEXT_PUBLIC_FORMSPREE_ENDPOINT`
+    - Verify all variables are correctly set
+    - _Requirements: 8.1, 8.3, 10.1_
+  - [ ] 37.4 Create Firebase Admin SDK initialization module
+    - Create `lib/firebase-admin.ts` with Admin SDK initialization
+    - Initialize Firebase Admin SDK with environment variables
+    - Export admin functions:
+      - `sendPushNotification(token, title, body)` - Send FCM notification
+      - `sendMulticastNotification(tokens, title, body)` - Send to multiple devices
+      - `verifyIdToken(token)` - Verify Firebase Auth token (if using auth)
+    - Add error handling for missing credentials
+    - Add TypeScript types for admin functions
+    - _Requirements: 10.1_
+  - [ ] 37.5 Implement deployment notification using Firebase Admin SDK
+    - Update `.github/workflows/deploy.yml` to send push notification on successful deployment
+    - Create API route `/api/notify-deployment` that uses Firebase Admin SDK
+    - Send notification with deployment details:
+      - Title: "Deployment Successful"
+      - Body: "New version deployed to production"
+      - Data: deployment timestamp, commit hash, branch
+    - Call API route from GitHub Actions workflow
+    - Test notification delivery after deployment
+    - _Requirements: 16.9, 10.1_
+  - [ ] 37.6 Test Firebase Admin SDK in development
+    - Test sending FCM notifications locally
+    - Verify notifications are received on test devices
+    - Test error handling for invalid tokens
+    - Test multicast notifications (multiple devices)
+    - Verify admin operations don't interfere with client SDK
+    - _Requirements: 10.1_
+  - [ ] 37.7 Test Firebase Admin SDK in production
+    - Deploy application with Firebase Admin SDK configuration
+    - Trigger deployment notification from CI/CD pipeline
+    - Verify notification is received on registered devices
+    - Test admin operations in production environment
+    - Monitor Firebase Console for admin API usage
+    - _Requirements: 10.1, 8.2_
+  - [ ] 37.8 Secure Firebase Admin SDK credentials
+    - Verify private key is not exposed in client-side code
+    - Ensure admin operations only run on server-side (API routes, server components)
+    - Add security checks to admin API routes (authentication, rate limiting)
+    - Review Vercel environment variable access controls
+    - Document security best practices for admin credentials
+    - _Requirements: 10.5_
+  - [ ] 37.9 Document Firebase Admin SDK setup
+    - Create `docs/FIREBASE-ADMIN-SETUP.md` with:
+      - How to generate service account credentials
+      - Environment variable configuration steps
+      - Local development setup
+      - Vercel deployment configuration
+      - Security considerations
+      - Troubleshooting guide
+    - Update `README.md` with Firebase Admin SDK requirements
+    - Document deployment notification feature
+    - Add Firebase Admin SDK to tech stack documentation
+    - _Requirements: 15.2_
+  - [ ] 37.10 Monitor Firebase Admin SDK usage and costs
+    - Review Firebase Admin SDK usage in Firebase Console
+    - Monitor FCM notification delivery rates
+    - Check for any API quota limits or errors
+    - Review Firebase billing for admin operations
+    - Set up alerts for unusual admin API usage
+    - Optimize notification sending to reduce costs
+    - _Requirements: 10.1_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
