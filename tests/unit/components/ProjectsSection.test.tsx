@@ -5,8 +5,30 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
 import type { Project } from "@/types/index";
+
+// Mock messages for next-intl
+const messages: AbstractIntlMessages = {
+  sections: {
+    projects: "Projects",
+  },
+  projects: {
+    filterByTech: "Filter by technology",
+    all: "All",
+    noMatch: "No projects match your filter",
+    viewDetails: "View details for",
+    screenshot: "screenshot",
+    featured: "Featured",
+    mockData: "Mock Data",
+    more: "more",
+    technologies: "Technologies",
+    liveDemo: "Live Demo",
+    repository: "Repository",
+    noImages: "No images available",
+  },
+};
 
 // Mock next/image
 jest.mock("next/image", () => ({
@@ -64,39 +86,48 @@ const sampleProjects: Project[] = [
   },
 ];
 
+// Helper to render with next-intl provider
+const renderWithIntl = (component: React.ReactElement) => {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {component}
+    </NextIntlClientProvider>
+  );
+};
+
 describe("ProjectsSection Component", () => {
   it("renders all projects in a grid", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
     expect(screen.getByText("Portfolio Website")).toBeInTheDocument();
     expect(screen.getByText("Chat App")).toBeInTheDocument();
   });
 
   it("renders project descriptions", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(screen.getByText("A mobile e-commerce application.")).toBeInTheDocument();
   });
 
   it("renders technology tags for each project", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(screen.getAllByText("React Native").length).toBeGreaterThan(0);
     expect(screen.getAllByText("TypeScript").length).toBeGreaterThan(0);
   });
 
   it("highlights featured projects", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(screen.getByText("Featured")).toBeInTheDocument();
   });
 
   it("renders project images with lazy loading", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const images = screen.getAllByRole("img");
     const lazyImages = images.filter((img) => img.getAttribute("data-loading") === "lazy");
     expect(lazyImages.length).toBeGreaterThan(0);
   });
 
   it("renders project images with alt text", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const images = screen.getAllByRole("img");
     images.forEach((img) => {
       expect(img).toHaveAttribute("alt");
@@ -105,14 +136,14 @@ describe("ProjectsSection Component", () => {
   });
 
   it("renders technology filter buttons", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const filterGroup = screen.getByRole("group", { name: /filter by technology/i });
     expect(filterGroup).toBeInTheDocument();
   });
 
   it("filters projects by technology when filter button is clicked", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     // Find the Next.js filter button (in the filter group)
     const filterButtons = screen.getAllByRole("button", { name: "Next.js" });
     await user.click(filterButtons[0]);
@@ -124,7 +155,7 @@ describe("ProjectsSection Component", () => {
 
   it("shows all projects when 'All' filter is selected", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     // Filter by Next.js first
     const nextjsButtons = screen.getAllByRole("button", { name: "Next.js" });
     await user.click(nextjsButtons[0]);
@@ -139,7 +170,7 @@ describe("ProjectsSection Component", () => {
 
   it("opens modal with project details when project card is clicked", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for e-commerce app/i });
     await user.click(card);
     await waitFor(() => {
@@ -149,7 +180,7 @@ describe("ProjectsSection Component", () => {
 
   it("shows full description in modal", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for e-commerce app/i });
     await user.click(card);
     await waitFor(() => {
@@ -161,7 +192,7 @@ describe("ProjectsSection Component", () => {
 
   it("shows live demo link in modal when liveUrl is present", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for e-commerce app/i });
     await user.click(card);
     await waitFor(() => {
@@ -172,7 +203,7 @@ describe("ProjectsSection Component", () => {
 
   it("shows repository link in modal when repoUrl is present", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for e-commerce app/i });
     await user.click(card);
     await waitFor(() => {
@@ -183,7 +214,7 @@ describe("ProjectsSection Component", () => {
 
   it("does not show live demo link when liveUrl is absent", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for portfolio website/i });
     await user.click(card);
     await waitFor(() => {
@@ -193,7 +224,7 @@ describe("ProjectsSection Component", () => {
 
   it("closes modal when close button is clicked", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     const card = screen.getByRole("button", { name: /view details for e-commerce app/i });
     await user.click(card);
     await waitFor(() => {
@@ -207,13 +238,13 @@ describe("ProjectsSection Component", () => {
   });
 
   it("renders section with correct id", () => {
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(document.getElementById("projects")).toBeInTheDocument();
   });
 
   it("shows empty state message when no projects match filter", async () => {
     const user = userEvent.setup();
-    render(<ProjectsSection projects={sampleProjects} locale="en" />);
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     // Filter by a tech that only matches one project, then filter by something else
     // to trigger the "no match" state — click TypeScript filter then Firebase filter
     const typescriptBtn = screen.getByRole("button", { name: "TypeScript" });

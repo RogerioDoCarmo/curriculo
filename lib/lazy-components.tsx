@@ -46,17 +46,19 @@ export const LazyTechStackSection = dynamic(() => import("@/components/TechStack
 export const LazyProjectsSection = dynamic(() => import("@/components/ProjectsSection"), {
   ssr: true,
   loading: () => (
-    <section className="py-8">
-      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded mb-4 animate-pulse" />
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
-          </div>
-        ))}
+    <section className="py-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+              <div className="h-48 bg-gray-200 dark:bg-gray-700 rounded mb-4 animate-pulse" />
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   ),
@@ -83,17 +85,19 @@ export const LazyContactForm = dynamic(() => import("@/components/ContactForm"),
 export const LazyExperienceSection = dynamic(() => import("@/components/ExperienceSection"), {
   ssr: true,
   loading: () => (
-    <section className="py-8">
-      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
-      <div className="space-y-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="border-l-2 border-gray-300 dark:border-gray-600 pl-6">
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
-          </div>
-        ))}
+    <section className="py-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
+        <div className="space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="border-l-2 border-gray-300 dark:border-gray-600 pl-6">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   ),
@@ -105,17 +109,19 @@ export const LazyExperienceSection = dynamic(() => import("@/components/Experien
 export const LazySkillsSection = dynamic(() => import("@/components/SkillsSection"), {
   ssr: true,
   loading: () => (
-    <section className="py-8">
-      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="space-y-2">
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-3 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5 animate-pulse" />
-          </div>
-        ))}
+    <section className="py-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-6 animate-pulse" />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="space-y-2">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-3 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5 animate-pulse" />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   ),
@@ -123,10 +129,9 @@ export const LazySkillsSection = dynamic(() => import("@/components/SkillsSectio
 
 /**
  * NotificationPrompt - Client-side only notification permission prompt
- * Note: Commented out due to Next.js 16 restriction on ssr: false in Server Components
- * If needed, move this to a separate client-side file
+ * Disabled SSR since notification API only works in browser
  */
-// export const LazyNotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), {
-//   ssr: false,
-//   loading: () => null,
-// });
+export const LazyNotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), {
+  ssr: false,
+  loading: () => null,
+});

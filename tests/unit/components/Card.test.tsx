@@ -1,6 +1,5 @@
 /**
  * Unit tests for Card component
- * Requirements: 4.4
  */
 
 import React from "react";
@@ -8,56 +7,133 @@ import { render, screen } from "@testing-library/react";
 import Card from "@/components/Card";
 
 describe("Card Component", () => {
-  it("renders children content", () => {
-    render(<Card>Card content</Card>);
-    expect(screen.getByText("Card content")).toBeInTheDocument();
+  it("renders children correctly", () => {
+    render(
+      <Card>
+        <p>Test content</p>
+      </Card>
+    );
+
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 
-  it("renders title when provided", () => {
-    render(<Card title="My Title">Content</Card>);
-    expect(screen.getByText("My Title")).toBeInTheDocument();
+  it("renders with title when provided", () => {
+    render(
+      <Card title="Test Title">
+        <p>Test content</p>
+      </Card>
+    );
+
+    expect(screen.getByText("Test Title")).toBeInTheDocument();
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
 
-  it("does not render title element when title is not provided", () => {
-    render(<Card>Content</Card>);
-    expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+  it("renders without title when not provided", () => {
+    render(
+      <Card>
+        <p>Test content</p>
+      </Card>
+    );
+
+    const headings = screen.queryAllByRole("heading");
+    expect(headings.length).toBe(0);
   });
 
   it("applies custom className", () => {
-    const { container } = render(<Card className="custom-class">Content</Card>);
-    expect(container.firstChild).toHaveClass("custom-class");
+    const { container } = render(
+      <Card className="custom-class">
+        <p>Test content</p>
+      </Card>
+    );
+
+    const card = container.firstChild;
+    expect(card).toHaveClass("custom-class");
   });
 
-  it("renders with default styling classes", () => {
-    const { container } = render(<Card>Content</Card>);
-    expect(container.firstChild).toHaveClass("rounded-lg");
-    expect(container.firstChild).toHaveClass("shadow-md");
+  it("has default styling classes", () => {
+    const { container } = render(
+      <Card>
+        <p>Test content</p>
+      </Card>
+    );
+
+    const card = container.firstChild;
+    expect(card).toHaveClass("rounded-lg");
+    expect(card).toHaveClass("bg-white");
+    expect(card).toHaveClass("p-6");
+    expect(card).toHaveClass("shadow-md");
+  });
+
+  it("has dark mode classes", () => {
+    const { container } = render(
+      <Card>
+        <p>Test content</p>
+      </Card>
+    );
+
+    const card = container.firstChild;
+    expect(card).toHaveClass("dark:bg-gray-800");
+  });
+
+  it("has hover effect classes", () => {
+    const { container } = render(
+      <Card>
+        <p>Test content</p>
+      </Card>
+    );
+
+    const card = container.firstChild;
+    expect(card).toHaveClass("hover:shadow-lg");
+    expect(card).toHaveClass("hover:border-primary-100");
+  });
+
+  it("renders title as h2 heading", () => {
+    render(
+      <Card title="Test Title">
+        <p>Test content</p>
+      </Card>
+    );
+
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveTextContent("Test Title");
+  });
+
+  it("title has correct styling classes", () => {
+    render(
+      <Card title="Test Title">
+        <p>Test content</p>
+      </Card>
+    );
+
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("mb-4");
+    expect(heading).toHaveClass("text-xl");
+    expect(heading).toHaveClass("font-semibold");
   });
 
   it("renders multiple children", () => {
     render(
       <Card>
-        <span>Child 1</span>
-        <span>Child 2</span>
+        <p>First paragraph</p>
+        <p>Second paragraph</p>
+        <button>Click me</button>
       </Card>
     );
-    expect(screen.getByText("Child 1")).toBeInTheDocument();
-    expect(screen.getByText("Child 2")).toBeInTheDocument();
+
+    expect(screen.getByText("First paragraph")).toBeInTheDocument();
+    expect(screen.getByText("Second paragraph")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Click me" })).toBeInTheDocument();
   });
 
-  it("renders title as h2 heading", () => {
-    render(<Card title="Section Title">Content</Card>);
-    const heading = screen.getByRole("heading", { level: 2 });
-    expect(heading).toHaveTextContent("Section Title");
-  });
+  it("combines custom className with default classes", () => {
+    const { container } = render(
+      <Card className="my-custom-class">
+        <p>Test content</p>
+      </Card>
+    );
 
-  it("has hover shadow transition class", () => {
-    const { container } = render(<Card>Content</Card>);
-    expect(container.firstChild).toHaveClass("hover:shadow-lg");
-  });
-
-  it("has dark mode background class", () => {
-    const { container } = render(<Card>Content</Card>);
-    expect(container.firstChild).toHaveClass("dark:bg-gray-800");
+    const card = container.firstChild;
+    expect(card).toHaveClass("my-custom-class");
+    expect(card).toHaveClass("rounded-lg"); // default class still present
   });
 });

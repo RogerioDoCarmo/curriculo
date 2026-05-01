@@ -1,6 +1,5 @@
 /**
  * Unit tests for HighlightedText component
- * TDD Red phase - tests written before implementation
  */
 
 import React from "react";
@@ -8,98 +7,123 @@ import { render, screen } from "@testing-library/react";
 import HighlightedText from "@/components/HighlightedText";
 
 describe("HighlightedText Component", () => {
-  // 1. Basic highlighting - single occurrence is bolded
-  it("should bold a single occurrence of the highlight text", () => {
-    render(<HighlightedText text="I love React Native development" highlight="React Native" />);
-    const strong = screen.getByText("React Native");
-    expect(strong.tagName).toBe("STRONG");
+  it("renders text without highlighting when highlight is empty", () => {
+    render(<HighlightedText text="Hello World" highlight="" />);
+
+    expect(screen.getByText("Hello World")).toBeInTheDocument();
+    const strong = screen.queryByRole("strong");
+    expect(strong).not.toBeInTheDocument();
   });
 
-  // 2. Multiple occurrences are all highlighted
-  it("should bold all occurrences of the highlight text", () => {
-    render(
-      <HighlightedText
-        text="React Native is great. I use React Native daily."
-        highlight="React Native"
-      />
-    );
-    const strongs = screen.getAllByText("React Native");
-    expect(strongs).toHaveLength(2);
-    strongs.forEach((el) => expect(el.tagName).toBe("STRONG"));
+  it("renders text without highlighting when text is empty", () => {
+    const { container } = render(<HighlightedText text="" highlight="test" />);
+
+    expect(container.textContent).toBe("");
   });
 
-  // 3. Case-insensitive matching
-  it("should match highlight text case-insensitively", () => {
-    render(<HighlightedText text="I love React Native development" highlight="react native" />);
-    const strong = screen.getByText("React Native");
-    expect(strong.tagName).toBe("STRONG");
+  it("highlights matching text case-insensitively", () => {
+    const { container } = render(<HighlightedText text="React Native" highlight="react" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("React");
   });
 
-  // 4. Fallback when highlight not found - renders plain text
-  it("should render plain text when highlight is not found", () => {
+  it("highlights matching text with different case", () => {
+    const { container } = render(<HighlightedText text="TypeScript" highlight="SCRIPT" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("Script");
+  });
+
+  it("highlights multiple occurrences", () => {
     const { container } = render(
-      <HighlightedText text="I love React Native development" highlight="Angular" />
+      <HighlightedText text="React is great, React is awesome" highlight="React" />
     );
-    expect(container).toHaveTextContent("I love React Native development");
-    expect(container.querySelectorAll("strong")).toHaveLength(0);
-  });
 
-  // 5. Empty highlight string - renders plain text unchanged
-  it("should render plain text unchanged when highlight is empty string", () => {
-    const { container } = render(
-      <HighlightedText text="I love React Native development" highlight="" />
-    );
-    expect(container).toHaveTextContent("I love React Native development");
-    expect(container.querySelectorAll("strong")).toHaveLength(0);
-  });
-
-  // 6. Empty text string - renders nothing
-  it("should render nothing when text is empty string", () => {
-    const { container } = render(<HighlightedText text="" highlight="React Native" />);
-    expect(container).toHaveTextContent("");
-  });
-
-  // 7. Highlight equals full text - entire text is bolded
-  it("should bold the entire text when highlight equals full text", () => {
-    render(<HighlightedText text="React Native" highlight="React Native" />);
-    const strong = screen.getByText("React Native");
-    expect(strong.tagName).toBe("STRONG");
-  });
-
-  // 8. Custom className is applied to wrapper
-  it("should apply custom className to the wrapper element", () => {
-    const { container } = render(
-      <HighlightedText
-        text="I love React Native development"
-        highlight="React Native"
-        className="my-custom-class"
-      />
-    );
-    expect(container.firstChild).toHaveClass("my-custom-class");
-  });
-
-  // 9. Highlighted parts use <strong> element
-  it("should use <strong> element for highlighted parts", () => {
-    const { container } = render(
-      <HighlightedText text="I love React Native development" highlight="React Native" />
-    );
     const strongs = container.querySelectorAll("strong");
-    expect(strongs).toHaveLength(1);
-    expect(strongs[0].textContent).toBe("React Native");
+    expect(strongs.length).toBe(2);
+    expect(strongs[0]).toHaveTextContent("React");
+    expect(strongs[1]).toHaveTextContent("React");
   });
 
-  // 10. Non-highlighted parts are plain text nodes
-  it("should render non-highlighted parts as plain text (not wrapped in strong)", () => {
+  it("applies custom className to wrapper span", () => {
     const { container } = render(
-      <HighlightedText text="I love React Native development" highlight="React Native" />
+      <HighlightedText text="Test" highlight="" className="custom-class" />
     );
-    const wrapper = container.firstChild as HTMLElement;
-    // Check that text nodes exist outside of <strong>
-    const textContent = wrapper.textContent;
-    expect(textContent).toBe("I love React Native development");
-    // The non-highlighted parts should not be inside <strong>
-    const strongs = wrapper.querySelectorAll("strong");
-    expect(strongs).toHaveLength(1);
-    expect(strongs[0].textContent).toBe("React Native");
+
+    const span = container.querySelector("span");
+    expect(span).toHaveClass("custom-class");
+  });
+
+  it("preserves non-matching text", () => {
+    const { container } = render(<HighlightedText text="Hello World" highlight="World" />);
+
+    expect(container.textContent).toBe("Hello World");
+    const strong = container.querySelector("strong");
+    expect(strong).toHaveTextContent("World");
+  });
+
+  it("handles partial word matches", () => {
+    const { container } = render(<HighlightedText text="JavaScript" highlight="Script" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("Script");
+    expect(container.textContent).toBe("JavaScript");
+  });
+
+  it("handles special regex characters in highlight", () => {
+    const { container } = render(<HighlightedText text="C++ Programming" highlight="C++" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("C++");
+  });
+
+  it("handles parentheses in highlight", () => {
+    const { container } = render(<HighlightedText text="Function (test)" highlight="(test)" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("(test)");
+  });
+
+  it("handles brackets in highlight", () => {
+    const { container } = render(<HighlightedText text="Array [1, 2, 3]" highlight="[1, 2, 3]" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("[1, 2, 3]");
+  });
+
+  it("does not highlight when no match found", () => {
+    const { container } = render(<HighlightedText text="Hello World" highlight="xyz" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).not.toBeInTheDocument();
+    expect(container.textContent).toBe("Hello World");
+  });
+
+  it("renders correctly with className and highlighting", () => {
+    const { container } = render(
+      <HighlightedText text="React Native" highlight="React" className="text-blue-500" />
+    );
+
+    const span = container.querySelector("span");
+    expect(span).toHaveClass("text-blue-500");
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("React");
+  });
+
+  it("handles whitespace in text", () => {
+    const { container } = render(<HighlightedText text="  React   Native  " highlight="React" />);
+
+    const strong = container.querySelector("strong");
+    expect(strong).toBeInTheDocument();
+    expect(strong).toHaveTextContent("React");
   });
 });

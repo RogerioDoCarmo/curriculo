@@ -16,6 +16,7 @@
 
 import { render } from "@testing-library/react";
 import fc from "fast-check";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import ContactForm from "@/components/ContactForm";
@@ -25,11 +26,77 @@ import Header from "@/components/Header";
 import ProjectsSection from "@/components/ProjectsSection";
 import type { Project } from "@/types/index";
 
-// Mock next-intl
-jest.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => "en",
-}));
+// Mock messages for next-intl
+const messages: AbstractIntlMessages = {
+  sections: {
+    projects: "Projects",
+  },
+  projects: {
+    filterByTech: "Filter by technology",
+    all: "All",
+    noMatch: "No projects match your filter",
+    viewDetails: "View details for",
+    screenshot: "screenshot",
+    featured: "Featured",
+    mockData: "Mock Data",
+    more: "more",
+    technologies: "Technologies",
+    liveDemo: "Live Demo",
+    repository: "Repository",
+    noImages: "No images available",
+  },
+  forms: {
+    name: "Name",
+    namePlaceholder: "Your name",
+    nameRequired: "Name is required",
+    nameMinLength: "Name must be at least 2 characters",
+    email: "Email",
+    emailPlaceholder: "your.email@example.com",
+    emailRequired: "Email is required",
+    emailInvalid: "Please enter a valid email address",
+    message: "Message",
+    messagePlaceholder: "Your message...",
+    messageRequired: "Message is required",
+    messageMinLength: "Message must be at least 10 characters",
+    submit: "Send Message",
+    sending: "Sending...",
+    success: "Message sent successfully!",
+    error: "Failed to send message. Please try again.",
+    orUseForm: "Or use the form below",
+    formAriaLabel: "Contact form",
+  },
+  footer: {
+    emailLabel: "Professional Email",
+  },
+  header: {
+    home: "Home",
+    projects: "Projects",
+    skills: "Skills",
+    experience: "Experience",
+    contact: "Contact",
+    menu: "Menu",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+  },
+  nav: {
+    home: "Home",
+    projects: "Projects",
+    skills: "Skills",
+    experience: "Experience",
+    contact: "Contact",
+    techStack: "Tech Stack",
+  },
+  theme: {
+    switchToDark: "Switch to dark mode",
+    switchToLight: "Switch to light mode",
+  },
+  language: {
+    selectLanguage: "Select language",
+  },
+  modal: {
+    close: "Close",
+  },
+};
 
 // Mock next/image
 jest.mock("next/image", () => ({
@@ -89,6 +156,15 @@ jest.mock("@/hooks/useAnchorNavigation", () => ({
   }),
 }));
 
+// Helper to render with next-intl provider
+const renderWithIntl = (component: React.ReactElement) => {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {component}
+    </NextIntlClientProvider>
+  );
+};
+
 describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   /**
    * Helper to check if an element has an accessible label.
@@ -129,7 +205,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   }
 
   it("should ensure ThemeToggle button has aria-label", () => {
-    const { container } = render(<ThemeToggle />);
+    const { container } = renderWithIntl(<ThemeToggle />);
 
     const button = container.querySelector("button");
     expect(button).toBeTruthy();
@@ -140,7 +216,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   });
 
   it("should ensure LanguageSelector has accessible label", () => {
-    const { container } = render(<LanguageSelector currentLocale="en" />);
+    const { container } = renderWithIntl(<LanguageSelector currentLocale="en" />);
 
     const select = container.querySelector("select");
     expect(select).toBeTruthy();
@@ -154,7 +230,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   });
 
   it("should ensure Modal has proper ARIA attributes", () => {
-    const { container } = render(
+    const { container } = renderWithIntl(
       <Modal isOpen={true} onClose={() => {}} title="Test Modal">
         <p>Modal content</p>
       </Modal>
@@ -176,7 +252,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   });
 
   it("should ensure ContactForm inputs have associated labels", () => {
-    const { container } = render(<ContactForm locale="en" />);
+    const { container } = renderWithIntl(<ContactForm locale="en" />);
 
     // Check all inputs and textareas
     const inputs = container.querySelectorAll("input, textarea");
@@ -188,7 +264,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
   });
 
   it("should ensure Header navigation has proper ARIA attributes", () => {
-    const { container } = render(<Header locale="en" />);
+    const { container } = renderWithIntl(<Header locale="en" />);
 
     // Navigation should have role and aria-label
     const nav = container.querySelector('nav[role="navigation"]');
@@ -222,7 +298,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
           { minLength: 1, maxLength: 3 }
         ),
         (projects: Project[]) => {
-          const { container } = render(<ProjectsSection projects={projects} locale="en" />);
+          const { container } = renderWithIntl(<ProjectsSection projects={projects} locale="en" />);
 
           // Section should have aria-label
           const section = container.querySelector("section");
@@ -253,7 +329,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
         fc.constantFrom<"sm" | "md" | "lg">("sm", "md", "lg"),
         fc.string({ minLength: 1, maxLength: 20 }).filter((s) => s.trim().length > 0),
         (variant, size, text) => {
-          const { container } = render(
+          const { container } = renderWithIntl(
             <Button variant={variant} size={size}>
               {text}
             </Button>
@@ -272,7 +348,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
 
   it("should ensure icon-only buttons have aria-label", () => {
     // ThemeToggle is an icon-only button
-    const { container } = render(<ThemeToggle />);
+    const { container } = renderWithIntl(<ThemeToggle />);
 
     const button = container.querySelector("button");
     expect(button).toBeTruthy();

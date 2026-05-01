@@ -5,25 +5,38 @@
     "experience": "Experiencia",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "techStack": "Tecnologías"
+    "techStack": "Usado en este sitio"
   },
   "hero": {
     "greeting": "Hola, soy",
     "title": "Desarrollador React Native Mobile",
     "subtitle": "Especialista en desarrollo de aplicaciones móviles multiplataforma para clientes enterprise.",
-    "cta": "Ver Mi Trabajo"
+    "cta": "Ver Mi Trabajo",
+    "contact": "Ponte en Contacto"
   },
   "careerPath": {
     "title": "Elige un Camino",
-    "professional": "Desarrollador Profesional",
-    "academic": "Formación Académica"
+    "professional": "Profesional",
+    "academic": "Académico"
   },
   "sections": {
     "experience": "Experiencia",
     "projects": "Proyectos",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "techStack": "Tecnologías Utilizadas"
+    "techStack": "Usado en este sitio"
+  },
+  "experience": {
+    "section": "experiencia",
+    "professionalExperience": "Experiencia Profesional",
+    "academicBackground": "Formación Académica",
+    "noExperiences": "No hay experiencias para mostrar.",
+    "present": "Presente",
+    "expandDetails": "Expandir detalles",
+    "collapseDetails": "Contraer detalles",
+    "achievements": "Logros",
+    "technologies": "Tecnologías",
+    "timeline": "Línea de Tiempo"
   },
   "forms": {
     "name": "Nombre",
@@ -31,7 +44,19 @@
     "message": "Mensaje",
     "submit": "Enviar Mensaje",
     "success": "¡Mensaje enviado con éxito!",
-    "error": "Error al enviar el mensaje. Por favor, inténtalo de nuevo."
+    "error": "Error al enviar el mensaje. Por favor, inténtalo de nuevo.",
+    "sending": "Enviando...",
+    "nameRequired": "El nombre es obligatorio",
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "emailInvalid": "El correo electrónico debe ser una dirección válida",
+    "messageRequired": "El mensaje es obligatorio",
+    "messageMinLength": "El mensaje debe tener al menos 10 caracteres",
+    "namePlaceholder": "Tu nombre",
+    "emailPlaceholder": "tu@email.com",
+    "messagePlaceholder": "Tu mensaje (al menos 10 caracteres)",
+    "formAriaLabel": "Formulario de contacto",
+    "orUseForm": "O usa el formulario a continuación para enviarme un mensaje"
   },
   "theme": {
     "toggle": "Cambiar tema",
@@ -45,7 +70,21 @@
     "copyright": "Todos los derechos reservados.",
     "sitemap": "Mapa del sitio",
     "email": "contact@rogeriodocarmo.com",
-    "emailLabel": "Correo Profesional"
+    "emailLabel": "Correo Profesional",
+    "navigate": "Navegar",
+    "languagesTitle": "Idiomas",
+    "connect": "Conectar",
+    "downloadResume": "Descargar Currículum",
+    "downloadResumeLabel": "Descargar currículum en formato PDF",
+    "downloadDissertation": "Descargar Disertación",
+    "downloadDissertationLabel": "Descargar disertación de maestría en formato PDF",
+    "printPage": "Imprimir Página",
+    "printPageLabel": "Imprimir página del sitio",
+    "languages": {
+      "portuguese": "Português (pt-BR)",
+      "english": "English (en)",
+      "spanish": "Español (es)"
+    }
   },
   "backToTop": {
     "label": "Volver arriba"
@@ -72,9 +111,38 @@
     "close": "Cerrar",
     "learnMore": "Saber más"
   },
+  "skills": {
+    "filterLabel": "Filtrar habilidades",
+    "filterPlaceholder": "Filtrar habilidades...",
+    "filterAriaLabel": "Filtrar habilidades por nombre",
+    "noMatch": "Ninguna habilidad coincide con tu filtro.",
+    "skillsLabel": "habilidades",
+    "levelLabel": "Nivel"
+  },
+  "projects": {
+    "filterByTech": "Filtrar por tecnología",
+    "all": "Todos",
+    "noMatch": "Ningún proyecto coincide con el filtro seleccionado.",
+    "viewDetails": "Ver detalles de",
+    "screenshot": "captura de pantalla",
+    "featured": "Destacado",
+    "mockData": "Datos Ficticios",
+    "more": "más",
+    "technologies": "Tecnologías",
+    "liveDemo": "Demo en Vivo",
+    "repository": "Repositorio",
+    "noImages": "No hay imágenes disponibles"
+  },
   "homepage": {
     "title": "Sitio Web de Currículum Personal",
     "description": "Un sitio web de currículum personal moderno y responsivo construido con Next.js 16, TypeScript y Tailwind CSS.",
+    "hero": {
+      "title": "Desarrollador Frontend Mobile React Native"
+    },
+    "contact": {
+      "title": "Ponte en Contacto",
+      "subtitle": "¿Tienes un proyecto en mente o quieres charlar? ¡Envíame un mensaje!"
+    },
     "stayInTouch": {
       "title": "Mantente en contacto",
       "subtitle": "Deja tu correo electrónico y me pondré en contacto sobre oportunidades o colaboraciones.",
@@ -85,7 +153,7 @@
     }
   },
   "techStack": {
-    "title": "Tecnologías Utilizadas",
+    "title": "Usado en este sitio",
     "subtitle": "Tecnologías usadas para construir este sitio web",
     "labels": {
       "why": "Por qué:",

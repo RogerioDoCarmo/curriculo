@@ -1800,6 +1800,184 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Track crash-free users improvement over time
     - _Requirements: 10.5_
 
+- [ ] 38. Populate website with complete professional content and integrate all components
+  - [x] 38.1 Extract and organize content from resume PDF
+    - Read `public/resumes/resume.pdf` to extract:
+      - Professional summary/bio
+      - Work experience (companies, roles, dates, responsibilities, achievements)
+      - Education (degrees, institutions, dates, honors)
+      - Skills (technical, languages, tools, frameworks)
+      - Certifications and courses
+      - Projects and publications
+    - Organize extracted content into structured data format
+    - Create content files in `/content/` directory following existing schema
+    - _Requirements: 1.3, 1.4, 1.5, 2.1, 2.2_
+  - [x] 38.2 Gather professional information from LinkedIn profile
+    - Visit https://www.linkedin.com/in/rogeriodocarmo/ to extract:
+      - Current position and company
+      - Professional headline
+      - About/summary section
+      - Work experience details
+      - Skills and endorsements
+      - Recommendations (if public)
+      - Volunteer experience
+    - Cross-reference with resume data for consistency
+    - Fill gaps in resume with LinkedIn information
+    - _Requirements: 1.1, 1.3, 2.1_
+  - [x] 38.3 Gather academic information from research profiles
+    - Visit FAPESP profile (from Linktree) to extract:
+      - Research projects
+      - Academic affiliations
+      - Publications
+      - Grants and funding
+    - Visit Currículo Lattes (from Linktree) to extract:
+      - Academic background
+      - Research areas
+      - Publications and citations
+      - Academic achievements
+    - Visit ResearchGate profile to extract:
+      - Research interests
+      - Publications
+      - Citations and impact
+      - Collaborations
+    - Organize academic content for "Academic" career path
+    - _Requirements: 1.3, 1.4, 2.1_
+  - [ ] 38.4 Create comprehensive Hero section content
+    - Write professional headline based on current role
+    - Create compelling introduction paragraph (2-3 sentences)
+    - Add professional tagline/subtitle
+    - Include years of experience
+    - Add call-to-action text for contact button
+    - Translate all Hero content to pt-BR, en, es
+    - Update `messages/*.json` with Hero translations
+    - _Requirements: 1.1, 11.7_
+  - [x] 38.5 Populate Professional career path content
+    - Create markdown files in `/content/experience/professional/` for each job:
+      - Company name, role, location, dates
+      - Detailed responsibilities (3-5 bullet points)
+      - Key achievements with metrics (e.g., "Improved performance by 40%")
+      - Technologies used
+      - Team size and collaboration details
+    - Order experiences chronologically (most recent first)
+    - Add company logos to `/public/images/companies/` if available
+    - Ensure content is professional and achievement-focused
+    - _Requirements: 1.3, 2.1, 2.2_
+  - [x] 38.6 Populate Academic career path content
+    - Create markdown files in `/content/experience/academic/` for each position:
+      - Institution name, role, location, dates
+      - Research focus and objectives
+      - Key publications and citations
+      - Teaching responsibilities (if applicable)
+      - Grants and funding received
+      - Academic achievements and honors
+    - Order experiences chronologically (most recent first)
+    - Add institution logos to `/public/images/institutions/` if available
+    - _Requirements: 1.4, 2.1, 2.2_
+  - [x] 38.7 Create comprehensive Skills section content
+    - Organize skills into categories:
+      - **Frontend**: React, React Native, JavaScript, TypeScript, HTML, CSS, Tailwind
+      - **Backend**: Node.js, Java, APIs, databases
+      - **Mobile**: React Native, iOS, Android
+      - **Tools**: Git, GitHub, CI/CD, testing frameworks
+      - **Languages**: Portuguese (native), English, Spanish
+      - **Soft Skills**: Leadership, communication, problem-solving
+    - Add skill proficiency levels (optional: beginner, intermediate, advanced, expert)
+    - Create `/content/skills.md` with structured skill data
+    - Translate skill categories to pt-BR, en, es
+    - _Requirements: 1.5, 11.7_
+  - [x] 38.8 Populate Projects portfolio section
+    - Create markdown files in `/content/projects/` for each project:
+      - Project name and description (2-3 sentences)
+      - Technologies used (tags)
+      - Role and responsibilities
+      - Key features and achievements
+      - Links to live demo and/or repository (if public)
+      - Project screenshots/images
+    - Include at least 6-8 projects:
+      - Professional projects (anonymized if needed)
+      - Personal projects from GitHub
+      - Academic projects/research
+      - Open source contributions
+    - Add project images to `/public/images/projects/`
+    - Mark featured projects (top 3-4)
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+  - [ ] 38.9 Update navigation and integrate all components
+    - Verify Header component displays correctly with:
+      - Logo/name
+      - Navigation links (Home, Projects, Experience, Skills, Contact, Tech Stack)
+      - Language selector (pt-BR, en, es)
+      - Theme toggle (light/dark)
+      - Linktree link
+      - Mobile hamburger menu
+    - Verify Footer component displays correctly with:
+      - Professional email (contato@rogeriodocarmo.com)
+      - Social links (LinkedIn, GitHub, Linktree)
+      - Sitemap sections
+      - Copyright notice
+      - Resume download link
+    - Ensure all components are visible and functional
+    - _Requirements: 4.1, 4.2, 4.3, 7.5, 11.5, 17.5_
+  - [ ] 38.10 Create complete homepage layout
+    - Integrate all sections in proper order:
+      1. **Hero section** with profile photo, headline, intro, CTA
+      2. **Career Path Selector** (Professional/Academic toggle)
+      3. **Experience section** with Timeline component
+      4. **Skills section** with categorized skills
+      5. **Projects section** with portfolio grid
+      6. **Tech Stack section** with technologies used
+      7. **Contact section** with form and email info
+    - Ensure smooth scrolling between sections
+    - Verify anchor navigation works (/#projects, /#experience, etc.)
+    - Test responsive layout on mobile, tablet, desktop
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 3.1, 4.1, 4.2, 4.3_
+  - [ ] 38.11 Translate all content to supported languages
+    - Translate Hero content to pt-BR, en, es
+    - Translate section headings and labels
+    - Translate experience descriptions (or keep in original language with note)
+    - Translate skills categories
+    - Translate project descriptions
+    - Translate contact form labels and messages
+    - Update all `messages/*.json` files with complete translations
+    - Verify translation coverage with property test
+    - _Requirements: 11.1, 11.7_
+  - [ ] 38.12 Add professional metadata and SEO content
+    - Update page title: "Rogério do Carmo - Frontend Mobile Developer"
+    - Write meta description (150-160 characters)
+    - Add keywords: React Native, JavaScript, TypeScript, Mobile Development
+    - Update Open Graph tags with professional info
+    - Update Twitter Card tags
+    - Add structured data (Person schema) with complete info
+    - Update sitemap with all sections
+    - _Requirements: 7.1, 7.2, 7.3, 20.1, 20.2_
+  - [ ] 38.13 Optimize images and assets
+    - Compress profile photo for web (target: <500KB)
+    - Add company/institution logos (optimized)
+    - Add project screenshots (optimized, responsive)
+    - Ensure all images have descriptive alt text
+    - Use Next.js Image component for all images
+    - Implement lazy loading for below-fold images
+    - _Requirements: 4.5, 6.3, 9.1_
+  - [ ] 38.14 Test complete website functionality
+    - Test language switching (pt-BR ↔ en ↔ es)
+    - Test theme switching (light ↔ dark)
+    - Test career path switching (Professional ↔ Academic)
+    - Test navigation (all links, anchor scrolling)
+    - Test contact form submission
+    - Test resume download
+    - Test exit intent modal
+    - Test responsive layout on all breakpoints
+    - Test all components render correctly
+    - _Requirements: 11.1, 17.1, 1.7, 3.4, 19.4, 4.1, 4.2, 4.3_
+  - [ ] 38.15 Verify content accuracy and professionalism
+    - Review all content for accuracy (dates, companies, roles)
+    - Ensure professional tone throughout
+    - Remove any placeholder or dummy content
+    - Verify no social media links (Facebook, Instagram) are included
+    - Ensure all external links work (LinkedIn, GitHub, FAPESP, Lattes, ResearchGate)
+    - Proofread all text for grammar and spelling
+    - Get user approval for final content
+    - _Requirements: 1.1, 1.3, 1.4, 2.1, 3.1_
+
 - [ ] 37. Configure Firebase Admin SDK and Vercel deployment environment variables
   - [ ] 37.1 Set up Firebase Admin SDK credentials
     - Go to Firebase Console → Project Settings → Service Accounts
@@ -1921,3 +2099,76 @@ This implementation plan breaks down the personal resume website into discrete, 
 - All code must follow TypeScript strict mode and ESLint rules
 - Checkpoints ensure incremental validation and provide opportunities for user feedback
 - Each task references specific requirements for traceability
+
+- [ ] 33. Implement automatic GitHub issue creation for CI failures
+  - [ ] 33.1 Add GitHub CLI issue creation for test failures
+    - Add step to CI workflow that runs on failure
+    - Use `gh issue create` command with GitHub CLI
+    - Include workflow run URL, commit SHA, and branch name in issue body
+    - Add labels: `bug`, `ci-failure`, `automated`
+    - Set environment variable `GH_TOKEN: ${{ github.token }}`
+    - _Requirements: 16.1, 16.2_
+  - [ ] 33.2 Implement deduplication logic for issues
+    - Check if similar issue already exists before creating new one
+    - Search for open issues with `ci-failure` label
+    - Match by test suite name or error message
+    - Add comment to existing issue if duplicate found
+    - _Prevents spam from repeated failures_
+  - [ ] 33.3 Add issue creation for performance regressions
+    - Trigger when Lighthouse score drops below threshold
+    - Include performance metrics in issue body (FCP, TTI, Score)
+    - Add labels: `performance`, `regression`, `automated`
+    - Link to Lighthouse report artifact
+    - _Requirements: 6.1, 6.2, 6.5_
+  - [ ] 33.4 Add issue creation for coverage drops
+    - Trigger when test coverage drops below 90%
+    - Include coverage percentage and affected files
+    - Add labels: `testing`, `coverage`, `automated`
+    - Link to coverage report artifact
+    - _Requirements: 14.1, 16.3_
+  - [ ] 33.5 Add issue creation for security vulnerabilities
+    - Trigger when SonarQube detects critical issues
+    - Include vulnerability details and severity
+    - Add labels: `security`, `vulnerability`, `automated`
+    - Link to SonarQube analysis
+    - _Requirements: 16.5, 16.6_
+  - [ ] 33.6 Implement auto-close logic for resolved issues
+    - Close issues automatically when CI passes again
+    - Add comment explaining resolution
+    - Use GitHub Actions Script for complex logic
+    - _Keeps issue tracker clean_
+  - [ ] 33.7 Add workflow permissions for issue creation
+    - Add `issues: write` permission to CI workflow
+    - Update workflow YAML with permissions block
+    - Test that issues can be created successfully
+    - _Required for GitHub CLI to create issues_
+  - [ ] 33.8 Test issue creation in staging environment
+    - Create test workflow that intentionally fails
+    - Verify issue is created correctly
+    - Verify deduplication works
+    - Verify auto-close works when fixed
+    - _Validate before enabling in production_
+  - [ ] 33.9 Update documentation
+    - Document automatic issue creation in CI-CD-PIPELINE.md
+    - Add troubleshooting guide for issue creation failures
+    - Document how to disable automatic issue creation if needed
+    - _Requirements: 15.2_
+
+- [ ] 39. Review and fix skipped E2E tests
+  - [ ] 39.1 Review email validation test
+    - Test: `tests/e2e/email-subscribe.spec.ts` - "shows validation error for invalid email"
+    - Issue: Test expects "Enter a valid email" but actual translation is "Email must be a valid email address"
+    - Current status: Skipped with regex fix applied (`/valid.*email/i`)
+    - Action: Review if the regex fix is acceptable or if translations should be updated
+    - _Requirements: 3.3, 11.1_
+  - [ ] 39.2 Review print media test
+    - Test: `tests/e2e/print-pdf.spec.ts` - "should hide non-essential elements in print media"
+    - Issue: Language selector parent container with `print:hidden` not being detected correctly
+    - Current status: Skipped with parent container check fix applied
+    - Action: Review if the fix correctly validates print media hiding behavior
+    - _Requirements: 18.2_
+  - [ ] 39.3 Unskip tests after review
+    - Remove `.skip` from both tests after confirming fixes are correct
+    - Run full E2E test suite to ensure no regressions
+    - Update CI pipeline if needed
+    - _Ensure all E2E tests are active and passing_
