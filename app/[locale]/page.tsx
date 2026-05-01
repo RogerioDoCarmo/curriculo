@@ -1,15 +1,9 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
-import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
+import { LazyTechStackSection } from "@/lib/lazy-components";
 import { getExperiences, getProjects, getSkills } from "@/lib/content";
-import Hero from "@/components/Hero";
-import CareerPathSelector from "@/components/CareerPathSelector";
-import ExperienceSection from "@/components/ExperienceSection";
-import SkillsSection from "@/components/SkillsSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import ContactForm from "@/components/ContactForm";
-import BackToTopButton from "@/components/BackToTopButton";
+import HomePageContent from "./HomePageContent";
 
 interface HomePageProps {
   readonly params: Promise<{ locale: string }>;
@@ -31,6 +25,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   // Get translations
   const t = await getTranslations("homepage");
+  const heroT = await getTranslations("hero");
 
   // Load all content
   const [experiences, projects, skills] = await Promise.all([
@@ -40,52 +35,17 @@ export default async function HomePage({ params }: HomePageProps) {
   ]);
 
   return (
-    <>
-      {/* Hero Section with Profile Photo */}
-      <Hero name="Rogério do Carmo" title={t("hero.title")} locale={locale} />
-
-      {/* Career Path Selector (Professional/Academic) */}
-      <CareerPathSelector />
-
-      {/* Experience Section with Timeline */}
-      <ExperienceSection careerPath="professional" experiences={experiences} locale={locale} />
-
-      {/* Skills Section */}
-      <SkillsSection skills={skills} locale={locale} />
-
-      {/* Projects Portfolio Section */}
-      <ProjectsSection projects={projects} locale={locale} />
-
-      {/* Tech Stack Section - Lazy loaded for code splitting */}
-      <LazyTechStackSection />
-
-      {/* Contact Form Section */}
-      <section
-        id="contact"
-        aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
-      >
-        <div className="mx-auto max-w-3xl">
-          <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">
-            {t("contact.title")}
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
-            {t("contact.subtitle")}
-          </p>
-          <ContactForm />
-        </div>
-      </section>
-
-      {/* Back to Top Button */}
-      <BackToTopButton />
-
-      {/* Exit Intent Modal - Lazy loaded, client-side only */}
-      <LazyExitIntentModal
-        enabled={true}
-        locale={locale}
-        linkedInUrl="https://www.linkedin.com/in/rogeriodocarmo/"
-        githubUrl="https://github.com/RogerioDoCarmo/curriculo"
-      />
-    </>
+    <HomePageContent
+      locale={locale}
+      heroTitle={t("hero.title")}
+      heroGreeting={heroT("greeting")}
+      heroCtaText={heroT("cta")}
+      heroContactText={t("contact.title")}
+      contactTitle={t("contact.title")}
+      contactSubtitle={t("contact.subtitle")}
+      experiences={experiences}
+      projects={projects}
+      skills={skills}
+    />
   );
 }

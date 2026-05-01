@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 
 interface HeroProps {
   readonly name: string;
   readonly title: string;
   readonly locale: string;
+  readonly greeting: string;
+  readonly ctaText: string;
+  readonly contactText: string;
 }
 
-export default function Hero({ name, title, locale }: HeroProps) {
+export default function Hero({ name, title, locale, greeting, ctaText, contactText }: HeroProps) {
   // Get locale-specific email
   const email = locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com";
 
@@ -23,7 +25,7 @@ export default function Hero({ name, title, locale }: HeroProps) {
         {/* Text content */}
         <div className="text-center md:text-left md:flex-1">
           <p className="mb-2 text-lg font-medium text-primary-600 dark:text-primary-400">
-            Hello, I&apos;m
+            {greeting}
           </p>
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl lg:text-6xl">
             {name}
@@ -34,7 +36,7 @@ export default function Hero({ name, title, locale }: HeroProps) {
               href="#projects"
               className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
             >
-              View My Work
+              {ctaText}
             </a>
             <a
               href={`mailto:${email}`}
@@ -55,7 +57,7 @@ export default function Hero({ name, title, locale }: HeroProps) {
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="m2 7 10 7 10-7" />
               </svg>
-              Get in Touch
+              {contactText}
             </a>
           </div>
           {/* Professional Email Display */}
