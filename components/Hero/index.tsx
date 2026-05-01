@@ -8,7 +8,10 @@ interface HeroProps {
   readonly locale: string;
 }
 
-export default function Hero({ name, title }: HeroProps) {
+export default function Hero({ name, title, locale }: HeroProps) {
+  // Get locale-specific email
+  const email = locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com";
+
   return (
     <section
       id="home"
@@ -23,12 +26,44 @@ export default function Hero({ name, title }: HeroProps) {
           {name}
         </h1>
         <p className="mb-8 text-xl text-gray-600 dark:text-gray-300 sm:text-2xl">{title}</p>
-        <a
-          href="#projects"
-          className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
-        >
-          View My Work
-        </a>
+        <div className="flex flex-col items-center gap-4 sm:flex-row md:items-start">
+          <a
+            href="#projects"
+            className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+          >
+            View My Work
+          </a>
+          <a
+            href={`mailto:${email}`}
+            className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-primary-600 px-6 py-3 text-lg font-medium text-primary-600 transition-colors duration-200 hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/20"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m2 7 10 7 10-7" />
+            </svg>
+            Get in Touch
+          </a>
+        </div>
+        {/* Professional Email Display */}
+        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+          <a
+            href={`mailto:${email}`}
+            className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+          >
+            {email}
+          </a>
+        </p>
       </div>
     </section>
   );
