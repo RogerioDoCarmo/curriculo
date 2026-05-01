@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
+import { LazyExitIntentModal } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -41,35 +41,44 @@ export default function HomePageContent({
   return (
     <>
       {/* Hero Section with Profile Photo */}
-      <Hero
-        name="Rogério do Carmo"
-        title={heroTitle}
-        locale={locale}
-        greeting={heroGreeting}
-        ctaText={heroCtaText}
-        contactText={heroContactText}
-      />
+      <div className="bg-white dark:bg-gray-900">
+        <Hero
+          name="Rogério do Carmo"
+          title={heroTitle}
+          locale={locale}
+          greeting={heroGreeting}
+          ctaText={heroCtaText}
+          contactText={heroContactText}
+        />
+      </div>
 
       {/* Career Path Selector (Professional/Academic) */}
-      <CareerPathSelector selected={careerPath} onSelect={setCareerPath} />
+      <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mx-auto max-w-7xl flex justify-center">
+          <CareerPathSelector selected={careerPath} onSelect={setCareerPath} />
+        </div>
+      </div>
 
       {/* Experience Section with Timeline */}
-      <ExperienceSection careerPath={careerPath} experiences={experiences} locale={locale} />
+      <div className="bg-white dark:bg-gray-900">
+        <ExperienceSection careerPath={careerPath} experiences={experiences} locale={locale} />
+      </div>
 
       {/* Skills Section */}
-      <SkillsSection skills={skills} locale={locale} />
+      <div className="bg-gray-50 dark:bg-gray-800/50">
+        <SkillsSection skills={skills} locale={locale} />
+      </div>
 
       {/* Projects Portfolio Section */}
-      <ProjectsSection projects={projects} locale={locale} />
-
-      {/* Tech Stack Section - Lazy loaded for code splitting */}
-      <LazyTechStackSection />
+      <div className="bg-white dark:bg-gray-900">
+        <ProjectsSection projects={projects} locale={locale} />
+      </div>
 
       {/* Contact Form Section */}
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
       >
         <div className="mx-auto max-w-3xl">
           <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">
