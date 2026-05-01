@@ -159,6 +159,13 @@ export function getTechTheme(tech: string): TagTheme {
 export function getTechColorClasses(tech: string): string {
   const theme = getTechTheme(tech);
   const colors = TAG_COLORS[theme];
+
+  // Safety check: if colors is undefined, use default 'tools' theme
+  if (!colors) {
+    const defaultColors = TAG_COLORS["tools"];
+    return `${defaultColors.bg} ${defaultColors.text} ${defaultColors.darkBg} ${defaultColors.darkText}`;
+  }
+
   return `${colors.bg} ${colors.text} ${colors.darkBg} ${colors.darkText}`;
 }
 
