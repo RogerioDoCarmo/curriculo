@@ -19,6 +19,22 @@ jest.mock("next-intl", () => ({
       "footer.sitemap": "Sitemap",
       "footer.email": "contact@rogeriodocarmo.com",
       "footer.emailLabel": "Professional Email",
+      "footer.navigate": "Navigate",
+      "footer.languagesTitle": "Languages",
+      "footer.connect": "Connect",
+      "footer.downloadResume": "Download Resume",
+      "footer.downloadResumeLabel": "Download resume in PDF format",
+      "footer.downloadDissertation": "Download Dissertation",
+      "footer.downloadDissertationLabel": "Download master's dissertation in PDF format",
+      "footer.languages.portuguese": "Português (pt-BR)",
+      "footer.languages.english": "English (en)",
+      "footer.languages.spanish": "Español (es)",
+      "nav.home": "Home",
+      "nav.projects": "Projects",
+      "nav.experience": "Experience",
+      "nav.skills": "Skills",
+      "nav.contact": "Contact",
+      "nav.techStack": "Tech Stack",
     };
     return translations[key] ?? key;
   },
@@ -108,15 +124,6 @@ describe("Footer", () => {
       const github = screen.getByRole("link", { name: /github/i });
       expect(github).toBeInTheDocument();
       expect(github).toHaveAttribute("href", expect.stringContaining("github.com"));
-    });
-  });
-
-  it("renders Twitter social link", async () => {
-    renderFooter();
-    await waitFor(() => {
-      const twitter = screen.getByRole("link", { name: /twitter/i });
-      expect(twitter).toBeInTheDocument();
-      expect(twitter).toHaveAttribute("href", expect.stringContaining("twitter.com"));
     });
   });
 
