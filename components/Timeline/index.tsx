@@ -6,10 +6,10 @@ interface TimelineProps {
 }
 
 const typeColors: Record<TimelineItemType, string> = {
-  education: "bg-blue-500 dark:bg-blue-400",
-  work: "bg-green-500 dark:bg-green-400",
-  achievement: "bg-yellow-500 dark:bg-yellow-400",
-  milestone: "bg-purple-500 dark:bg-purple-400",
+  education: "bg-blue-400 dark:bg-blue-500",
+  work: "bg-blue-400 dark:bg-blue-500",
+  achievement: "bg-blue-400 dark:bg-blue-500",
+  milestone: "bg-blue-400 dark:bg-blue-500",
 };
 
 const typeLabels: Record<TimelineItemType, string> = {
