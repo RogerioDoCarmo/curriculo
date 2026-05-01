@@ -106,8 +106,22 @@ describe("Hero Component", () => {
 
   it("applies animation class for fade-in effect", () => {
     render(<Hero {...defaultProps} />);
-    // The animated container should have the animate-fade-in class
-    const container = screen.getByRole("heading", { level: 1 }).closest("div");
-    expect(container?.className).toMatch(/animate-fade-in/);
+    // The animated container wraps the entire hero content
+    const section = screen.getByRole("region", { name: /hero/i });
+    const animatedDiv = section.querySelector(".animate-fade-in");
+    expect(animatedDiv).toBeInTheDocument();
+  });
+
+  it("renders profile photo with correct alt text", () => {
+    render(<Hero {...defaultProps} />);
+    const photo = screen.getByRole("img", { name: /rogério do carmo/i });
+    expect(photo).toBeInTheDocument();
+    expect(photo).toHaveAttribute("src", expect.stringContaining("rogeriodocarmo.jpg"));
+  });
+
+  it("profile photo has rounded-full class for circular display", () => {
+    render(<Hero {...defaultProps} />);
+    const photo = screen.getByRole("img", { name: /rogério do carmo/i });
+    expect(photo.className).toMatch(/rounded-full/);
   });
 });
