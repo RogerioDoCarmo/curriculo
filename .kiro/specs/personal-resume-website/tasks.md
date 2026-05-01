@@ -1800,6 +1800,106 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Track crash-free users improvement over time
     - _Requirements: 10.5_
 
+- [ ] 37. Configure Firebase Admin SDK and Vercel deployment environment variables
+  - [ ] 37.1 Set up Firebase Admin SDK credentials
+    - Go to Firebase Console → Project Settings → Service Accounts
+    - Click "Generate new private key" to download service account JSON
+    - Store the JSON file securely (DO NOT commit to repository)
+    - Extract required credentials from JSON:
+      - `project_id`
+      - `private_key`
+      - `client_email`
+    - Document credential storage location (password manager, secure vault)
+    - _Requirements: 10.1, 10.5_
+  - [ ] 37.2 Configure Firebase Admin SDK environment variables locally
+    - Add Firebase Admin SDK variables to `.env.local`:
+      - `FIREBASE_ADMIN_PROJECT_ID`
+      - `FIREBASE_ADMIN_PRIVATE_KEY` (escape newlines: `\n`)
+      - `FIREBASE_ADMIN_CLIENT_EMAIL`
+    - Update `.env.example` with placeholder values
+    - Test Firebase Admin SDK initialization locally
+    - Verify admin operations work (e.g., sending FCM notifications)
+    - _Requirements: 10.1, 10.5_
+  - [ ] 37.3 Configure Vercel deployment environment variables
+    - Go to Vercel Dashboard → Project Settings → Environment Variables
+    - Add Firebase Admin SDK variables for all environments:
+      - Production: `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_PRIVATE_KEY`, `FIREBASE_ADMIN_CLIENT_EMAIL`
+      - Preview: Same values as production (or separate Firebase project)
+      - Development: Same values as production (or separate Firebase project)
+    - Add other required environment variables:
+      - `NEXT_PUBLIC_FIREBASE_API_KEY`
+      - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+      - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+      - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+      - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+      - `NEXT_PUBLIC_FIREBASE_APP_ID`
+      - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID`
+      - `NEXT_PUBLIC_SENTRY_DSN`
+      - `NEXT_PUBLIC_FORMSPREE_ENDPOINT`
+    - Verify all variables are correctly set
+    - _Requirements: 8.1, 8.3, 10.1_
+  - [ ] 37.4 Create Firebase Admin SDK initialization module
+    - Create `lib/firebase-admin.ts` with Admin SDK initialization
+    - Initialize Firebase Admin SDK with environment variables
+    - Export admin functions:
+      - `sendPushNotification(token, title, body)` - Send FCM notification
+      - `sendMulticastNotification(tokens, title, body)` - Send to multiple devices
+      - `verifyIdToken(token)` - Verify Firebase Auth token (if using auth)
+    - Add error handling for missing credentials
+    - Add TypeScript types for admin functions
+    - _Requirements: 10.1_
+  - [ ] 37.5 Implement deployment notification using Firebase Admin SDK
+    - Update `.github/workflows/deploy.yml` to send push notification on successful deployment
+    - Create API route `/api/notify-deployment` that uses Firebase Admin SDK
+    - Send notification with deployment details:
+      - Title: "Deployment Successful"
+      - Body: "New version deployed to production"
+      - Data: deployment timestamp, commit hash, branch
+    - Call API route from GitHub Actions workflow
+    - Test notification delivery after deployment
+    - _Requirements: 16.9, 10.1_
+  - [ ] 37.6 Test Firebase Admin SDK in development
+    - Test sending FCM notifications locally
+    - Verify notifications are received on test devices
+    - Test error handling for invalid tokens
+    - Test multicast notifications (multiple devices)
+    - Verify admin operations don't interfere with client SDK
+    - _Requirements: 10.1_
+  - [ ] 37.7 Test Firebase Admin SDK in production
+    - Deploy application with Firebase Admin SDK configuration
+    - Trigger deployment notification from CI/CD pipeline
+    - Verify notification is received on registered devices
+    - Test admin operations in production environment
+    - Monitor Firebase Console for admin API usage
+    - _Requirements: 10.1, 8.2_
+  - [ ] 37.8 Secure Firebase Admin SDK credentials
+    - Verify private key is not exposed in client-side code
+    - Ensure admin operations only run on server-side (API routes, server components)
+    - Add security checks to admin API routes (authentication, rate limiting)
+    - Review Vercel environment variable access controls
+    - Document security best practices for admin credentials
+    - _Requirements: 10.5_
+  - [ ] 37.9 Document Firebase Admin SDK setup
+    - Create `docs/FIREBASE-ADMIN-SETUP.md` with:
+      - How to generate service account credentials
+      - Environment variable configuration steps
+      - Local development setup
+      - Vercel deployment configuration
+      - Security considerations
+      - Troubleshooting guide
+    - Update `README.md` with Firebase Admin SDK requirements
+    - Document deployment notification feature
+    - Add Firebase Admin SDK to tech stack documentation
+    - _Requirements: 15.2_
+  - [ ] 37.10 Monitor Firebase Admin SDK usage and costs
+    - Review Firebase Admin SDK usage in Firebase Console
+    - Monitor FCM notification delivery rates
+    - Check for any API quota limits or errors
+    - Review Firebase billing for admin operations
+    - Set up alerts for unusual admin API usage
+    - Optimize notification sending to reduce costs
+    - _Requirements: 10.1_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
