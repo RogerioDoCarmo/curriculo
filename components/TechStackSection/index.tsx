@@ -114,8 +114,8 @@ export default function TechStackSection() {
                           rel="noopener noreferrer"
                           className="
                             inline-flex items-center gap-2
-                            text-sm font-medium text-primary-600
-                            hover:text-primary-700 hover:underline
+                            text-sm font-medium text-primary-700
+                            hover:text-primary-800 hover:underline
                             focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded
                             transition-colors duration-200
                           "
