@@ -120,10 +120,8 @@ test.describe("Basic Navigation", () => {
   });
 
   test("should display tech stack section", async ({ page }) => {
-    await page.goto("/");
-
-    // Navigate to tech stack page
-    await page.goto("/tech-stack");
+    // Navigate to tech stack page with explicit locale
+    await page.goto("/en/tech-stack");
 
     // Verify tech stack page heading is visible
     // The heading text varies by language:
