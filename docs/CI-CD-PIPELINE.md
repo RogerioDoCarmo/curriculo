@@ -255,3 +255,64 @@ If Lighthouse scores drop:
 - [TESTING.md](../TESTING.md) - Testing guidelines
 - [COMMANDS.md](../COMMANDS.md) - CLI commands reference
 - [tests/lighthouse/README.md](../tests/lighthouse/README.md) - Lighthouse tests documentation
+
+## Future Enhancements
+
+### TODO: Automatic GitHub Issue Creation
+
+Add automatic GitHub issue creation for CI failures to improve visibility and tracking:
+
+**Potential Use Cases:**
+
+- Create issues when tests fail on main/develop branches
+- Create issues for performance regressions (Lighthouse score drops)
+- Create issues for security vulnerabilities detected
+- Create issues for coverage drops below threshold
+
+**Implementation Options:**
+
+1. **GitHub CLI (`gh`)**: Pre-installed in GitHub Actions runners
+
+   ```yaml
+   - name: Create issue on test failure
+     if: failure()
+     run: |
+       gh issue create \
+         --title "CI Test Failure on ${{ github.ref_name }}" \
+         --body "Tests failed in workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+         --label "bug,ci-failure"
+     env:
+       GH_TOKEN: ${{ github.token }}
+   ```
+
+2. **GitHub Actions Script**: Using `actions/github-script@v7`
+   ```yaml
+   - name: Create issue on failure
+     if: failure()
+     uses: actions/github-script@v7
+     with:
+       script: |
+         await github.rest.issues.create({
+           owner: context.repo.owner,
+           repo: context.repo.repo,
+           title: 'CI Test Failure',
+           body: 'Tests failed in run ${{ github.run_id }}',
+           labels: ['bug', 'ci-failure']
+         })
+   ```
+
+**Considerations:**
+
+- Add deduplication logic to avoid creating duplicate issues
+- Include relevant context (commit SHA, branch, test output)
+- Add labels for easy filtering and triage
+- Consider auto-closing issues when CI passes again
+- Require `issues: write` permission in workflow
+
+**Priority**: Low (nice-to-have for better issue tracking)
+
+**References:**
+
+- [GitHub CLI Manual](https://cli.github.com/manual/)
+- [GitHub Actions Script](https://github.com/actions/github-script)
+- [GitHub REST API - Issues](https://docs.github.com/en/rest/issues/issues)

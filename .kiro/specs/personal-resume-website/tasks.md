@@ -2099,3 +2099,57 @@ This implementation plan breaks down the personal resume website into discrete, 
 - All code must follow TypeScript strict mode and ESLint rules
 - Checkpoints ensure incremental validation and provide opportunities for user feedback
 - Each task references specific requirements for traceability
+
+- [ ] 33. Implement automatic GitHub issue creation for CI failures
+  - [ ] 33.1 Add GitHub CLI issue creation for test failures
+    - Add step to CI workflow that runs on failure
+    - Use `gh issue create` command with GitHub CLI
+    - Include workflow run URL, commit SHA, and branch name in issue body
+    - Add labels: `bug`, `ci-failure`, `automated`
+    - Set environment variable `GH_TOKEN: ${{ github.token }}`
+    - _Requirements: 16.1, 16.2_
+  - [ ] 33.2 Implement deduplication logic for issues
+    - Check if similar issue already exists before creating new one
+    - Search for open issues with `ci-failure` label
+    - Match by test suite name or error message
+    - Add comment to existing issue if duplicate found
+    - _Prevents spam from repeated failures_
+  - [ ] 33.3 Add issue creation for performance regressions
+    - Trigger when Lighthouse score drops below threshold
+    - Include performance metrics in issue body (FCP, TTI, Score)
+    - Add labels: `performance`, `regression`, `automated`
+    - Link to Lighthouse report artifact
+    - _Requirements: 6.1, 6.2, 6.5_
+  - [ ] 33.4 Add issue creation for coverage drops
+    - Trigger when test coverage drops below 90%
+    - Include coverage percentage and affected files
+    - Add labels: `testing`, `coverage`, `automated`
+    - Link to coverage report artifact
+    - _Requirements: 14.1, 16.3_
+  - [ ] 33.5 Add issue creation for security vulnerabilities
+    - Trigger when SonarQube detects critical issues
+    - Include vulnerability details and severity
+    - Add labels: `security`, `vulnerability`, `automated`
+    - Link to SonarQube analysis
+    - _Requirements: 16.5, 16.6_
+  - [ ] 33.6 Implement auto-close logic for resolved issues
+    - Close issues automatically when CI passes again
+    - Add comment explaining resolution
+    - Use GitHub Actions Script for complex logic
+    - _Keeps issue tracker clean_
+  - [ ] 33.7 Add workflow permissions for issue creation
+    - Add `issues: write` permission to CI workflow
+    - Update workflow YAML with permissions block
+    - Test that issues can be created successfully
+    - _Required for GitHub CLI to create issues_
+  - [ ] 33.8 Test issue creation in staging environment
+    - Create test workflow that intentionally fails
+    - Verify issue is created correctly
+    - Verify deduplication works
+    - Verify auto-close works when fixed
+    - _Validate before enabling in production_
+  - [ ] 33.9 Update documentation
+    - Document automatic issue creation in CI-CD-PIPELINE.md
+    - Add troubleshooting guide for issue creation failures
+    - Document how to disable automatic issue creation if needed
+    - _Requirements: 15.2_
