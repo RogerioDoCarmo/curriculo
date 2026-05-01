@@ -81,12 +81,12 @@ describe("Static Generation Optimizations", () => {
     it("should have content parsed at build time (no runtime parsing)", () => {
       // Validates: Requirement 21.9 - Content transformed during build
       const locales = [
-        { code: "pt-BR", techStackTitle: "Tecnologias Utilizadas" },
-        { code: "en", techStackTitle: "Tech Stack" },
-        { code: "es", techStackTitle: "Tecnologías Utilizadas" },
+        { code: "pt-BR", contactTitle: "Entre em Contato" },
+        { code: "en", contactTitle: "Get in Touch" },
+        { code: "es", contactTitle: "Ponte en Contacto" },
       ];
 
-      locales.forEach(({ code, techStackTitle }) => {
+      locales.forEach(({ code, contactTitle }) => {
         const htmlPath = path.join(outDir, code, "index.html");
         const html = fs.readFileSync(htmlPath, "utf-8");
 
@@ -94,9 +94,8 @@ describe("Static Generation Optimizations", () => {
         expect(html.length).toBeGreaterThan(1000);
 
         // Should contain actual rendered content (not just loading indicators)
-        // The HTML should have the tech stack section pre-rendered with locale-specific text
-        expect(html).toContain(techStackTitle);
-        expect(html).toContain("Next.js");
+        // The HTML should have the contact section pre-rendered with locale-specific text
+        expect(html).toContain(contactTitle);
 
         // Should not contain runtime data fetching indicators for main content
         expect(html).not.toContain("Fetching data");

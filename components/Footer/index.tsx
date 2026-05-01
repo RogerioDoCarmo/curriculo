@@ -48,6 +48,7 @@ const SOCIAL_LINKS = [
         viewBox="0 0 24 24"
         fill="currentColor"
         aria-hidden="true"
+        className="text-gray-700 dark:text-gray-300"
       >
         <path d="M7.953 15.066c-.08.163-.08.324-.08.486.08.517.528.897 1.052.897h.244l4.72-4.72v6.782c0 .566.404 1.052.972 1.133.647.08 1.214-.404 1.214-1.052v-6.863l4.72 4.72h.244c.405 0 .81-.162 1.052-.486.324-.404.324-.97 0-1.375l-5.934-5.934 5.934-5.934c.324-.404.324-.97 0-1.375-.243-.324-.647-.486-1.052-.486h-.244l-4.72 4.72V.972C15.08.405 14.676 0 14.11 0c-.648 0-1.133.486-1.133 1.133v5.61L8.257 2.023h-.244c-.405 0-.81.162-1.052.486-.324.404-.324.97 0 1.375l5.934 5.934-5.934 5.934c-.243.162-.324.405-.324.648.08.243.162.486.324.648l-.008-.002z" />
       </svg>
@@ -85,37 +86,21 @@ const SOCIAL_LINKS = [
       </svg>
     ),
   },
-  {
-    name: "Twitter",
-    href: "https://twitter.com/rogeriodocarmo",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-      </svg>
-    ),
-  },
 ];
 
 const NAV_SECTIONS = [
-  { label: "Home", href: "#home" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contact", href: "#contact" },
-  { label: "Tech Stack", href: "#tech-stack" },
+  { labelKey: "nav.home", href: "#home" },
+  { labelKey: "nav.projects", href: "#projects" },
+  { labelKey: "nav.experience", href: "#experience" },
+  { labelKey: "nav.skills", href: "#skills" },
+  { labelKey: "nav.contact", href: "#contact" },
+  { labelKey: "nav.techStack", href: "#tech-stack" },
 ];
 
 const LANGUAGE_LINKS = [
-  { label: "Português (pt-BR)", href: "/pt-BR" },
-  { label: "English (en)", href: "/en" },
-  { label: "Español (es)", href: "/es" },
+  { labelKey: "footer.languages.portuguese", href: "/pt-BR" },
+  { labelKey: "footer.languages.english", href: "/en" },
+  { labelKey: "footer.languages.spanish", href: "/es" },
 ];
 
 export default function Footer({ locale }: FooterProps) {
@@ -139,10 +124,10 @@ export default function Footer({ locale }: FooterProps) {
           {/* Navigate */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
-              Navigate
+              {t("footer.navigate")}
             </h2>
             <ul className="space-y-2">
-              {NAV_SECTIONS.map(({ label, href }) => (
+              {NAV_SECTIONS.map(({ labelKey, href }) => (
                 <li key={href}>
                   <a
                     href={href}
@@ -152,7 +137,7 @@ export default function Footer({ locale }: FooterProps) {
                       focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
                     "
                   >
-                    {label}
+                    {t(labelKey)}
                   </a>
                 </li>
               ))}
@@ -162,10 +147,10 @@ export default function Footer({ locale }: FooterProps) {
           {/* Languages */}
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
-              Languages
+              {t("footer.languagesTitle")}
             </h2>
             <ul className="space-y-2">
-              {LANGUAGE_LINKS.map(({ label, href }) => (
+              {LANGUAGE_LINKS.map(({ labelKey, href }) => (
                 <li key={href}>
                   <a
                     href={href}
@@ -175,7 +160,7 @@ export default function Footer({ locale }: FooterProps) {
                       focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
                     "
                   >
-                    {label}
+                    {t(labelKey)}
                   </a>
                 </li>
               ))}
@@ -185,7 +170,7 @@ export default function Footer({ locale }: FooterProps) {
           {/* Connect */}
           <div className="social-links print:hidden">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
-              Connect
+              {t("footer.connect")}
             </h2>
             <ul className="space-y-2">
               {/* Professional Email */}
@@ -225,7 +210,7 @@ export default function Footer({ locale }: FooterProps) {
                   href={resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Download resume in PDF format"
+                  aria-label={t("footer.downloadResumeLabel")}
                   className="
                     inline-flex items-center gap-2 text-sm
                     hover:text-primary-600 dark:hover:text-primary-400
@@ -247,7 +232,38 @@ export default function Footer({ locale }: FooterProps) {
                   >
                     <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  <span>Download Resume</span>
+                  <span>{t("footer.downloadResume")}</span>
+                </a>
+              </li>
+              {/* Dissertation Download Link */}
+              <li>
+                <a
+                  href="/academic/masters_degree_dissertation_rogerio_do_carmo.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("footer.downloadDissertationLabel")}
+                  className="
+                    inline-flex items-center gap-2 text-sm
+                    hover:text-primary-600 dark:hover:text-primary-400
+                    transition-colors duration-200
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>{t("footer.downloadDissertation")}</span>
                 </a>
               </li>
               {SOCIAL_LINKS.map(({ name, href, icon }) => (
@@ -259,16 +275,49 @@ export default function Footer({ locale }: FooterProps) {
                     aria-label={`${name} profile`}
                     className="
                       inline-flex items-center gap-2 text-sm
+                      text-gray-700 dark:text-gray-300
                       hover:text-primary-600 dark:hover:text-primary-400
                       transition-colors duration-200
                       focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
                     "
                   >
                     {icon}
-                    <span>{name}</span>
+                    <span className="font-medium">{name}</span>
                   </a>
                 </li>
               ))}
+              {/* Print Button */}
+              <li>
+                <button
+                  onClick={() => window.print()}
+                  aria-label={t("footer.printPageLabel")}
+                  className="
+                    inline-flex items-center gap-2 text-sm
+                    text-gray-700 dark:text-gray-300
+                    hover:text-primary-600 dark:hover:text-primary-400
+                    transition-colors duration-200
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="6 9 6 2 18 2 18 9" />
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                    <rect x="6" y="14" width="12" height="8" />
+                  </svg>
+                  <span className="font-medium">{t("footer.printPage")}</span>
+                </button>
+              </li>
             </ul>
           </div>
         </div>

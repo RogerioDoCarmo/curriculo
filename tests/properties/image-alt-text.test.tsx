@@ -13,8 +13,30 @@
 
 import { render } from "@testing-library/react";
 import fc from "fast-check";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
 import type { Project } from "@/types/index";
+
+// Mock messages for next-intl
+const messages: AbstractIntlMessages = {
+  sections: {
+    projects: "Projects",
+  },
+  projects: {
+    filterByTech: "Filter by technology",
+    all: "All",
+    noMatch: "No projects match your filter",
+    viewDetails: "View details for",
+    screenshot: "screenshot",
+    featured: "Featured",
+    mockData: "Mock Data",
+    more: "more",
+    technologies: "Technologies",
+    liveDemo: "Live Demo",
+    repository: "Repository",
+    noImages: "No images available",
+  },
+};
 
 // Mock next/image
 jest.mock("next/image", () => ({
@@ -49,6 +71,15 @@ jest.mock("next/image", () => ({
   },
 }));
 
+// Helper to render with next-intl provider
+const renderWithIntl = (component: React.ReactElement) => {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {component}
+    </NextIntlClientProvider>
+  );
+};
+
 describe("Property 14: All Images Have Alt Text", () => {
   it("should ensure all images have alt text or role=presentation", () => {
     fc.assert(
@@ -68,7 +99,7 @@ describe("Property 14: All Images Have Alt Text", () => {
           { minLength: 1, maxLength: 5 }
         ),
         (projects: Project[]) => {
-          const { container } = render(<ProjectsSection projects={projects} locale="en" />);
+          const { container } = renderWithIntl(<ProjectsSection projects={projects} locale="en" />);
 
           // Find all img elements
           const images = container.querySelectorAll("img");
@@ -105,7 +136,7 @@ describe("Property 14: All Images Have Alt Text", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     const images = container.querySelectorAll("img");
     expect(images.length).toBeGreaterThan(0);
@@ -129,7 +160,7 @@ describe("Property 14: All Images Have Alt Text", () => {
       date: "2024-01-15",
     };
 
-    const { container } = render(<ProjectsSection projects={[project]} locale="en" />);
+    const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
 
     // Should render without errors
     expect(container).toBeTruthy();
