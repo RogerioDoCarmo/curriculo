@@ -49,7 +49,7 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 ## Features
 
 - **Multi-Language Support**: Brazilian Portuguese (pt-BR), English (en), Spanish (es)
-- **Professional Email**: Custom domain email addresses (contato@rogeriodocarmo.com for Portuguese, contact@rogeriodocarmo.com for English/Spanish)
+- **Professional Email**: Custom domain email addresses (<contato@rogeriodocarmo.com> for Portuguese, <contact@rogeriodocarmo.com> for English/Spanish)
 - **Dark/Light Mode**: Automatic theme detection with manual toggle
 - **Responsive Design**: Mobile-first approach with tablet and desktop optimizations
 - **Career Path Selection**: Toggle between Professional Developer and Academic career paths
