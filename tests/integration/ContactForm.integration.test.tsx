@@ -11,11 +11,48 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ContactForm from "@/components/ContactForm";
+
+// Mock messages for next-intl
+const messages: AbstractIntlMessages = {
+  forms: {
+    name: "Name",
+    namePlaceholder: "Your name",
+    nameRequired: "Name is required",
+    nameMinLength: "Name must be at least 2 characters",
+    email: "Email",
+    emailPlaceholder: "your.email@example.com",
+    emailRequired: "Email is required",
+    emailInvalid: "Please enter a valid email address",
+    message: "Message",
+    messagePlaceholder: "Your message...",
+    messageRequired: "Message is required",
+    messageMinLength: "Message must be at least 10 characters",
+    submit: "Send Message",
+    sending: "Sending...",
+    success: "Message sent successfully!",
+    error: "Failed to send message. Please try again.",
+    orUseForm: "Or use the form below",
+    formAriaLabel: "Contact form",
+  },
+  footer: {
+    emailLabel: "Professional Email",
+  },
+};
 
 // Mock fetch globally
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
+
+// Helper to render with next-intl provider
+const renderWithIntl = (component: React.ReactElement) => {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      {component}
+    </NextIntlClientProvider>
+  );
+};
 
 describe("ContactForm Integration Tests", () => {
   beforeEach(() => {
@@ -41,7 +78,7 @@ describe("ContactForm Integration Tests", () => {
           )
       );
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Step 1: Fill out the form
       const nameInput = screen.getByLabelText(/name/i);
@@ -102,7 +139,7 @@ describe("ContactForm Integration Tests", () => {
 
     it("shows validation errors before submission", async () => {
       const user = userEvent.setup();
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Try to submit empty form
       const submitButton = screen.getByRole("button", { name: /send message/i });
@@ -121,7 +158,7 @@ describe("ContactForm Integration Tests", () => {
 
     it("validates individual fields on blur", async () => {
       const user = userEvent.setup();
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Fill email with invalid value and blur
       const emailInput = screen.getByLabelText(/email/i);
@@ -146,7 +183,7 @@ describe("ContactForm Integration Tests", () => {
         json: async () => ({ error: "Server error" }),
       });
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Fill and submit form
       await user.type(screen.getByLabelText(/name/i), "John Doe");
@@ -177,7 +214,7 @@ describe("ContactForm Integration Tests", () => {
       // Mock network error
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Fill and submit form
       await user.type(screen.getByLabelText(/name/i), "John Doe");
@@ -205,7 +242,7 @@ describe("ContactForm Integration Tests", () => {
       // First attempt fails
       mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Fill and submit form
       await user.type(screen.getByLabelText(/name/i), "John Doe");
@@ -251,7 +288,7 @@ describe("ContactForm Integration Tests", () => {
         json: async () => ({ success: true }),
       });
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       const nameInput = screen.getByLabelText(/name/i);
       const emailInput = screen.getByLabelText(/email/i);
@@ -281,7 +318,7 @@ describe("ContactForm Integration Tests", () => {
     it("clears validation errors after successful submission", async () => {
       const user = userEvent.setup();
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // First, trigger validation errors
       const submitButton = screen.getByRole("button", { name: /send message/i });
@@ -326,7 +363,7 @@ describe("ContactForm Integration Tests", () => {
         json: async () => ({ success: true }),
       });
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       await user.type(screen.getByLabelText(/name/i), "First User");
       await user.type(screen.getByLabelText(/email/i), "first@example.com");
@@ -377,7 +414,7 @@ describe("ContactForm Integration Tests", () => {
           )
       );
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       // Fill and submit
       await user.type(screen.getByLabelText(/name/i), "John Doe");
@@ -416,7 +453,7 @@ describe("ContactForm Integration Tests", () => {
         json: async () => ({ success: true }),
       });
 
-      render(<ContactForm locale="en" />);
+      renderWithIntl(<ContactForm locale="en" />);
 
       await user.type(screen.getByLabelText(/name/i), "John Doe");
       await user.type(screen.getByLabelText(/email/i), "john.doe@example.com");

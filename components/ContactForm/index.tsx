@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { ContactFormData } from "@/types/index";
 
 interface ContactFormProps {
@@ -27,31 +28,10 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
-function validateForm(
-  data: Partial<ContactFormData>
-): Partial<Record<keyof ContactFormData, string>> {
-  const errors: Partial<Record<keyof ContactFormData, string>> = {};
-  if (!data.name || data.name.trim().length === 0) {
-    errors.name = "Name is required";
-  } else if (data.name.trim().length < 2) {
-    errors.name = "Name must be at least 2 characters";
-  }
-  if (!data.email || data.email.trim().length === 0) {
-    errors.email = "Email is required";
-  } else if (!isValidEmail(data.email.trim())) {
-    errors.email = "Email must be a valid email address";
-  }
-  if (!data.message || data.message.trim().length === 0) {
-    errors.message = "Message is required";
-  } else if (data.message.trim().length < 10) {
-    errors.message = "Message must be at least 10 characters";
-  }
-  return errors;
-}
+export default function ContactForm({ locale }: ContactFormProps) {
+  const t = useTranslations("forms");
+  const footer = useTranslations("footer");
 
-type SubmissionStatus = "idle" | "submitting" | "success" | "error";
-
-export default function ContactForm({ locale: _locale }: ContactFormProps) {
   const [formData, setFormData] = useState<Partial<ContactFormData>>({
     name: "",
     email: "",
@@ -61,8 +41,29 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
     {}
   );
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
-  const [status, setStatus] = useState<SubmissionStatus>("idle");
-  const [statusMessage, setStatusMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  function validateForm(
+    data: Partial<ContactFormData>
+  ): Partial<Record<keyof ContactFormData, string>> {
+    const errors: Partial<Record<keyof ContactFormData, string>> = {};
+    if (!data.name || data.name.trim().length === 0) {
+      errors.name = t("nameRequired");
+    } else if (data.name.trim().length < 2) {
+      errors.name = t("nameMinLength");
+    }
+    if (!data.email || data.email.trim().length === 0) {
+      errors.email = t("emailRequired");
+    } else if (!isValidEmail(data.email.trim())) {
+      errors.email = t("emailInvalid");
+    }
+    if (!data.message || data.message.trim().length === 0) {
+      errors.message = t("messageRequired");
+    } else if (data.message.trim().length < 10) {
+      errors.message = t("messageMinLength");
+    }
+    return errors;
+  }
 
   function handleChange(field: keyof ContactFormData, value: string) {
     const updated = { ...formData, [field]: value };
@@ -88,7 +89,6 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
     if (Object.keys(errs).length > 0) return;
 
     setStatus("submitting");
-    setStatusMessage("");
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;
     const endpoint = formId
@@ -104,24 +104,21 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
 
       if (response.ok) {
         setStatus("success");
-        setStatusMessage("Message sent successfully!");
         setFormData({ name: "", email: "", message: "" });
         setTouched({});
         setFieldErrors({});
       } else {
         setStatus("error");
-        setStatusMessage("Failed to send message. Please try again.");
       }
     } catch {
       setStatus("error");
-      setStatusMessage("Failed to send message. Please try again.");
     }
   }
 
-  return (
-    <section id="contact" aria-label="Contact form" className="py-8">
-      <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">Get in Touch</h2>
+  const email = locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com";
 
+  return (
+    <>
       {/* Professional Email Note */}
       <div className="mb-6 rounded-lg border border-primary-200 bg-primary-50 p-4 dark:border-primary-800 dark:bg-primary-900/20">
         <div className="flex items-start gap-3">
@@ -143,17 +140,15 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
           </svg>
           <div>
             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-              Professional Email
+              {footer("emailLabel")}
             </p>
             <a
-              href={`mailto:${_locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com"}`}
+              href={`mailto:${email}`}
               className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
             >
-              {_locale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com"}
+              {email}
             </a>
-            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-              Or use the form below to send me a message
-            </p>
+            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">{t("orUseForm")}</p>
           </div>
         </div>
       </div>
@@ -162,7 +157,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
         onSubmit={handleSubmit}
         noValidate
         className="max-w-lg space-y-5"
-        aria-label="Contact form"
+        aria-label={t("formAriaLabel")}
       >
         {/* Name */}
         <div>
@@ -170,7 +165,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
             htmlFor="contact-name"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Name <span aria-hidden="true">*</span>
+            {t("name")} <span aria-hidden="true">*</span>
           </label>
           <input
             id="contact-name"
@@ -188,7 +183,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
                 ? "border-red-500 focus:ring-red-500 dark:border-red-400"
                 : "border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600",
             ].join(" ")}
-            placeholder="Your name"
+            placeholder={t("namePlaceholder")}
           />
           {fieldErrors.name && (
             <p
@@ -207,7 +202,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
             htmlFor="contact-email"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Email <span aria-hidden="true">*</span>
+            {t("email")} <span aria-hidden="true">*</span>
           </label>
           <input
             id="contact-email"
@@ -225,7 +220,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
                 ? "border-red-500 focus:ring-red-500 dark:border-red-400"
                 : "border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600",
             ].join(" ")}
-            placeholder="your@email.com"
+            placeholder={t("emailPlaceholder")}
           />
           {fieldErrors.email && (
             <p
@@ -244,7 +239,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
             htmlFor="contact-message"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Message <span aria-hidden="true">*</span>
+            {t("message")} <span aria-hidden="true">*</span>
           </label>
           <textarea
             id="contact-message"
@@ -261,7 +256,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
                 ? "border-red-500 focus:ring-red-500 dark:border-red-400"
                 : "border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600",
             ].join(" ")}
-            placeholder="Your message (at least 10 characters)"
+            placeholder={t("messagePlaceholder")}
           />
           {fieldErrors.message && (
             <p
@@ -281,7 +276,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
             aria-live="polite"
             className="text-sm font-medium text-green-600 dark:text-green-400"
           >
-            {statusMessage}
+            {t("success")}
           </p>
         )}
         {status === "error" && (
@@ -290,7 +285,7 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
             aria-live="assertive"
             className="text-sm font-medium text-red-600 dark:text-red-400"
           >
-            {statusMessage}
+            {t("error")}
           </p>
         )}
 
@@ -324,13 +319,13 @@ export default function ContactForm({ locale: _locale }: ContactFormProps) {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 />
               </svg>
-              Sending...
+              {t("sending")}
             </>
           ) : (
-            "Send Message"
+            t("submit")
           )}
         </button>
       </form>
-    </section>
+    </>
   );
 }

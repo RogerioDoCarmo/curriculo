@@ -35,13 +35,25 @@ git branch -d <branch-name>
 
 ### 4. Create annotated git tag
 
-Ask user for:
+**Intelligent Version Suggestion:**
 
-- Tag version (e.g., v0.18.0)
-- Release title
-- Key changes/features
+1. Check the latest tag: `git describe --tags --abbrev=0`
+2. Analyze the changes in the branch (commits, files changed)
+3. Suggest next version based on semantic versioning:
+   - **Major** (v1.0.0): Breaking changes detected
+   - **Minor** (v0.X.0): New features added (default for feature branches)
+   - **Patch** (v0.X.Y): Only bug fixes
+4. Present suggestion to user: "I suggest version **vX.Y.Z** based on the changes. Confirm or provide a different version?"
 
-Then create tag with structured release notes:
+**After version is confirmed:**
+
+5. Analyze all commits and changes to generate:
+   - Release title (short, descriptive)
+   - Release description (structured with sections)
+6. Show the user the complete tag message with title and description
+7. Ask: "Should I proceed with creating this release, or would you like to change something?"
+
+**Only after user confirms**, create tag:
 
 ```bash
 git tag -a <version> -m "<release-notes>"
