@@ -9,7 +9,7 @@ import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactForm from "@/components/ContactForm";
 import BackToTopButton from "@/components/BackToTopButton";
-import type { Experience, Project, Skill, CareerPath } from "@/types/index";
+import type { Experience, Project, SkillCategory, CareerPath } from "@/types/index";
 
 interface HomePageContentProps {
   readonly locale: string;
@@ -21,7 +21,7 @@ interface HomePageContentProps {
   readonly contactSubtitle: string;
   readonly experiences: Experience[];
   readonly projects: Project[];
-  readonly skills: Skill[];
+  readonly skills: SkillCategory[];
 }
 
 export default function HomePageContent({
