@@ -1447,6 +1447,195 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add Sentry dashboard URL to documentation
     - _Requirements: 15.2_
 
+- [ ] 35. Implement comprehensive Firebase Analytics tracking for user insights
+  - [ ] 35.1 Audit current analytics implementation
+    - Review `lib/analytics.ts` for existing tracking functions
+    - Check which events are currently tracked
+    - Identify gaps in tracking coverage
+    - Review Firebase Analytics dashboard for current data
+    - Document current tracking implementation
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.2 Design comprehensive event tracking strategy
+    - Define event taxonomy and naming conventions
+    - Map all user interactions to track:
+      - Page views (all routes and locales)
+      - Navigation clicks (header, footer, back-to-top)
+      - Section scrolls (projects, experience, skills, contact)
+      - External link clicks (social media, project links)
+      - Form interactions (contact form)
+      - Language changes
+      - Theme toggles
+      - Career path selection
+      - Project detail views
+      - Resume downloads
+      - Exit intent modal interactions
+    - Define custom parameters for each event
+    - Create event tracking documentation
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.3 Implement page view tracking
+    - Track page views with custom parameters:
+      - Page path
+      - Page title
+      - Locale (pt-BR, en, es)
+      - Referrer
+      - User agent
+    - Track virtual page views for single-page navigation
+    - Track section visibility (when sections scroll into view)
+    - Implement scroll depth tracking (25%, 50%, 75%, 100%)
+    - _Requirements: 10.3_
+  - [ ] 35.4 Implement navigation tracking
+    - Track header navigation clicks:
+      - Menu item clicked
+      - Destination section
+      - Current section
+      - Locale
+    - Track footer navigation clicks
+    - Track back-to-top button clicks
+    - Track mobile menu open/close
+    - Track anchor navigation (URL hash changes)
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.5 Implement content interaction tracking
+    - Track project interactions:
+      - Project card clicks
+      - Project detail modal opens
+      - Project link clicks (demo, repository)
+      - Project technology filter usage
+    - Track experience section interactions:
+      - Career path selection (professional/academic)
+      - Experience item expansions
+      - Timeline interactions
+    - Track skills section interactions:
+      - Skill category views
+      - Skill search/filter usage
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.6 Implement form and conversion tracking
+    - Track contact form interactions:
+      - Form field focus events
+      - Form validation errors
+      - Form submission attempts
+      - Form submission success
+      - Form submission failures
+    - Track resume download events:
+      - Download button clicks
+      - Locale-specific resume downloads
+      - Exit intent modal resume downloads
+    - Track external link clicks:
+      - Social media links (LinkedIn, GitHub, Twitter)
+      - Project external links
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.7 Implement user preference tracking
+    - Track language changes:
+      - From locale
+      - To locale
+      - Change method (selector, browser detection)
+    - Track theme changes:
+      - From theme (light/dark)
+      - To theme
+      - Change method (toggle, system preference)
+    - Track career path selection:
+      - Selected path (professional/academic)
+      - Session persistence
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.8 Implement engagement and timing tracking
+    - Track time on page/section:
+      - Total session duration
+      - Time spent per section
+      - Time to first interaction
+    - Track engagement metrics:
+      - Scroll depth
+      - Number of interactions
+      - Bounce rate indicators
+    - Track exit intent triggers:
+      - Exit intent detected
+      - Modal shown
+      - Modal action taken (download, connect, dismiss)
+    - _Requirements: 10.3, 10.4_
+  - [ ] 35.9 Set up custom dimensions and user properties
+    - Configure custom dimensions in Firebase:
+      - User locale preference
+      - User theme preference
+      - User career path preference
+      - Device type (mobile, tablet, desktop)
+      - Browser type
+    - Set user properties for segmentation:
+      - Preferred language
+      - Preferred theme
+      - First visit date
+      - Total visits
+      - Last visit date
+    - _Requirements: 10.3_
+  - [ ] 35.10 Create Firebase Analytics dashboard and reports
+    - Set up custom dashboards in Firebase Analytics:
+      - Overview dashboard (page views, users, sessions)
+      - Navigation flow dashboard
+      - Content engagement dashboard
+      - Conversion funnel dashboard (contact form, resume downloads)
+      - User preferences dashboard (language, theme, career path)
+    - Configure custom reports:
+      - Most viewed sections
+      - Most clicked projects
+      - Language distribution
+      - Theme preference distribution
+      - Device and browser distribution
+    - Set up audience segments for analysis
+    - _Requirements: 10.3_
+  - [ ] 35.11 Implement analytics event testing
+    - Create test utilities for analytics events
+    - Write unit tests for analytics tracking functions
+    - Test event firing in development environment
+    - Verify events appear in Firebase DebugView
+    - Test custom parameters are captured correctly
+    - Test user properties are set correctly
+    - _Requirements: 10.3, 14.1_
+  - [ ] 35.12 Test analytics in production
+    - Deploy analytics implementation to production
+    - Use Firebase DebugView to verify events in real-time
+    - Test all tracked interactions:
+      - Navigate through all sections
+      - Change language and theme
+      - Submit contact form
+      - Download resume
+      - Click external links
+      - Trigger exit intent modal
+    - Verify events appear in Firebase Analytics dashboard (24-48 hour delay)
+    - _Requirements: 10.3, 8.2_
+  - [ ] 35.13 Set up analytics alerts and monitoring
+    - Configure Firebase Analytics alerts:
+      - Sudden drop in page views
+      - Spike in form submission errors
+      - Unusual traffic patterns
+    - Set up BigQuery export for advanced analysis (optional)
+    - Configure Google Analytics 4 integration (optional)
+    - Set up weekly analytics reports
+    - _Requirements: 10.3_
+  - [ ] 35.14 Document analytics implementation and usage
+    - Create `docs/ANALYTICS-TRACKING.md` with:
+      - Complete list of tracked events
+      - Event parameters and user properties
+      - Dashboard and report descriptions
+      - How to add new tracking events
+      - Testing procedures
+      - Privacy considerations
+    - Update `docs/SECURITY-CHECKLIST.md` with analytics verification
+    - Document how to interpret analytics data
+    - Add Firebase Analytics dashboard URL
+    - _Requirements: 15.2_
+  - [ ] 35.15 Analyze initial data and optimize
+    - Wait 2-4 weeks for data collection
+    - Analyze user behavior patterns:
+      - Most popular sections
+      - Common navigation paths
+      - Language preferences
+      - Device distribution
+      - Engagement metrics
+    - Identify optimization opportunities:
+      - Sections with low engagement
+      - High exit pages
+      - Form abandonment points
+      - Popular content to highlight
+    - Create action plan based on insights
+    - _Requirements: 10.3, 10.4_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
