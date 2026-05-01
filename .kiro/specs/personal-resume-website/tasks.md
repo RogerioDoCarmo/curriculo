@@ -1277,6 +1277,91 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Monitor search queries and click-through rates
     - _Requirements: 10.1, 10.3_
 
+- [ ] 33. Fix GitHub Dependabot security vulnerabilities
+  - [ ] 33.1 Review Dependabot security alerts
+    - Go to GitHub repository → Security → Dependabot alerts
+    - Review all 12 vulnerabilities:
+      - 1 critical severity
+      - 3 high severity
+      - 6 moderate severity
+      - 2 low severity
+    - Document each vulnerability:
+      - Package name and version
+      - Vulnerability type (e.g., XSS, DoS, RCE)
+      - Affected functionality
+      - Recommended fix version
+      - Impact on project
+    - Create `docs/SECURITY-VULNERABILITIES.md` with findings
+    - _Security: Critical for production deployment_
+  - [ ] 33.2 Update dependencies to fix critical and high severity issues
+    - Update packages with critical severity vulnerabilities first
+    - Update packages with high severity vulnerabilities
+    - Run `npm audit` to verify fixes
+    - Check for breaking changes in updated packages
+    - Update package.json with new versions
+    - Run `npm install` to update package-lock.json
+    - _Security: Addresses 4 critical/high severity issues_
+  - [ ] 33.3 Update dependencies to fix moderate severity issues
+    - Update packages with moderate severity vulnerabilities
+    - Run `npm audit` to verify fixes
+    - Check for breaking changes
+    - Test application functionality after updates
+    - _Security: Addresses 6 moderate severity issues_
+  - [ ] 33.4 Update dependencies to fix low severity issues
+    - Update packages with low severity vulnerabilities
+    - Run `npm audit` to verify all issues resolved
+    - Verify `npm audit` shows 0 vulnerabilities
+    - _Security: Addresses 2 low severity issues_
+  - [ ] 33.5 Test application after dependency updates
+    - Run full test suite: `npm test`
+    - Verify all 91 tests still pass (or fix broken tests)
+    - Run E2E tests: `npm run test:e2e`
+    - Run type checking: `npm run type-check`
+    - Test build: `npm run build`
+    - Verify static export generates correctly
+    - Test on all locales (pt-BR, en, es)
+    - _Requirements: 14.1, 14.2, 14.3_
+  - [ ] 33.6 Update CI/CD pipeline for security scanning
+    - Verify GitHub Actions workflows still pass
+    - Add `npm audit` check to CI pipeline (if not already present)
+    - Configure Dependabot auto-merge for patch updates (optional)
+    - Set up Dependabot security update notifications
+    - _Requirements: 16.1, 16.2_
+  - [ ] 33.7 Run Lighthouse audits after updates
+    - Run `npm run test:lighthouse`
+    - Verify Performance score >= 90 (currently 93)
+    - Verify no regressions in metrics:
+      - First Contentful Paint < 1.5s (currently 1.3s)
+      - Time to Interactive < 3s (currently 2.7s)
+      - Bundle size similar or smaller (currently 182KB gzipped)
+    - Document any performance changes
+    - _Requirements: 6.1, 6.2, 6.5_
+  - [ ] 33.8 Update security documentation
+    - Update `docs/SECURITY-CHECKLIST.md` with:
+      - Date of security audit
+      - Vulnerabilities fixed
+      - Updated package versions
+      - Verification steps taken
+    - Update `docs/SECURITY-VULNERABILITIES.md` with resolution status
+    - Document any remaining known issues (if any)
+    - Add security update to CHANGELOG.md
+    - _Requirements: 15.2_
+  - [ ] 33.9 Deploy and verify in production
+    - Deploy updated application to Vercel
+    - Verify deployment succeeds
+    - Test production site on all 11 domains
+    - Verify no runtime errors in browser console
+    - Check Sentry for any new errors
+    - Monitor Firebase Analytics for any issues
+    - _Requirements: 8.1, 8.2, 10.5_
+  - [ ] 33.10 Set up automated security monitoring
+    - Enable Dependabot security updates in GitHub settings
+    - Configure Dependabot to create PRs for security updates
+    - Set up email notifications for new vulnerabilities
+    - Schedule monthly security audits (`npm audit`)
+    - Document security update process in `docs/SECURITY-CHECKLIST.md`
+    - _Security: Proactive vulnerability management_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
