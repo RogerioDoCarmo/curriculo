@@ -148,7 +148,8 @@ describe("HomePageContent Component", () => {
       expect(screen.getByTestId("experience-section")).toBeInTheDocument();
       expect(screen.getByTestId("skills-section")).toBeInTheDocument();
       expect(screen.getByTestId("projects-section")).toBeInTheDocument();
-      expect(screen.getByTestId("tech-stack-section")).toBeInTheDocument();
+      // Tech Stack section moved to separate page
+      expect(screen.queryByTestId("tech-stack-section")).not.toBeInTheDocument();
       expect(screen.getByTestId("contact-form")).toBeInTheDocument();
       expect(screen.getByTestId("back-to-top")).toBeInTheDocument();
       expect(screen.getByTestId("exit-intent-modal")).toBeInTheDocument();
@@ -370,13 +371,13 @@ describe("HomePageContent Component", () => {
         section.getAttribute("data-testid")
       );
 
+      // Tech Stack section moved to separate page
       expect(sectionOrder).toEqual([
         "hero",
         "career-path-selector",
         "experience-section",
         "skills-section",
         "projects-section",
-        "tech-stack-section",
         "contact-form",
         "back-to-top",
         "exit-intent-modal",
