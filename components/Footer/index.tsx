@@ -172,6 +172,37 @@ export default function Footer({ locale }: FooterProps) {
               Connect
             </h2>
             <ul className="space-y-2">
+              {/* Professional Email */}
+              <li>
+                <a
+                  href={`mailto:${t("footer.email")}`}
+                  aria-label={t("footer.emailLabel")}
+                  className="
+                    inline-flex items-center gap-2 text-sm
+                    hover:text-primary-600 dark:hover:text-primary-400
+                    transition-colors duration-200
+                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                    font-medium
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m2 7 10 7 10-7" />
+                  </svg>
+                  <span>{t("footer.email")}</span>
+                </a>
+              </li>
               {/* Resume Download Link */}
               <li>
                 <a
