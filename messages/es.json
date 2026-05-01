@@ -78,6 +78,8 @@
     "downloadResumeLabel": "Descargar currículum en formato PDF",
     "downloadDissertation": "Descargar Disertación",
     "downloadDissertationLabel": "Descargar disertación de maestría en formato PDF",
+    "printPage": "Imprimir Página",
+    "printPageLabel": "Imprimir página del sitio",
     "languages": {
       "portuguese": "Português (pt-BR)",
       "english": "English (en)",

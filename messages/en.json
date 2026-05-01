@@ -78,6 +78,8 @@
     "downloadResumeLabel": "Download resume in PDF format",
     "downloadDissertation": "Download Dissertation",
     "downloadDissertationLabel": "Download master's dissertation in PDF format",
+    "printPage": "Print Page",
+    "printPageLabel": "Print site page",
     "languages": {
       "portuguese": "Português (pt-BR)",
       "english": "English (en)",
