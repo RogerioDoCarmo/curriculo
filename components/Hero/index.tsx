@@ -73,7 +73,7 @@ export default function Hero({ name, title, locale }: HeroProps) {
         <div className="flex-shrink-0">
           <div className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48">
             <Image
-              src="/images/profile/rogeriodocarmo.jpg"
+              src="/images/profile/rogeriodocarmo.png"
               alt="Rogério do Carmo — Mobile React Native Developer"
               fill
               sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"

@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
 import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
+import { getExperiences, getProjects, getSkills } from "@/lib/content";
 import Hero from "@/components/Hero";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
@@ -23,8 +24,15 @@ interface HomePageContentProps {
   readonly locale: string;
 }
 
-function HomePageContent({ locale }: HomePageContentProps) {
+async function HomePageContent({ locale }: HomePageContentProps) {
   const t = useTranslations("homepage");
+
+  // Load all content
+  const [experiences, projects, skills] = await Promise.all([
+    getExperiences(),
+    getProjects(),
+    getSkills(),
+  ]);
 
   return (
     <>
@@ -35,13 +43,13 @@ function HomePageContent({ locale }: HomePageContentProps) {
       <CareerPathSelector />
 
       {/* Experience Section with Timeline */}
-      <ExperienceSection />
+      <ExperienceSection careerPath="professional" experiences={experiences} locale={locale} />
 
       {/* Skills Section */}
-      <SkillsSection />
+      <SkillsSection skills={skills} locale={locale} />
 
       {/* Projects Portfolio Section */}
-      <ProjectsSection />
+      <ProjectsSection projects={projects} locale={locale} />
 
       {/* Tech Stack Section - Lazy loaded for code splitting */}
       <LazyTechStackSection />
