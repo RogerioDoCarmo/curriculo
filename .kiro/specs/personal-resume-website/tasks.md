@@ -2153,3 +2153,22 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add troubleshooting guide for issue creation failures
     - Document how to disable automatic issue creation if needed
     - _Requirements: 15.2_
+
+- [ ] 39. Review and fix skipped E2E tests
+  - [ ] 39.1 Review email validation test
+    - Test: `tests/e2e/email-subscribe.spec.ts` - "shows validation error for invalid email"
+    - Issue: Test expects "Enter a valid email" but actual translation is "Email must be a valid email address"
+    - Current status: Skipped with regex fix applied (`/valid.*email/i`)
+    - Action: Review if the regex fix is acceptable or if translations should be updated
+    - _Requirements: 3.3, 11.1_
+  - [ ] 39.2 Review print media test
+    - Test: `tests/e2e/print-pdf.spec.ts` - "should hide non-essential elements in print media"
+    - Issue: Language selector parent container with `print:hidden` not being detected correctly
+    - Current status: Skipped with parent container check fix applied
+    - Action: Review if the fix correctly validates print media hiding behavior
+    - _Requirements: 18.2_
+  - [ ] 39.3 Unskip tests after review
+    - Remove `.skip` from both tests after confirming fixes are correct
+    - Run full E2E test suite to ensure no regressions
+    - Update CI pipeline if needed
+    - _Ensure all E2E tests are active and passing_
