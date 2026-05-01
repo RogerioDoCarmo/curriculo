@@ -71,12 +71,12 @@ export default function Hero({ name, title, locale }: HeroProps) {
 
         {/* Profile photo */}
         <div className="flex-shrink-0">
-          <div className="relative h-56 w-56 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80">
+          <div className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48">
             <Image
               src="/images/profile/rogeriodocarmo.jpg"
               alt="Rogério do Carmo — Mobile React Native Developer"
               fill
-              sizes="(max-width: 640px) 224px, (max-width: 768px) 256px, (max-width: 1024px) 288px, 320px"
+              sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
               className="rounded-full object-cover object-top shadow-xl ring-4 ring-primary-200 dark:ring-primary-800"
               priority
             />
