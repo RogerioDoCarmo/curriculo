@@ -1,0 +1,103 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Triggers on version tags like v0.19.0, v1.0.0, etc.
+
+permissions:
+  contents: write # Required to create releases
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for changelog generation
+
+      - name: Get tag information
+        id: tag_info
+        run: |
+          # Get the tag name
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          
+          # Get the tag message (release notes)
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' $TAG_NAME)
+          echo "tag_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Get previous tag for changelog
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 $TAG_NAME^ 2>/dev/null || echo "")
+          echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          
+          # Get commit hash
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          TAG_NAME="${{ steps.tag_info.outputs.tag_name }}"
+          TAG_MESSAGE="${{ steps.tag_info.outputs.tag_message }}"
+          PREVIOUS_TAG="${{ steps.tag_info.outputs.previous_tag }}"
+          COMMIT_HASH="${{ steps.tag_info.outputs.commit_hash }}"
+          
+          # Extract title from tag message (first line)
+          TITLE=$(echo "$TAG_MESSAGE" | head -n 1)
+          
+          # Create release body with tag message and additional info
+          RELEASE_BODY="$TAG_MESSAGE"
+          
+          # Add technical details section if not already present
+          if ! echo "$RELEASE_BODY" | grep -q "## Technical Details"; then
+            RELEASE_BODY="$RELEASE_BODY
+
+## 🔧 Technical Details
+
+**Commit**: $COMMIT_HASH  
+**Tag**: $TAG_NAME"
+            
+            if [ -n "$PREVIOUS_TAG" ]; then
+              RELEASE_BODY="$RELEASE_BODY  
+**Previous Release**: [$PREVIOUS_TAG](https://github.com/${{ github.repository }}/releases/tag/$PREVIOUS_TAG)"
+            fi
+          fi
+          
+          # Add full changelog link if not already present
+          if ! echo "$RELEASE_BODY" | grep -q "Full Changelog"; then
+            if [ -n "$PREVIOUS_TAG" ]; then
+              RELEASE_BODY="$RELEASE_BODY
+
+---
+
+**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$TAG_NAME"
+            fi
+          fi
+          
+          # Save to output
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_BODY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.release_notes.outputs.title }}
+          body: ${{ steps.release_notes.outputs.body }}
+          draft: false
+          prerelease: false
+          generate_release_notes: false # We provide our own notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release created successfully
+        run: |
+          echo "✅ GitHub Release created successfully!"
+          echo "📦 Release: ${{ steps.tag_info.outputs.tag_name }}"
+          echo "🔗 URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag_info.outputs.tag_name }}"
