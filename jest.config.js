@@ -30,7 +30,7 @@ const config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },
-  transformIgnorePatterns: ["node_modules/(?!(next-intl|use-intl|@formatjs)/)"],
+  transformIgnorePatterns: ["node_modules/(?!(next-intl|use-intl|@formatjs|intl-messageformat)/)"],
   testMatch: ["<rootDir>/tests/**/*.test.ts", "<rootDir>/tests/**/*.test.tsx"],
   testPathIgnorePatterns: [
     "/node_modules/",
