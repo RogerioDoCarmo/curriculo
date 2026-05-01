@@ -2,6 +2,45 @@
 
 This project follows the **Git Flow** branching model for organized development and releases.
 
+## ⚠️ CRITICAL: Protected Branches
+
+**NEVER commit directly to `main` or `develop` branches!**
+
+These branches are protected and require pull requests:
+
+- ❌ **DO NOT**: `git checkout main` → make changes → `git commit`
+- ❌ **DO NOT**: `git checkout develop` → make changes → `git commit`
+- ❌ **DO NOT**: Use `--no-verify` to bypass pre-commit hooks on protected branches
+- ✅ **ALWAYS**: Create a feature branch → make changes → create PR
+
+**Correct workflow:**
+
+```bash
+# Start from develop
+git checkout develop
+git pull origin develop
+
+# Create feature branch
+git checkout -b feature/your-task-name
+
+# Make changes and commit
+git add .
+git commit -m "feat: your changes"
+
+# Push feature branch
+git push origin feature/your-task-name
+
+# Create PR on GitHub: feature/your-task-name → develop
+```
+
+**Why this matters:**
+
+- Protects code quality through CI/CD checks
+- Enables code review process
+- Maintains clean git history
+- Prevents accidental breaking changes
+- Enforces branch protection rules
+
 ## Branch Structure
 
 ```
