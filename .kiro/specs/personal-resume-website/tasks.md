@@ -1636,6 +1636,170 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Create action plan based on insights
     - _Requirements: 10.3, 10.4_
 
+- [ ] 36. Configure Firebase Crashlytics for error tracking and monitoring
+  - [ ] 36.1 Set up Firebase Crashlytics in Firebase Console
+    - Go to Firebase Console → Project Settings
+    - Navigate to Crashlytics section
+    - Enable Crashlytics for the project
+    - Review Crashlytics data retention settings
+    - Configure crash reporting settings
+    - Note Crashlytics app ID for configuration
+    - _Requirements: 10.5_
+  - [ ] 36.2 Install and configure Firebase Crashlytics SDK
+    - Install Firebase Crashlytics package: `npm install firebase`
+    - Verify Firebase SDK version compatibility with Next.js 16
+    - Update `lib/firebase.ts` to initialize Crashlytics
+    - Configure Crashlytics for web platform
+    - Set up Crashlytics initialization in app layout
+    - Verify Crashlytics is initialized before app renders
+    - _Requirements: 10.1, 10.5_
+  - [ ] 36.3 Implement automatic crash reporting
+    - Configure global error handlers:
+      - Window error event listener
+      - Unhandled promise rejection handler
+      - React error boundaries
+    - Integrate Crashlytics with error boundaries:
+      - Create ErrorBoundary component with Crashlytics
+      - Wrap app with ErrorBoundary
+      - Log component stack traces to Crashlytics
+    - Configure automatic crash collection
+    - Set crash reporting opt-in/opt-out (GDPR compliance)
+    - _Requirements: 10.5_
+  - [ ] 36.4 Implement custom error logging
+    - Create `lib/crashlytics.ts` with helper functions:
+      - `logError(error, context)` - Log errors with context
+      - `logMessage(message, level)` - Log custom messages
+      - `setUserIdentifier(userId)` - Set user ID for tracking
+      - `setCustomKey(key, value)` - Add custom metadata
+      - `recordError(error)` - Record non-fatal errors
+    - Integrate with existing error handling code
+    - Add Crashlytics logging to try/catch blocks
+    - Log API errors and network failures
+    - _Requirements: 10.5_
+  - [ ] 36.5 Add custom keys and user attributes
+    - Set custom keys for debugging:
+      - User locale (pt-BR, en, es)
+      - User theme (light, dark)
+      - Career path selection (professional, academic)
+      - Device type (mobile, tablet, desktop)
+      - Browser type and version
+      - Page/route where error occurred
+    - Set user attributes:
+      - User ID (if authenticated)
+      - Session ID
+      - First visit date
+      - Total visits
+    - Add custom keys before error logging
+    - _Requirements: 10.5_
+  - [ ] 36.6 Implement breadcrumb logging
+    - Log user actions as breadcrumbs:
+      - Page navigation
+      - Button clicks
+      - Form interactions
+      - API calls
+      - State changes
+    - Create breadcrumb helper functions
+    - Add breadcrumbs to critical user flows:
+      - Contact form submission flow
+      - Resume download flow
+      - Language/theme change flow
+    - Limit breadcrumb history (last 50-100 events)
+    - _Requirements: 10.5_
+  - [ ] 36.7 Configure crash-free users and stability metrics
+    - Set up crash-free users tracking
+    - Configure stability score calculation
+    - Set up crash velocity alerts
+    - Define acceptable crash rate thresholds
+    - Configure crash grouping and deduplication
+    - _Requirements: 10.5_
+  - [ ] 36.8 Test Crashlytics in development
+    - Force a test crash to verify Crashlytics works:
+      - Create test button to throw error
+      - Trigger test crash
+      - Verify crash appears in Firebase Console
+    - Test non-fatal error logging
+    - Test custom keys and breadcrumbs
+    - Verify error context is captured correctly
+    - Test error boundary integration
+    - _Requirements: 10.5_
+  - [ ] 36.9 Test Crashlytics in production
+    - Deploy Crashlytics implementation to production
+    - Monitor Crashlytics dashboard for incoming crashes
+    - Trigger test errors in production (controlled):
+      - Test non-fatal error logging
+      - Verify custom keys are captured
+      - Verify breadcrumbs are recorded
+    - Verify crash reports include:
+      - Stack traces
+      - Device information
+      - Custom keys
+      - Breadcrumbs
+      - User attributes
+    - _Requirements: 10.5, 8.2_
+  - [ ] 36.10 Set up Crashlytics alerts and notifications
+    - Configure Crashlytics alert rules:
+      - New crash types detected
+      - Crash rate exceeds threshold
+      - Stability score drops below threshold
+      - Regression in crash-free users
+    - Set up email notifications for critical crashes
+    - Configure Slack integration (optional)
+    - Set up daily/weekly crash reports
+    - Define alert recipients and escalation
+    - _Requirements: 10.5_
+  - [ ] 36.11 Integrate Crashlytics with CI/CD
+    - Upload source maps to Crashlytics for better stack traces
+    - Configure Crashlytics CLI for build integration
+    - Add Crashlytics verification to CI pipeline
+    - Set up automatic crash reporting for production builds
+    - Configure release tracking in Crashlytics
+    - Tag releases with version numbers
+    - _Requirements: 10.5, 16.1_
+  - [ ] 36.12 Create Crashlytics dashboard and monitoring
+    - Set up custom Crashlytics dashboard:
+      - Crash-free users percentage
+      - Crash velocity (crashes per hour/day)
+      - Top crashes by occurrence
+      - Crashes by device/browser
+      - Crashes by app version
+    - Configure crash priority and severity
+    - Set up crash triage workflow
+    - Define crash resolution process
+    - _Requirements: 10.5_
+  - [ ] 36.13 Compare Crashlytics with Sentry
+    - Analyze overlap between Crashlytics and Sentry
+    - Determine if both are needed or choose one:
+      - Crashlytics: Better Firebase integration, free
+      - Sentry: More features, better source maps, paid
+    - Document pros/cons of each solution
+    - Decide on primary error tracking tool
+    - Configure dual logging if keeping both
+    - _Requirements: 10.5_
+  - [ ] 36.14 Document Crashlytics implementation
+    - Create `docs/CRASHLYTICS-SETUP.md` with:
+      - Configuration instructions
+      - Custom error logging guide
+      - Custom keys and breadcrumbs usage
+      - Testing procedures
+      - Alert configuration
+      - Dashboard usage guide
+    - Update `docs/SECURITY-CHECKLIST.md` with Crashlytics verification
+    - Document crash triage and resolution process
+    - Add Crashlytics dashboard URL
+    - _Requirements: 15.2_
+  - [ ] 36.15 Monitor and optimize crash reporting
+    - Monitor Crashlytics for 2-4 weeks
+    - Analyze crash patterns:
+      - Most common crashes
+      - Crashes by device/browser
+      - Crashes by app version
+      - User impact (affected users)
+    - Prioritize and fix critical crashes
+    - Optimize error logging (reduce noise)
+    - Improve error messages and context
+    - Track crash-free users improvement over time
+    - _Requirements: 10.5_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
