@@ -32,7 +32,19 @@
     "message": "Mensagem",
     "submit": "Enviar Mensagem",
     "success": "Mensagem enviada com sucesso!",
-    "error": "Falha ao enviar mensagem. Por favor, tente novamente."
+    "error": "Falha ao enviar mensagem. Por favor, tente novamente.",
+    "sending": "Enviando...",
+    "nameRequired": "Nome é obrigatório",
+    "nameMinLength": "Nome deve ter pelo menos 2 caracteres",
+    "emailRequired": "E-mail é obrigatório",
+    "emailInvalid": "E-mail deve ser um endereço válido",
+    "messageRequired": "Mensagem é obrigatória",
+    "messageMinLength": "Mensagem deve ter pelo menos 10 caracteres",
+    "namePlaceholder": "Seu nome",
+    "emailPlaceholder": "seu@email.com",
+    "messagePlaceholder": "Sua mensagem (pelo menos 10 caracteres)",
+    "formAriaLabel": "Formulário de contato",
+    "orUseForm": "Ou use o formulário abaixo para me enviar uma mensagem"
   },
   "theme": {
     "toggle": "Alternar tema",

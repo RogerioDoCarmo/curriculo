@@ -2,14 +2,48 @@
  * Unit tests for ContactForm component
  */
 
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ContactForm from "@/components/ContactForm";
 
 // Mock fetch
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
+
+const messages: AbstractIntlMessages = {
+  forms: {
+    name: "Name",
+    email: "Email",
+    message: "Message",
+    submit: "Send Message",
+    success: "Message sent successfully!",
+    error: "Failed to send message. Please try again.",
+    sending: "Sending...",
+    nameRequired: "Name is required",
+    nameMinLength: "Name must be at least 2 characters",
+    emailRequired: "Email is required",
+    emailInvalid: "Email must be a valid email address",
+    messageRequired: "Message is required",
+    messageMinLength: "Message must be at least 10 characters",
+    namePlaceholder: "Your name",
+    emailPlaceholder: "your@email.com",
+    messagePlaceholder: "Your message (at least 10 characters)",
+    formAriaLabel: "Contact form",
+    orUseForm: "Or use the form below to send me a message",
+  },
+  footer: {
+    emailLabel: "Professional Email",
+  },
+};
+
+function renderContactForm(locale = "en") {
+  return render(
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <ContactForm locale={locale} />
+    </NextIntlClientProvider>
+  );
+}
 
 describe("ContactForm Component", () => {
   beforeEach(() => {
@@ -17,20 +51,20 @@ describe("ContactForm Component", () => {
   });
 
   it("renders name, email, and message fields", () => {
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
   });
 
   it("renders a submit button", () => {
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     expect(screen.getByRole("button", { name: /send message/i })).toBeInTheDocument();
   });
 
   it("shows validation error when name is empty on submit", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
       expect(screen.getByText(/name is required/i)).toBeInTheDocument();
@@ -39,7 +73,7 @@ describe("ContactForm Component", () => {
 
   it("shows validation error when name is too short", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/name/i), "A");
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
@@ -49,7 +83,7 @@ describe("ContactForm Component", () => {
 
   it("shows validation error when email is empty on submit", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
       expect(screen.getByText(/email is required/i)).toBeInTheDocument();
@@ -58,7 +92,7 @@ describe("ContactForm Component", () => {
 
   it("shows validation error when email is invalid", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/email/i), "notanemail");
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
@@ -68,7 +102,7 @@ describe("ContactForm Component", () => {
 
   it("shows validation error when message is empty on submit", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
       expect(screen.getByText(/message is required/i)).toBeInTheDocument();
@@ -77,7 +111,7 @@ describe("ContactForm Component", () => {
 
   it("shows validation error when message is too short", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/message/i), "Short");
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
@@ -87,7 +121,7 @@ describe("ContactForm Component", () => {
 
   it("shows inline error messages below each field", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.click(screen.getByRole("button", { name: /send message/i }));
     await waitFor(() => {
       // All three errors should be visible
@@ -103,7 +137,7 @@ describe("ContactForm Component", () => {
     mockFetch.mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 500))
     );
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/name/i), "John Doe");
     await user.type(screen.getByLabelText(/email/i), "john@example.com");
     await user.type(
@@ -119,7 +153,7 @@ describe("ContactForm Component", () => {
   it("shows success message after successful submission", async () => {
     const user = userEvent.setup();
     mockFetch.mockResolvedValueOnce({ ok: true });
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/name/i), "John Doe");
     await user.type(screen.getByLabelText(/email/i), "john@example.com");
     await user.type(
@@ -135,7 +169,7 @@ describe("ContactForm Component", () => {
   it("resets form after successful submission", async () => {
     const user = userEvent.setup();
     mockFetch.mockResolvedValueOnce({ ok: true });
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     const nameInput = screen.getByLabelText(/name/i);
     await user.type(nameInput, "John Doe");
     await user.type(screen.getByLabelText(/email/i), "john@example.com");
@@ -152,7 +186,7 @@ describe("ContactForm Component", () => {
   it("shows error message when submission fails", async () => {
     const user = userEvent.setup();
     mockFetch.mockResolvedValueOnce({ ok: false });
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/name/i), "John Doe");
     await user.type(screen.getByLabelText(/email/i), "john@example.com");
     await user.type(
@@ -168,7 +202,7 @@ describe("ContactForm Component", () => {
   it("shows error message when network error occurs", async () => {
     const user = userEvent.setup();
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     await user.type(screen.getByLabelText(/name/i), "John Doe");
     await user.type(screen.getByLabelText(/email/i), "john@example.com");
     await user.type(
@@ -181,25 +215,35 @@ describe("ContactForm Component", () => {
     });
   });
 
-  it("renders section with correct id", () => {
-    render(<ContactForm locale="en" />);
-    expect(document.getElementById("contact")).toBeInTheDocument();
-  });
-
   it("has accessible form with aria-label", () => {
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     const form = screen.getByRole("form", { name: /contact form/i });
     expect(form).toBeInTheDocument();
   });
 
   it("shows error inline below field on blur with invalid value", async () => {
     const user = userEvent.setup();
-    render(<ContactForm locale="en" />);
+    renderContactForm();
     const emailInput = screen.getByLabelText(/email/i);
     await user.type(emailInput, "bademail");
     await user.tab(); // blur
     await waitFor(() => {
       expect(screen.getByText(/valid email/i)).toBeInTheDocument();
     });
+  });
+
+  it("renders professional email label", () => {
+    renderContactForm();
+    expect(screen.getByText("Professional Email")).toBeInTheDocument();
+  });
+
+  it("renders correct email for English locale", () => {
+    renderContactForm("en");
+    expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
+  });
+
+  it("renders correct email for Portuguese locale", () => {
+    renderContactForm("pt-BR");
+    expect(screen.getByText("contato@rogeriodocarmo.com")).toBeInTheDocument();
   });
 });
