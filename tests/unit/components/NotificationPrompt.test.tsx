@@ -123,7 +123,9 @@ describe("NotificationPrompt Component", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /allow/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /no thanks/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /dismiss notification prompt/i })
+      ).toBeInTheDocument();
     });
   });
 
@@ -203,7 +205,7 @@ describe("NotificationPrompt Component", () => {
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    const dismissButton = screen.getByRole("button", { name: /no thanks/i });
+    const dismissButton = screen.getByRole("button", { name: /dismiss notification prompt/i });
     await user.click(dismissButton);
 
     await waitFor(() => {
