@@ -28,7 +28,7 @@
 [![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
 [![Last Commit](https://img.shields.io/github/last-commit/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/commits/main)
 
-A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+A modern, responsive personal resume website built with Next.js 16.2.4, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
 ## Development Progress
 
@@ -67,10 +67,10 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 (App Router) with TypeScript
+- **Framework**: Next.js 16.2.4 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + CSS Modules
 - **Content**: Markdown files with Gray-matter parsing
-- **Internationalization**: next-intl
+- **Internationalization**: next-intl 4.9.2
 - **Testing**: Jest, React Testing Library, Playwright, fast-check
 - **Component Documentation**: Storybook 8
 - **Analytics**: Firebase Analytics + Vercel Analytics
@@ -80,6 +80,8 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 - **CI/CD**: GitHub Actions + SonarQube Cloud
 - **Deployment**: Vercel with custom domains
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
+
+> **Note**: Recently upgraded from Next.js 14 to 16.2.4 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
 
 ## Project Structure
 
@@ -239,5 +241,6 @@ MIT
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
+- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.4 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
