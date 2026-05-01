@@ -42,14 +42,11 @@ test.describe("Print and PDF Output", () => {
     });
     expect(isPrintMedia).toBe(true);
 
-    // Verify main content (main article with heading) is still visible
-    // Text varies by locale
-    const mainArticle = page.locator("article").filter({
-      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
-    });
-    await expect(mainArticle).toBeVisible();
+    // Verify main content (hero section with heading) is still visible
+    const heroSection = page.locator('section[id="home"]');
+    await expect(heroSection).toBeVisible();
 
-    const display = await mainArticle.evaluate((el) => {
+    const display = await heroSection.evaluate((el) => {
       return window.getComputedStyle(el).display;
     });
     expect(display).not.toBe("none");
@@ -176,13 +173,11 @@ test.describe("Print and PDF Output", () => {
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(500);
 
-    // Verify article content is visible (text varies by locale)
-    const mainArticle = page.locator("article").filter({
-      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
-    });
-    await expect(mainArticle).toBeVisible();
+    // Verify hero section content is visible
+    const heroSection = page.locator('section[id="home"]');
+    await expect(heroSection).toBeVisible();
 
-    const display = await mainArticle.evaluate((el) => {
+    const display = await heroSection.evaluate((el) => {
       return window.getComputedStyle(el).display;
     });
     expect(display).not.toBe("none");
@@ -205,21 +200,19 @@ test.describe("Print and PDF Output", () => {
     await page.emulateMedia({ media: "print" });
     await page.waitForTimeout(500);
 
-    // Verify article and sections are visible (text varies by locale)
-    const mainArticle = page.locator("article").filter({
-      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
-    });
-    await expect(mainArticle).toBeVisible();
+    // Verify hero section and contact section are visible
+    const heroSection = page.locator('section[id="home"]');
+    await expect(heroSection).toBeVisible();
 
     const sections = page.locator("section");
     const sectionCount = await sections.count();
     expect(sectionCount).toBeGreaterThanOrEqual(1);
 
-    // Verify first section (description) is visible
-    const firstSection = page.locator("article section").first();
-    await expect(firstSection).toBeVisible();
+    // Verify contact section is visible
+    const contactSection = page.locator('section[id="contact"]');
+    await expect(contactSection).toBeVisible();
 
-    const display = await firstSection.evaluate((el) => {
+    const display = await contactSection.evaluate((el) => {
       return window.getComputedStyle(el).display;
     });
     expect(display).not.toBe("none");
@@ -230,16 +223,16 @@ test.describe("Print and PDF Output", () => {
     await page.emulateMedia({ media: "print" });
     await page.waitForTimeout(500);
 
-    // Check article content area
-    const article = page.locator("article");
-    if ((await article.count()) > 0) {
-      const articleWidth = await article.first().evaluate((el) => {
+    // Check hero section content area
+    const heroSection = page.locator('section[id="home"]');
+    if ((await heroSection.count()) > 0) {
+      const sectionWidth = await heroSection.first().evaluate((el) => {
         return window.getComputedStyle(el).width;
       });
 
-      // Article should have a width
-      expect(articleWidth).toBeTruthy();
-      expect(articleWidth).not.toBe("0px");
+      // Section should have a width
+      expect(sectionWidth).toBeTruthy();
+      expect(sectionWidth).not.toBe("0px");
     }
   });
 
