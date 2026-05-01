@@ -43,7 +43,9 @@
   },
   "footer": {
     "copyright": "Todos los derechos reservados.",
-    "sitemap": "Mapa del sitio"
+    "sitemap": "Mapa del sitio",
+    "email": "contact@rogeriodocarmo.com",
+    "emailLabel": "Correo Profesional"
   },
   "backToTop": {
     "label": "Volver arriba"
