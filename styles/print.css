@@ -9,7 +9,6 @@
   /* Hide non-essential elements */
   nav,
   .theme-toggle,
-  .language-selector,
   .exit-intent-modal,
   footer .social-links,
   button:not(.print-visible),
