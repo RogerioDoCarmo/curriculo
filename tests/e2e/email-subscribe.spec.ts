@@ -28,7 +28,8 @@ test.describe("EmailSubscribeForm - main page", () => {
     const section = page.locator("#contact");
     await section.locator('input[id="contact-email"]').fill("not-an-email");
     await section.locator('button[type="submit"]').click();
-    await expect(section.locator("text=Enter a valid email")).toBeVisible();
+    // Match the actual translation key: "Email must be a valid email address"
+    await expect(section.locator("text=/valid.*email/i")).toBeVisible();
   });
 
   test("submits valid email and shows success message", async ({ page }) => {

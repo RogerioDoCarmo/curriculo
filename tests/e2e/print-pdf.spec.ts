@@ -30,11 +30,14 @@ test.describe("Print and PDF Output", () => {
      * interactive controls
      */
 
+    // Wait for page to fully load before emulating print media
+    await page.waitForLoadState("networkidle");
+
     // Emulate print media
     await page.emulateMedia({ media: "print" });
 
-    // Wait for styles to apply
-    await page.waitForTimeout(500);
+    // Wait for styles to apply and for any dynamic content
+    await page.waitForTimeout(1000);
 
     // Verify page is in print media mode
     const isPrintMedia = await page.evaluate(() => {
@@ -52,10 +55,15 @@ test.describe("Print and PDF Output", () => {
     expect(display).not.toBe("none");
 
     // Verify non-essential elements are hidden (Requirement 18.2)
-    // Check for navigation elements
-    const nav = page.locator("nav");
-    if ((await nav.count()) > 0) {
-      const navDisplay = await nav.first().evaluate((el) => {
+    // Check for navigation elements - wait for them to exist first
+    const nav = page.locator("nav").first();
+    const navCount = await page.locator("nav").count();
+
+    if (navCount > 0) {
+      // Wait for the nav to be in the DOM
+      await nav.waitFor({ state: "attached", timeout: 5000 });
+
+      const navDisplay = await nav.evaluate((el) => {
         return window.getComputedStyle(el).display;
       });
       // Navigation should be hidden in print mode
@@ -75,15 +83,14 @@ test.describe("Print and PDF Output", () => {
     }
 
     // Check for language selector
-    const languageSelector = page.locator(
-      'button[aria-label*="language" i], select[aria-label*="language" i]'
-    );
-    if ((await languageSelector.count()) > 0) {
-      const languageSelectorDisplay = await languageSelector.first().evaluate((el) => {
+    // The LanguageSelector component wraps the select in a div with print:hidden
+    const languageSelectorContainer = page.locator('div:has(> select[id="language-selector"])');
+    if ((await languageSelectorContainer.count()) > 0) {
+      const containerDisplay = await languageSelectorContainer.first().evaluate((el) => {
         return window.getComputedStyle(el).display;
       });
-      // Language selector should be hidden in print mode
-      expect(languageSelectorDisplay).toBe("none");
+      // Container with print:hidden should be hidden in print mode
+      expect(containerDisplay).toBe("none");
     }
   });
 
