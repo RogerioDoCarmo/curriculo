@@ -5,7 +5,7 @@
 
 import { render, screen } from "@testing-library/react";
 import HomePageContent from "@/app/[locale]/HomePageContent";
-import type { Experience, Project, Skill } from "@/types/index";
+import type { Experience, Project, SkillCategory } from "@/types/index";
 
 // Mock lazy-loaded components
 jest.mock("@/lib/lazy-components", () => ({
@@ -109,14 +109,15 @@ describe("HomePageContent Component", () => {
       title: "Portfolio Website",
       description: "Personal website",
       technologies: ["Next.js", "TypeScript"],
-      link: "https://example.com",
-      github: "https://github.com/example",
-      image: "/images/project.png",
+      liveUrl: "https://example.com",
+      repoUrl: "https://github.com/example",
+      images: ["/images/project.png"],
       featured: true,
+      date: "2024-01-15",
     },
   ];
 
-  const mockSkills: Skill[] = [
+  const mockSkills: SkillCategory[] = [
     {
       category: "Frontend",
       skills: [
