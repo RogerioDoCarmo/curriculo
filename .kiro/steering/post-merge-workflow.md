@@ -53,6 +53,22 @@ git tag -a <version> -m "<release-notes>"
 git push --tags
 ```
 
+**Note**: Pushing the tag automatically triggers the GitHub Actions workflow (`.github/workflows/release.yml`) which creates the GitHub Release using the tag message.
+
+### 6. Verify GitHub Release (Automated)
+
+After pushing the tag, GitHub Actions will automatically:
+
+- Extract release notes from the git tag message
+- Create a GitHub Release with the tag name as title
+- Add technical details (commit hash, previous release link)
+- Add full changelog link
+- Publish the release
+
+**No manual action required!** The release will be created within 1-2 minutes.
+
+You can verify the release at: `https://github.com/<owner>/<repo>/releases/tag/<version>`
+
 ## Release Notes Template
 
 ```
