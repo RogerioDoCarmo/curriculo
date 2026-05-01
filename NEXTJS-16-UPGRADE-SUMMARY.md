@@ -168,11 +168,11 @@ Due to next-intl ESM compatibility issues with Jest 29:
 
 | Metric                 | Before (14.x) | After (16.2.4) | Change          |
 | ---------------------- | ------------- | -------------- | --------------- |
-| Build Time             | ~3.2s         | ~2.5s          | ⬇️ 22% faster   |
-| Bundle Size (gzipped)  | 185KB         | 182KB          | ⬇️ 1.6% smaller |
-| First Contentful Paint | 1.4s          | 1.3s           | ⬇️ 7% faster    |
-| Time to Interactive    | 2.8s          | 2.7s           | ⬇️ 3.6% faster  |
-| Lighthouse Score       | 92            | 93             | ⬆️ +1 point     |
+| Build Time             | ~3.2s         | ~2.5s          | ✅ 22% faster   |
+| Bundle Size (gzipped)  | 185KB         | 182KB          | ✅ 1.6% smaller |
+| First Contentful Paint | 1.4s          | 1.3s           | ✅ 7% faster    |
+| Time to Interactive    | 2.8s          | 2.7s           | ✅ 3.6% faster  |
+| Lighthouse Score       | 92            | 93             | ✅ +1 point     |
 
 ## CI/CD Pipeline
 

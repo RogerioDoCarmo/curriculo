@@ -300,6 +300,47 @@ Before committing, verify:
 - Use CSS Modules for component-specific styles when needed
 - Maintain consistent spacing and naming conventions
 
+### Performance Metrics Documentation
+
+When documenting performance improvements or regressions in documentation, use this convention:
+
+**✅ Improvements** (lower is better for time/size metrics):
+
+```markdown
+| Metric      | Before | After | Change          |
+| ----------- | ------ | ----- | --------------- |
+| Build Time  | 3.2s   | 2.5s  | ✅ 22% faster   |
+| Bundle Size | 185KB  | 182KB | ✅ 1.6% smaller |
+| FCP         | 1.4s   | 1.3s  | ✅ 7% faster    |
+```
+
+**❌ Regressions** (higher is worse for time/size metrics):
+
+```markdown
+| Metric      | Before | After | Change         |
+| ----------- | ------ | ----- | -------------- |
+| Build Time  | 2.5s   | 3.2s  | ❌ 28% slower  |
+| Bundle Size | 182KB  | 200KB | ❌ 9.9% larger |
+```
+
+**✅ Improvements** (higher is better for score metrics):
+
+```markdown
+| Metric           | Before | After | Change      |
+| ---------------- | ------ | ----- | ----------- |
+| Lighthouse Score | 92     | 93    | ✅ +1 point |
+| Test Coverage    | 85%    | 92%   | ✅ +7%      |
+```
+
+**Key Rules:**
+
+- Use ✅ for improvements (regardless of direction)
+- Use ❌ for regressions (regardless of direction)
+- Always include the semantic description (faster/slower, smaller/larger, etc.)
+- For time metrics: lower values = ✅ improvement
+- For size metrics: lower values = ✅ improvement
+- For score metrics: higher values = ✅ improvement
+
 ## Testing Guidelines
 
 See [TESTING.md](./TESTING.md) for comprehensive testing guidelines.
