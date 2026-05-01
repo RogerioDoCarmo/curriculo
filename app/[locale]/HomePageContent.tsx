@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
 import CareerPathSelector from "@/components/CareerPathSelector";
@@ -8,7 +9,7 @@ import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactForm from "@/components/ContactForm";
 import BackToTopButton from "@/components/BackToTopButton";
-import type { Experience, Project, Skill } from "@/types/index";
+import type { Experience, Project, Skill, CareerPath } from "@/types/index";
 
 interface HomePageContentProps {
   readonly locale: string;
@@ -35,6 +36,8 @@ export default function HomePageContent({
   projects,
   skills,
 }: HomePageContentProps) {
+  const [careerPath, setCareerPath] = useState<CareerPath>("professional");
+
   return (
     <>
       {/* Hero Section with Profile Photo */}
@@ -48,10 +51,10 @@ export default function HomePageContent({
       />
 
       {/* Career Path Selector (Professional/Academic) */}
-      <CareerPathSelector />
+      <CareerPathSelector selected={careerPath} onSelect={setCareerPath} />
 
       {/* Experience Section with Timeline */}
-      <ExperienceSection careerPath="professional" experiences={experiences} locale={locale} />
+      <ExperienceSection careerPath={careerPath} experiences={experiences} locale={locale} />
 
       {/* Skills Section */}
       <SkillsSection skills={skills} locale={locale} />
