@@ -30,36 +30,31 @@ test.describe("Basic Navigation", () => {
   test("should have accessible navigation", async ({ page }) => {
     await page.goto("/");
 
-    // Verify header exists with main heading (inside article)
-    const header = page.locator("article header");
-    await expect(header).toBeVisible();
+    // Verify hero section exists
+    const heroSection = page.locator('section[id="home"]');
+    await expect(heroSection).toBeVisible();
 
     // Verify heading is accessible (varies by locale)
     const heading = page.getByRole("heading", { level: 1 });
     await expect(heading).toBeVisible();
-    // Text varies by locale: pt-BR, en, es
-    await expect(heading).toHaveText(
-      /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/
-    );
+    // Heading should contain the name
+    await expect(heading).toHaveText(/Rogério do Carmo/i);
   });
 
   test("should display content sections", async ({ page }) => {
     await page.goto("/");
 
-    // Verify main article exists (the one with the main heading)
-    // Text varies by locale
-    const mainArticle = page.locator("article").filter({
-      hasText: /Site de Currículo Pessoal|Personal Resume Website|Sitio Web de Currículum Personal/,
-    });
-    await expect(mainArticle).toBeVisible();
+    // Verify hero section exists
+    const heroSection = page.locator('section[id="home"]');
+    await expect(heroSection).toBeVisible();
 
-    // Verify description section inside article
-    const descriptionSection = page.locator("article section").first();
-    await expect(descriptionSection).toBeVisible();
+    // Verify main heading is visible
+    const heading = page.getByRole("heading", { level: 1 });
+    await expect(heading).toBeVisible();
 
-    // Verify tech stack section exists (outside main article)
-    const techStackSection = page.locator("section").filter({ hasText: /tech stack|tecnologias/i });
-    await expect(techStackSection).toBeVisible();
+    // Verify contact section exists
+    const contactSection = page.locator('section[id="contact"]');
+    await expect(contactSection).toBeVisible();
   });
 
   test("should be responsive on mobile", async ({ page }) => {
@@ -127,13 +122,16 @@ test.describe("Basic Navigation", () => {
   test("should display tech stack section", async ({ page }) => {
     await page.goto("/");
 
-    // Verify tech stack section is visible
+    // Navigate to tech stack page
+    await page.goto("/tech-stack");
+
+    // Verify tech stack page heading is visible
     // The heading text varies by language:
-    // - en: "Tech Stack"
-    // - pt-BR: "Tecnologias Utilizadas"
-    // - es: "Tecnologías Utilizadas"
+    // - en: "Used in this site"
+    // - pt-BR: "Usado neste site"
+    // - es: "Usado en este sitio"
     const techStackHeading = page.getByRole("heading", {
-      name: /tech stack|tecnologias utilizadas|tecnologías utilizadas/i,
+      name: /used in this site|usado neste site|usado en este sitio/i,
     });
     await expect(techStackHeading).toBeVisible();
   });
