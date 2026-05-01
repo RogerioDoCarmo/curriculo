@@ -84,6 +84,15 @@ describe("Footer", () => {
   // -------------------------------------------------------------------------
   // Social media links
   // -------------------------------------------------------------------------
+  it("renders Linktree social link", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const linktree = screen.getByRole("link", { name: /linktree/i });
+      expect(linktree).toBeInTheDocument();
+      expect(linktree).toHaveAttribute("href", "https://linktr.ee/rogeriodocarmo");
+    });
+  });
+
   it("renders LinkedIn social link", async () => {
     renderFooter();
     await waitFor(() => {
