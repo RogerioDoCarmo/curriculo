@@ -5,7 +5,7 @@
     "experience": "Experiência",
     "skills": "Habilidades",
     "contact": "Contato",
-    "techStack": "Tecnologias"
+    "techStack": "Usado neste site"
   },
   "hero": {
     "greeting": "Olá, eu sou",
@@ -16,15 +16,27 @@
   },
   "careerPath": {
     "title": "Escolha um Caminho",
-    "professional": "Desenvolvedor Profissional",
-    "academic": "Formação Acadêmica"
+    "professional": "Profissional",
+    "academic": "Acadêmico"
   },
   "sections": {
     "experience": "Experiência",
     "projects": "Projetos",
     "skills": "Habilidades",
     "contact": "Contato",
-    "techStack": "Tecnologias Utilizadas"
+    "techStack": "Usado neste site"
+  },
+  "experience": {
+    "section": "experiência",
+    "professionalExperience": "Experiência Profissional",
+    "academicBackground": "Formação Acadêmica",
+    "noExperiences": "Nenhuma experiência para exibir.",
+    "present": "Presente",
+    "expandDetails": "Expandir detalhes",
+    "collapseDetails": "Recolher detalhes",
+    "achievements": "Conquistas",
+    "technologies": "Tecnologias",
+    "timeline": "Linha do Tempo"
   },
   "forms": {
     "name": "Nome",
@@ -58,7 +70,19 @@
     "copyright": "Todos os direitos reservados.",
     "sitemap": "Mapa do site",
     "email": "contato@rogeriodocarmo.com",
-    "emailLabel": "E-mail Profissional"
+    "emailLabel": "E-mail Profissional",
+    "navigate": "Navegar",
+    "languagesTitle": "Idiomas",
+    "connect": "Conectar",
+    "downloadResume": "Baixar Currículo",
+    "downloadResumeLabel": "Baixar currículo em formato PDF",
+    "downloadDissertation": "Baixar Dissertação",
+    "downloadDissertationLabel": "Baixar dissertação de mestrado em formato PDF",
+    "languages": {
+      "portuguese": "Português (pt-BR)",
+      "english": "English (en)",
+      "spanish": "Español (es)"
+    }
   },
   "backToTop": {
     "label": "Voltar ao topo"
@@ -85,6 +109,28 @@
     "close": "Fechar",
     "learnMore": "Saiba mais"
   },
+  "skills": {
+    "filterLabel": "Filtrar habilidades",
+    "filterPlaceholder": "Filtrar habilidades...",
+    "filterAriaLabel": "Filtrar habilidades por nome",
+    "noMatch": "Nenhuma habilidade corresponde ao seu filtro.",
+    "skillsLabel": "habilidades",
+    "levelLabel": "Nível"
+  },
+  "projects": {
+    "filterByTech": "Filtrar por tecnologia",
+    "all": "Todas",
+    "noMatch": "Nenhum projeto corresponde ao filtro selecionado.",
+    "viewDetails": "Ver detalhes de",
+    "screenshot": "captura de tela",
+    "featured": "Destaque",
+    "mockData": "Dados Fictícios",
+    "more": "mais",
+    "technologies": "Tecnologias",
+    "liveDemo": "Demo ao Vivo",
+    "repository": "Repositório",
+    "noImages": "Nenhuma imagem disponível"
+  },
   "homepage": {
     "title": "Site de Currículo Pessoal",
     "description": "Um site de currículo pessoal moderno e responsivo construído com Next.js 16, TypeScript e Tailwind CSS.",
@@ -105,7 +151,7 @@
     }
   },
   "techStack": {
-    "title": "Tecnologias Utilizadas",
+    "title": "Usado neste site",
     "subtitle": "Ferramentas e tecnologias usadas para construir este site",
     "labels": {
       "why": "Por quê:",
