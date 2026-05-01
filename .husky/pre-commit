@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check if we're on a protected branch
+BRANCH=$(git branch --show-current)
+PROTECTED_BRANCHES="main|master|develop"
+
+if echo "$BRANCH" | grep -qE "^($PROTECTED_BRANCHES)$"; then
+  echo ""
+  echo "❌ ERROR: Direct commits to protected branch '$BRANCH' are not allowed!"
+  echo ""
+  echo "📋 Proper workflow:"
+  echo "  1. Switch to develop: git checkout develop"
+  echo "  2. Create feature branch: git checkout -b feature/your-feature-name"
+  echo "  3. Make your changes and commit"
+  echo "  4. Push and create PR to develop"
+  echo ""
+  echo "🔧 To fix this now:"
+  echo "  1. Stash your changes: git stash"
+  echo "  2. Switch to develop: git checkout develop"
+  echo "  3. Create feature branch: git checkout -b feature/your-feature-name"
+  echo "  4. Apply changes: git stash pop"
+  echo "  5. Commit again"
+  echo ""
+  echo "📖 See docs/GIT-WORKFLOW.md for more information"
+  echo ""
+  exit 1
+fi
+
+# Run lint-staged for code quality checks
+npx lint-staged
