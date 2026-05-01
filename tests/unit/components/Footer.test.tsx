@@ -17,6 +17,8 @@ jest.mock("next-intl", () => ({
     const translations: Record<string, string> = {
       "footer.copyright": "All rights reserved.",
       "footer.sitemap": "Sitemap",
+      "footer.email": "contact@rogeriodocarmo.com",
+      "footer.emailLabel": "Professional Email",
     };
     return translations[key] ?? key;
   },
@@ -82,6 +84,15 @@ describe("Footer", () => {
   // -------------------------------------------------------------------------
   // Social media links
   // -------------------------------------------------------------------------
+  it("renders Linktree social link", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const linktree = screen.getByRole("link", { name: /linktree/i });
+      expect(linktree).toBeInTheDocument();
+      expect(linktree).toHaveAttribute("href", "https://linktr.ee/rogeriodocarmo");
+    });
+  });
+
   it("renders LinkedIn social link", async () => {
     renderFooter();
     await waitFor(() => {
@@ -193,6 +204,67 @@ describe("Footer", () => {
     await waitFor(() => {
       const resumeLink = screen.getByRole("link", { name: /download resume/i });
       expect(resumeLink).toBeInTheDocument();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Professional Email (Custom Domain Email)
+  // -------------------------------------------------------------------------
+  it("renders professional email link", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const emailLink = screen.getByRole("link", { name: /professional email/i });
+      expect(emailLink).toBeInTheDocument();
+    });
+  });
+
+  it("professional email link has mailto href", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const emailLink = screen.getByRole("link", { name: /professional email/i });
+      expect(emailLink).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
+    });
+  });
+
+  it("professional email displays the email address", async () => {
+    renderFooter();
+    await waitFor(() => {
+      expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
+    });
+  });
+
+  it("professional email link has email icon with aria-hidden", async () => {
+    const { container } = renderFooter();
+    await waitFor(() => {
+      const emailLink = screen.getByRole("link", { name: /professional email/i });
+      const svg = emailLink.querySelector("svg");
+      expect(svg).toBeInTheDocument();
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+    });
+  });
+
+  it("professional email link is keyboard accessible", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const emailLink = screen.getByRole("link", { name: /professional email/i });
+      expect(emailLink).toHaveAttribute("href");
+      expect(emailLink.getAttribute("href")).toContain("mailto:");
+    });
+  });
+
+  it("professional email appears before resume download link in Connect section", async () => {
+    const { container } = renderFooter();
+    await waitFor(() => {
+      const connectSection = container.querySelector(".social-links");
+      expect(connectSection).toBeInTheDocument();
+
+      const links = connectSection?.querySelectorAll("a");
+      expect(links).toBeTruthy();
+      if (links && links.length > 0) {
+        // First link should be the email
+        const firstLink = links[0];
+        expect(firstLink.getAttribute("href")).toContain("mailto:");
+      }
     });
   });
 

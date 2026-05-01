@@ -98,6 +98,30 @@ Pull Request → main
 
 Example: `feature/add-dark-mode`, `fix/contact-form-validation`
 
+### Git Best Practices
+
+**DO**:
+
+- ✅ Create feature branches from `develop`
+- ✅ Make small, focused commits
+- ✅ Write clear commit messages
+- ✅ Pull latest changes before starting work
+- ✅ Create new commits to fix mistakes
+
+**DON'T**:
+
+- ❌ Commit directly to `main` or `develop`
+- ❌ Force push to shared branches
+- ❌ Rewrite history on pushed branches
+- ❌ Amend commits that others have pulled
+
+**If You Must Force Push**:
+
+- Only on branches you own
+- Use `--force-with-lease` (safer than `--force`)
+- Communicate with team first
+- Never on `main` or `develop`
+
 ### Local Development
 
 ```bash

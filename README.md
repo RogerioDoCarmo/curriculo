@@ -49,6 +49,8 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 ## Features
 
 - **Multi-Language Support**: Brazilian Portuguese (pt-BR), English (en), Spanish (es)
+- **Professional Email**: Custom domain email addresses (<contato@rogeriodocarmo.com> for Portuguese, <contact@rogeriodocarmo.com> for English/Spanish)
+- **Linktree**: All social links in one place at [linktr.ee/rogeriodocarmo](https://linktr.ee/rogeriodocarmo)
 - **Dark/Light Mode**: Automatic theme detection with manual toggle
 - **Responsive Design**: Mobile-first approach with tablet and desktop optimizations
 - **Career Path Selection**: Toggle between Professional Developer and Academic career paths
@@ -214,6 +216,19 @@ The website is deployed on Vercel with automatic deployments from the main branc
 - rogeriodocarmo.xyz
 
 See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
+
+## Contact
+
+**Professional Email Addresses:**
+
+- **Portuguese (pt-BR)**: [contato@rogeriodocarmo.com](mailto:contato@rogeriodocarmo.com)
+- **English/Spanish (en/es)**: [contact@rogeriodocarmo.com](mailto:contact@rogeriodocarmo.com)
+
+**Social Links:**
+
+- **Linktree**: [linktr.ee/rogeriodocarmo](https://linktr.ee/rogeriodocarmo) — all profiles in one place
+
+These custom domain email addresses highlight the professional nature of this portfolio and are prominently displayed throughout the website.
 
 ### Environment Variables
 
