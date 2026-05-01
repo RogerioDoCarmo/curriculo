@@ -5,7 +5,7 @@
     "experience": "Experience",
     "skills": "Skills",
     "contact": "Contact",
-    "techStack": "Tech Stack"
+    "techStack": "Used in this site"
   },
   "hero": {
     "greeting": "Hello, I'm",
@@ -16,15 +16,27 @@
   },
   "careerPath": {
     "title": "Choose a Path",
-    "professional": "Professional Developer",
-    "academic": "Academic Background"
+    "professional": "Professional",
+    "academic": "Academic"
   },
   "sections": {
     "experience": "Experience",
     "projects": "Projects",
     "skills": "Skills",
     "contact": "Contact",
-    "techStack": "Technologies Used"
+    "techStack": "Used in this site"
+  },
+  "experience": {
+    "section": "experience",
+    "professionalExperience": "Professional Experience",
+    "academicBackground": "Academic Background",
+    "noExperiences": "No experiences to display.",
+    "present": "Present",
+    "expandDetails": "Expand details",
+    "collapseDetails": "Collapse details",
+    "achievements": "Achievements",
+    "technologies": "Technologies",
+    "timeline": "Timeline"
   },
   "forms": {
     "name": "Name",
@@ -58,7 +70,19 @@
     "copyright": "All rights reserved.",
     "sitemap": "Sitemap",
     "email": "contact@rogeriodocarmo.com",
-    "emailLabel": "Professional Email"
+    "emailLabel": "Professional Email",
+    "navigate": "Navigate",
+    "languagesTitle": "Languages",
+    "connect": "Connect",
+    "downloadResume": "Download Resume",
+    "downloadResumeLabel": "Download resume in PDF format",
+    "downloadDissertation": "Download Dissertation",
+    "downloadDissertationLabel": "Download master's dissertation in PDF format",
+    "languages": {
+      "portuguese": "Português (pt-BR)",
+      "english": "English (en)",
+      "spanish": "Español (es)"
+    }
   },
   "backToTop": {
     "label": "Back to top"
@@ -85,6 +109,28 @@
     "close": "Close",
     "learnMore": "Learn more"
   },
+  "skills": {
+    "filterLabel": "Filter skills",
+    "filterPlaceholder": "Filter skills...",
+    "filterAriaLabel": "Filter skills by name",
+    "noMatch": "No skills match your filter.",
+    "skillsLabel": "skills",
+    "levelLabel": "Level"
+  },
+  "projects": {
+    "filterByTech": "Filter by technology",
+    "all": "All",
+    "noMatch": "No projects match the selected filter.",
+    "viewDetails": "View details for",
+    "screenshot": "screenshot",
+    "featured": "Featured",
+    "mockData": "Mock Data",
+    "more": "more",
+    "technologies": "Technologies",
+    "liveDemo": "Live Demo",
+    "repository": "Repository",
+    "noImages": "No images available"
+  },
   "homepage": {
     "title": "Personal Resume Website",
     "description": "A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS.",
@@ -105,7 +151,7 @@
     }
   },
   "techStack": {
-    "title": "Tech Stack",
+    "title": "Used in this site",
     "subtitle": "Technologies used to build this website",
     "labels": {
       "why": "Why:",
