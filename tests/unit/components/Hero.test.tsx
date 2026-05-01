@@ -32,6 +32,60 @@ describe("Hero Component", () => {
     expect(cta).toHaveAttribute("href", "#projects");
   });
 
+  it("renders 'Get in Touch' email button", () => {
+    render(<Hero {...defaultProps} />);
+    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    expect(emailButton).toBeInTheDocument();
+  });
+
+  it("'Get in Touch' button has mailto link with correct email for English locale", () => {
+    render(<Hero {...defaultProps} locale="en" />);
+    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
+  });
+
+  it("'Get in Touch' button has mailto link with correct email for Portuguese locale", () => {
+    render(<Hero {...defaultProps} locale="pt-BR" />);
+    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    expect(emailButton).toHaveAttribute("href", "mailto:contato@rogeriodocarmo.com");
+  });
+
+  it("'Get in Touch' button has mailto link with correct email for Spanish locale", () => {
+    render(<Hero {...defaultProps} locale="es" />);
+    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
+  });
+
+  it("'Get in Touch' button has email icon with aria-hidden", () => {
+    const { container } = render(<Hero {...defaultProps} />);
+    const emailButton = screen.getByRole("link", { name: /get in touch/i });
+    const svg = emailButton.querySelector("svg");
+    expect(svg).toBeInTheDocument();
+    expect(svg).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("displays professional email address below CTA buttons for English locale", () => {
+    render(<Hero {...defaultProps} locale="en" />);
+    expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
+  });
+
+  it("displays professional email address below CTA buttons for Portuguese locale", () => {
+    render(<Hero {...defaultProps} locale="pt-BR" />);
+    expect(screen.getByText("contato@rogeriodocarmo.com")).toBeInTheDocument();
+  });
+
+  it("displays professional email address below CTA buttons for Spanish locale", () => {
+    render(<Hero {...defaultProps} locale="es" />);
+    expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
+  });
+
+  it("professional email is a clickable mailto link", () => {
+    render(<Hero {...defaultProps} locale="en" />);
+    const emailLink = screen.getByRole("link", { name: "contact@rogeriodocarmo.com" });
+    expect(emailLink).toBeInTheDocument();
+    expect(emailLink).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
+  });
+
   it("renders the hero section with correct id", () => {
     render(<Hero {...defaultProps} />);
     const section = document.getElementById("home");
