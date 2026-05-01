@@ -1362,6 +1362,91 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document security update process in `docs/SECURITY-CHECKLIST.md`
     - _Security: Proactive vulnerability management_
 
+- [ ] 34. Fix Sentry error logging integration
+  - [ ] 34.1 Verify Sentry configuration and credentials
+    - Check if Sentry DSN is correctly set in `.env.local`
+    - Verify `NEXT_PUBLIC_SENTRY_DSN` environment variable in Vercel
+    - Check Sentry project exists and is active in Sentry dashboard
+    - Verify Sentry organization and project settings
+    - Review Sentry SDK version in package.json (`@sentry/nextjs`)
+    - _Requirements: 10.5_
+  - [ ] 34.2 Review Sentry configuration files
+    - Check `sentry.client.config.ts` (or `.js`) exists and is correct
+    - Check `sentry.server.config.ts` (or `.js`) exists and is correct
+    - Check `sentry.edge.config.ts` (or `.js`) if using Edge runtime
+    - Verify `next.config.js` has Sentry webpack plugin configuration
+    - Review Sentry initialization options (environment, release, tracesSampleRate)
+    - _Requirements: 10.5_
+  - [ ] 34.3 Test Sentry error logging locally
+    - Create a test error in development environment
+    - Trigger the error and verify it appears in Sentry dashboard
+    - Test different error types:
+      - Runtime errors (throw new Error)
+      - Unhandled promise rejections
+      - React error boundaries
+      - API route errors
+    - Verify error context includes useful information (user, environment, breadcrumbs)
+    - _Requirements: 10.5_
+  - [ ] 34.4 Check Sentry integration with Next.js 16
+    - Verify `@sentry/nextjs` is compatible with Next.js 16.2.4
+    - Check Sentry documentation for Next.js 16 compatibility
+    - Update `@sentry/nextjs` to latest compatible version if needed
+    - Review breaking changes in Sentry SDK updates
+    - Test with Next.js App Router (app directory)
+    - _Requirements: 10.5, 21.1_
+  - [ ] 34.5 Verify Sentry source maps upload
+    - Check if source maps are being uploaded to Sentry
+    - Verify `sentry-cli` is configured correctly
+    - Check `.sentryclirc` file exists with auth token
+    - Verify Sentry auth token in Vercel environment variables
+    - Test source map upload during build: `npm run build`
+    - Verify stack traces in Sentry show original source code (not minified)
+    - _Requirements: 10.5_
+  - [ ] 34.6 Test Sentry in production environment
+    - Deploy application to Vercel
+    - Trigger a test error in production
+    - Verify error appears in Sentry dashboard within 1-2 minutes
+    - Check error includes:
+      - Stack trace with source maps
+      - User context (if available)
+      - Environment (production)
+      - Release version
+      - Breadcrumbs (user actions before error)
+    - _Requirements: 10.5, 8.2_
+  - [ ] 34.7 Review and update error logging code
+    - Check `lib/error-logging.ts` (or similar) exists
+    - Verify `logError()` function uses Sentry correctly
+    - Review error boundaries in React components
+    - Check API route error handling uses Sentry
+    - Verify async error handling (try/catch with Sentry)
+    - Add Sentry context where useful (user info, custom tags)
+    - _Requirements: 10.5_
+  - [ ] 34.8 Set up Sentry alerts and notifications
+    - Configure Sentry alert rules for critical errors
+    - Set up email notifications for new issues
+    - Configure Sentry integrations (Slack, email, etc.)
+    - Set up issue assignment rules
+    - Configure alert frequency and thresholds
+    - _Requirements: 10.5_
+  - [ ] 34.9 Test Sentry performance monitoring (optional)
+    - Verify performance monitoring is enabled in Sentry config
+    - Check `tracesSampleRate` is set appropriately (e.g., 0.1 for 10%)
+    - Test transaction tracking for page loads
+    - Verify API route performance is tracked
+    - Review performance data in Sentry dashboard
+    - _Optional: Performance monitoring feature_
+  - [ ] 34.10 Document Sentry setup and troubleshooting
+    - Update `docs/SECURITY-CHECKLIST.md` with Sentry verification steps
+    - Create `docs/SENTRY-SETUP.md` with:
+      - Configuration instructions
+      - Environment variables required
+      - Testing procedures
+      - Troubleshooting common issues
+      - Alert configuration
+    - Document how to test error logging
+    - Add Sentry dashboard URL to documentation
+    - _Requirements: 15.2_
+
 ## Notes
 
 **CRITICAL TDD REQUIREMENTS:**
