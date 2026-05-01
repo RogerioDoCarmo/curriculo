@@ -33,7 +33,7 @@ const originalWarn = console.warn;
 const originalLog = console.log;
 
 beforeAll(() => {
-  // Suppress React 18 act() warnings and FCM/Firebase errors
+  // Suppress React 18 act() warnings, FCM/Firebase errors, and jsdom navigation warnings
   console.error = (...args) => {
     if (typeof args[0] === "string") {
       const msg = args[0];
@@ -41,10 +41,19 @@ beforeAll(() => {
         (msg.includes("Warning: An update to") && msg.includes("was not wrapped in act")) ||
         msg.includes("[FCM]") ||
         msg.includes("[Firebase]") ||
-        msg.includes("[ErrorLogging]")
+        msg.includes("[ErrorLogging]") ||
+        msg.includes("Not implemented: navigation")
       ) {
         return;
       }
+    }
+    // Also check if it's an Error object with the jsdom navigation message
+    if (
+      args[0] instanceof Error &&
+      args[0].message &&
+      args[0].message.includes("Not implemented: navigation")
+    ) {
+      return;
     }
     originalError.call(console, ...args);
   };
