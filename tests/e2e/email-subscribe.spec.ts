@@ -30,7 +30,6 @@ test.describe("EmailSubscribeForm - main page", () => {
     await section.locator('button[type="submit"]').click();
     await expect(section.locator("text=Enter a valid email")).toBeVisible();
   });
-  });
 
   test("submits valid email and shows success message", async ({ page }) => {
     // Intercept the Formspree request
