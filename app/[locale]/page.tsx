@@ -1,5 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
 import { LazyExitIntentModal, LazyTechStackSection } from "@/lib/lazy-components";
@@ -20,12 +19,18 @@ export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
-interface HomePageContentProps {
-  readonly locale: string;
-}
+export default async function HomePage({ params }: HomePageProps) {
+  const { locale } = await params;
 
-async function HomePageContent({ locale }: HomePageContentProps) {
-  const t = useTranslations("homepage");
+  if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
+    notFound();
+  }
+
+  // Enable static rendering for this locale
+  setRequestLocale(locale);
+
+  // Get translations
+  const t = await getTranslations("homepage");
 
   // Load all content
   const [experiences, projects, skills] = await Promise.all([
@@ -83,17 +88,4 @@ async function HomePageContent({ locale }: HomePageContentProps) {
       />
     </>
   );
-}
-
-export default async function HomePage({ params }: HomePageProps) {
-  const { locale } = await params;
-
-  if (!SUPPORTED_LOCALES.includes(locale as SupportedLocale)) {
-    notFound();
-  }
-
-  // Enable static rendering for this locale
-  setRequestLocale(locale);
-
-  return <HomePageContent locale={locale} />;
 }
