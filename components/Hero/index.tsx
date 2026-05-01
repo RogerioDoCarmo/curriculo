@@ -39,6 +39,7 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
               alt="UNESP Logo"
               width={125}
               height={125}
+              style={{ width: "125px", height: "auto" }}
               className="rounded"
             />
             <div className="text-left">
@@ -132,6 +133,7 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
               alt="Company Logo"
               width={200}
               height={200}
+              style={{ width: "200px", height: "auto" }}
               className="rounded"
             />
             <div className="text-left">
