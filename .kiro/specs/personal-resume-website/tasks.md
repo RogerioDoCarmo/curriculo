@@ -1800,6 +1800,184 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Track crash-free users improvement over time
     - _Requirements: 10.5_
 
+- [ ] 38. Populate website with complete professional content and integrate all components
+  - [ ] 38.1 Extract and organize content from resume PDF
+    - Read `public/resumes/resume.pdf` to extract:
+      - Professional summary/bio
+      - Work experience (companies, roles, dates, responsibilities, achievements)
+      - Education (degrees, institutions, dates, honors)
+      - Skills (technical, languages, tools, frameworks)
+      - Certifications and courses
+      - Projects and publications
+    - Organize extracted content into structured data format
+    - Create content files in `/content/` directory following existing schema
+    - _Requirements: 1.3, 1.4, 1.5, 2.1, 2.2_
+  - [ ] 38.2 Gather professional information from LinkedIn profile
+    - Visit https://www.linkedin.com/in/rogeriodocarmo/ to extract:
+      - Current position and company
+      - Professional headline
+      - About/summary section
+      - Work experience details
+      - Skills and endorsements
+      - Recommendations (if public)
+      - Volunteer experience
+    - Cross-reference with resume data for consistency
+    - Fill gaps in resume with LinkedIn information
+    - _Requirements: 1.1, 1.3, 2.1_
+  - [ ] 38.3 Gather academic information from research profiles
+    - Visit FAPESP profile (from Linktree) to extract:
+      - Research projects
+      - Academic affiliations
+      - Publications
+      - Grants and funding
+    - Visit Currículo Lattes (from Linktree) to extract:
+      - Academic background
+      - Research areas
+      - Publications and citations
+      - Academic achievements
+    - Visit ResearchGate profile to extract:
+      - Research interests
+      - Publications
+      - Citations and impact
+      - Collaborations
+    - Organize academic content for "Academic" career path
+    - _Requirements: 1.3, 1.4, 2.1_
+  - [ ] 38.4 Create comprehensive Hero section content
+    - Write professional headline based on current role
+    - Create compelling introduction paragraph (2-3 sentences)
+    - Add professional tagline/subtitle
+    - Include years of experience
+    - Add call-to-action text for contact button
+    - Translate all Hero content to pt-BR, en, es
+    - Update `messages/*.json` with Hero translations
+    - _Requirements: 1.1, 11.7_
+  - [ ] 38.5 Populate Professional career path content
+    - Create markdown files in `/content/experience/professional/` for each job:
+      - Company name, role, location, dates
+      - Detailed responsibilities (3-5 bullet points)
+      - Key achievements with metrics (e.g., "Improved performance by 40%")
+      - Technologies used
+      - Team size and collaboration details
+    - Order experiences chronologically (most recent first)
+    - Add company logos to `/public/images/companies/` if available
+    - Ensure content is professional and achievement-focused
+    - _Requirements: 1.3, 2.1, 2.2_
+  - [ ] 38.6 Populate Academic career path content
+    - Create markdown files in `/content/experience/academic/` for each position:
+      - Institution name, role, location, dates
+      - Research focus and objectives
+      - Key publications and citations
+      - Teaching responsibilities (if applicable)
+      - Grants and funding received
+      - Academic achievements and honors
+    - Order experiences chronologically (most recent first)
+    - Add institution logos to `/public/images/institutions/` if available
+    - _Requirements: 1.4, 2.1, 2.2_
+  - [ ] 38.7 Create comprehensive Skills section content
+    - Organize skills into categories:
+      - **Frontend**: React, React Native, JavaScript, TypeScript, HTML, CSS, Tailwind
+      - **Backend**: Node.js, Java, APIs, databases
+      - **Mobile**: React Native, iOS, Android
+      - **Tools**: Git, GitHub, CI/CD, testing frameworks
+      - **Languages**: Portuguese (native), English, Spanish
+      - **Soft Skills**: Leadership, communication, problem-solving
+    - Add skill proficiency levels (optional: beginner, intermediate, advanced, expert)
+    - Create `/content/skills.md` with structured skill data
+    - Translate skill categories to pt-BR, en, es
+    - _Requirements: 1.5, 11.7_
+  - [ ] 38.8 Populate Projects portfolio section
+    - Create markdown files in `/content/projects/` for each project:
+      - Project name and description (2-3 sentences)
+      - Technologies used (tags)
+      - Role and responsibilities
+      - Key features and achievements
+      - Links to live demo and/or repository (if public)
+      - Project screenshots/images
+    - Include at least 6-8 projects:
+      - Professional projects (anonymized if needed)
+      - Personal projects from GitHub
+      - Academic projects/research
+      - Open source contributions
+    - Add project images to `/public/images/projects/`
+    - Mark featured projects (top 3-4)
+    - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
+  - [ ] 38.9 Update navigation and integrate all components
+    - Verify Header component displays correctly with:
+      - Logo/name
+      - Navigation links (Home, Projects, Experience, Skills, Contact, Tech Stack)
+      - Language selector (pt-BR, en, es)
+      - Theme toggle (light/dark)
+      - Linktree link
+      - Mobile hamburger menu
+    - Verify Footer component displays correctly with:
+      - Professional email (contato@rogeriodocarmo.com)
+      - Social links (LinkedIn, GitHub, Linktree)
+      - Sitemap sections
+      - Copyright notice
+      - Resume download link
+    - Ensure all components are visible and functional
+    - _Requirements: 4.1, 4.2, 4.3, 7.5, 11.5, 17.5_
+  - [ ] 38.10 Create complete homepage layout
+    - Integrate all sections in proper order:
+      1. **Hero section** with profile photo, headline, intro, CTA
+      2. **Career Path Selector** (Professional/Academic toggle)
+      3. **Experience section** with Timeline component
+      4. **Skills section** with categorized skills
+      5. **Projects section** with portfolio grid
+      6. **Tech Stack section** with technologies used
+      7. **Contact section** with form and email info
+    - Ensure smooth scrolling between sections
+    - Verify anchor navigation works (/#projects, /#experience, etc.)
+    - Test responsive layout on mobile, tablet, desktop
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 3.1, 4.1, 4.2, 4.3_
+  - [ ] 38.11 Translate all content to supported languages
+    - Translate Hero content to pt-BR, en, es
+    - Translate section headings and labels
+    - Translate experience descriptions (or keep in original language with note)
+    - Translate skills categories
+    - Translate project descriptions
+    - Translate contact form labels and messages
+    - Update all `messages/*.json` files with complete translations
+    - Verify translation coverage with property test
+    - _Requirements: 11.1, 11.7_
+  - [ ] 38.12 Add professional metadata and SEO content
+    - Update page title: "Rogério do Carmo - Frontend Mobile Developer"
+    - Write meta description (150-160 characters)
+    - Add keywords: React Native, JavaScript, TypeScript, Mobile Development
+    - Update Open Graph tags with professional info
+    - Update Twitter Card tags
+    - Add structured data (Person schema) with complete info
+    - Update sitemap with all sections
+    - _Requirements: 7.1, 7.2, 7.3, 20.1, 20.2_
+  - [ ] 38.13 Optimize images and assets
+    - Compress profile photo for web (target: <500KB)
+    - Add company/institution logos (optimized)
+    - Add project screenshots (optimized, responsive)
+    - Ensure all images have descriptive alt text
+    - Use Next.js Image component for all images
+    - Implement lazy loading for below-fold images
+    - _Requirements: 4.5, 6.3, 9.1_
+  - [ ] 38.14 Test complete website functionality
+    - Test language switching (pt-BR ↔ en ↔ es)
+    - Test theme switching (light ↔ dark)
+    - Test career path switching (Professional ↔ Academic)
+    - Test navigation (all links, anchor scrolling)
+    - Test contact form submission
+    - Test resume download
+    - Test exit intent modal
+    - Test responsive layout on all breakpoints
+    - Test all components render correctly
+    - _Requirements: 11.1, 17.1, 1.7, 3.4, 19.4, 4.1, 4.2, 4.3_
+  - [ ] 38.15 Verify content accuracy and professionalism
+    - Review all content for accuracy (dates, companies, roles)
+    - Ensure professional tone throughout
+    - Remove any placeholder or dummy content
+    - Verify no social media links (Facebook, Instagram) are included
+    - Ensure all external links work (LinkedIn, GitHub, FAPESP, Lattes, ResearchGate)
+    - Proofread all text for grammar and spelling
+    - Get user approval for final content
+    - _Requirements: 1.1, 1.3, 1.4, 2.1, 3.1_
+
 - [ ] 37. Configure Firebase Admin SDK and Vercel deployment environment variables
   - [ ] 37.1 Set up Firebase Admin SDK credentials
     - Go to Firebase Console → Project Settings → Service Accounts
