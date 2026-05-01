@@ -174,11 +174,16 @@ export async function getExperiences(
     }
   }
 
+  // Sort by startDate descending (most recent first)
+  const sorted = experiences.sort((a, b) =>
+    a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0
+  );
+
   if (type) {
-    return experiences.filter((e) => e.type === type);
+    return sorted.filter((e) => e.type === type);
   }
 
-  return experiences;
+  return sorted;
 }
 
 // ─── Skills ──────────────────────────────────────────────────────────────────
