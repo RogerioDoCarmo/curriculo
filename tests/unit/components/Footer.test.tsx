@@ -26,6 +26,8 @@ jest.mock("next-intl", () => ({
       "footer.downloadResumeLabel": "Download resume in PDF format",
       "footer.downloadDissertation": "Download Dissertation",
       "footer.downloadDissertationLabel": "Download master's dissertation in PDF format",
+      "footer.printPage": "Print Page",
+      "footer.printPageLabel": "Print site page",
       "footer.languages.portuguese": "Português (pt-BR)",
       "footer.languages.english": "English (en)",
       "footer.languages.spanish": "Español (es)",
@@ -333,6 +335,87 @@ describe("Footer", () => {
       const resumeLink = screen.getByRole("link", { name: /download resume/i });
       expect(resumeLink).toHaveAttribute("href");
       expect(resumeLink.getAttribute("href")).not.toBe("");
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Print button
+  // -------------------------------------------------------------------------
+  it("renders print page button", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const printButton = screen.getByRole("button", { name: /print/i });
+      expect(printButton).toBeInTheDocument();
+    });
+  });
+
+  it("print button has proper aria-label for accessibility", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const printButton = screen.getByRole("button", { name: /print site page/i });
+      expect(printButton).toBeInTheDocument();
+      expect(printButton).toHaveAttribute("aria-label", "Print site page");
+    });
+  });
+
+  it("print button has printer icon with aria-hidden", async () => {
+    const { container } = renderFooter();
+    await waitFor(() => {
+      const printButton = screen.getByRole("button", { name: /print/i });
+      const svg = printButton.querySelector("svg");
+      expect(svg).toBeInTheDocument();
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+    });
+  });
+
+  it("print button calls window.print when clicked", async () => {
+    const mockPrint = jest.fn();
+    window.print = mockPrint;
+
+    renderFooter();
+    await waitFor(() => {
+      const printButton = screen.getByRole("button", { name: /print/i });
+      printButton.click();
+      expect(mockPrint).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("print button is keyboard accessible", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const printButton = screen.getByRole("button", { name: /print/i });
+      // Button should be focusable and have proper role
+      expect(printButton).toBeInTheDocument();
+      expect(printButton.tagName).toBe("BUTTON");
+    });
+  });
+
+  it("print button appears after GitHub link in Connect section", async () => {
+    const { container } = renderFooter();
+    await waitFor(() => {
+      const connectSection = container.querySelector(".social-links");
+      expect(connectSection).toBeInTheDocument();
+
+      // Get all list items
+      const listItems = connectSection?.querySelectorAll("li");
+      expect(listItems).toBeTruthy();
+
+      if (listItems && listItems.length > 0) {
+        // Find GitHub link and print button positions
+        let githubIndex = -1;
+        let printButtonIndex = -1;
+
+        listItems.forEach((li, index) => {
+          const link = li.querySelector('a[href*="github"]');
+          const button = li.querySelector('button[aria-label*="print" i]');
+
+          if (link) githubIndex = index;
+          if (button) printButtonIndex = index;
+        });
+
+        // Print button should come after GitHub link
+        expect(printButtonIndex).toBeGreaterThan(githubIndex);
+      }
     });
   });
 });
