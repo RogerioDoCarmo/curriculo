@@ -15,15 +15,21 @@ describe("Web App Manifest", () => {
 
   describe("Basic Properties", () => {
     it("should have a full name for app stores and install prompts", () => {
+      expect(manifestData.name).toBeDefined();
       expect(manifestData.name).toBe("Rogério do Carmo | Desenvolvedor React Native Mobile");
       expect(manifestData.name).toBeTruthy();
-      expect(manifestData.name.length).toBeGreaterThan(0);
+      if (manifestData.name) {
+        expect(manifestData.name.length).toBeGreaterThan(0);
+      }
     });
 
     it("should have a short name for home screen display", () => {
+      expect(manifestData.short_name).toBeDefined();
       expect(manifestData.short_name).toBe("Rogério do Carmo");
       expect(manifestData.short_name).toBeTruthy();
-      expect(manifestData.short_name.length).toBeLessThan(manifestData.name.length);
+      if (manifestData.short_name && manifestData.name) {
+        expect(manifestData.short_name.length).toBeLessThan(manifestData.name.length);
+      }
     });
 
     it("should have a description", () => {
@@ -61,28 +67,41 @@ describe("Web App Manifest", () => {
     it("should have at least one icon", () => {
       expect(manifestData.icons).toBeDefined();
       expect(Array.isArray(manifestData.icons)).toBe(true);
-      expect(manifestData.icons!.length).toBeGreaterThan(0);
+      if (manifestData.icons) {
+        expect(manifestData.icons.length).toBeGreaterThan(0);
+      }
     });
 
     it("should have an SVG icon", () => {
-      const svgIcon = manifestData.icons!.find((icon) => icon.type === "image/svg+xml");
-      expect(svgIcon).toBeDefined();
-      expect(svgIcon!.src).toBe("/icon.svg");
+      expect(manifestData.icons).toBeDefined();
+      if (manifestData.icons) {
+        const svgIcon = manifestData.icons.find((icon) => icon.type === "image/svg+xml");
+        expect(svgIcon).toBeDefined();
+        if (svgIcon) {
+          expect(svgIcon.src).toBe("/icon.svg");
+        }
+      }
     });
 
     it("should have proper icon configuration", () => {
-      const icon = manifestData.icons![0];
-      expect(icon.src).toBeTruthy();
-      expect(icon.sizes).toBe("any");
-      expect(icon.type).toBe("image/svg+xml");
-      expect(icon.purpose).toBe("any");
+      expect(manifestData.icons).toBeDefined();
+      if (manifestData.icons && manifestData.icons.length > 0) {
+        const icon = manifestData.icons[0];
+        expect(icon.src).toBeTruthy();
+        expect(icon.sizes).toBe("any");
+        expect(icon.type).toBe("image/svg+xml");
+        expect(icon.purpose).toBe("any");
+      }
     });
 
     it("should have valid purpose values", () => {
       const validPurposes = ["any", "maskable", "monochrome", undefined];
-      manifestData.icons!.forEach((icon) => {
-        expect(validPurposes).toContain(icon.purpose);
-      });
+      expect(manifestData.icons).toBeDefined();
+      if (manifestData.icons) {
+        manifestData.icons.forEach((icon) => {
+          expect(validPurposes).toContain(icon.purpose);
+        });
+      }
     });
   });
 
@@ -94,7 +113,9 @@ describe("Web App Manifest", () => {
       expect(manifestData.start_url).toBeTruthy();
       expect(manifestData.display).toBeTruthy();
       expect(manifestData.icons).toBeTruthy();
-      expect(manifestData.icons!.length).toBeGreaterThan(0);
+      if (manifestData.icons) {
+        expect(manifestData.icons.length).toBeGreaterThan(0);
+      }
     });
 
     it("should have appropriate display mode for standalone app", () => {
@@ -105,16 +126,25 @@ describe("Web App Manifest", () => {
 
   describe("Short Name Optimization", () => {
     it("should have a short name suitable for mobile home screens", () => {
+      expect(manifestData.short_name).toBeDefined();
       // Mobile home screens typically show 10-12 characters
-      expect(manifestData.short_name!.length).toBeLessThanOrEqual(20);
+      if (manifestData.short_name) {
+        expect(manifestData.short_name.length).toBeLessThanOrEqual(20);
+      }
     });
 
     it("should have short name different from full name", () => {
+      expect(manifestData.short_name).toBeDefined();
+      expect(manifestData.name).toBeDefined();
       expect(manifestData.short_name).not.toBe(manifestData.name);
     });
 
     it("should have short name that is a subset of full name", () => {
-      expect(manifestData.name).toContain("Rogério do Carmo");
+      expect(manifestData.name).toBeDefined();
+      expect(manifestData.short_name).toBeDefined();
+      if (manifestData.name) {
+        expect(manifestData.name).toContain("Rogério do Carmo");
+      }
       expect(manifestData.short_name).toBe("Rogério do Carmo");
     });
   });
@@ -122,12 +152,17 @@ describe("Web App Manifest", () => {
   describe("Branding Consistency", () => {
     it("should use consistent branding in name and description", () => {
       const brandName = "Rogério do Carmo";
+      expect(manifestData.name).toBeDefined();
+      expect(manifestData.short_name).toBeDefined();
+      expect(manifestData.description).toBeDefined();
       expect(manifestData.name).toContain(brandName);
       expect(manifestData.short_name).toContain(brandName);
       expect(manifestData.description).toContain(brandName);
     });
 
     it("should mention React Native in branding", () => {
+      expect(manifestData.name).toBeDefined();
+      expect(manifestData.description).toBeDefined();
       expect(manifestData.name).toContain("React Native");
       expect(manifestData.description).toContain("React Native");
     });
