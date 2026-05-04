@@ -93,20 +93,29 @@ export interface UseLanguageReturn {
 export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
   const router = useRouter();
   const pathname = usePathname();
-  const [locale, setLocaleState] = useState<SupportedLocale>(currentLocale);
 
-  // On mount, check for saved preference or detect browser language
+  // Initialize with the correct locale from the start
+  // This ensures the language selector displays the right language immediately
+  const [locale, setLocaleState] = useState<SupportedLocale>(() => {
+    if (typeof window === "undefined") return currentLocale;
+
+    // Check for saved preference first - this takes priority
+    const saved = getStoredLocale();
+    if (saved) return saved;
+
+    // Otherwise use the current locale from URL
+    return currentLocale;
+  });
+
+  // Sync state with currentLocale only when currentLocale changes AND
+  // there's no saved preference (to respect user's explicit choice)
   useEffect(() => {
     const saved = getStoredLocale();
-    if (saved && saved !== currentLocale) {
-      setLocaleState(saved);
-    } else if (!saved) {
-      const detected = detectBrowserLocale();
-      if (detected !== currentLocale) {
-        setLocaleState(detected);
-      }
+    // Only update if there's no saved preference and currentLocale differs
+    if (!saved && locale !== currentLocale) {
+      setLocaleState(currentLocale);
     }
-  }, [currentLocale]);
+  }, [currentLocale, locale]);
 
   const setLocale = useCallback(
     (newLocale: SupportedLocale) => {
