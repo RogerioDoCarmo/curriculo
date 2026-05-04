@@ -139,35 +139,54 @@ If a component has a hardcoded list of keys (e.g. a `TECH_CATEGORIES` constant),
 
 Steps:
 
-1. Check the component for key mappings.
-2. Ensure mock messages include all keys and all fields (including ones added later like `url`).
+1. **Check the component for ALL translation keys** - including `sections.*` keys used in `aria-label` and headings
+2. Ensure mock messages include all keys and all fields (including ones added later like `url`)
+3. **Common translation key patterns to check**:
+   - `sections.{sectionName}` - Used for section headings and aria-labels
+   - `{componentName}.{field}` - Component-specific translations
+   - Nested keys for complex components
 
 ```typescript
 // ❌ mock missing keys/fields → MISSING_MESSAGE error
-const messages = { techStack: { technologies: { nextjs: { name: "Next.js" } } } };
-
-// ✅ complete mock matching component's TECH_CATEGORIES
 const messages = {
-  techStack: {
-    technologies: {
-      nextjs: {
-        name: "Next.js",
-        description: "...",
-        why: "...",
-        benefits: "...",
-        url: "https://nextjs.org",
-      },
-      sonarqube: {
-        name: "SonarQube",
-        description: "...",
-        why: "...",
-        benefits: "...",
-        url: "https://www.sonarqube.org",
-      },
-      // ... all other keys
-    },
+  // Missing sections.projects key!
+  projects: {
+    title: "Projects",
+    filterByTech: "Filter by technology",
   },
 };
+
+// ✅ complete mock including sections.* keys
+const messages = {
+  sections: {
+    projects: "Projects", // ← Don't forget section keys!
+    about: "About",
+    skills: "Skills",
+  },
+  projects: {
+    title: "Projects",
+    filterByTech: "Filter by technology",
+    all: "All",
+    noMatch: "No projects match",
+    screenshot: "screenshot",
+    // ... all other keys
+  },
+};
+```
+
+### How to Find All Translation Keys
+
+1. **Search for `t("` in the component** - finds all translation calls
+2. **Check `aria-label` attributes** - often use `sections.*` keys
+3. **Check heading elements** - commonly use `sections.*` keys
+4. **Look for nested components** - may use additional translation namespaces
+
+```typescript
+// Example: ProjectsSection uses both sections.* and projects.* keys
+<section aria-label={t("sections.projects")}>  {/* ← sections key */}
+  <h2>{t("sections.projects")}</h2>            {/* ← sections key */}
+  <button>{t("projects.all")}</button>         {/* ← projects key */}
+</section>
 ```
 
 ## Mock Data Must Match Type Definitions
