@@ -157,3 +157,8 @@ jspm_packages/
 
 *storybook.log
 storybook-static
+
+# Build archives and release artifacts
+*.tar.gz
+*.zip
+*-checksums.txt
