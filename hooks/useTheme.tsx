@@ -102,14 +102,17 @@ interface ThemeProviderProps {
  * suppressHydrationWarning on the html/body tags.
  */
 export function ThemeProvider({ children, defaultTheme }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(defaultTheme ?? "light");
+  // Initialize with the actual theme from localStorage/system preference
+  // This ensures the icon matches the applied theme from the start
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === "undefined") return defaultTheme ?? "light";
+    return getInitialTheme();
+  });
 
-  // On mount, read saved preference or detect system preference
+  // On mount, ensure theme is applied (in case SSR/hydration didn't apply it)
   useEffect(() => {
-    const initial = getInitialTheme();
-    setThemeState(initial);
-    applyTheme(initial);
-  }, []);
+    applyTheme(theme);
+  }, [theme]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);

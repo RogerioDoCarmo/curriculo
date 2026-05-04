@@ -1183,7 +1183,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Close out the known issue_
 
 - [ ] 32. Submit sitemap and robots.txt to search engines (SEO optimization)
-  - [ ] 32.1 Verify sitemap.xml and robots.txt are accessible
+  - [x] 32.1 Verify sitemap.xml and robots.txt are accessible
     - Visit `https://rogeriodocarmo.com/sitemap.xml` and verify it loads correctly
     - Visit `https://rogeriodocarmo.com/robots.txt` and verify it loads correctly
     - Verify sitemap includes all pages and locales (pt-BR, en, es)
@@ -1277,8 +1277,125 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Monitor search queries and click-through rates
     - _Requirements: 10.1, 10.3_
 
-- [ ] 33. Fix GitHub Dependabot security vulnerabilities
-  - [ ] 33.1 Review Dependabot security alerts
+- [ ] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
+  - [ ] 33.1 Analyze data collection and legal requirements
+    - Document all data collection points:
+      - Firebase Analytics (page views, events, user interactions)
+      - Email subscription form (email addresses via Formspree)
+      - Firebase Cloud Messaging (notification tokens)
+      - localStorage (theme preference, language preference, session data)
+      - Cookies (if any third-party services use them)
+    - Identify applicable regulations:
+      - **GDPR** (General Data Protection Regulation) - EU users
+      - **LGPD** (Lei Geral de Proteção de Dados) - Brazilian users (your primary audience)
+      - **CCPA** (California Consumer Privacy Act) - California users
+    - Determine if cookie consent banner is required (depends on cookie usage)
+    - _Requirements: 10.1, 10.5_
+  - [ ] 33.2 Create Privacy Policy page
+    - Create `app/[locale]/privacy/page.tsx` for Privacy Policy
+    - Include sections:
+      - **Introduction**: What data is collected and why
+      - **Data Collection**: Detailed list of collected data (analytics, emails, preferences)
+      - **Data Usage**: How data is used (analytics, communication, personalization)
+      - **Data Storage**: Where data is stored (Firebase, Formspree, browser localStorage)
+      - **Data Sharing**: Third parties with access (Google Analytics, Formspree)
+      - **User Rights**: Rights to access, delete, or export data (GDPR/LGPD compliance)
+      - **Cookies**: Types of cookies used (if any)
+      - **Contact Information**: How users can contact you about privacy concerns
+      - **Policy Updates**: How users will be notified of changes
+    - Add translations for all three languages (pt-BR, en, es)
+    - Ensure GDPR and LGPD compliance
+    - _Requirements: 10.1, 10.5, 11.7_
+  - [ ] 33.3 Create Cookie Policy (if needed)
+    - Determine if cookies are used (check Firebase Analytics, third-party services)
+    - If cookies are used, create `app/[locale]/cookies/page.tsx`
+    - Include sections:
+      - **What are cookies**: Explanation for non-technical users
+      - **Types of cookies used**: Essential, analytics, functional
+      - **Cookie list**: Specific cookies with names, purposes, and expiration
+      - **How to manage cookies**: Browser settings instructions
+      - **Third-party cookies**: List of third-party services using cookies
+    - Add translations for all three languages
+    - _Requirements: 10.1_
+  - [ ] 33.4 Create Terms of Use page
+    - Create `app/[locale]/terms/page.tsx` for Terms of Use
+    - Include sections:
+      - **Acceptance of Terms**: User agreement to terms
+      - **Use of Website**: Permitted and prohibited uses
+      - **Intellectual Property**: Copyright and trademark notices
+      - **User Content**: Rights to submitted content (contact form messages)
+      - **Disclaimers**: Limitations of liability
+      - **External Links**: Disclaimer for third-party links
+      - **Modifications**: Right to update terms
+      - **Governing Law**: Applicable jurisdiction (Brazil)
+      - **Contact Information**: How to reach you with questions
+    - Add translations for all three languages
+    - _Requirements: 11.7_
+  - [ ] 33.5 Implement cookie consent banner (if required)
+    - Determine if consent banner is legally required based on cookie usage
+    - If required, create `CookieConsent` component
+    - Display banner on first visit with options:
+      - Accept all cookies
+      - Reject non-essential cookies
+      - Customize cookie preferences
+    - Store consent preference in localStorage
+    - Respect user's choice (don't load analytics if rejected)
+    - Include link to Cookie Policy
+    - Add translations for all three languages
+    - Ensure GDPR/LGPD compliance (opt-in, not opt-out)
+    - _Requirements: 10.1, 11.7_
+  - [ ] 33.6 Add privacy links to Footer
+    - Update Footer component to include links to:
+      - Privacy Policy (`/privacy`)
+      - Cookie Policy (`/cookies`) - if applicable
+      - Terms of Use (`/terms`)
+    - Ensure links are visible and accessible
+    - Add to all language versions
+    - _Requirements: 7.5, 11.7_
+  - [ ] 33.7 Update LICENSE file
+    - Review current MIT License
+    - **Decision**: Keep MIT License for source code (recommended)
+      - MIT License applies to the **code/software**, not the website content
+      - Allows others to use, modify, and distribute the code
+      - Does NOT conflict with privacy policies or terms of use
+      - Common practice for open-source portfolio sites
+    - Update copyright holder from "Your Name" to "Rogério do Carmo"
+    - Update copyright year to current year (2024 or 2024-2026)
+    - Add clarification comment at top of LICENSE:
+      ```
+      # License for Source Code
+      # This MIT License applies to the source code of this project.
+      # Content, images, and personal information are not covered by this license.
+      # See Terms of Use for website content usage terms.
+      ```
+    - _Requirements: 15.2_
+  - [ ] 33.8 Add content copyright notice
+    - Create `COPYRIGHT.md` file for website content
+    - Specify that personal content (resume, projects, images) is:
+      - © 2024-2026 Rogério do Carmo. All rights reserved.
+      - Not covered by MIT License
+      - Not to be used without permission
+    - Clarify that source code remains MIT licensed
+    - Add to Footer: "© 2024-2026 Rogério do Carmo. All rights reserved."
+    - _Requirements: 7.5_
+  - [ ] 33.9 Implement data deletion mechanism (GDPR/LGPD compliance)
+    - Add contact information for data deletion requests
+    - Document process for handling deletion requests:
+      - Email subscriptions: Unsubscribe link or manual removal from Formspree
+      - Analytics data: Cannot be deleted (anonymous), explain in Privacy Policy
+      - localStorage: User can clear browser data
+    - Add "Delete My Data" section to Privacy Policy
+    - _Requirements: 10.5_
+  - [ ] 33.10 Test privacy implementation
+    - Verify all privacy pages load correctly in all languages
+    - Test cookie consent banner (if implemented)
+    - Verify privacy links in Footer work
+    - Check that analytics respects user consent
+    - Review all policies for completeness and accuracy
+    - _Requirements: 10.1, 11.7_
+
+- [ ] 34. Fix GitHub Dependabot security vulnerabilities
+  - [ ] 34.1 Review Dependabot security alerts
     - Go to GitHub repository → Security → Dependabot alerts
     - Review all 12 vulnerabilities:
       - 1 critical severity
@@ -1293,7 +1410,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Impact on project
     - Create `docs/SECURITY-VULNERABILITIES.md` with findings
     - _Security: Critical for production deployment_
-  - [ ] 33.2 Update dependencies to fix critical and high severity issues
+  - [ ] 34.2 Update dependencies to fix critical and high severity issues
     - Update packages with critical severity vulnerabilities first
     - Update packages with high severity vulnerabilities
     - Run `npm audit` to verify fixes
@@ -1301,18 +1418,18 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Update package.json with new versions
     - Run `npm install` to update package-lock.json
     - _Security: Addresses 4 critical/high severity issues_
-  - [ ] 33.3 Update dependencies to fix moderate severity issues
+  - [ ] 34.3 Update dependencies to fix moderate severity issues
     - Update packages with moderate severity vulnerabilities
     - Run `npm audit` to verify fixes
     - Check for breaking changes
     - Test application functionality after updates
     - _Security: Addresses 6 moderate severity issues_
-  - [ ] 33.4 Update dependencies to fix low severity issues
+  - [ ] 34.4 Update dependencies to fix low severity issues
     - Update packages with low severity vulnerabilities
     - Run `npm audit` to verify all issues resolved
     - Verify `npm audit` shows 0 vulnerabilities
     - _Security: Addresses 2 low severity issues_
-  - [ ] 33.5 Test application after dependency updates
+  - [ ] 34.5 Test application after dependency updates
     - Run full test suite: `npm test`
     - Verify all 91 tests still pass (or fix broken tests)
     - Run E2E tests: `npm run test:e2e`
@@ -1321,13 +1438,13 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify static export generates correctly
     - Test on all locales (pt-BR, en, es)
     - _Requirements: 14.1, 14.2, 14.3_
-  - [ ] 33.6 Update CI/CD pipeline for security scanning
+  - [ ] 34.6 Update CI/CD pipeline for security scanning
     - Verify GitHub Actions workflows still pass
     - Add `npm audit` check to CI pipeline (if not already present)
     - Configure Dependabot auto-merge for patch updates (optional)
     - Set up Dependabot security update notifications
     - _Requirements: 16.1, 16.2_
-  - [ ] 33.7 Run Lighthouse audits after updates
+  - [ ] 34.7 Run Lighthouse audits after updates
     - Run `npm run test:lighthouse`
     - Verify Performance score >= 90 (currently 93)
     - Verify no regressions in metrics:
@@ -1336,7 +1453,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Bundle size similar or smaller (currently 182KB gzipped)
     - Document any performance changes
     - _Requirements: 6.1, 6.2, 6.5_
-  - [ ] 33.8 Update security documentation
+  - [ ] 34.8 Update security documentation
     - Update `docs/SECURITY-CHECKLIST.md` with:
       - Date of security audit
       - Vulnerabilities fixed
@@ -1346,7 +1463,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document any remaining known issues (if any)
     - Add security update to CHANGELOG.md
     - _Requirements: 15.2_
-  - [ ] 33.9 Deploy and verify in production
+  - [ ] 34.9 Deploy and verify in production
     - Deploy updated application to Vercel
     - Verify deployment succeeds
     - Test production site on all 11 domains
@@ -1354,7 +1471,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Check Sentry for any new errors
     - Monitor Firebase Analytics for any issues
     - _Requirements: 8.1, 8.2, 10.5_
-  - [ ] 33.10 Set up automated security monitoring
+  - [ ] 34.10 Set up automated security monitoring
     - Enable Dependabot security updates in GitHub settings
     - Configure Dependabot to create PRs for security updates
     - Set up email notifications for new vulnerabilities
@@ -1362,8 +1479,8 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document security update process in `docs/SECURITY-CHECKLIST.md`
     - _Security: Proactive vulnerability management_
 
-- [ ] 34. Fix Sentry error logging integration
-  - [ ] 34.1 Verify Sentry configuration and credentials
+- [ ] 35. Fix Sentry error logging integration
+  - [ ] 35.1 Verify Sentry configuration and credentials
     - Check if Sentry DSN is correctly set in `.env.local`
     - Verify `NEXT_PUBLIC_SENTRY_DSN` environment variable in Vercel
     - Check Sentry project exists and is active in Sentry dashboard

@@ -48,6 +48,7 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 
 ## Features
 
+- **📱 Progressive Web App (PWA)**: Install on mobile devices with customized home screen shortcut
 - **Multi-Language Support**: Brazilian Portuguese (pt-BR), English (en), Spanish (es)
 - **Professional Email**: Custom domain email addresses (<contato@rogeriodocarmo.com> for Portuguese, <contact@rogeriodocarmo.com> for English/Spanish)
 - **Linktree**: All social links in one place at [linktr.ee/rogeriodocarmo](https://linktr.ee/rogeriodocarmo)
@@ -67,12 +68,33 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 - **URL Anchor Navigation**: Deep linking to specific sections
 - **Tech Stack Explanation**: Simple explanations of technologies used
 
+### 📱 Progressive Web App (PWA) Features
+
+This website can be installed as a Progressive Web App on mobile devices, providing a native app-like experience:
+
+- **🏠 Home Screen Installation**: Add to home screen with a clean, professional shortcut
+  - **Shortcut Title**: "Rogério do Carmo" (optimized for mobile screens)
+  - **Full Title for Sharing**: "Rogério do Carmo | Desenvolvedor React Native Mobile" (used in WhatsApp, social media)
+- **📲 Standalone Mode**: Opens without browser UI, looks like a native app
+- **🎨 Custom Theme**: Branded theme color (#2563eb) for Android UI elements
+- **⚡ Splash Screen**: Professional splash screen on app launch
+- **🔔 Push Notifications**: Receive updates about new content (Firebase Cloud Messaging)
+- **📴 Offline Ready**: Core functionality available without internet connection
+
+**How to Install:**
+
+- **iOS**: Safari → Share → "Add to Home Screen"
+- **Android**: Chrome → Menu → "Add to Home screen" or "Install app"
+
+See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
+
 ## Tech Stack
 
 - **Framework**: Next.js 16.2.4 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + CSS Modules
 - **Content**: Markdown files with Gray-matter parsing
 - **Internationalization**: next-intl 4.9.2
+- **PWA**: Web App Manifest for mobile installation
 - **Testing**: Jest, React Testing Library, Playwright, fast-check
 - **Component Documentation**: Storybook 8
 - **Analytics**: Firebase Analytics + Vercel Analytics
@@ -91,7 +113,10 @@ See [tasks.md](.kiro/specs/personal-resume-website/tasks.md) for detailed implem
 personal-resume-website/
 ├── app/                          # Next.js App Router
 │   ├── [locale]/                 # Internationalized routes
-│   └── api/                      # API routes
+│   ├── api/                      # API routes
+│   ├── manifest.ts               # PWA Web App Manifest
+│   ├── sitemap.ts                # Dynamic sitemap generation
+│   └── robots.ts                 # Robots.txt generation
 ├── components/                   # React components
 │   ├── ui/                       # Reusable UI components
 │   └── sections/                 # Page sections
@@ -252,6 +277,7 @@ MIT
 
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
+- [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
 - [docs/BADGES.md](./docs/BADGES.md) - **Explanation of all quality badges** (16 badges)
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
