@@ -12,6 +12,97 @@ Rules that must be followed when writing or editing test files in this project.
 `@testing-library/jest-dom` is configured in `tsconfig.json` via `"types": ["@testing-library/jest-dom"]`.
 This provides `toBeInTheDocument`, `toHaveAttribute`, `toHaveTextContent`, etc. — no extra imports needed.
 
+## TypeScript Strict Null Checks
+
+**NEVER use non-null assertion operator (`!`)** in tests. It bypasses TypeScript's null safety and can cause runtime errors.
+
+### The Problem
+
+```typescript
+// ❌ WRONG - Non-null assertion bypasses type safety
+it("should have a name", () => {
+  expect(manifestData.name).toBeDefined();
+  expect(manifestData.name!.length).toBeGreaterThan(0); // ❌ Could throw NPE
+});
+
+// ❌ WRONG - Accessing potentially undefined property
+it("should have icons", () => {
+  const icon = manifestData.icons![0]; // ❌ Could throw NPE
+  expect(icon.src).toBeTruthy();
+});
+```
+
+### The Solution
+
+Use proper type guards with conditional checks:
+
+```typescript
+// ✅ CORRECT - Type guard before accessing property
+it("should have a name", () => {
+  expect(manifestData.name).toBeDefined();
+  if (manifestData.name) {
+    expect(manifestData.name.length).toBeGreaterThan(0);
+  }
+});
+
+// ✅ CORRECT - Check array exists before accessing elements
+it("should have icons", () => {
+  expect(manifestData.icons).toBeDefined();
+  if (manifestData.icons && manifestData.icons.length > 0) {
+    const icon = manifestData.icons[0];
+    expect(icon.src).toBeTruthy();
+  }
+});
+
+// ✅ CORRECT - Check nested properties exist
+it("should have an SVG icon", () => {
+  expect(manifestData.icons).toBeDefined();
+  if (manifestData.icons) {
+    const svgIcon = manifestData.icons.find((icon) => icon.type === "image/svg+xml");
+    expect(svgIcon).toBeDefined();
+    if (svgIcon) {
+      expect(svgIcon.src).toBe("/icon.svg");
+    }
+  }
+});
+```
+
+### Why This Matters
+
+1. **CI Enforcement**: TypeScript strict null checks (`--strictNullChecks`) are enabled in CI
+2. **Runtime Safety**: Prevents `Cannot read property 'X' of undefined` errors
+3. **Type Safety**: Maintains TypeScript's null safety guarantees
+4. **Code Quality**: Forces explicit handling of potentially undefined values
+
+### Pattern to Follow
+
+1. **Always check `toBeDefined()` or `toBeTruthy()` first**
+2. **Then use conditional check before accessing properties**
+3. **Never assume a value exists just because you tested it**
+
+```typescript
+// Pattern for single property
+expect(data.property).toBeDefined();
+if (data.property) {
+  expect(data.property.nestedValue).toBe(expected);
+}
+
+// Pattern for arrays
+expect(data.array).toBeDefined();
+if (data.array && data.array.length > 0) {
+  expect(data.array[0].value).toBe(expected);
+}
+
+// Pattern for optional chaining in find/filter
+if (data.items) {
+  const found = data.items.find((item) => item.id === "test");
+  expect(found).toBeDefined();
+  if (found) {
+    expect(found.name).toBe("Test");
+  }
+}
+```
+
 ## Unused Variables in Callbacks
 
 The ESLint rule `no-unused-vars` requires unused arguments to match `/^_/`.
