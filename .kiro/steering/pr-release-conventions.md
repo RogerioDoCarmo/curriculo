@@ -1,5 +1,6 @@
 ---
 inclusion: auto
+description: Standards for creating and formatting pull request and release descriptions with copyable text
 ---
 
 # PR and Release Conventions
