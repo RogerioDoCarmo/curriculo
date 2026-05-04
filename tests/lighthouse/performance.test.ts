@@ -33,6 +33,21 @@ describe("Lighthouse Performance Audits", () => {
   beforeAll(() => {
     console.log(`Running Lighthouse audit on ${testUrl}...`);
 
+    // First, verify the server is accessible
+    try {
+      console.log("Checking if server is accessible...");
+      execSync(`curl -f ${testUrl}`, {
+        stdio: "pipe",
+        timeout: 5000,
+      });
+      console.log("Server is accessible!");
+    } catch (error) {
+      console.error(`Server is not accessible at ${testUrl}`);
+      console.error("Make sure the production build is running:");
+      console.error("  npm run build && npm run serve");
+      throw new Error(`Server not accessible at ${testUrl}. Please start the server first.`);
+    }
+
     try {
       // Run Lighthouse CLI with performance-focused settings
       execSync(
