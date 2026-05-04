@@ -107,7 +107,8 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage
-        run: npm run test:coverage -- --testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"
+        run: npm run test:coverage --
+          --testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"
 
       - name: Check coverage threshold
         run: |
@@ -253,13 +254,22 @@ jobs:
 
       - name: Start server in background
         run: |
+          echo "Starting server..."
           npm run serve &
           echo $! > server.pid
-          sleep 5
+          echo "Server PID: $(cat server.pid)"
+          sleep 10
 
       - name: Wait for server to be ready
         run: |
-          timeout 30 bash -c 'until curl -f http://localhost:3000; do sleep 1; done'
+          echo "Waiting for server to be ready..."
+          timeout 60 bash -c 'until curl -f http://localhost:3000; do echo "Waiting..."; sleep 2; done'
+          echo "Server is ready!"
+
+      - name: Verify server is running
+        run: |
+          echo "Verifying server..."
+          curl -I http://localhost:3000 || (echo "Server not responding!" && exit 1)
 
       - name: Run Lighthouse tests
         run: npm run test:lighthouse
@@ -304,7 +314,8 @@ jobs:
         run: npm run build
 
       - name: Run tests with coverage
-        run: npm run test:coverage -- --testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"
+        run: npm run test:coverage --
+          --testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
