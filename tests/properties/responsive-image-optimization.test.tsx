@@ -23,12 +23,25 @@ import type { Project } from "@/types/index";
 // Helper to render with intl provider
 function renderWithIntl(component: React.ReactElement) {
   const messages: AbstractIntlMessages = {
+    sections: {
+      projects: "Projects",
+    },
     projects: {
       title: "Projects",
       filterPlaceholder: "Filter by technology",
+      filterByTech: "Filter by technology",
+      all: "All",
+      noMatch: "No projects match the selected technology",
       viewProject: "View Project",
       viewDetails: "View details for",
+      screenshot: "screenshot",
+      featured: "Featured",
+      mockData: "Mock Data",
+      more: "more",
+      noImages: "No images available",
+      technologies: "Technologies",
       liveDemo: "Live Demo",
+      repository: "Repository",
       sourceCode: "Source Code",
       closeModal: "Close modal",
     },
