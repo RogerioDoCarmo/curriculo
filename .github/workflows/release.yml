@@ -3,7 +3,7 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*.*.*' # Triggers on version tags like v0.19.0, v1.0.0, etc.
+      - "v*.*.*" # Triggers on version tags like v0.19.0, v1.0.0, etc.
 
 permissions:
   contents: write # Required to create releases
@@ -11,7 +11,7 @@ permissions:
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,17 +24,17 @@ jobs:
           # Get the tag name
           TAG_NAME=${GITHUB_REF#refs/tags/}
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
-          
+
           # Get the tag message (release notes)
           TAG_MESSAGE=$(git tag -l --format='%(contents)' $TAG_NAME)
           echo "tag_message<<EOF" >> $GITHUB_OUTPUT
           echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
+
           # Get previous tag for changelog
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 $TAG_NAME^ 2>/dev/null || echo "")
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
-          
+
           # Get commit hash
           COMMIT_HASH=$(git rev-parse --short HEAD)
           echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
@@ -46,44 +46,40 @@ jobs:
           TAG_MESSAGE="${{ steps.tag_info.outputs.tag_message }}"
           PREVIOUS_TAG="${{ steps.tag_info.outputs.previous_tag }}"
           COMMIT_HASH="${{ steps.tag_info.outputs.commit_hash }}"
-          
+          REPO="${{ github.repository }}"
+
           # Extract title from tag message (first line)
           TITLE=$(echo "$TAG_MESSAGE" | head -n 1)
-          
-          # Create release body with tag message and additional info
+
+          # Create release body with tag message
           RELEASE_BODY="$TAG_MESSAGE"
-          
-          # Add technical details section if not already present
-          if ! echo "$RELEASE_BODY" | grep -q "## Technical Details"; then
-            RELEASE_BODY="$RELEASE_BODY
 
-## 🔧 Technical Details
-
-**Commit**: $COMMIT_HASH  
-**Tag**: $TAG_NAME"
+          # Add technical details if not present
+          if ! echo "$RELEASE_BODY" | grep -q "Technical Details"; then
+            RELEASE_BODY="$RELEASE_BODY"$'\n\n'"## Technical Details"$'\n\n'
+            RELEASE_BODY="$RELEASE_BODY""Commit: $COMMIT_HASH"$'\n'
+            RELEASE_BODY="$RELEASE_BODY""Tag: $TAG_NAME"$'\n'
             
             if [ -n "$PREVIOUS_TAG" ]; then
-              RELEASE_BODY="$RELEASE_BODY  
-**Previous Release**: [$PREVIOUS_TAG](https://github.com/${{ github.repository }}/releases/tag/$PREVIOUS_TAG)"
+              RELEASE_BODY="$RELEASE_BODY""Previous Release: [$PREVIOUS_TAG](https://github.com/$REPO/releases/tag/$PREVIOUS_TAG)"$'\n'
             fi
           fi
-          
-          # Add full changelog link if not already present
+
+          # Add changelog link if not present
           if ! echo "$RELEASE_BODY" | grep -q "Full Changelog"; then
             if [ -n "$PREVIOUS_TAG" ]; then
-              RELEASE_BODY="$RELEASE_BODY
-
----
-
-**Full Changelog**: https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$TAG_NAME"
+              RELEASE_BODY="$RELEASE_BODY"$'\n'"---"$'\n\n'
+              RELEASE_BODY="$RELEASE_BODY""Full Changelog: https://github.com/$REPO/compare/$PREVIOUS_TAG...$TAG_NAME"
             fi
           fi
-          
-          # Save to output
-          echo "title=$TITLE" >> $GITHUB_OUTPUT
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$RELEASE_BODY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Save to output using heredoc
+          {
+            echo "title=$TITLE"
+            echo "body<<EOFBODY"
+            echo "$RELEASE_BODY"
+            echo "EOFBODY"
+          } >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
