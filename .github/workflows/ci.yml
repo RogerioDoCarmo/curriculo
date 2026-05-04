@@ -255,9 +255,14 @@ jobs:
       - name: Start server in background
         run: |
           echo "Starting server..."
-          npm run serve &
-          echo $! > server.pid
-          echo "Server PID: $(cat server.pid)"
+          echo "Contents of out/ directory:"
+          ls -la out/ || echo "out/ directory not found!"
+          echo "Starting serve on port 3000..."
+          npx --yes serve@latest out -l 3000 &
+          SERVER_PID=$!
+          echo $SERVER_PID > server.pid
+          echo "Server PID: $SERVER_PID"
+          echo "Waiting for server to initialize..."
           sleep 10
 
       - name: Wait for server to be ready
