@@ -94,18 +94,17 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Initialize with the correct locale from the start
-  // This ensures the language selector displays the right language immediately
-  const [locale, setLocaleState] = useState<SupportedLocale>(() => {
-    if (typeof window === "undefined") return currentLocale;
+  // Initialize with currentLocale to ensure server/client consistency
+  // We'll sync with localStorage after hydration to avoid hydration mismatch
+  const [locale, setLocaleState] = useState<SupportedLocale>(currentLocale);
 
-    // Check for saved preference first - this takes priority
+  // Sync with localStorage after hydration to respect user's saved preference
+  useEffect(() => {
     const saved = getStoredLocale();
-    if (saved) return saved;
-
-    // Otherwise use the current locale from URL
-    return currentLocale;
-  });
+    if (saved && saved !== locale) {
+      setLocaleState(saved);
+    }
+  }, []); // Run only once after mount
 
   // Sync state with currentLocale only when currentLocale changes AND
   // there's no saved preference (to respect user's explicit choice)

@@ -18,8 +18,8 @@
     <text x="600" y="400" font-size="48" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="600">Rogério do Carmo</text>
 
     <!-- Title/Role -->
-    <text x="600" y="460" font-size="32" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif">Full Stack Developer</text>
+    <text x="600" y="460" font-size="32" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif">Mobile Frontend React Developer</text>
 
     <!-- Subtitle -->
-    <text x="600" y="510" font-size="24" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial, sans-serif">React • Next.js • TypeScript • Node.js</text>
+    <text x="600" y="510" font-size="24" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial, sans-serif">React • React Native • TypeScript • Java</text>
 </svg>
