@@ -1,103 +1,111 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Generate OG Image</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        background: #f3f4f6;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      canvas {
-        border: 2px solid #ddd;
-        display: block;
-        margin: 20px auto;
-        background: white;
-      }
-      button {
-        display: block;
-        margin: 20px auto;
-        padding: 12px 24px;
-        font-size: 16px;
-        background: #3b82f6;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #2563eb;
-      }
-      .instructions {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="instructions">
-        <h1>Open Graph Image Generator</h1>
-        <p>This tool generates a 1200x630px PNG image for Open Graph social media sharing.</p>
-        <ol>
-          <li>The canvas below shows the preview</li>
-          <li>Click "Download PNG" to save the image</li>
-          <li>Save it as <code>og-image.png</code> in the <code>public/</code> folder</li>
-        </ol>
-      </div>
 
-      <canvas id="canvas" width="1200" height="630"></canvas>
-      <button onclick="downloadImage()">Download PNG</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate OG Image</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    canvas {
+      border: 2px solid #ddd;
+      display: block;
+      margin: 20px auto;
+      background: white;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .instructions {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="instructions">
+      <h1>Open Graph Image Generator</h1>
+      <p>This tool generates a 1200x630px PNG image for Open Graph social media sharing.</p>
+      <ol>
+        <li>The canvas below shows the preview</li>
+        <li>Click "Download PNG" to save the image</li>
+        <li>Save it as <code>og-image.png</code> in the <code>public/</code> folder</li>
+      </ol>
     </div>
 
-    <script>
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
+    <canvas id="canvas" width="1200" height="630"></canvas>
+    <button onclick="downloadImage()">Download PNG</button>
+  </div>
 
-      // Create gradient background
-      const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
-      gradient.addColorStop(0, "#3b82f6");
-      gradient.addColorStop(1, "#2563eb");
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 1200, 630);
+    // Create gradient background
+    const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+    gradient.addColorStop(0, "#3b82f6");
+    gradient.addColorStop(1, "#2563eb");
 
-      // Draw large "R" initial
-      ctx.fillStyle = "white";
-      ctx.font = "bold 200px Arial, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("R", 600, 240);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1200, 630);
 
-      // Draw name
-      ctx.font = "600 48px Arial, sans-serif";
-      ctx.fillText("Rogério do Carmo", 600, 380);
+    // Draw large "R" initial
+    ctx.fillStyle = "white";
+    ctx.font = "bold 200px Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("R", 600, 240);
 
-      // Draw title/role
-      ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-      ctx.font = "32px Arial, sans-serif";
-      ctx.fillText("Full Stack Developer", 600, 440);
+    // Draw name
+    ctx.font = "600 48px Arial, sans-serif";
+    ctx.fillText("Rogério do Carmo", 600, 380);
 
-      // Draw subtitle
-      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-      ctx.font = "24px Arial, sans-serif";
-      ctx.fillText("React • Next.js • TypeScript • Node.js", 600, 490);
+    // Draw title/role
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.font = "32px Arial, sans-serif";
+    ctx.fillText("Mobile Frontend React Developer", 600, 440);
 
-      function downloadImage() {
-        const link = document.createElement("a");
-        link.download = "og-image.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      }
-    </script>
-  </body>
+    // Draw subtitle
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.font = "24px Arial, sans-serif";
+    ctx.fillText("React • React Native • TypeScript • Java", 600, 490);
+
+    function downloadImage() {
+      const link = document.createElement("a");
+      link.download = "og-image.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+
 </html>

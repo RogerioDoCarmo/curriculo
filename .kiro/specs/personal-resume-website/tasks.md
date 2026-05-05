@@ -1194,7 +1194,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - `https://rogeriodocarmo.xyz`
       - `https://rogeriodocarmo.online`
     - _Requirements: 7.3, 7.4_
-  - [ ] 32.2 Submit sitemap to Google Search Console
+  - [x] 32.2 Submit sitemap to Google Search Console
     - Go to [Google Search Console](https://search.google.com/search-console)
     - Add property for `https://rogeriodocarmo.com` (if not already added)
     - Verify domain ownership using one of these methods:
