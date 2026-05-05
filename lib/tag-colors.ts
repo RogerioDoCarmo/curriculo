@@ -90,7 +90,7 @@ const TECH_THEME_MAP: Record<string, TagTheme> = {
   "next-intl": "web",
 
   // Backend
-  "Node.js": "backend",
+  Java: "backend",
   Express: "backend",
   NestJS: "backend",
   Python: "backend",
