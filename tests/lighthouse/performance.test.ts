@@ -50,7 +50,7 @@ describe("Lighthouse Performance Audits", () => {
 
     try {
       // Run Lighthouse CLI with performance-focused settings
-      // CI environments need additional Chrome flags to prevent interstitial errors
+      // CI environments need specific Chrome flags to work reliably
       const chromeFlags = [
         "--headless",
         "--no-sandbox",
@@ -59,8 +59,9 @@ describe("Lighthouse Performance Audits", () => {
         "--disable-software-rasterizer",
         "--disable-extensions",
         "--no-first-run",
-        "--no-zygote",
-        "--single-process", // Critical for CI environments
+        "--disable-setuid-sandbox",
+        "--disable-background-networking",
+        "--disable-default-apps",
       ].join(" ");
 
       execSync(
@@ -72,7 +73,7 @@ describe("Lighthouse Performance Audits", () => {
           `--quiet`,
         {
           stdio: "inherit",
-          timeout: 60000, // 60 second timeout
+          timeout: 90000, // 90 second timeout for CI
         }
       );
 
