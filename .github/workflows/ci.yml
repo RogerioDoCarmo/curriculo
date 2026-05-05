@@ -252,6 +252,37 @@ jobs:
           name: build-output
           path: out/
 
+      # Port Conflict Resolution Phase
+      # Expected: Port 3000 is available for server startup
+      # Failure: Port is already in use by previous CI jobs or concurrent processes
+      - name: Resolve port conflicts
+        run: |
+          echo "Checking for port conflicts on port 3000..."
+
+          # Check if port 3000 is in use
+          if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+            echo "⚠️  WARNING: Port 3000 is already in use"
+            echo "Attempting to kill existing processes on port 3000..."
+            
+            # Kill all processes using port 3000
+            lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+            
+            # Wait a moment for processes to terminate
+            sleep 2
+            
+            # Verify port is now available
+            if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+              echo "❌ ERROR: Failed to free port 3000"
+              echo "Port 3000 is still in use after cleanup attempt"
+              lsof -i :3000
+              exit 1
+            fi
+            
+            echo "✓ Port 3000 is now available"
+          else
+            echo "✓ Port 3000 is available (no conflicts detected)"
+          fi
+
       # Server Startup Phase
       # Expected: Server starts successfully and logs output to server.log
       # Failure: PID file not created or process crashes immediately
@@ -393,13 +424,62 @@ jobs:
           if [ -f server.pid ]; then
             PID=$(cat server.pid)
             if ps -p $PID > /dev/null 2>&1; then
+              echo "Attempting graceful shutdown with SIGTERM..."
               kill $PID || true
-              echo "✓ Server process (PID $PID) stopped"
+              
+              # Wait up to 5 seconds for graceful shutdown
+              for i in {1..5}; do
+                if ! ps -p $PID > /dev/null 2>&1; then
+                  echo "✓ Server process (PID $PID) stopped gracefully"
+                  break
+                fi
+                sleep 1
+              done
+              
+              # If process still exists, force kill with SIGKILL
+              if ps -p $PID > /dev/null 2>&1; then
+                echo "⚠️  Graceful shutdown failed, forcing termination with SIGKILL..."
+                kill -9 $PID || true
+                sleep 1
+                
+                if ps -p $PID > /dev/null 2>&1; then
+                  echo "❌ ERROR: Failed to terminate server process (PID $PID)"
+                else
+                  echo "✓ Server process (PID $PID) force terminated"
+                fi
+              fi
             else
               echo "Server process (PID $PID) was already stopped"
             fi
+            
+            # Clean up PID file
+            rm -f server.pid
+            echo "✓ Cleaned up PID file"
           else
             echo "⚠️  No PID file found, server may not have started"
+          fi
+
+          # Clean up log file
+          if [ -f server.log ]; then
+            rm -f server.log
+            echo "✓ Cleaned up log file"
+          fi
+
+          # Final verification: ensure no processes are left on port 3000
+          if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+            echo "⚠️  WARNING: Processes still running on port 3000 after cleanup"
+            echo "Killing remaining processes..."
+            lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+            sleep 1
+            
+            if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+              echo "❌ ERROR: Failed to clean up port 3000"
+              lsof -i :3000
+            else
+              echo "✓ Port 3000 cleaned up successfully"
+            fi
+          else
+            echo "✓ Port 3000 is clean (no processes running)"
           fi
 
       # Artifact Upload Phase
