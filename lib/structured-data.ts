@@ -15,21 +15,21 @@ export function generatePersonSchema(locale: string): WithContext<Person> {
   > = {
     "pt-BR": {
       name: "Rogério do Carmo",
-      jobTitle: "Desenvolvedor Full Stack",
+      jobTitle: "Desenvolvedor Mobile Frontend React",
       description:
-        "Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e Node.js. Experiência em desenvolvimento web moderno e arquitetura de software.",
+        "Desenvolvedor Mobile Frontend React especializado em React, React Native, TypeScript e Java. Experiência em desenvolvimento web moderno e arquitetura de software.",
     },
     en: {
       name: "Rogério do Carmo",
-      jobTitle: "Full Stack Developer",
+      jobTitle: "Mobile Frontend React Developer",
       description:
-        "Full Stack Developer specialized in React, Next.js, TypeScript and Node.js. Experience in modern web development and software architecture.",
+        "Mobile Frontend React Developer specialized in React, React Native, TypeScript and Java. Experience in modern web development and software architecture.",
     },
     es: {
       name: "Rogério do Carmo",
-      jobTitle: "Desarrollador Full Stack",
+      jobTitle: "Desarrollador Mobile Frontend React",
       description:
-        "Desarrollador Full Stack especializado en React, Next.js, TypeScript y Node.js. Experiencia en desarrollo web moderno y arquitectura de software.",
+        "Desarrollador Mobile Frontend React especializado en React, React Native, TypeScript y Java. Experiencia en desarrollo web moderno y arquitectura de software.",
     },
   };
 
@@ -51,11 +51,11 @@ export function generatePersonSchema(locale: string): WithContext<Person> {
       "JavaScript",
       "TypeScript",
       "React",
-      "Next.js",
-      "Node.js",
+      "React Native",
+      "Java",
       "Web Development",
       "Software Architecture",
-      "Full Stack Development",
+      "Mobile Frontend Development",
     ],
     alumniOf: {
       "@type": "EducationalOrganization",
