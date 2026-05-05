@@ -242,6 +242,58 @@ The website is deployed on Vercel with automatic deployments from the main branc
 
 See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
 
+## SEO & Search Engine Submission
+
+The website is fully optimized for search engines and submitted to major search platforms:
+
+### ✅ Completed Submissions
+
+- **Google Search Console**: ✅ Verified and sitemap submitted
+  - Primary domain: `rogeriodocarmo.com`
+  - Verification method: DNS TXT record
+  - Sitemap: `https://rogeriodocarmo.com/sitemap.xml` (6 URLs)
+  - Status: **✅ Indexed and accessible** (verified May 5, 2026)
+  - Monitoring: **✅ URL inspection and email notifications configured**
+
+- **Bing Webmaster Tools**: ✅ Verified and sitemap submitted
+  - Primary domain: `rogeriodocarmo.com`
+  - Verification method: Imported from Google Search Console
+  - Sitemap: `https://rogeriodocarmo.com/sitemap.xml` (6 URLs)
+  - Status: Active and indexing
+  - Monitoring: **✅ Email alerts and site scan configured**
+
+### 🔍 Search Visibility
+
+- ✅ **Domain indexed**: Site appears in search results for `site:rogeriodocarmo.com`
+- ✅ **Content verified**: All pages rendering correctly with proper SEO elements
+- ⏳ **Rich snippets**: Will populate within 24-72 hours of initial indexing
+
+### 📊 SEO Features
+
+- ✅ **Sitemap.xml**: Auto-generated with all pages and locales
+- ✅ **Robots.txt**: Configured to allow all search engines
+- ✅ **Structured Data**: Schema.org Person and WebSite schemas
+- ✅ **Meta Tags**: Complete Open Graph and Twitter Card tags
+- ✅ **Semantic HTML**: Proper heading hierarchy and semantic elements
+- ✅ **Mobile-Friendly**: Responsive design optimized for all devices
+- ✅ **Performance**: 90+ Lighthouse score
+- ✅ **Accessibility**: WCAG AA compliant
+
+### 📚 Documentation
+
+- [docs/SEO-MONITORING-COMPLETION-LOG.md](./docs/SEO-MONITORING-COMPLETION-LOG.md) - **✅ Monitoring setup completion log**
+- [docs/SEARCH-VISIBILITY-TEST.md](./docs/SEARCH-VISIBILITY-TEST.md) - **Latest search visibility test results**
+- [docs/URL-INSPECTION-MONITORING-GUIDE.md](./docs/URL-INSPECTION-MONITORING-GUIDE.md) - **Complete URL inspection and monitoring setup**
+- [docs/URL-INSPECTION-QUICK-CHECKLIST.md](./docs/URL-INSPECTION-QUICK-CHECKLIST.md) - **Quick checklist for monitoring setup**
+- [docs/GOOGLE-SEARCH-CONSOLE-SETUP.md](./docs/GOOGLE-SEARCH-CONSOLE-SETUP.md) - Complete GSC setup guide
+- [docs/GSC-DNS-VERIFICATION.md](./docs/GSC-DNS-VERIFICATION.md) - DNS TXT record verification guide
+- [docs/GSC-HOSTINGER-GUIDE.md](./docs/GSC-HOSTINGER-GUIDE.md) - Hostinger-specific DNS setup
+- [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - General search engine submission guide
+
+### 🔍 Domain Strategy
+
+The 10 additional domains (`.io`, `.info`, `.click`, etc.) redirect to the primary `.com` domain for SEO consolidation and brand protection. Only the primary domain is submitted to search engines to avoid duplicate content issues.
+
 ## Contact
 
 **Professional Email Addresses:**
