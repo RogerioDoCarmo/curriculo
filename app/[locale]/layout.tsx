@@ -113,6 +113,9 @@ export async function generateMetadata({ params }: GenerateMetadataProps): Promi
     authors: [{ name: "Rogério do Carmo", url: SITE_URL }],
     creator: "Rogério do Carmo",
     metadataBase: new URL(SITE_URL),
+    verification: {
+      google: "i3BjrtslxFpkcU7watTXAZFaoE-QTfXKcG1bASimjBw",
+    },
     alternates: {
       canonical: canonicalUrl,
       languages: {

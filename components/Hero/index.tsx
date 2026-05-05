@@ -38,7 +38,7 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
               src="/images/logos/logo_unesp.png"
               alt="UNESP Logo"
               width={125}
-              height={125}
+              height={0}
               style={{ width: "125px", height: "auto" }}
               className="rounded"
             />
@@ -132,7 +132,7 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
               src="/images/logos/logo_topaz.webp"
               alt="Company Logo"
               width={200}
-              height={200}
+              height={0}
               style={{ width: "200px", height: "auto" }}
               className="rounded"
             />
