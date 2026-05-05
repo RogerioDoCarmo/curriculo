@@ -96,10 +96,17 @@ export function generatePageMetadata(
   > = {
     "pt-BR": {
       home: {
-        title: "Rogério do Carmo - Desenvolvedor Full Stack",
+        title: "Rogério do Carmo - Desenvolvedor Mobile Frontend React",
         description:
-          "Portfolio profissional de Rogério do Carmo. Desenvolvedor Full Stack especializado em React, Next.js, TypeScript e Node.js.",
-        keywords: ["desenvolvedor", "full stack", "react", "nextjs", "typescript", "portfolio"],
+          "Portfolio profissional de Rogério do Carmo. Desenvolvedor Mobile Frontend React especializado em React, React Native, TypeScript e Java.",
+        keywords: [
+          "desenvolvedor",
+          "mobile frontend",
+          "react",
+          "react native",
+          "typescript",
+          "portfolio",
+        ],
       },
       projects: {
         title: "Projetos - Rogério do Carmo",
@@ -127,10 +134,17 @@ export function generatePageMetadata(
     },
     en: {
       home: {
-        title: "Rogério do Carmo - Full Stack Developer",
+        title: "Rogério do Carmo - Mobile Frontend React Developer",
         description:
-          "Professional portfolio of Rogério do Carmo. Full Stack Developer specialized in React, Next.js, TypeScript and Node.js.",
-        keywords: ["developer", "full stack", "react", "nextjs", "typescript", "portfolio"],
+          "Professional portfolio of Rogério do Carmo. Mobile Frontend React Developer specialized in React, React Native, TypeScript and Java.",
+        keywords: [
+          "developer",
+          "mobile frontend",
+          "react",
+          "react native",
+          "typescript",
+          "portfolio",
+        ],
       },
       projects: {
         title: "Projects - Rogério do Carmo",
@@ -158,10 +172,17 @@ export function generatePageMetadata(
     },
     es: {
       home: {
-        title: "Rogério do Carmo - Desarrollador Full Stack",
+        title: "Rogério do Carmo - Desarrollador Mobile Frontend React",
         description:
-          "Portafolio profesional de Rogério do Carmo. Desarrollador Full Stack especializado en React, Next.js, TypeScript y Node.js.",
-        keywords: ["desarrollador", "full stack", "react", "nextjs", "typescript", "portafolio"],
+          "Portafolio profesional de Rogério do Carmo. Desarrollador Mobile Frontend React especializado en React, React Native, TypeScript y Java.",
+        keywords: [
+          "desarrollador",
+          "mobile frontend",
+          "react",
+          "react native",
+          "typescript",
+          "portafolio",
+        ],
       },
       projects: {
         title: "Proyectos - Rogério do Carmo",

@@ -90,14 +90,13 @@ const TECH_THEME_MAP: Record<string, TagTheme> = {
   "next-intl": "web",
 
   // Backend
-  "Node.js": "backend",
+  Java: "backend",
+  "Spring Boot": "backend",
   Express: "backend",
   NestJS: "backend",
   Python: "backend",
   Django: "backend",
   FastAPI: "backend",
-  Java: "backend",
-  "Spring Boot": "backend",
   PostgreSQL: "backend",
   MongoDB: "backend",
   MySQL: "backend",
