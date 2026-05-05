@@ -50,12 +50,25 @@ describe("Lighthouse Performance Audits", () => {
 
     try {
       // Run Lighthouse CLI with performance-focused settings
+      // CI environments need additional Chrome flags to prevent interstitial errors
+      const chromeFlags = [
+        "--headless",
+        "--no-sandbox",
+        "--disable-gpu",
+        "--disable-dev-shm-usage", // Overcome limited resource problems in CI
+        "--disable-software-rasterizer",
+        "--disable-extensions",
+        "--no-first-run",
+        "--no-zygote",
+        "--single-process", // Critical for CI environments
+      ].join(" ");
+
       execSync(
         `npx lighthouse ${testUrl} ` +
           `--output=json ` +
           `--output-path=${lighthouseReportPath} ` +
           `--only-categories=performance ` +
-          `--chrome-flags="--headless --no-sandbox --disable-gpu" ` +
+          `--chrome-flags="${chromeFlags}" ` +
           `--quiet`,
         {
           stdio: "inherit",
