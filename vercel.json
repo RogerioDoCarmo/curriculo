@@ -1,13 +1,4 @@
 {
   "installCommand": "npm ci --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "routes": [
-    {
-      "src": "/google190cb190a03d3832.html",
-      "dest": "/google190cb190a03d3832.html",
-      "headers": {
-        "Content-Type": "text/html; charset=utf-8"
-      }
-    }
-  ]
+  "buildCommand": "npm run build"
 }
