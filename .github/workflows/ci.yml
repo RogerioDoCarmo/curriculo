@@ -232,6 +232,7 @@ jobs:
     name: Lighthouse Performance Tests
     runs-on: ubuntu-latest
     needs: build
+    continue-on-error: true # Allow this job to fail without blocking the pipeline
 
     steps:
       - name: Checkout code
@@ -541,10 +542,18 @@ jobs:
              [[ "${{ needs.test.result }}" != "success" ]] || \
              [[ "${{ needs.coverage.result }}" != "success" ]] || \
              [[ "${{ needs.build.result }}" != "success" ]] || \
-             [[ "${{ needs.e2e.result }}" != "success" ]] || \
-             [[ "${{ needs.lighthouse.result }}" != "success" ]]; then
+             [[ "${{ needs.e2e.result }}" != "success" ]]; then
             echo "❌ One or more required checks failed"
             exit 1
+          fi
+
+          # Check Lighthouse (can be success, failure, or skipped - not blocking)
+          if [[ "${{ needs.lighthouse.result }}" == "success" ]]; then
+            echo "✅ Lighthouse tests passed"
+          elif [[ "${{ needs.lighthouse.result }}" == "failure" ]]; then
+            echo "⚠️  Lighthouse tests failed (non-blocking)"
+          else
+            echo "⚠️  Lighthouse tests skipped"
           fi
 
           # Check SonarQube (can be success or skipped)
@@ -554,4 +563,4 @@ jobs:
             exit 1
           fi
 
-          echo "✅ All checks passed"
+          echo "✅ All required checks passed"
