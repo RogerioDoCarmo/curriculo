@@ -1,0 +1,149 @@
+name: Dependabot Auto Issue
+
+# This workflow automatically creates GitHub issues for Dependabot security alerts
+# It runs when a new Dependabot alert is created or reopened
+
+on:
+  repository_vulnerability_alert:
+    types: [ create ]
+
+permissions:
+  issues: write
+  security-events: read
+  contents: read
+
+jobs:
+  create-issue:
+    name: Create Issue for Security Alert
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Get Dependabot alerts
+        id: get-alerts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all open Dependabot alerts
+            const { data: alerts } = await github.rest.dependabot.listAlertsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+
+            console.log(`Found ${alerts.length} open Dependabot alerts`);
+
+            // Get existing issues to avoid duplicates
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'security,dependabot'
+            });
+
+            const existingAlertNumbers = issues
+              .map(issue => {
+                const match = issue.body?.match(/Alert #(\d+)/);
+                return match ? parseInt(match[1]) : null;
+              })
+              .filter(num => num !== null);
+
+            console.log(`Found ${existingAlertNumbers.length} existing issues for alerts`);
+
+            // Create issues for new alerts
+            for (const alert of alerts) {
+              if (existingAlertNumbers.includes(alert.number)) {
+                console.log(`Issue already exists for alert #${alert.number}, skipping`);
+                continue;
+              }
+              
+              const severity = alert.security_advisory.severity.toUpperCase();
+              const package_name = alert.security_vulnerability.package.name;
+              const vulnerable_version = alert.security_vulnerability.vulnerable_version_range;
+              const patched_version = alert.security_vulnerability.first_patched_version?.identifier || 'Not available';
+              const cve = alert.security_advisory.cve_id || 'N/A';
+              const cvss_score = alert.security_advisory.cvss?.score || 'N/A';
+              const summary = alert.security_advisory.summary;
+              const description = alert.security_advisory.description;
+              const references = alert.security_advisory.references.map(ref => `- ${ref.url}`).join('\n');
+              
+              // Determine priority label based on severity
+              let priorityLabel = 'priority: medium';
+              if (severity === 'CRITICAL' || severity === 'HIGH') {
+                priorityLabel = 'priority: high';
+              } else if (severity === 'LOW') {
+                priorityLabel = 'priority: low';
+              }
+              
+              // Create issue title
+              const title = `🔒 [${severity}] Security vulnerability in ${package_name}`;
+              
+              // Create issue body
+              const body = `## 🚨 Dependabot Security Alert #${alert.number}
+
+            **Severity**: ${severity} (CVSS: ${cvss_score})
+            **Package**: \`${package_name}\`
+            **Vulnerable Version**: ${vulnerable_version}
+            **Patched Version**: ${patched_version}
+            **CVE**: ${cve}
+
+            ### Summary
+            ${summary}
+
+            ### Description
+            ${description}
+
+            ### References
+            ${references}
+
+            ### Recommended Action
+            ${patched_version !== 'Not available' 
+              ? `Update \`${package_name}\` to version \`${patched_version}\` or later.`
+              : `Review the security advisory and apply the recommended mitigation.`}
+
+            ### Steps to Fix
+            1. Review the security advisory details above
+            2. Update the dependency in \`package.json\`:
+               \`\`\`bash
+               npm install ${package_name}@${patched_version !== 'Not available' ? patched_version : 'latest'} --save${alert.dependency.scope === 'development' ? '-dev' : ''}
+               \`\`\`
+            3. Run tests to ensure compatibility:
+               \`\`\`bash
+               npm test
+               npm run test:e2e
+               \`\`\`
+            4. Commit and push changes:
+               \`\`\`bash
+               git add package.json package-lock.json
+               git commit -m "fix(deps): update ${package_name} to ${patched_version} (security fix)"
+               git push
+               \`\`\`
+            5. Verify the alert is resolved in GitHub Security tab
+
+            ### Related Links
+            - [Dependabot Alert #${alert.number}](${alert.html_url})
+            - [GitHub Security Advisory](https://github.com/advisories/${alert.security_advisory.ghsa_id})
+            ${cve !== 'N/A' ? `- [CVE Details](https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cve})` : ''}
+
+            ---
+
+            **Alert #${alert.number}** | Auto-generated by Dependabot | ${new Date().toISOString()}`;
+              
+              // Create the issue
+              const { data: issue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'dependabot', priorityLabel, 'automated']
+              });
+              
+              console.log(`Created issue #${issue.number} for alert #${alert.number}`);
+            }
+
+      - name: Summary
+        run: |
+          echo "✅ Dependabot security alert issues created successfully"
+          echo "Check the Issues tab for new security alerts"
