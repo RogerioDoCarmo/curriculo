@@ -50,6 +50,26 @@ Log of code quality improvements:
 - Verification results
 - Impact summary
 
+### [nextjs-best-practices.md](./nextjs-best-practices.md)
+
+Next.js specific best practices and common pitfalls:
+
+- Image component usage (LCP optimization, aspect ratios)
+- Hydration issues and solutions
+- Performance optimization
+- SSR vs client-side rendering
+
+### [coding-standards.md](./coding-standards.md)
+
+Project coding standards and patterns:
+
+- Component templates (client and server)
+- Image handling patterns
+- Theme and dark mode patterns
+- TypeScript conventions
+- Testing requirements
+- Accessibility standards
+
 ## Configuration Files
 
 ### [.eslintrc.json](../../.eslintrc.json)
