@@ -106,16 +106,24 @@ This will create issues for all existing open Dependabot alerts.
    - Issues (to receive security issue notifications)
    - Pull requests (to receive dependency update notifications)
 
-## Issue Labels
+## Issue and PR Labels
 
-Issues created by Dependabot workflows use these labels:
+Issues and PRs created by Dependabot use these labels:
 
-- **`security`**: Security-related issue
+- **`security`**: Security-related issue or PR
 - **`dependabot`**: Created by Dependabot automation
+- **`dependencies`**: Dependency update PR
 - **`automated`**: Automatically generated
 - **`priority: high`**: Critical or high severity vulnerabilities
 - **`priority: medium`**: Medium severity vulnerabilities
 - **`priority: low`**: Low severity vulnerabilities
+
+**Note**: The `dependencies` and `automated` labels must exist in your repository for Dependabot PRs to be labeled correctly. If you see a warning about missing labels, create them using:
+
+```bash
+gh label create "dependencies" --description "Dependency updates" --color "0366d6"
+gh label create "automated" --description "Automatically generated" --color "ededed"
+```
 
 ## Fixing Security Vulnerabilities
 
