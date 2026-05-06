@@ -37,10 +37,10 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
             <Image
               src="/images/logos/logo_unesp.png"
               alt="UNESP Logo"
-              width={125}
-              height={0}
-              style={{ width: "125px", height: "auto" }}
-              className="rounded"
+              width={1280}
+              height={427}
+              className="rounded w-[125px] h-auto"
+              priority
             />
             <div className="text-left">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -131,10 +131,10 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
             <Image
               src="/images/logos/logo_topaz.webp"
               alt="Company Logo"
-              width={200}
-              height={0}
-              style={{ width: "200px", height: "auto" }}
-              className="rounded"
+              width={1280}
+              height={291}
+              className="rounded w-[200px] h-auto"
+              priority
             />
             <div className="text-left">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
