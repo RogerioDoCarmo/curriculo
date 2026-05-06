@@ -13,8 +13,8 @@ This implementation plan breaks down the personal resume website into discrete, 
 | Checkpoint 3 | `v0.3.0-checkpoint-3` | Tasks 5-9   | ✅ Complete | Core UI components, layout, forms                  |
 | Checkpoint 4 | Task 10               | Task 10     | ✅ Complete | Core functionality validation (no tag created)     |
 | Checkpoint 5 | `v0.5.0-checkpoint-5` | Task 11     | ✅ Complete | Firebase integration                               |
-| Checkpoint 6 | TBD                   | Tasks 12-17 | ✅ Complete | SEO, accessibility, print, exit intent, responsive |
-| Checkpoint 7 | TBD                   | Tasks 18-26 | ⏳ Pending  | Tech stack, testing, CI/CD, deployment             |
+| Checkpoint 6 | `v1.2.0`              | Tasks 12-17 | ✅ Complete | SEO, accessibility, print, exit intent, responsive |
+| Checkpoint 7 | `v1.2.1`              | Tasks 18-26 | ✅ Complete | Tech stack, testing, CI/CD, deployment, SEO        |
 
 ## TDD Workflow Requirements
 
@@ -816,7 +816,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Explain non-obvious implementation decisions
     - _Requirements: 12.2_
 
-- [ ] 24. Content population and final polish
+- [x] 24. Content population and final polish
   - [x] 24.1 Add real content to markdown files
     - Populate professional experience entries
     - Populate academic experience entries
@@ -845,7 +845,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test error reporting
     - _Requirements: 10.5_
 
-- [ ] 25. Checkpoint 7 - Final checkpoint and deployment
+- [x] 25. Checkpoint 7 - Final checkpoint and deployment
   - Ensure all tests pass with 90%+ coverage
   - Verify SonarQube quality gate passes
   - Test all features on staging deployment
@@ -853,8 +853,9 @@ This implementation plan breaks down the personal resume website into discrete, 
   - Test on multiple browsers and devices
   - Run final Lighthouse audits
   - Ask the user if questions arise before production deployment
+  - **Status**: ✅ Complete - All core deployment tasks finished, site live in production
 
-- [ ] 26. Production deployment
+- [x] 26. Production deployment
   - [x] 26.1 Deploy to production via Vercel
     - Merge to main branch to trigger deployment
     - Verify deployment succeeds
@@ -1182,7 +1183,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document the resolution in commit message
     - _Close out the known issue_
 
-- [ ] 32. Submit sitemap and robots.txt to search engines (SEO optimization)
+- [x] 32. Submit sitemap and robots.txt to search engines (SEO optimization)
   - [x] 32.1 Verify sitemap.xml and robots.txt are accessible
     - Visit `https://rogeriodocarmo.com/sitemap.xml` and verify it loads correctly
     - Visit `https://rogeriodocarmo.com/robots.txt` and verify it loads correctly
