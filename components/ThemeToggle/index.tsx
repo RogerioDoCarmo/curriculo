@@ -25,6 +25,7 @@
  */
 
 import { useTheme } from "@/hooks/useTheme";
+import { useState, useEffect } from "react";
 
 /**
  * ThemeToggle component props
@@ -36,11 +37,45 @@ interface ThemeToggleProps {
 
 export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Only render theme-dependent content after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isDark = theme === "dark";
   const ariaLabel = isDark ? "Switch to light mode" : "Switch to dark mode";
   const icon = isDark ? "☀️" : "🌙";
   const iconLabel = isDark ? "Sun" : "Moon";
+
+  // Render a placeholder during SSR to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        aria-label="Toggle theme"
+        title="Toggle theme"
+        className={`
+          inline-flex items-center justify-center
+          w-9 h-9 rounded-md
+          border border-border
+          bg-transparent
+          text-foreground
+          transition-colors duration-200
+          hover:bg-accent hover:text-accent-foreground
+          focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+          print:hidden
+          ${className}
+        `}
+        disabled
+      >
+        <span role="img" aria-label="Theme" className="text-base leading-none">
+          ☀️
+        </span>
+      </button>
+    );
+  }
 
   return (
     <button
