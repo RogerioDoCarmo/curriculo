@@ -1,12 +1,20 @@
 # Dependabot Alerts and PRs Status
 
-**Last Updated**: May 6, 2026
+**Last Updated**: May 7, 2026
 
 ## Summary
 
-- **Total Open Alerts**: 10
+- **Total Open Alerts**: 9 (1 resolved, 8 pending auto-closure)
 - **Total Open PRs**: 8
 - **Security Issues Created**: 5
+
+## Recent Updates
+
+### May 7, 2026
+
+- ✅ **Alert #20 (@tootallnate/once) - RESOLVED** via npm override in PR #96
+- ⚠️ **Alert #22 (postcss) - PARTIALLY MITIGATED** - Updated direct dependency to 8.5.14, but Next.js 16.2.5 still bundles vulnerable version 8.4.31. Waiting for Next.js update.
+- 🔄 **8 undici alerts** - Waiting for Dependabot auto-closure (24-48 hours after Firebase PR #82 merged to main on May 6, 2026)
 
 ## Alert to PR Mapping
 
@@ -42,11 +50,11 @@
 
 4. **Alert #22** - postcss vulnerability
    - **Issue**: #85
-   - **PR**: None (current version 8.5.14 is already above patched version 8.5.10)
+   - **PR**: #96 (updated direct dependency + Next.js version)
    - **Package**: postcss
-   - **Current Version**: 8.5.14
+   - **Current Version**: 8.5.14 (direct), 8.4.31 (Next.js bundled)
    - **Patched Version**: >= 8.5.10
-   - **Status**: ⚠️ Needs investigation - version appears to be patched but alert is still open
+   - **Status**: ⚠️ **PARTIALLY MITIGATED** - Direct dependency patched (8.5.14), but Next.js 16.2.5 bundles vulnerable version (8.4.31). Cannot override without breaking compatibility. Waiting for Next.js to update their bundled postcss. Risk is LOW as vulnerability affects build-time CSS processing in controlled environment.
 
 5. **Alert #10** - undici vulnerability
    - **Issue**: Not created yet
@@ -84,11 +92,11 @@
 
 9. **Alert #20** - @tootallnate/once vulnerability
    - **Issue**: #86
-   - **PR**: None (transitive dependency)
+   - **PR**: #96 (npm override to force patched version)
    - **Package**: @tootallnate/once
-   - **Current Version**: Unknown (transitive)
+   - **Current Version**: 3.0.1 (patched via override)
    - **Patched Version**: >= 3.0.1
-   - **Status**: ⚠️ Needs investigation - transitive dependency
+   - **Status**: ✅ **RESOLVED** - npm override forces version 3.0.1
 
 10. **Alert #2** - undici vulnerability
     - **Issue**: Not created yet
@@ -100,13 +108,25 @@
 
 ## Open PRs (8 total)
 
-### Security-Related PRs (1)
+### Security-Related PRs (2)
 
-1. **PR #82** - `chore(deps): bump firebase from 10.14.1 to 12.12.1`
+1. **PR #96** - `fix: resolve @tootallnate/once vulnerability and update postcss`
+   - **Labels**: dependencies, security
+   - **Fixes**: Issue #86 (Alert #20 - @tootallnate/once LOW severity)
+   - **Partially Fixes**: Issue #85 (Alert #22 - postcss MEDIUM severity)
+   - **Priority**: 🟡 MEDIUM - Fully resolves 1 vulnerability, partially mitigates another
+   - **Changes**:
+     - Added npm override for @tootallnate/once (2.0.1 → 3.0.1)
+     - Updated Next.js (16.2.4 → 16.2.5)
+     - Updated postcss direct dependency (8.5.10 → 8.5.14)
+   - **Note**: postcss vulnerability in Next.js bundled version cannot be fully resolved until Next.js updates their internal dependency
+
+2. **PR #82** - `chore(deps): bump firebase from 10.14.1 to 12.12.1`
    - **Labels**: dependencies, automated, security
    - **Fixes**: Issues #87, #88, #89 (3 HIGH severity undici vulnerabilities)
    - **Also Fixes**: Alerts #10, #8, #4, #1, #2 (5 additional undici vulnerabilities)
    - **Priority**: 🔴 HIGH - Fixes 8 security vulnerabilities (3 HIGH, 4 MEDIUM, 1 LOW)
+   - **Status**: ✅ **MERGED** to main on May 6, 2026. Waiting for Dependabot auto-closure (24-48 hours)
 
 ### Dependency Update PRs (7)
 
@@ -152,62 +172,63 @@
 1. ✅ **Create missing "dependencies" label** - DONE
 2. ✅ **Add labels to all Dependabot PRs** - DONE
 3. ✅ **Link PR #82 to security issues #87, #88, #89** - DONE
-4. ⏳ **Review and merge PR #82** (Firebase update) - Fixes 8 security vulnerabilities
-   - Run full test suite
-   - Test Firebase Analytics
-   - Test Firebase Cloud Messaging
-   - Verify build succeeds
+4. ✅ **Review and merge PR #82** (Firebase update) - MERGED to main on May 6, 2026
+5. ✅ **Create PR #96** to fix @tootallnate/once and update postcss - DONE
+6. ⏳ **Review and merge PR #96** - Waiting for review
+   - Fully resolves Alert #20 (@tootallnate/once)
+   - Partially mitigates Alert #22 (postcss)
+   - Build verified successful
 
 ### Medium Priority Actions
 
-5. ⏳ **Create issues for remaining 5 alerts** (Alerts #10, #8, #4, #1, #2)
-   - These will be automatically closed when PR #82 is merged
-   - Or skip creating issues since PR #82 already addresses them
+7. ⏳ **Wait for Dependabot auto-closure** (24-48 hours after PR #82 merge)
+   - 8 undici alerts should auto-close by May 8, 2026
 
-6. ⏳ **Investigate Alert #22** (postcss)
-   - Current version (8.5.14) appears to be above patched version (8.5.10)
-   - May be a false positive or related to transitive dependency
-   - Check if alert can be dismissed
+8. ⏳ **Monitor Next.js releases** for postcss update
+   - Check https://github.com/vercel/next.js/releases
+   - Update Next.js when version with patched postcss (>= 8.5.10) is available
+   - Or consider dismissing Alert #22 with justification (see DEPENDABOT-VULNERABILITIES-FIX.md)
 
-7. ⏳ **Investigate Alert #20** (@tootallnate/once)
-   - Transitive dependency - need to identify which package depends on it
-   - May require updating parent package
+9. ⏳ **Create issues for remaining 5 alerts** (Alerts #10, #8, #4, #1, #2)
+   - These will be automatically closed when Dependabot rescans
+   - Or skip creating issues since they're being auto-closed
 
 ### Low Priority Actions
 
-8. ⏳ **Review and test major version updates**
-   - PR #83 (React 18 → 19) - May have breaking changes
-   - PR #81 (Jest 29 → 30) - May have breaking changes
-   - PR #80 (Tailwind 3 → 4) - Likely has breaking changes
+10. ⏳ **Review and test major version updates**
+
+- PR #83 (React 18 → 19) - May have breaking changes
+- PR #81 (Jest 29 → 30) - May have breaking changes
+- PR #80 (Tailwind 3 → 4) - Likely has breaking changes
 
 9. ⏳ **Merge GitHub Actions updates** (PRs #79, #78, #77)
    - Low risk, can be merged after CI passes
 
 ## Notes
 
-- **Why 8 PRs but 10 alerts?**
+- **Why 9 PRs but 10 alerts?**
   - 8 of the 10 alerts are for `undici`, which is a transitive dependency from Firebase
-  - PR #82 (Firebase update) will fix all 8 undici vulnerabilities at once
-  - The remaining 2 alerts (postcss and @tootallnate/once) are for different packages
-  - postcss appears to already be patched (needs investigation)
-  - @tootallnate/once is a transitive dependency (needs investigation)
+  - PR #82 (Firebase update) was merged and will fix all 8 undici vulnerabilities once Dependabot rescans (24-48 hours)
+  - PR #96 addresses the remaining 2 alerts (postcss and @tootallnate/once)
+  - @tootallnate/once is fully resolved via npm override
+  - postcss is partially mitigated (direct dependency patched, but Next.js bundles older version)
 
 - **Why only 5 issues created?**
   - The script `scripts/create-dependabot-issues.sh` was run once and created 5 issues
   - It created issues for the 3 HIGH severity alerts and 2 others
   - The remaining 5 alerts (all related to undici) don't have issues yet
-  - Since PR #82 addresses all undici vulnerabilities, creating additional issues may not be necessary
+  - Since PR #82 was merged, these alerts will auto-close without needing issues
 
 ## Recommendations
 
-1. **Prioritize PR #82** - This single PR fixes 8 out of 10 security vulnerabilities
-2. **Test thoroughly** - Firebase is a critical dependency, ensure all functionality works after update
-3. **Investigate false positives** - Alert #22 (postcss) may be incorrectly flagged
-4. **Consider batch merging** - After PR #82 is merged and tested, consider merging the GitHub Actions PRs together
-5. **Defer major updates** - React 19, Jest 30, and Tailwind 4 are major version updates that may require significant testing and code changes
+1. ✅ **PR #82 merged** - 8 undici vulnerabilities will auto-close within 24-48 hours
+2. ⏳ **Merge PR #96** - Fully resolves @tootallnate/once, partially mitigates postcss
+3. ⏳ **Monitor Next.js releases** - Update when postcss is patched in Next.js
+4. ⏳ **Consider dismissing Alert #22** - postcss risk is LOW (see DEPENDABOT-VULNERABILITIES-FIX.md for justification)
+5. ⏳ **Defer major updates** - React 19, Jest 30, and Tailwind 4 are major version updates that may require significant testing and code changes
 
 ---
 
-**Generated**: May 6, 2026
+**Generated**: May 7, 2026
 **Repository**: RogerioDoCarmo/curriculo
-**Branch**: develop
+**Branch**: fix/dependabot-postcss-once-vulnerabilities
