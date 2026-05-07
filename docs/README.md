@@ -7,6 +7,7 @@ This directory contains all project documentation organized by category.
 ```
 docs/
 ├── README.md                          # This file
+├── DOCUMENTATION-GUIDELINES.md        # Guidelines for creating new docs
 ├── releases/                          # Release notes and summaries
 ├── development/                       # Development guides and workflows
 ├── deployment/                        # Deployment and infrastructure docs
@@ -122,6 +123,10 @@ Performance optimization guides and summaries.
 
 ## 🔍 Quick Links
 
+### Documentation Guidelines
+
+- **[Documentation Guidelines](DOCUMENTATION-GUIDELINES.md)** - **READ THIS FIRST** when creating new documentation
+
 ### Latest Updates
 
 - [Next.js 16.2.6 Security Update](NEXTJS-16.2.6-SECURITY-UPDATE.md) - 13 critical security fixes
@@ -163,10 +168,11 @@ Performance optimization guides and summaries.
 
 This documentation is actively maintained. When adding new documentation:
 
-1. Place it in the appropriate category folder
-2. Update this README.md with a link
-3. Follow the naming conventions
-4. Include a clear description
+1. **READ** [Documentation Guidelines](DOCUMENTATION-GUIDELINES.md) first
+2. Place it in the appropriate category folder (NEVER in project root)
+3. Update this README.md with a link
+4. Follow the naming conventions
+5. Include a clear description
 
 ---
 
