@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { trackHeroCTAClick, trackExternalLinkClick, trackFooterLinkClick } from "@/lib/analytics";
 
 interface HeroProps {
   readonly name: string;
@@ -69,6 +70,12 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
                 href="http://hdl.handle.net/11449/243430"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackExternalLinkClick({
+                    url: "http://hdl.handle.net/11449/243430",
+                    context: "hero_dissertation_link",
+                  })
+                }
                 className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 hover:underline flex items-center gap-1"
               >
                 <svg
@@ -98,6 +105,16 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
                 href="/academic/masters_degree_dissertation_rogerio_do_carmo.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackFooterLinkClick({
+                    link_text:
+                      locale === "pt-BR"
+                        ? "Baixar Dissertação (PDF)"
+                        : "Download Dissertation (PDF)",
+                    link_url: "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf",
+                    link_type: "dissertation_download",
+                  })
+                }
                 aria-label={
                   locale === "pt-BR"
                     ? "Baixar dissertação de mestrado em PDF"
@@ -149,12 +166,24 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center md:justify-start md:items-start">
             <a
               href="#projects"
+              onClick={() =>
+                trackHeroCTAClick({
+                  cta_text: ctaText,
+                  cta_action: "view_projects",
+                })
+              }
               className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
             >
               {ctaText}
             </a>
             <a
               href={`mailto:${email}`}
+              onClick={() =>
+                trackHeroCTAClick({
+                  cta_text: contactText,
+                  cta_action: "contact_email",
+                })
+              }
               className="inline-flex items-center justify-center gap-2 rounded-md border-2 border-primary-600 px-6 py-3 text-lg font-medium text-primary-600 transition-colors duration-200 hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:border-primary-400 dark:text-primary-400 dark:hover:bg-primary-900/20"
             >
               <svg

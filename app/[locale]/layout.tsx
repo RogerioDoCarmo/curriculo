@@ -11,6 +11,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ClientNotificationWrapper from "@/components/ClientNotificationWrapper";
+import CookieConsent from "@/components/CookieConsent";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -217,12 +219,15 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <ErrorBoundary component="RootLayout">
-              <Header locale={locale} />
-              <main className="min-h-screen">{children}</main>
-              <Footer locale={locale} />
-              <ClientNotificationWrapper />
-            </ErrorBoundary>
+            <AnalyticsProvider>
+              <ErrorBoundary component="RootLayout">
+                <Header locale={locale} />
+                <main className="min-h-screen">{children}</main>
+                <Footer locale={locale} />
+                <ClientNotificationWrapper />
+                <CookieConsent />
+              </ErrorBoundary>
+            </AnalyticsProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

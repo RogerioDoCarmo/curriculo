@@ -16,6 +16,7 @@ import Link from "next/link";
 import LanguageSelector from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
+import { trackNavLinkClick, trackExternalLinkClick } from "@/lib/analytics";
 import type { SupportedLocale } from "@/types/index";
 
 interface HeaderProps {
@@ -57,7 +58,10 @@ export default function Header({ locale }: HeaderProps) {
     setSidebarOpen(false);
   }
 
-  function handleNavClick(section: string) {
+  function handleNavClick(section: string, label: string) {
+    // Track navigation
+    trackNavLinkClick({ link_text: label, link_url: `#${section}` });
+
     // If we're NOT on the home page, navigate to home page with hash
     // This handles any future pages (blog, about, portfolio, etc.) automatically
     // without needing to update this logic for each new page
@@ -123,6 +127,7 @@ export default function Header({ locale }: HeaderProps) {
                 <Link
                   key={key}
                   href={href}
+                  onClick={() => trackNavLinkClick({ link_text: label, link_url: href })}
                   className={`
                       text-sm font-medium transition-colors duration-200
                       hover:text-primary-600
@@ -138,7 +143,7 @@ export default function Header({ locale }: HeaderProps) {
                   href={href}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavClick(key);
+                    handleNavClick(key, label);
                   }}
                   className={`
                       text-sm font-medium transition-colors duration-200
@@ -160,6 +165,12 @@ export default function Header({ locale }: HeaderProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Linktree profile"
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: "https://linktr.ee/rogeriodocarmo",
+                  context: "header_linktree",
+                })
+              }
               className="
                 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
@@ -239,7 +250,10 @@ export default function Header({ locale }: HeaderProps) {
                   <Link
                     key={key}
                     href={href}
-                    onClick={closeSidebar}
+                    onClick={() => {
+                      trackNavLinkClick({ link_text: label, link_url: href });
+                      closeSidebar();
+                    }}
                     className={`
                       px-3 py-2 rounded-md text-sm font-medium
                       transition-colors duration-200
@@ -256,7 +270,7 @@ export default function Header({ locale }: HeaderProps) {
                     href={href}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavClick(key);
+                      handleNavClick(key, label);
                     }}
                     className={`
                       px-3 py-2 rounded-md text-sm font-medium

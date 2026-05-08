@@ -12,6 +12,7 @@ import type { CareerPath, SectionId, SupportedLocale, Theme } from "@/types/inde
 // ─── Event Names ──────────────────────────────────────────────────────────────
 
 export const ANALYTICS_EVENTS = {
+  // Existing events
   PAGE_VIEW: "page_view",
   CONTACT_FORM_SUBMISSION: "contact_form_submission",
   PROJECT_CLICK: "project_click",
@@ -22,6 +23,57 @@ export const ANALYTICS_EVENTS = {
   BACK_TO_TOP_CLICK: "back_to_top_click",
   EXIT_INTENT_SHOWN: "exit_intent_shown",
   EXIT_INTENT_ACTION: "exit_intent_action",
+
+  // Navigation events
+  HEADER_LOGO_CLICK: "header_logo_click",
+  NAV_LINK_CLICK: "nav_link_click",
+  FOOTER_LINK_CLICK: "footer_link_click",
+  SOCIAL_LINK_CLICK: "social_link_click",
+  EXTERNAL_LINK_CLICK: "external_link_click",
+
+  // Hero events
+  HERO_CTA_CLICK: "hero_cta_click",
+  HERO_SCROLL_INDICATOR_CLICK: "hero_scroll_indicator_click",
+
+  // Form events
+  FORM_FIELD_FOCUS: "form_field_focus",
+  FORM_FIELD_BLUR: "form_field_blur",
+  FORM_VALIDATION_ERROR: "form_validation_error",
+  FORM_SUBMISSION_START: "form_submission_start",
+  FORM_SUBMISSION_SUCCESS: "form_submission_success",
+  FORM_SUBMISSION_ERROR: "form_submission_error",
+
+  // Email subscription events
+  EMAIL_SUBSCRIBE_FOCUS: "email_subscribe_focus",
+  EMAIL_SUBSCRIBE_SUBMIT: "email_subscribe_submit",
+  EMAIL_SUBSCRIBE_SUCCESS: "email_subscribe_success",
+  EMAIL_SUBSCRIBE_ERROR: "email_subscribe_error",
+
+  // Content interaction events
+  TECH_STACK_ITEM_CLICK: "tech_stack_item_click",
+  SKILL_CATEGORY_VIEW: "skill_category_view",
+  EXPERIENCE_CARD_EXPAND: "experience_card_expand",
+  EXPERIENCE_CARD_COLLAPSE: "experience_card_collapse",
+
+  // Notification events
+  NOTIFICATION_PERMISSION_REQUESTED: "notification_permission_requested",
+  NOTIFICATION_PERMISSION_GRANTED: "notification_permission_granted",
+  NOTIFICATION_PERMISSION_DENIED: "notification_permission_denied",
+  NOTIFICATION_PROMPT_DISMISSED: "notification_prompt_dismissed",
+
+  // Scroll events
+  SCROLL_DEPTH_25: "scroll_depth_25",
+  SCROLL_DEPTH_50: "scroll_depth_50",
+  SCROLL_DEPTH_75: "scroll_depth_75",
+  SCROLL_DEPTH_100: "scroll_depth_100",
+
+  // Error events
+  ERROR_BOUNDARY_TRIGGERED: "error_boundary_triggered",
+  API_ERROR: "api_error",
+
+  // Engagement events
+  TIME_ON_PAGE: "time_on_page",
+  SESSION_DURATION: "session_duration",
 } as const;
 
 // ─── Core Tracking Helper ─────────────────────────────────────────────────────
@@ -122,4 +174,272 @@ export function trackExitIntentAction(params: {
   action: "download_resume" | "connect_linkedin" | "star_github" | "dismiss";
 }): void {
   trackEvent(ANALYTICS_EVENTS.EXIT_INTENT_ACTION, params);
+}
+
+// ─── Navigation Tracking ──────────────────────────────────────────────────────
+
+/**
+ * Tracks a header logo click.
+ */
+export function trackHeaderLogoClick(): void {
+  trackEvent(ANALYTICS_EVENTS.HEADER_LOGO_CLICK);
+}
+
+/**
+ * Tracks a navigation link click.
+ */
+export function trackNavLinkClick(params: { link_text: string; link_url: string }): void {
+  trackEvent(ANALYTICS_EVENTS.NAV_LINK_CLICK, params);
+}
+
+/**
+ * Tracks a footer link click.
+ */
+export function trackFooterLinkClick(params: {
+  link_text: string;
+  link_url: string;
+  link_type: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FOOTER_LINK_CLICK, params);
+}
+
+/**
+ * Tracks a social media link click.
+ */
+export function trackSocialLinkClick(params: { platform: string; url: string }): void {
+  trackEvent(ANALYTICS_EVENTS.SOCIAL_LINK_CLICK, params);
+}
+
+/**
+ * Tracks an external link click.
+ */
+export function trackExternalLinkClick(params: { url: string; context: string }): void {
+  trackEvent(ANALYTICS_EVENTS.EXTERNAL_LINK_CLICK, params);
+}
+
+// ─── Hero Tracking ────────────────────────────────────────────────────────────
+
+/**
+ * Tracks a hero CTA button click.
+ */
+export function trackHeroCTAClick(params: { cta_text: string; cta_action: string }): void {
+  trackEvent(ANALYTICS_EVENTS.HERO_CTA_CLICK, params);
+}
+
+/**
+ * Tracks a hero scroll indicator click.
+ */
+export function trackHeroScrollIndicatorClick(): void {
+  trackEvent(ANALYTICS_EVENTS.HERO_SCROLL_INDICATOR_CLICK);
+}
+
+// ─── Form Tracking ────────────────────────────────────────────────────────────
+
+/**
+ * Tracks when a form field receives focus.
+ */
+export function trackFormFieldFocus(params: { form_name: string; field_name: string }): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_FIELD_FOCUS, params);
+}
+
+/**
+ * Tracks when a form field loses focus.
+ */
+export function trackFormFieldBlur(params: {
+  form_name: string;
+  field_name: string;
+  has_value: boolean;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_FIELD_BLUR, params);
+}
+
+/**
+ * Tracks a form validation error.
+ */
+export function trackFormValidationError(params: {
+  form_name: string;
+  field_name: string;
+  error_type: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_VALIDATION_ERROR, params);
+}
+
+/**
+ * Tracks when a form submission starts.
+ */
+export function trackFormSubmissionStart(params: { form_name: string }): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_SUBMISSION_START, params);
+}
+
+/**
+ * Tracks a successful form submission.
+ */
+export function trackFormSubmissionSuccess(params: {
+  form_name: string;
+  submission_time_ms: number;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_SUBMISSION_SUCCESS, params);
+}
+
+/**
+ * Tracks a failed form submission.
+ */
+export function trackFormSubmissionError(params: {
+  form_name: string;
+  error_message: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FORM_SUBMISSION_ERROR, params);
+}
+
+// ─── Email Subscription Tracking ──────────────────────────────────────────────
+
+/**
+ * Tracks when the email subscribe field receives focus.
+ */
+export function trackEmailSubscribeFocus(): void {
+  trackEvent(ANALYTICS_EVENTS.EMAIL_SUBSCRIBE_FOCUS);
+}
+
+/**
+ * Tracks an email subscription submission attempt.
+ */
+export function trackEmailSubscribeSubmit(): void {
+  trackEvent(ANALYTICS_EVENTS.EMAIL_SUBSCRIBE_SUBMIT);
+}
+
+/**
+ * Tracks a successful email subscription.
+ */
+export function trackEmailSubscribeSuccess(): void {
+  trackEvent(ANALYTICS_EVENTS.EMAIL_SUBSCRIBE_SUCCESS);
+}
+
+/**
+ * Tracks a failed email subscription.
+ */
+export function trackEmailSubscribeError(params: { error_message: string }): void {
+  trackEvent(ANALYTICS_EVENTS.EMAIL_SUBSCRIBE_ERROR, params);
+}
+
+// ─── Content Interaction Tracking ─────────────────────────────────────────────
+
+/**
+ * Tracks a tech stack item click.
+ */
+export function trackTechStackItemClick(params: {
+  tech_name: string;
+  tech_category: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.TECH_STACK_ITEM_CLICK, params);
+}
+
+/**
+ * Tracks when a skill category becomes visible.
+ */
+export function trackSkillCategoryView(params: { category_name: string }): void {
+  trackEvent(ANALYTICS_EVENTS.SKILL_CATEGORY_VIEW, params);
+}
+
+/**
+ * Tracks when an experience card is expanded.
+ */
+export function trackExperienceCardExpand(params: {
+  company_name: string;
+  position: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.EXPERIENCE_CARD_EXPAND, params);
+}
+
+/**
+ * Tracks when an experience card is collapsed.
+ */
+export function trackExperienceCardCollapse(params: {
+  company_name: string;
+  position: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.EXPERIENCE_CARD_COLLAPSE, params);
+}
+
+// ─── Notification Tracking ────────────────────────────────────────────────────
+
+/**
+ * Tracks when notification permission is requested.
+ */
+export function trackNotificationPermissionRequested(): void {
+  trackEvent(ANALYTICS_EVENTS.NOTIFICATION_PERMISSION_REQUESTED);
+}
+
+/**
+ * Tracks when notification permission is granted.
+ */
+export function trackNotificationPermissionGranted(): void {
+  trackEvent(ANALYTICS_EVENTS.NOTIFICATION_PERMISSION_GRANTED);
+}
+
+/**
+ * Tracks when notification permission is denied.
+ */
+export function trackNotificationPermissionDenied(): void {
+  trackEvent(ANALYTICS_EVENTS.NOTIFICATION_PERMISSION_DENIED);
+}
+
+/**
+ * Tracks when the notification prompt is dismissed.
+ */
+export function trackNotificationPromptDismissed(): void {
+  trackEvent(ANALYTICS_EVENTS.NOTIFICATION_PROMPT_DISMISSED);
+}
+
+// ─── Scroll Tracking ──────────────────────────────────────────────────────────
+
+/**
+ * Tracks scroll depth milestones.
+ */
+export function trackScrollDepth(params: { depth_percentage: 25 | 50 | 75 | 100 }): void {
+  const eventMap = {
+    25: ANALYTICS_EVENTS.SCROLL_DEPTH_25,
+    50: ANALYTICS_EVENTS.SCROLL_DEPTH_50,
+    75: ANALYTICS_EVENTS.SCROLL_DEPTH_75,
+    100: ANALYTICS_EVENTS.SCROLL_DEPTH_100,
+  };
+  trackEvent(eventMap[params.depth_percentage]);
+}
+
+// ─── Error Tracking ───────────────────────────────────────────────────────────
+
+/**
+ * Tracks when an error boundary is triggered.
+ */
+export function trackErrorBoundary(params: {
+  error_message: string;
+  component_stack: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.ERROR_BOUNDARY_TRIGGERED, params);
+}
+
+/**
+ * Tracks API errors.
+ */
+export function trackAPIError(params: {
+  endpoint: string;
+  status_code: number;
+  error_message: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.API_ERROR, params);
+}
+
+// ─── Engagement Tracking ──────────────────────────────────────────────────────
+
+/**
+ * Tracks time spent on a page.
+ */
+export function trackTimeOnPage(params: { page_path: string; time_seconds: number }): void {
+  trackEvent(ANALYTICS_EVENTS.TIME_ON_PAGE, params);
+}
+
+/**
+ * Tracks total session duration.
+ */
+export function trackSessionDuration(params: { duration_seconds: number }): void {
+  trackEvent(ANALYTICS_EVENTS.SESSION_DURATION, params);
 }

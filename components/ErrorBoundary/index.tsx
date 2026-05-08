@@ -9,6 +9,7 @@
 
 import React from "react";
 import { logError } from "@/lib/error-logging";
+import { trackErrorBoundary } from "@/lib/analytics";
 
 interface ErrorBoundaryProps {
   readonly children: React.ReactNode;
@@ -37,6 +38,10 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
       extra: {
         componentStack: info.componentStack ?? "",
       },
+    });
+    trackErrorBoundary({
+      error_message: error.message,
+      component_stack: info.componentStack ?? "",
     });
   }
 

@@ -7,6 +7,11 @@
  */
 
 import { useTranslations } from "next-intl";
+import {
+  trackFooterLinkClick,
+  trackSocialLinkClick,
+  trackExternalLinkClick,
+} from "@/lib/analytics";
 
 interface FooterProps {
   readonly locale: string;
@@ -131,6 +136,13 @@ export default function Footer({ locale }: FooterProps) {
                 <li key={href}>
                   <a
                     href={href}
+                    onClick={() =>
+                      trackFooterLinkClick({
+                        link_text: t(labelKey),
+                        link_url: href,
+                        link_type: "navigation",
+                      })
+                    }
                     className="
                       text-sm hover:text-primary-600 dark:hover:text-primary-400
                       transition-colors duration-200
@@ -154,6 +166,13 @@ export default function Footer({ locale }: FooterProps) {
                 <li key={href}>
                   <a
                     href={href}
+                    onClick={() =>
+                      trackFooterLinkClick({
+                        link_text: t(labelKey),
+                        link_url: href,
+                        link_type: "language",
+                      })
+                    }
                     className="
                       text-sm hover:text-primary-600 dark:hover:text-primary-400
                       transition-colors duration-200
@@ -178,6 +197,13 @@ export default function Footer({ locale }: FooterProps) {
                 <a
                   href={`mailto:${t("footer.email")}`}
                   aria-label={t("footer.emailLabel")}
+                  onClick={() =>
+                    trackFooterLinkClick({
+                      link_text: "Email",
+                      link_url: `mailto:${t("footer.email")}`,
+                      link_type: "email",
+                    })
+                  }
                   className="
                     inline-flex items-center gap-2 text-sm
                     hover:text-primary-600 dark:hover:text-primary-400
@@ -211,6 +237,12 @@ export default function Footer({ locale }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t("footer.downloadResumeLabel")}
+                  onClick={() =>
+                    trackExternalLinkClick({
+                      url: resumeUrl,
+                      context: "footer_resume_download",
+                    })
+                  }
                   className="
                     inline-flex items-center gap-2 text-sm
                     hover:text-primary-600 dark:hover:text-primary-400
@@ -242,6 +274,12 @@ export default function Footer({ locale }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={t("footer.downloadDissertationLabel")}
+                  onClick={() =>
+                    trackExternalLinkClick({
+                      url: "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf",
+                      context: "footer_dissertation_download",
+                    })
+                  }
                   className="
                     inline-flex items-center gap-2 text-sm
                     hover:text-primary-600 dark:hover:text-primary-400
@@ -273,6 +311,7 @@ export default function Footer({ locale }: FooterProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${name} profile`}
+                    onClick={() => trackSocialLinkClick({ platform: name, url: href })}
                     className="
                       inline-flex items-center gap-2 text-sm
                       text-gray-700 dark:text-gray-300

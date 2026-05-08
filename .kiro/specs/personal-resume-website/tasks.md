@@ -1283,43 +1283,79 @@ This implementation plan breaks down the personal resume website into discrete, 
 - [ ] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
   - [ ] 33.1 Analyze data collection and legal requirements
     - Document all data collection points:
-      - Firebase Analytics (page views, events, user interactions)
+      - **Firebase Analytics** (comprehensive user interaction tracking):
+        - **Navigation Events**: Page views, link clicks (internal/external), section navigation, header logo clicks, footer links, social media links
+        - **Form Interactions**: Field focus/blur events, validation errors (error types only, no user data), submission attempts, success/failure rates, submission timing
+        - **Content Engagement**: Scroll depth (25%, 50%, 75%, 100%), time on page, session duration, project clicks, experience card interactions, tech stack item clicks, skill category views
+        - **User Preferences**: Theme selection (light/dark), language selection (pt-BR/en/es), career path selection (professional/academic)
+        - **Hero Section**: CTA button clicks (View Projects, Contact), dissertation link clicks, PDF downloads
+        - **Email Subscription**: Email field focus, submission attempts, success/error states
+        - **Notification Events**: Permission requests, grants, denials, prompt dismissals
+        - **Error Events**: Error boundary triggers, API failures, component errors with stack traces
+        - **Exit Intent**: Modal displays, user actions (download resume, connect LinkedIn, star GitHub, dismiss)
+        - **Note**: All analytics data is anonymous and does not include PII (personal identifiable information)
       - Email subscription form (email addresses via Formspree)
       - Firebase Cloud Messaging (notification tokens)
-      - localStorage (theme preference, language preference, session data)
-      - Cookies (if any third-party services use them)
+      - localStorage (theme preference, language preference, session data, exit intent session flag)
+      - **Cookies**: Firebase Analytics uses cookies for session tracking and user identification
+        - `_ga`: Google Analytics ID (2 years)
+        - `_ga_<container-id>`: Session tracking (2 years)
+        - `_gid`: User distinction (24 hours)
+        - `_gat`: Request rate throttling (1 minute)
     - Identify applicable regulations:
       - **GDPR** (General Data Protection Regulation) - EU users
       - **LGPD** (Lei Geral de Proteção de Dados) - Brazilian users (your primary audience)
       - **CCPA** (California Consumer Privacy Act) - California users
-    - Determine if cookie consent banner is required (depends on cookie usage)
-    - _Requirements: 10.1, 10.5_
+    - **Cookie consent banner is REQUIRED** due to Firebase Analytics cookie usage
+    - _Requirements: 10.1, 10.3, 10.4, 10.5_
   - [ ] 33.2 Create Privacy Policy page
     - Create `app/[locale]/privacy/page.tsx` for Privacy Policy
     - Include sections:
       - **Introduction**: What data is collected and why
-      - **Data Collection**: Detailed list of collected data (analytics, emails, preferences)
-      - **Data Usage**: How data is used (analytics, communication, personalization)
+      - **Data Collection**: Detailed list of collected data
+        - **Analytics Data** (Firebase Analytics - Anonymous):
+          - **Navigation**: Page views, link clicks, section navigation, language/theme changes
+          - **Form Interactions**: Field focus/blur, validation errors (types only), submission events, timing
+          - **Content Engagement**: Scroll depth, time on page, project/experience/skill interactions
+          - **User Preferences**: Theme, language, career path selections
+          - **Error Events**: Component errors, API failures (no sensitive data)
+          - **Important**: All analytics data is anonymous and does not include personal information
+        - **Email Addresses**: Collected via contact form and email subscription (stored by Formspree)
+        - **Notification Tokens**: Firebase Cloud Messaging tokens (if user grants permission)
+        - **Browser Storage**: Theme preference, language preference, session data (stored locally)
+      - **Data Usage**: How data is used (analytics for site improvement, communication, personalization)
       - **Data Storage**: Where data is stored (Firebase, Formspree, browser localStorage)
-      - **Data Sharing**: Third parties with access (Google Analytics, Formspree)
+      - **Data Sharing**: Third parties with access (Google Analytics/Firebase, Formspree)
       - **User Rights**: Rights to access, delete, or export data (GDPR/LGPD compliance)
-      - **Cookies**: Types of cookies used (if any)
+      - **Cookies**: Types of cookies used (Firebase Analytics cookies - see Cookie Policy)
+      - **Analytics Opt-Out**: How to disable analytics tracking (cookie consent banner)
       - **Contact Information**: How users can contact you about privacy concerns
       - **Policy Updates**: How users will be notified of changes
     - Add translations for all three languages (pt-BR, en, es)
     - Ensure GDPR and LGPD compliance
-    - _Requirements: 10.1, 10.5, 11.7_
-  - [ ] 33.3 Create Cookie Policy (if needed)
-    - Determine if cookies are used (check Firebase Analytics, third-party services)
-    - If cookies are used, create `app/[locale]/cookies/page.tsx`
+    - _Requirements: 10.1, 10.3, 10.4, 10.5, 11.7_
+  - [ ] 33.3 Create Cookie Policy (REQUIRED)
+    - **Firebase Analytics uses cookies** - Cookie Policy is mandatory
+    - Create `app/[locale]/cookies/page.tsx`
     - Include sections:
       - **What are cookies**: Explanation for non-technical users
       - **Types of cookies used**: Essential, analytics, functional
       - **Cookie list**: Specific cookies with names, purposes, and expiration
-      - **How to manage cookies**: Browser settings instructions
-      - **Third-party cookies**: List of third-party services using cookies
+        - **Firebase Analytics Cookies** (Analytics - Non-Essential):
+          - `_ga`: Google Analytics ID - Distinguishes unique users (Expires: 2 years)
+          - `_ga_<container-id>`: Session tracking - Stores session state (Expires: 2 years)
+          - `_gid`: User distinction - Distinguishes users (Expires: 24 hours)
+          - `_gat`: Request throttling - Throttles request rate (Expires: 1 minute)
+          - Purpose: Track user interactions and engagement anonymously
+          - Category: Analytics (non-essential, requires consent)
+        - **Essential Cookies** (if any):
+          - Session cookies for basic functionality
+      - **How to manage cookies**: Browser settings instructions for Chrome, Firefox, Safari, Edge
+      - **Third-party cookies**: Firebase Analytics (Google)
+      - **Cookie consent**: How to accept/reject cookies via consent banner
+      - **Analytics opt-out**: Link to Google Analytics opt-out browser add-on
     - Add translations for all three languages
-    - _Requirements: 10.1_
+    - _Requirements: 10.1, 10.3_
   - [ ] 33.4 Create Terms of Use page
     - Create `app/[locale]/terms/page.tsx` for Terms of Use
     - Include sections:
@@ -1334,26 +1370,37 @@ This implementation plan breaks down the personal resume website into discrete, 
       - **Contact Information**: How to reach you with questions
     - Add translations for all three languages
     - _Requirements: 11.7_
-  - [ ] 33.5 Implement cookie consent banner (if required)
-    - Determine if consent banner is legally required based on cookie usage
-    - If required, create `CookieConsent` component
+  - [ ] 33.5 Implement cookie consent banner (REQUIRED)
+    - **Cookie consent banner is mandatory** due to Firebase Analytics cookie usage
+    - Create `CookieConsent` component
     - Display banner on first visit with options:
-      - Accept all cookies
-      - Reject non-essential cookies
-      - Customize cookie preferences
-    - Store consent preference in localStorage
-    - Respect user's choice (don't load analytics if rejected)
-    - Include link to Cookie Policy
+      - **Accept all cookies**: Enable all analytics tracking
+      - **Reject non-essential cookies**: Disable Firebase Analytics, keep essential functionality
+      - **Customize cookie preferences**: Granular control over cookie categories
+    - Store consent preference in localStorage (`cookie-consent`)
+    - **Respect user's choice**:
+      - Don't initialize Firebase Analytics if user rejects analytics cookies
+      - Disable all tracking functions in `lib/analytics.ts` if consent is denied
+      - Update `AnalyticsProvider` to check consent before initializing hooks
+      - Provide `getFirebaseAnalytics()` wrapper that returns null if consent denied
+    - Include link to Cookie Policy for more information
+    - Add "Change Cookie Preferences" link in Footer
     - Add translations for all three languages
-    - Ensure GDPR/LGPD compliance (opt-in, not opt-out)
-    - _Requirements: 10.1, 11.7_
+    - **Ensure GDPR/LGPD compliance**:
+      - Opt-in approach (not opt-out) - analytics disabled by default
+      - Clear explanation of what each cookie category does
+      - Easy way to withdraw consent later
+      - No tracking before consent is given
+    - _Requirements: 10.1, 10.3, 11.7_
   - [ ] 33.6 Add privacy links to Footer
     - Update Footer component to include links to:
       - Privacy Policy (`/privacy`)
-      - Cookie Policy (`/cookies`) - if applicable
+      - Cookie Policy (`/cookies`)
       - Terms of Use (`/terms`)
+      - "Change Cookie Preferences" (opens cookie consent banner)
     - Ensure links are visible and accessible
     - Add to all language versions
+    - Group privacy links in a dedicated "Privacy & Legal" section
     - _Requirements: 7.5, 11.7_
   - [ ] 33.7 Update LICENSE file
     - Review current MIT License
@@ -1384,18 +1431,31 @@ This implementation plan breaks down the personal resume website into discrete, 
   - [ ] 33.9 Implement data deletion mechanism (GDPR/LGPD compliance)
     - Add contact information for data deletion requests
     - Document process for handling deletion requests:
-      - Email subscriptions: Unsubscribe link or manual removal from Formspree
-      - Analytics data: Cannot be deleted (anonymous), explain in Privacy Policy
-      - localStorage: User can clear browser data
+      - **Email subscriptions**: Unsubscribe link or manual removal from Formspree
+      - **Analytics data**: Cannot be deleted (anonymous and aggregated), explain in Privacy Policy
+      - **Notification tokens**: Can be revoked by user (browser notification settings)
+      - **localStorage**: User can clear browser data manually
+      - **Cookies**: User can delete cookies via browser settings or reject via consent banner
     - Add "Delete My Data" section to Privacy Policy
+    - Provide email address for data deletion requests: privacy@rogeriodocarmo.com (or your preferred contact)
     - _Requirements: 10.5_
   - [ ] 33.10 Test privacy implementation
     - Verify all privacy pages load correctly in all languages
-    - Test cookie consent banner (if implemented)
+    - **Test cookie consent banner**:
+      - Verify banner appears on first visit
+      - Test "Accept all" enables Firebase Analytics
+      - Test "Reject non-essential" disables Firebase Analytics
+      - Test consent preference persists across page reloads
+      - Verify analytics tracking respects consent choice
+      - Test "Change Cookie Preferences" link in Footer
     - Verify privacy links in Footer work
-    - Check that analytics respects user consent
+    - **Check that analytics respects user consent**:
+      - Verify no analytics events fire when consent is denied
+      - Verify analytics events fire normally when consent is granted
+      - Test in Firebase Analytics Console
     - Review all policies for completeness and accuracy
-    - _Requirements: 10.1, 11.7_
+    - Test cookie deletion and consent withdrawal
+    - _Requirements: 10.1, 10.3, 11.7_
 
 - [ ] 34. Fix GitHub Dependabot security vulnerabilities
   - [ ] 34.1 Review Dependabot security alerts

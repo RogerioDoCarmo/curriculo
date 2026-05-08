@@ -9,6 +9,12 @@
  */
 
 import { useState } from "react";
+import {
+  trackEmailSubscribeFocus,
+  trackEmailSubscribeSubmit,
+  trackEmailSubscribeSuccess,
+  trackEmailSubscribeError,
+} from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -76,6 +82,7 @@ export default function EmailSubscribeForm({
 
     setStatus("submitting");
     setEmailError("");
+    trackEmailSubscribeSubmit();
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;
     const endpoint = formId
@@ -101,13 +108,18 @@ export default function EmailSubscribeForm({
 
       if (res.ok) {
         setStatus("success");
+        trackEmailSubscribeSuccess();
         setEmail("");
         setMessage("");
       } else {
         setStatus("error");
+        trackEmailSubscribeError({ error_message: `HTTP ${res.status}` });
       }
-    } catch {
+    } catch (error) {
       setStatus("error");
+      trackEmailSubscribeError({
+        error_message: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
 
@@ -138,6 +150,7 @@ export default function EmailSubscribeForm({
             setEmail(e.target.value);
             if (emailError) setEmailError(validateEmail(e.target.value));
           }}
+          onFocus={() => trackEmailSubscribeFocus()}
           placeholder={placeholder}
           aria-required="true"
           aria-invalid={!!emailError}
