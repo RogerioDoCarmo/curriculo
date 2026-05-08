@@ -915,14 +915,14 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Ensure link is accessible and keyboard navigable
     - _Requirements: 19.4, 9.4_
 
-- [ ] 28. Firebase Remote Config for Feature Flags
-  - [ ] 28.1 Set up Firebase Remote Config
+- [x] 28. Firebase Remote Config for Feature Flags
+  - [x] 28.1 Set up Firebase Remote Config
     - Install Firebase Remote Config SDK (if not already included)
     - Initialize Remote Config in `lib/firebase.ts`
     - Configure default values for feature flags
     - Set up Remote Config fetch and activation strategy
     - _Requirements: 10.1_
-  - [ ] 28.2 Create feature flag management utilities
+  - [x] 28.2 Create feature flag management utilities
     - Create `lib/feature-flags.ts` with Remote Config integration
     - Implement `getFeatureFlag()` function to retrieve flag values
     - Implement `useFeatureFlag()` hook for React components
@@ -935,7 +935,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test caching behavior
     - Test fallback to default values when Remote Config unavailable
     - Test error handling for network failures
-  - [ ] 28.4 Migrate USE_LOCALE_SPECIFIC_PDFS to Remote Config
+  - [x] 28.4 Migrate USE_LOCALE_SPECIFIC_PDFS to Remote Config
     - Replace hardcoded `USE_LOCALE_SPECIFIC_PDFS` constant with Remote Config flag
     - Update ExitIntentModal to use `useFeatureFlag('use_locale_specific_pdfs')`
     - Update Footer component to use `useFeatureFlag('use_locale_specific_pdfs')`
@@ -946,13 +946,13 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that resume URLs update when flag is toggled
     - Test that default behavior works when Remote Config is unavailable
     - Test that flag changes don't require code deployment
-  - [ ] 28.6 Configure Remote Config in Firebase Console
+  - [x] 28.6 Configure Remote Config in Firebase Console
     - Create `use_locale_specific_pdfs` parameter in Firebase Console
     - Set default value to `false`
     - Document how to toggle the flag in production
     - Add monitoring/analytics for flag usage
     - _Requirements: 10.1_
-  - [ ] 28.7 Add documentation for feature flag management
+  - [x] 28.7 Add documentation for feature flag management
     - Document how to add new feature flags
     - Document how to test feature flags locally
     - Document how to toggle flags in Firebase Console
@@ -1085,99 +1085,132 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Requirements: 15.3_
 
 - [ ] 30. Fix ESLint circular dependency issue (Post Next.js 16 upgrade)
-  - [ ] 30.1 Monitor Next.js releases for eslint-config-next fix
+  - [x] 30.1 Monitor Next.js releases for eslint-config-next fix
     - Check Next.js release notes for eslint-config-next updates
     - Monitor GitHub issue: https://github.com/vercel/next.js/issues
     - Test with each new Next.js patch release (16.2.5+)
     - _Issue: eslint-config-next@16.2.4 has circular dependency bug_
-  - [ ] 30.2 Update eslint-config-next when fix is available
-    - Update to fixed version: `npm install eslint-config-next@latest --legacy-peer-deps`
+    - **FINDINGS (May 8, 2026):**
+      - ✅ Next.js 16.2.6 is available (latest stable)
+      - ✅ eslint-config-next@16.2.6 is available
+      - ⚠️ **ROOT CAUSE IDENTIFIED:** Issue requires ESLint 9+ upgrade
+      - ⚠️ eslint-config-next@16.2.4, 16.2.5, 16.2.6 all require `eslint@>=9.0.0`
+      - ⚠️ Current project uses `eslint@8.57.1` (incompatible)
+      - ⚠️ Circular dependency error confirmed with current setup
+      - 📄 Full report: `.kiro/specs/personal-resume-website/eslint-monitoring-report.md`
+      - **CONCLUSION:** Cannot fix by upgrading Next.js alone - requires ESLint 9 migration
+  - [ ] 30.2 Plan ESLint 9 migration (NEW - replaces old 30.2-30.6)
+    - Research ESLint 9 breaking changes and migration guide
+    - Document required changes to ESLint configuration (flat config format)
+    - Identify all ESLint plugins that need updating
+    - Create migration checklist and testing plan
+    - Estimate effort and potential issues
+    - _Prerequisite for fixing circular dependency issue_
+  - [ ] 30.3 Migrate to ESLint 9 flat config format
+    - Upgrade ESLint to version 9 or 10: `npm install --save-dev eslint@^10`
+    - Convert `.eslintrc.json` to `eslint.config.mjs` (flat config)
+    - Update all ESLint plugins to ESLint 9-compatible versions
+    - Update `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser`
+    - Update `eslint-plugin-storybook` if needed
+    - _Major breaking change - requires careful testing_
+  - [ ] 30.4 Update eslint-config-next to 16.2.6
+    - Upgrade: `npm install --save-dev eslint-config-next@^16.2.6`
+    - Integrate with new flat config format
     - Verify ESLint runs without circular dependency error
-    - Test all lint rules still work correctly
-    - _Current workaround: Lint command temporarily disabled_
-  - [ ] 30.3 Restore lint scripts in package.json
+    - Test all Next.js-specific lint rules work correctly
+    - _Should resolve circular dependency issue_
+  - [ ] 30.5 Test ESLint configuration
+    - Run `npx eslint .` to check for configuration errors
+    - Test linting on TypeScript files
+    - Test linting on React/Next.js files
+    - Test linting on Storybook files
+    - Verify all existing lint rules still work
+    - Fix any linting errors discovered
+    - _Ensure no regressions from migration_
+  - [ ] 30.6 Restore lint scripts in package.json
     - Update `"lint": "next lint"` (restore original command)
     - Update `"lint:fix": "next lint --fix"` (restore original command)
     - Remove workaround message
-    - _Restore functionality after fix is available_
-  - [ ] 30.4 Run full lint check on codebase
-    - Run `npm run lint` to check for any linting issues
-    - Fix any linting errors that were missed during upgrade
-    - Run `npm run lint:fix` to auto-fix formatting issues
-    - Verify all files pass linting
-    - _Ensure code quality after ESLint is restored_
-  - [ ] 30.5 Update CI/CD pipeline
+    - Test scripts work correctly
+    - _Restore functionality after migration_
+  - [ ] 30.7 Update pre-commit hooks
+    - Verify husky pre-commit hooks work with ESLint 9
+    - Test lint-staged configuration
+    - Ensure hooks don't break git workflow
+    - _Requirements: 12.1_
+  - [ ] 30.8 Update CI/CD pipeline
     - Verify lint step in `.github/workflows/ci.yml` works
     - Ensure lint failures block deployment
     - Test full CI/CD pipeline with linting enabled
     - _Requirements: 16.1, 16.2_
-  - [ ] 30.6 Update documentation
+  - [ ] 30.9 Update documentation
     - Remove ESLint issue from `NEXTJS-16-UPGRADE-STATUS.md`
-    - Update `README.md` if needed
+    - Document ESLint 9 migration in upgrade notes
+    - Update `README.md` with new ESLint version
     - Document the resolution in commit message
     - _Close out the known issue_
 
 - [ ] 31. Fix skipped tests due to next-intl ESM module issues (Post Next.js 16 upgrade)
-  - [ ] 31.1 Monitor next-intl and Jest releases for ESM support improvements
+  - [~] 31.1 Monitor next-intl and Jest releases for ESM support improvements
     - Check next-intl release notes for Jest/ESM compatibility updates
     - Monitor Jest 30 release for native ESM support
     - Test with each new next-intl release (4.x+)
     - Monitor GitHub issues: https://github.com/amannn/next-intl/issues
     - _Issue: next-intl 4.x ESM modules not compatible with Jest 29_
-  - [ ] 31.2 Unskip and fix ExitIntentModal-resume.test.tsx
+  - [~] 31.2 Unskip and fix ExitIntentModal-resume.test.tsx
     - Remove `.skip` from test suite in `tests/unit/components/ExitIntentModal-resume.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify all test cases pass
     - Ensure test coverage is maintained
     - _Test file: tests/unit/components/ExitIntentModal-resume.test.tsx_
-  - [ ] 31.3 Unskip and fix lazy-components.test.tsx
+  - [~] 31.3 Unskip and fix lazy-components.test.tsx
     - Remove `.skip` from test suite in `tests/unit/lib/lazy-components.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify all test cases pass
     - Ensure test coverage is maintained
     - _Test file: tests/unit/lib/lazy-components.test.tsx_
-  - [ ] 31.4 Unskip and fix TechStackSection.test.tsx
+  - [~] 31.4 Unskip and fix TechStackSection.test.tsx
     - Remove `.skip` from test suite in `tests/unit/TechStackSection.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify all test cases pass
     - Ensure test coverage is maintained
     - _Test file: tests/unit/TechStackSection.test.tsx_
-  - [ ] 31.5 Unskip and fix tech-stack-links.test.tsx
+  - [~] 31.5 Unskip and fix tech-stack-links.test.tsx
     - Remove `.skip` from test suite in `tests/properties/tech-stack-links.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify property test passes with 100+ iterations
     - Ensure test coverage is maintained
     - _Test file: tests/properties/tech-stack-links.test.tsx_
-  - [ ] 31.6 Unskip and fix resume-download.test.tsx
+  - [~] 31.6 Unskip and fix resume-download.test.tsx
     - Remove `.skip` from test suite in `tests/integration/resume-download.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify integration test passes
     - Ensure test coverage is maintained
     - _Test file: tests/integration/resume-download.test.tsx_
-  - [ ] 31.7 Unskip and fix responsive-layout.test.tsx
+  - [~] 31.7 Unskip and fix responsive-layout.test.tsx
     - Remove `.skip` from test suite in `tests/integration/responsive-layout.test.tsx`
     - Update test configuration if needed for ESM compatibility
     - Verify integration test passes
     - Ensure test coverage is maintained
     - _Test file: tests/integration/responsive-layout.test.tsx_
-  - [ ] 31.8 Remove test exclusions from jest.config.js
+  - [~] 31.8 Remove test exclusions from jest.config.js
     - Remove `testPathIgnorePatterns` entries for the 6 test files from `jest.config.js`
     - Keep only standard exclusions (node_modules, etc.)
     - Verify configuration is clean
     - _Configuration file: jest.config.js_
-  - [ ] 31.9 Restore CI workflow test commands
+  - [~] 31.9 Restore CI workflow test commands
     - Update `.github/workflows/ci.yml` test commands to remove test file exclusions
     - Change `--testPathIgnorePatterns="lighthouse|ExitIntentModal-resume|lazy-components|TechStackSection.test|tech-stack-links|resume-download|responsive-layout"` back to `--testPathIgnorePatterns=lighthouse`
     - Update both `npm test` and `npm run test:coverage` commands (3 occurrences total)
     - Verify CI runs all test suites
     - _Configuration file: .github/workflows/ci.yml_
-  - [ ] 31.10 Run full test suite and verify coverage
+  - [~] 31.10 Run full test suite and verify coverage
     - Run `npm run test:coverage` to verify all tests pass
     - Ensure 90%+ test coverage is maintained
     - Verify no test suites are skipped
     - Document any remaining issues
     - _Requirements: 14.1, 14.2, 14.3_
-  - [ ] 31.11 Update documentation
+  - [~] 31.11 Update documentation
     - Remove next-intl ESM issue from `NEXTJS-16-UPGRADE-STATUS.md`
     - Update `README.md` if needed
     - Document the resolution in commit message
@@ -1223,7 +1256,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify sitemap is processed successfully
     - Repeat for all four domains
     - _Requirements: 7.3_
-  - [ ] 32.4 Submit sitemap to Yandex Webmaster (optional, for Russian audience)
+  - [~] 32.4 Submit sitemap to Yandex Webmaster (optional, for Russian audience)
     - Go to [Yandex Webmaster](https://webmaster.yandex.com/)
     - Add site: `https://rogeriodocarmo.com`
     - Verify site ownership
@@ -1231,7 +1264,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add sitemap URL: `https://rogeriodocarmo.com/sitemap.xml`
     - Click "Add"
     - _Optional: Only if targeting Russian-speaking audience_
-  - [ ] 32.5 Verify indexing status in Google Search Console
+  - [~] 32.5 Verify indexing status in Google Search Console
     - Wait 24-48 hours after sitemap submission
     - Go to Google Search Console → "Coverage" or "Pages"
     - Check "Valid" pages count (should match sitemap page count)
@@ -1239,7 +1272,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify all locales are indexed (pt-BR, en, es)
     - Check "Enhancements" for any issues with structured data
     - _Requirements: 7.3, 20.1_
-  - [ ] 32.6 Verify indexing status in Bing Webmaster Tools
+  - [~] 32.6 Verify indexing status in Bing Webmaster Tools
     - Wait 24-48 hours after sitemap submission
     - Go to Bing Webmaster Tools → "Site Explorer"
     - Check indexed pages count
@@ -1263,7 +1296,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Monitor "Coverage" reports weekly for the first month
     - _Requirements: 7.3_
     - **Status**: ✅ COMPLETED - All URLs inspected, indexing requested for unindexed pages, email notifications enabled in both GSC and Bing (May 5, 2026)
-  - [ ] 32.9 Document submission details
+  - [~] 32.9 Document submission details
     - Create `docs/SEO-SUBMISSION-LOG.md` with:
       - Submission dates for each search engine
       - Verification methods used
@@ -1273,15 +1306,15 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add credentials/access info to password manager (if applicable)
     - Document monitoring schedule and responsibilities
     - _Requirements: 15.2_
-  - [ ] 32.10 Set up Google Analytics and Search Console integration (optional)
+  - [~] 32.10 Set up Google Analytics and Search Console integration (optional)
     - Link Google Analytics property to Search Console
     - Enable Search Console data in Google Analytics
     - Set up custom reports for organic search traffic
     - Monitor search queries and click-through rates
     - _Requirements: 10.1, 10.3_
 
-- [ ] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
-  - [ ] 33.1 Analyze data collection and legal requirements
+- [~] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
+  - [~] 33.1 Analyze data collection and legal requirements
     - Document all data collection points:
       - **Firebase Analytics** (comprehensive user interaction tracking):
         - **Navigation Events**: Page views, link clicks (internal/external), section navigation, header logo clicks, footer links, social media links
@@ -1507,7 +1540,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure Dependabot auto-merge for patch updates (optional)
     - Set up Dependabot security update notifications
     - _Requirements: 16.1, 16.2_
-  - [ ] 34.7 Run Lighthouse audits after updates
+  - [~] 34.7 Run Lighthouse audits after updates
     - Run `npm run test:lighthouse`
     - Verify Performance score >= 90 (currently 93)
     - Verify no regressions in metrics:
@@ -1628,7 +1661,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Requirements: 15.2_
 
 - [ ] 35. Implement comprehensive Firebase Analytics tracking for user insights
-  - [ ] 35.1 Audit current analytics implementation
+  - [~] 35.1 Audit current analytics implementation
     - Review `lib/analytics.ts` for existing tracking functions
     - Check which events are currently tracked
     - Identify gaps in tracking coverage
@@ -1825,7 +1858,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure crash reporting settings
     - Note Crashlytics app ID for configuration
     - _Requirements: 10.5_
-  - [ ] 36.2 Install and configure Firebase Crashlytics SDK
+  - [~] 36.2 Install and configure Firebase Crashlytics SDK
     - Install Firebase Crashlytics package: `npm install firebase`
     - Verify Firebase SDK version compatibility with Next.js 16
     - Update `lib/firebase.ts` to initialize Crashlytics
@@ -1856,7 +1889,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add Crashlytics logging to try/catch blocks
     - Log API errors and network failures
     - _Requirements: 10.5_
-  - [ ] 36.5 Add custom keys and user attributes
+  - [~] 36.5 Add custom keys and user attributes
     - Set custom keys for debugging:
       - User locale (pt-BR, en, es)
       - User theme (light, dark)
@@ -2281,7 +2314,7 @@ This implementation plan breaks down the personal resume website into discrete, 
 - Each task references specific requirements for traceability
 
 - [ ] 33. Implement automatic GitHub issue creation for CI failures
-  - [ ] 33.1 Add GitHub CLI issue creation for test failures
+  - [~] 33.1 Add GitHub CLI issue creation for test failures
     - Add step to CI workflow that runs on failure
     - Use `gh issue create` command with GitHub CLI
     - Include workflow run URL, commit SHA, and branch name in issue body

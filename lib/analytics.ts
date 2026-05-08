@@ -74,6 +74,10 @@ export const ANALYTICS_EVENTS = {
   // Engagement events
   TIME_ON_PAGE: "time_on_page",
   SESSION_DURATION: "session_duration",
+
+  // Feature flag events
+  FEATURE_FLAG_CHECKED: "feature_flag_checked",
+  PDF_DOWNLOAD: "pdf_download",
 } as const;
 
 // ─── Core Tracking Helper ─────────────────────────────────────────────────────
@@ -442,4 +446,30 @@ export function trackTimeOnPage(params: { page_path: string; time_seconds: numbe
  */
 export function trackSessionDuration(params: { duration_seconds: number }): void {
   trackEvent(ANALYTICS_EVENTS.SESSION_DURATION, params);
+}
+
+// ─── Feature Flag Tracking ────────────────────────────────────────────────────
+
+/**
+ * Tracks when a feature flag is checked.
+ * Used to monitor feature flag usage and adoption.
+ *
+ * Requirements: 10.1
+ */
+export function trackFeatureFlagChecked(params: {
+  flag_name: string;
+  flag_value: boolean | string | number;
+  locale?: string;
+}): void {
+  trackEvent(ANALYTICS_EVENTS.FEATURE_FLAG_CHECKED, params);
+}
+
+/**
+ * Tracks when a PDF is downloaded.
+ * Includes information about whether locale-specific PDFs are enabled.
+ *
+ * Requirements: 10.1
+ */
+export function trackPDFDownload(params: { locale: string; feature_flag_enabled: boolean }): void {
+  trackEvent(ANALYTICS_EVENTS.PDF_DOWNLOAD, params);
 }

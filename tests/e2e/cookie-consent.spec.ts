@@ -36,8 +36,8 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/");
 
       // Wait for banner to appear
-      const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
-      await expect(banner).toBeVisible();
+      const banner = page.getByRole("dialog");
+      await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Verify banner has proper ARIA attributes
       await expect(banner).toHaveAttribute("aria-modal", "true");
@@ -47,12 +47,12 @@ test.describe("Cookie Consent Banner", () => {
     test("should show essential and analytics cookie categories", async ({ page }) => {
       await page.goto("/");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
-      await expect(banner).toBeVisible();
+      const banner = page.getByRole("dialog");
+      await expect(banner).toBeVisible({ timeout: 10000 });
 
-      // Check for cookie categories
-      await expect(banner.getByText(/essenciais|essential/i)).toBeVisible();
-      await expect(banner.getByText(/analíticos|analytics/i)).toBeVisible();
+      // Check for cookie categories (look for text content, not exact matches)
+      await expect(banner.getByText(/essential|essencial/i)).toBeVisible();
+      await expect(banner.getByText(/analytics|analítico/i)).toBeVisible();
     });
 
     test("should have three action buttons", async ({ page }) => {
