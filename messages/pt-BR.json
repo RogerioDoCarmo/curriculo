@@ -269,5 +269,28 @@
         "url": "https://www.sonarqube.org"
       }
     }
+  },
+  "cookieConsent": {
+    "title": "Este site usa cookies",
+    "description": "Usamos cookies essenciais para o funcionamento do site e cookies de análise para entender como você interage com nosso conteúdo. Todos os dados de análise são anônimos e não incluem informações pessoais.",
+    "essential": "Cookies Essenciais",
+    "essentialDescription": "Necessários para o funcionamento básico do site (tema, idioma, sessão). Sempre ativos.",
+    "analytics": "Cookies de Análise",
+    "analyticsDescription": "Ajudam a entender como os visitantes interagem com o site através do Firebase Analytics. Dados anônimos.",
+    "analyticsCookies": "Cookies: _ga, _ga_<container-id>, _gid, _gat",
+    "functional": "Cookies Funcionais",
+    "functionalDescription": "Melhoram a experiência do usuário com recursos adicionais (notificações, preferências).",
+    "acceptAll": "Aceitar Todos",
+    "rejectAll": "Rejeitar Não-Essenciais",
+    "customize": "Personalizar",
+    "learnMore": "Saiba mais em nossa",
+    "privacyPolicy": "Política de Privacidade",
+    "cookiePolicy": "Política de Cookies",
+    "and": "e",
+    "back": "Voltar",
+    "customizeTitle": "Personalizar Preferências de Cookies",
+    "customizeDescription": "Escolha quais categorias de cookies você deseja permitir. Cookies essenciais não podem ser desativados.",
+    "required": "Obrigatório",
+    "savePreferences": "Salvar Preferências"
   }
 }

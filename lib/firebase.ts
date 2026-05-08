@@ -41,14 +41,50 @@ export async function getFirebaseApp(): Promise<FirebaseApp> {
 }
 
 /**
+ * Check if user has given analytics consent
+ */
+function hasAnalyticsConsent(): boolean {
+  if (typeof window === "undefined") return false;
+
+  try {
+    const consentStatus = localStorage.getItem("cookie-consent");
+    const preferences = localStorage.getItem("cookie-preferences");
+
+    // If no consent given yet, return false (opt-in approach)
+    if (!consentStatus) return false;
+
+    // If rejected, return false
+    if (consentStatus === "rejected") return false;
+
+    // If accepted, return true
+    if (consentStatus === "accepted") return true;
+
+    // If customized, check preferences
+    if (consentStatus === "customized" && preferences) {
+      const parsed = JSON.parse(preferences);
+      return parsed.analytics === true;
+    }
+  } catch (error) {
+    console.warn("[Firebase] Failed to check analytics consent:", error);
+  }
+
+  return false;
+}
+
+/**
  * Returns the Firebase Analytics instance.
  * Only available in browser environments.
- * Returns null in SSR/Node.js environments or when config is missing.
+ * Returns null in SSR/Node.js environments, when config is missing, or when user hasn't consented.
  * Dynamically imports Firebase Analytics to reduce initial bundle size.
  */
 export async function getFirebaseAnalytics(): Promise<Analytics | null> {
   if (typeof window === "undefined") return null;
   if (!process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID) return null;
+
+  // Check for user consent before initializing analytics
+  if (!hasAnalyticsConsent()) {
+    return null;
+  }
 
   if (!analytics) {
     try {
