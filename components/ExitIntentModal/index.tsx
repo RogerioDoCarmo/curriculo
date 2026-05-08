@@ -23,6 +23,7 @@ import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 import { useExitIntent } from "@/hooks/useExitIntent";
+import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 
 interface ExitIntentModalProps {
   readonly enabled?: boolean;
@@ -31,16 +32,14 @@ interface ExitIntentModalProps {
   readonly githubUrl?: string;
 }
 
-// Feature flag: Set to true when locale-specific PDFs are available
-const USE_LOCALE_SPECIFIC_PDFS = false;
-
 /**
- * Get the resume URL based on locale
+ * Get the resume URL based on locale and feature flag
  * @param locale - Current locale (pt-BR, en, es)
+ * @param useLocaleSpecificPdfs - Feature flag for locale-specific PDFs
  * @returns Resume PDF URL
  */
-function getResumeUrl(locale?: string): string {
-  if (!USE_LOCALE_SPECIFIC_PDFS) {
+function getResumeUrl(locale?: string, useLocaleSpecificPdfs?: boolean): string {
+  if (!useLocaleSpecificPdfs) {
     // Use single PDF for all locales
     return "/resumes/resume.pdf";
   }
@@ -62,7 +61,11 @@ export default function ExitIntentModal({
   githubUrl = "https://github.com/RogerioDoCarmo/curriculo",
 }: ExitIntentModalProps) {
   const t = useTranslations("exitIntent");
-  const resumeUrl = getResumeUrl(locale);
+
+  // Get feature flag for locale-specific PDFs
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
+
+  const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
   const { showModal, dismissModal } = useExitIntent({
     enabled,
