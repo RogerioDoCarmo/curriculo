@@ -236,7 +236,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
                 fill
                 sizes="256px"
                 loading="lazy"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           ))}
