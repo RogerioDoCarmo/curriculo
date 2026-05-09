@@ -17,13 +17,16 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe.skip("Theme Switching", () => {
   test.beforeEach(async ({ page }) => {
     // Clear localStorage to start with clean state
     await page.goto("/");
+    await dismissCookieBanner(page);
     await page.evaluate(() => localStorage.clear());
     await page.reload();
+    await dismissCookieBanner(page);
   });
 
   test("should toggle between light and dark themes", async ({ page }) => {

@@ -17,11 +17,13 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe.skip("Career Path Navigation", () => {
   test.beforeEach(async ({ page }) => {
     // Start at the homepage
     await page.goto("/");
+    await dismissCookieBanner(page);
 
     // Scroll to experience section
     await page

@@ -42,6 +42,14 @@ jest.mock("next-intl", () => ({
   },
 }));
 
+jest.mock("@/hooks/useFeatureFlag", () => ({
+  useFeatureFlag: jest.fn(() => ({
+    value: false, // Default to false (single PDF for all locales)
+    loading: false,
+    error: false,
+  })),
+}));
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------

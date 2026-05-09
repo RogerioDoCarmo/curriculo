@@ -18,13 +18,16 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe.skip("Exit Intent Detection", () => {
   test.beforeEach(async ({ page }) => {
     // Clear sessionStorage to start fresh
     await page.goto("/");
+    await dismissCookieBanner(page);
     await page.evaluate(() => sessionStorage.clear());
     await page.reload();
+    await dismissCookieBanner(page);
   });
 
   test("should trigger exit intent modal on desktop", async ({ page }) => {

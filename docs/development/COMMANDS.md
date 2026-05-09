@@ -22,10 +22,34 @@ npx prettier --write .       # Auto-fix all formatting issues
 
 ```bash
 npm run dev          # Start development server (http://localhost:3000)
+npm run dev:clean    # Start dev server with clean cache (cold start)
 npm run build        # Build for production (static export)
+npm run build:with-storybook # Build Storybook + copy to public + build site
 npm run start        # Start production server (preview build)
 npm run storybook    # Start Storybook component explorer (http://localhost:6006)
+npm run build-storybook # Build Storybook as static files
+npm run copy-storybook  # Copy Storybook build to public directory
 ```
+
+**Development Cache Options:**
+
+- `npm run dev` - Normal startup (fast, uses cached builds)
+- `npm run dev:clean` - Cold start (slower, clears `.next` cache, perfect for testing cookie consent and localStorage from scratch)
+
+**Storybook Integration:**
+
+- `npm run storybook` - Run Storybook in development mode (http://localhost:6006)
+- `npm run build-storybook` - Build Storybook as static files to `storybook-static/`
+- `npm run copy-storybook` - Copy Storybook build to `public/storybook/` for serving on the main site
+- `npm run build:with-storybook` - Complete workflow: build Storybook, copy to public, build site (use this for production deployments that include Storybook)
+
+**Accessing Storybook on the site:**
+
+After running `npm run build:with-storybook`, Storybook will be available at:
+
+- Development: `http://localhost:3000/storybook/` (after copying)
+- Production: `https://yourdomain.com/storybook/`
+- Or via the route: `/[locale]/storybook` which redirects to `/storybook/index.html`
 
 ## Testing
 

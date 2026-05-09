@@ -1,5 +1,6 @@
 import React from "react";
 import type { TimelineItem, TimelineItemType } from "@/types/index";
+import MarkdownText from "@/components/MarkdownText";
 
 interface TimelineProps {
   readonly items: TimelineItem[];
@@ -75,7 +76,9 @@ export default function Timeline({ items }: TimelineProps) {
             {item.subtitle && (
               <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">{item.subtitle}</p>
             )}
-            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{item.description}</p>
+            <div className="mt-2">
+              <MarkdownText text={item.description} />
+            </div>
           </div>
         </li>
       ))}

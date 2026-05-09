@@ -19,11 +19,13 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe.skip("Contact Form Flow", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the contact section
     await page.goto("/");
+    await dismissCookieBanner(page);
     await page
       .getByRole("link", { name: /contact|contato|contacto/i })
       .first()
