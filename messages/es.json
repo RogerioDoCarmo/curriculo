@@ -291,7 +291,7 @@
     "essentialDescription": "Almacenamiento del navegador para funcionalidad básica (tema, idioma, sesión). Permanece solo en tu navegador. Siempre activo.",
     "analytics": "Cookies de Análisis (Opcional)",
     "analyticsDescription": "Ayudan a entender cómo los visitantes interactúan con el sitio a través de Firebase Analytics. Datos anónimos. Requiere consentimiento.",
-    "analyticsCookies": "Cookies: _ga, _ga_{container-id}, _gid, _gat",
+    "analyticsCookies": "Cookies: _ga, _ga_'{'container-id'}', _gid, _gat",
     "functional": "Funcional (localStorage)",
     "functionalDescription": "Almacenamiento del navegador para características mejoradas (notificaciones, preferencias). Permanece solo en tu navegador.",
     "acceptAll": "Aceptar Todas",
@@ -363,7 +363,7 @@
             "expiration": "2 años"
           },
           "gaContainer": {
-            "name": "_ga_{container-id}",
+            "name": "_ga_'{'container-id'}'",
             "purposeLabel": "Propósito",
             "purpose": "Seguimiento de sesión - Almacena estado de sesión e interacciones del usuario",
             "expirationLabel": "Expiración",
