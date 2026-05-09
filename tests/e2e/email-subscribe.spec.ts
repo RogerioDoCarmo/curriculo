@@ -82,7 +82,7 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
     await page.mouse.move(400, 100);
     await page.mouse.move(400, 5); // cross the threshold
 
-    const modal = page.locator('[role="dialog"]');
+    const modal = page.getByRole("dialog", { name: "Hey, wait!" });
     await expect(modal).toBeVisible({ timeout: 2000 });
 
     await expect(modal.locator('input[type="email"]')).toBeVisible();
@@ -98,7 +98,7 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
     await page.mouse.move(400, 100);
     await page.mouse.move(400, 5);
 
-    const modal = page.locator('[role="dialog"]');
+    const modal = page.getByRole("dialog", { name: "Hey, wait!" });
     await expect(modal).toBeVisible({ timeout: 2000 });
 
     await modal.locator('input[type="email"]').fill("modal@example.com");
