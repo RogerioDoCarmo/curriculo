@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { CareerPath, Experience, TimelineItem } from "@/types/index";
 import Timeline from "@/components/Timeline";
+import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ExperienceSectionProps {
@@ -12,34 +13,64 @@ interface ExperienceSectionProps {
   readonly locale: string;
 }
 
-/** Format a date string (YYYY-MM-DD or YYYY-MM) to a human-readable month/year. */
-function formatDate(dateStr: string): string {
+/**
+ * Format a date string (YYYY-MM-DD or YYYY-MM) to a human-readable month/year.
+ * Uses the provided locale for proper date formatting.
+ */
+function formatDate(dateStr: string, locale: string): string {
   try {
     const date = new Date(dateStr + (dateStr.length === 7 ? "-01" : ""));
-    return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    return date.toLocaleDateString(locale, { month: "short", year: "numeric" });
   } catch {
     return dateStr;
   }
 }
 
-/** Calculate duration between two dates in years/months. */
-function calcDuration(startDate: string, endDate?: string): string {
+/**
+ * Calculate duration between two dates in years/months.
+ * Uses translations for proper localization of duration text.
+ */
+function calcDuration(
+  startDate: string,
+  endDate: string | undefined,
+  t: (key: string) => string
+): string {
   const start = new Date(startDate);
   const end = endDate ? new Date(endDate) : new Date();
   const months =
     (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-  if (months < 1) return "< 1 month";
+
+  if (months < 1) return t("duration.lessThanMonth");
+
   const years = Math.floor(months / 12);
   const remainingMonths = months % 12;
   const parts: string[] = [];
-  if (years > 0) parts.push(`${years} yr${years > 1 ? "s" : ""}`);
-  if (remainingMonths > 0) parts.push(`${remainingMonths} mo`);
+
+  if (years > 0) {
+    const yearLabel = years === 1 ? t("duration.year") : t("duration.years");
+    parts.push(`${years} ${yearLabel}`);
+  }
+
+  if (remainingMonths > 0) {
+    const monthLabel = remainingMonths === 1 ? t("duration.month") : t("duration.months");
+    parts.push(`${remainingMonths} ${monthLabel}`);
+  }
+
   return parts.join(" ");
 }
 
 /** Convert an Experience to a TimelineItem. */
-function experienceToTimelineItem(exp: Experience): TimelineItem {
-  const dateLabel = `${formatDate(exp.startDate)} – ${exp.endDate ? formatDate(exp.endDate) : "Present"} · ${calcDuration(exp.startDate, exp.endDate)}`;
+function experienceToTimelineItem(
+  exp: Experience,
+  locale: string,
+  t: (key: string) => string
+): TimelineItem {
+  const startFormatted = formatDate(exp.startDate, locale);
+  const endFormatted = exp.endDate ? formatDate(exp.endDate, locale) : t("present");
+  const duration = calcDuration(exp.startDate, exp.endDate, t);
+  const separator = t("duration.separator");
+  const dateLabel = `${startFormatted} – ${endFormatted} ${separator} ${duration}`;
+
   return {
     id: exp.id,
     date: dateLabel,
@@ -54,14 +85,14 @@ function experienceToTimelineItem(exp: Experience): TimelineItem {
 export default function ExperienceSection({
   careerPath,
   experiences,
-  locale: _locale,
+  locale,
 }: ExperienceSectionProps) {
   const t = useTranslations("experience");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = experiences.filter((e) => e.type === careerPath);
 
-  const timelineItems = filtered.map(experienceToTimelineItem);
+  const timelineItems = filtered.map((exp) => experienceToTimelineItem(exp, locale, t));
 
   return (
     <section
@@ -94,9 +125,9 @@ export default function ExperienceSection({
                         {exp.organization} · {exp.location}
                       </p>
                       <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                        {formatDate(exp.startDate)} –{" "}
-                        {exp.endDate ? formatDate(exp.endDate) : t("present")} ·{" "}
-                        {calcDuration(exp.startDate, exp.endDate)}
+                        {formatDate(exp.startDate, locale)} –{" "}
+                        {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
+                        {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t)}
                       </p>
                     </div>
                     <button
@@ -123,7 +154,9 @@ export default function ExperienceSection({
                     </button>
                   </div>
 
-                  <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">{exp.description}</p>
+                  <div className="mt-3">
+                    <MarkdownText text={exp.description} />
+                  </div>
 
                   {isExpanded && (
                     <div id={`exp-details-${exp.id}`} className="mt-4 space-y-3">
@@ -132,11 +165,11 @@ export default function ExperienceSection({
                           <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
                             {t("achievements")}
                           </h4>
-                          <ul className="list-inside list-disc space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                          <div className="space-y-1">
                             {exp.achievements.map((achievement, i) => (
-                              <li key={i}>{achievement}</li>
+                              <MarkdownText key={i} text={achievement} />
                             ))}
-                          </ul>
+                          </div>
                         </div>
                       )}
                       {exp.technologies && exp.technologies.length > 0 && (

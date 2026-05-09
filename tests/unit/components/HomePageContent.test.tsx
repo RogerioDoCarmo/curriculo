@@ -4,6 +4,7 @@
  */
 
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import HomePageContent from "@/app/[locale]/HomePageContent";
 import type { Experience, Project, SkillCategory } from "@/types/index";
 
@@ -140,9 +141,32 @@ describe("HomePageContent Component", () => {
     skills: mockSkills,
   };
 
+  // Mock translation messages
+  const messages = {
+    techStack: {
+      title: "Tech Stack",
+      viewFullStack: "View Full Tech Stack",
+    },
+    careerPath: {
+      professional: "Professional",
+      academic: "Academic",
+    },
+    homepage: {
+      storybookLink: "View Component Library",
+    },
+  };
+
+  const renderWithIntl = (component: React.ReactElement, locale = "en") => {
+    return render(
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {component}
+      </NextIntlClientProvider>
+    );
+  };
+
   describe("Component Rendering", () => {
     it("renders all main sections", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       expect(screen.getByTestId("hero")).toBeInTheDocument();
       expect(screen.getByTestId("career-path-selector")).toBeInTheDocument();
@@ -157,7 +181,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("renders contact section with correct structure", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const contactSection = screen.getByRole("region", { name: "Get in Touch" });
       expect(contactSection).toBeInTheDocument();
@@ -165,7 +189,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("renders contact section heading", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const heading = screen.getByRole("heading", { name: "Get in Touch" });
       expect(heading).toBeInTheDocument();
@@ -173,7 +197,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("renders contact section subtitle", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       expect(
         screen.getByText("Have a project in mind or want to chat? Send me a message!")
@@ -183,7 +207,7 @@ describe("HomePageContent Component", () => {
 
   describe("Props Passing", () => {
     it("passes correct props to Hero component", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const hero = screen.getByTestId("hero");
       expect(hero).toHaveAttribute("data-name", "Rogério do Carmo");
@@ -195,7 +219,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("passes correct props to ExperienceSection", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const experienceSection = screen.getByTestId("experience-section");
       expect(experienceSection).toHaveAttribute("data-career-path", "professional");
@@ -204,7 +228,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("passes correct props to SkillsSection", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const skillsSection = screen.getByTestId("skills-section");
       expect(skillsSection).toHaveAttribute("data-locale", "en");
@@ -212,7 +236,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("passes correct props to ProjectsSection", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const projectsSection = screen.getByTestId("projects-section");
       expect(projectsSection).toHaveAttribute("data-locale", "en");
@@ -220,7 +244,7 @@ describe("HomePageContent Component", () => {
     });
 
     it("passes correct props to ExitIntentModal", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const modal = screen.getByTestId("exit-intent-modal");
       expect(modal).toHaveAttribute("data-locale", "en");
@@ -242,7 +266,7 @@ describe("HomePageContent Component", () => {
         contactSubtitle: "Tem um projeto em mente ou quer conversar? Envie-me uma mensagem!",
       };
 
-      render(<HomePageContent {...ptProps} />);
+      renderWithIntl(<HomePageContent {...ptProps} />, "pt-BR");
 
       const hero = screen.getByTestId("hero");
       expect(hero).toHaveAttribute("data-locale", "pt-BR");
@@ -268,7 +292,7 @@ describe("HomePageContent Component", () => {
         contactSubtitle: "¿Tienes un proyecto en mente o quieres charlar? ¡Envíame un mensaje!",
       };
 
-      render(<HomePageContent {...esProps} />);
+      renderWithIntl(<HomePageContent {...esProps} />, "es");
 
       const hero = screen.getByTestId("hero");
       expect(hero).toHaveAttribute("data-locale", "es");
@@ -290,7 +314,7 @@ describe("HomePageContent Component", () => {
         experiences: [],
       };
 
-      render(<HomePageContent {...propsWithNoExperiences} />);
+      renderWithIntl(<HomePageContent {...propsWithNoExperiences} />);
 
       const experienceSection = screen.getByTestId("experience-section");
       expect(experienceSection).toHaveAttribute("data-experiences-count", "0");
@@ -302,7 +326,7 @@ describe("HomePageContent Component", () => {
         projects: [],
       };
 
-      render(<HomePageContent {...propsWithNoProjects} />);
+      renderWithIntl(<HomePageContent {...propsWithNoProjects} />);
 
       const projectsSection = screen.getByTestId("projects-section");
       expect(projectsSection).toHaveAttribute("data-projects-count", "0");
@@ -314,7 +338,7 @@ describe("HomePageContent Component", () => {
         skills: [],
       };
 
-      render(<HomePageContent {...propsWithNoSkills} />);
+      renderWithIntl(<HomePageContent {...propsWithNoSkills} />);
 
       const skillsSection = screen.getByTestId("skills-section");
       expect(skillsSection).toHaveAttribute("data-skills-count", "0");
@@ -342,7 +366,7 @@ describe("HomePageContent Component", () => {
         experiences: multipleExperiences,
       };
 
-      render(<HomePageContent {...propsWithMultipleExperiences} />);
+      renderWithIntl(<HomePageContent {...propsWithMultipleExperiences} />);
 
       const experienceSection = screen.getByTestId("experience-section");
       expect(experienceSection).toHaveAttribute("data-experiences-count", "2");
@@ -351,21 +375,21 @@ describe("HomePageContent Component", () => {
 
   describe("Accessibility", () => {
     it("contact section has proper ARIA labeling", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const contactSection = screen.getByRole("region", { name: "Get in Touch" });
       expect(contactSection).toHaveAttribute("aria-labelledby", "contact-title");
     });
 
     it("contact heading has correct ID for aria-labelledby", () => {
-      render(<HomePageContent {...defaultProps} />);
+      renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const heading = screen.getByRole("heading", { name: "Get in Touch" });
       expect(heading).toHaveAttribute("id", "contact-title");
     });
 
     it("all sections are rendered in correct semantic order", () => {
-      const { container } = render(<HomePageContent {...defaultProps} />);
+      const { container } = renderWithIntl(<HomePageContent {...defaultProps} />);
 
       const sections = container.querySelectorAll("[data-testid]");
       const sectionOrder = Array.from(sections).map((section) =>
@@ -388,18 +412,26 @@ describe("HomePageContent Component", () => {
 
   describe("Component Integration", () => {
     it("renders without crashing with all props", () => {
-      const { container } = render(<HomePageContent {...defaultProps} />);
+      const { container } = renderWithIntl(<HomePageContent {...defaultProps} />);
       expect(container.firstChild).toBeInTheDocument();
     });
 
     it("maintains component structure with different locales", () => {
-      const { rerender } = render(<HomePageContent {...defaultProps} locale="en" />);
+      const { rerender } = renderWithIntl(<HomePageContent {...defaultProps} locale="en" />);
       expect(screen.getByTestId("hero")).toBeInTheDocument();
 
-      rerender(<HomePageContent {...defaultProps} locale="pt-BR" />);
+      rerender(
+        <NextIntlClientProvider locale="pt-BR" messages={messages}>
+          <HomePageContent {...defaultProps} locale="pt-BR" />
+        </NextIntlClientProvider>
+      );
       expect(screen.getByTestId("hero")).toBeInTheDocument();
 
-      rerender(<HomePageContent {...defaultProps} locale="es" />);
+      rerender(
+        <NextIntlClientProvider locale="es" messages={messages}>
+          <HomePageContent {...defaultProps} locale="es" />
+        </NextIntlClientProvider>
+      );
       expect(screen.getByTestId("hero")).toBeInTheDocument();
     });
   });

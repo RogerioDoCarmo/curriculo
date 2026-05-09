@@ -1,6 +1,7 @@
 /**
  * NotificationPrompt component.
- * Asks the user for push notification permission after a delay.
+ * Asks the user for push notification permission.
+ * Can be triggered automatically after a delay or manually via props.
  *
  * Requirements: 10.1
  */
@@ -12,20 +13,36 @@ import { requestNotificationPermission, subscribeToTopic } from "@/lib/notificat
 
 type PromptState = "idle" | "visible" | "dismissed";
 
-export default function NotificationPrompt() {
+interface NotificationPromptProps {
+  /** If true, shows the prompt immediately (overrides automatic delay) */
+  readonly show?: boolean;
+  /** Delay in milliseconds before showing the prompt automatically (default: 10000) */
+  readonly delay?: number;
+}
+
+export default function NotificationPrompt({
+  show = false,
+  delay = 10_000,
+}: NotificationPromptProps) {
   const [state, setState] = useState<PromptState>("idle");
 
   useEffect(() => {
-    // Only show if notifications are supported and not yet decided
+    // If show prop is true, display immediately
+    if (show) {
+      setState("visible");
+      return;
+    }
+
+    // Only show automatically if notifications are supported and not yet decided
     if (typeof window === "undefined") return;
     if (!("Notification" in window)) return;
     if (Notification.permission !== "default") return;
     if (sessionStorage.getItem("notification-prompt-dismissed")) return;
 
-    // Show prompt after 10 seconds
-    const timer = setTimeout(() => setState("visible"), 10_000);
+    // Show prompt after delay
+    const timer = setTimeout(() => setState("visible"), delay);
     return () => clearTimeout(timer);
-  }, []);
+  }, [show, delay]);
 
   async function handleAllow() {
     setState("dismissed");
