@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
+import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ProjectsSectionProps {
@@ -147,7 +148,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               loading="lazy"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
@@ -235,7 +236,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
                 fill
                 sizes="256px"
                 loading="lazy"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           ))}
@@ -267,13 +268,11 @@ function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* Description */}
       <div>
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          {project.longDescription || project.description}
-        </p>
+        <MarkdownText text={project.longDescription || project.description} />
       </div>
 
       {/* Technologies */}
-      <div>
+      <div className="mt-2">
         <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
           {t("projects.technologies")}
         </h4>

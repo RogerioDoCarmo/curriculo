@@ -1,6 +1,6 @@
 ---
 id: android-study-app
-title: Android Study Application
+title: Android Native Crud
 description: Aplicação de exemplo para estudo inicial do ambiente Android, explorando componentes fundamentais e padrões de desenvolvimento
 featured: false
 date: 2017-09-01
@@ -10,7 +10,7 @@ technologies:
   - Material Design
   - SQLite
   - Android Architecture Components
-repoUrl: https://github.com/RogerioDoCarmo/AndroidStudy
+repoUrl: https://github.com/RogerioDoCarmo/Android-SimpleCRUD
 images:
   - /images/projects/android-study-1.jpg
 ---

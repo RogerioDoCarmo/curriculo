@@ -243,7 +243,7 @@ describe("Hero Component", () => {
   it("renders current job section for Portuguese locale", () => {
     render(<Hero {...defaultProps} locale="pt-BR" />);
     expect(screen.getByText("Desenvolvedor Mobile Sênior")).toBeInTheDocument();
-    expect(screen.getByText("Atual")).toBeInTheDocument();
+    expect(screen.getByText("2023 - 2026 (3 anos)")).toBeInTheDocument();
     const companyLogo = screen.getByAltText("Company Logo");
     expect(companyLogo).toBeInTheDocument();
   });
@@ -251,7 +251,7 @@ describe("Hero Component", () => {
   it("renders current job section for English locale", () => {
     render(<Hero {...defaultProps} locale="en" />);
     expect(screen.getByText("Senior Mobile Developer")).toBeInTheDocument();
-    expect(screen.getByText("Current")).toBeInTheDocument();
+    expect(screen.getByText("2023 - 2026 (3 years)")).toBeInTheDocument();
     const companyLogo = screen.getByAltText("Company Logo");
     expect(companyLogo).toBeInTheDocument();
   });
