@@ -291,7 +291,7 @@
     "essentialDescription": "Browser storage for basic functionality (theme, language, session). Stays in your browser only. Always active.",
     "analytics": "Analytics Cookies (Optional)",
     "analyticsDescription": "Help understand how visitors interact with the site through Firebase Analytics. Anonymous data. Requires consent.",
-    "analyticsCookies": "Cookies: _ga, _ga_{container-id}, _gid, _gat",
+    "analyticsCookies": "Cookies: _ga, _ga_'{'container-id'}', _gid, _gat",
     "functional": "Functional (localStorage)",
     "functionalDescription": "Browser storage for enhanced features (notifications, preferences). Stays in your browser only.",
     "acceptAll": "Accept All",
@@ -363,7 +363,7 @@
             "expiration": "2 years"
           },
           "gaContainer": {
-            "name": "_ga_{container-id}",
+            "name": "_ga_'{'container-id'}'",
             "purposeLabel": "Purpose",
             "purpose": "Session tracking - Stores session state and user interactions",
             "expirationLabel": "Expiration",
