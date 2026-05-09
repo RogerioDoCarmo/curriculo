@@ -15,7 +15,7 @@ const levelColors: Record<SkillLevel, string> = {
   beginner: "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
   intermediate: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
   advanced: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-  expert: "bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300",
+  expert: "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
 };
 
 export default function SkillsSection({ skills, locale: _locale }: SkillsSectionProps) {

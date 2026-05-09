@@ -71,7 +71,7 @@ const sampleProjects: Project[] = [
     title: "Portfolio Website",
     description: "Personal portfolio website.",
     technologies: ["Next.js", "Tailwind CSS"],
-    images: ["/images/portfolio-1.jpg"],
+    images: ["/images/resume.png"],
     featured: false,
     date: "2023-06-01",
   },

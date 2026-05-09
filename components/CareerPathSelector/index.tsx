@@ -39,7 +39,7 @@ export default function CareerPathSelector({ onSelect, selected }: CareerPathSel
     <div
       role="tablist"
       aria-label={t("title")}
-      className="w-full max-w-2xl rounded-lg border border-gray-200 bg-gray-100 p-1.5 dark:border-gray-700 dark:bg-gray-800"
+      className="w-full rounded-lg border border-gray-200 bg-gray-100 p-1.5 dark:border-gray-700 dark:bg-gray-800"
     >
       <div className="grid grid-cols-2 gap-2">
         <button

@@ -158,6 +158,9 @@ jspm_packages/
 *storybook.log
 storybook-static
 
+# Storybook build copied to public directory (generated during build)
+public/storybook
+
 # Build archives and release artifacts
 *.tar.gz
 *.zip

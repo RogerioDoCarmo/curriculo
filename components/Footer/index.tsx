@@ -99,6 +99,9 @@ const NAV_SECTIONS = [
   { labelKey: "nav.skills", href: "#skills" },
   { labelKey: "nav.contact", href: "#contact" },
   { labelKey: "nav.techStack", href: "#tech-stack" },
+  { labelKey: "footer.privacyPolicy", href: "/privacy", external: true },
+  { labelKey: "footer.cookiePolicy", href: "/cookies", external: true },
+  { labelKey: "footer.termsOfUse", href: "/terms", external: true },
 ];
 
 const LANGUAGE_LINKS = [
@@ -135,15 +138,15 @@ export default function Footer({ locale }: FooterProps) {
               {t("footer.navigate")}
             </h2>
             <ul className="space-y-2">
-              {NAV_SECTIONS.map(({ labelKey, href }) => (
+              {NAV_SECTIONS.map(({ labelKey, href, external }) => (
                 <li key={href}>
                   <a
-                    href={href}
+                    href={external ? `/${locale}${href}` : href}
                     onClick={() =>
                       trackFooterLinkClick({
                         link_text: t(labelKey),
                         link_url: href,
-                        link_type: "navigation",
+                        link_type: external ? "page" : "navigation",
                       })
                     }
                     className="

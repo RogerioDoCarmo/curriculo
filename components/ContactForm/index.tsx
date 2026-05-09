@@ -11,6 +11,7 @@ import {
   trackFormSubmissionSuccess,
   trackFormSubmissionError,
 } from "@/lib/analytics";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 interface ContactFormProps {
   readonly locale: string;
@@ -51,6 +52,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [submissionStartTime, setSubmissionStartTime] = useState<number>(0);
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState<boolean>(false);
 
   function validateForm(
     data: Partial<ContactFormData>
@@ -166,6 +168,21 @@ export default function ContactForm({ locale }: ContactFormProps) {
         setFormData({ name: "", email: "", message: "" });
         setTouched({});
         setFieldErrors({});
+
+        // Show notification prompt after successful submission
+        // Check if notification permission hasn't been decided yet and prompt wasn't shown before
+        if (
+          typeof window !== "undefined" &&
+          "Notification" in window &&
+          Notification.permission === "default" &&
+          !localStorage.getItem("notification-prompt-shown-after-contact")
+        ) {
+          // Delay showing the prompt by 2 seconds to let user see success message
+          setTimeout(() => {
+            setShowNotificationPrompt(true);
+            localStorage.setItem("notification-prompt-shown-after-contact", "true");
+          }, 2000);
+        }
       } else {
         setStatus("error");
         trackFormSubmissionError({
@@ -396,6 +413,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
           )}
         </button>
       </form>
+
+      {/* Notification Prompt - shown after successful form submission */}
+      {showNotificationPrompt && <NotificationPrompt show={true} />}
     </>
   );
 }

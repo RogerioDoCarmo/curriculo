@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
+import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ProjectsSectionProps {
@@ -267,13 +268,11 @@ function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* Description */}
       <div>
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          {project.longDescription || project.description}
-        </p>
+        <MarkdownText text={project.longDescription || project.description} />
       </div>
 
       {/* Technologies */}
-      <div>
+      <div className="mt-2">
         <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
           {t("projects.technologies")}
         </h4>

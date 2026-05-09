@@ -35,32 +35,47 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
 
           {/* Education Section */}
           <div className="mb-4 flex items-center justify-center md:justify-start gap-4">
-            <Image
-              src="/images/logos/logo_unesp.png"
-              alt="UNESP Logo"
-              width={1280}
-              height={427}
-              className="rounded w-[125px] h-auto"
-              priority
-            />
+            <a
+              href="https://www2.unesp.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: "https://www2.unesp.br/",
+                  context: "hero_unesp_logo",
+                })
+              }
+              aria-label="UNESP - Universidade Estadual Paulista"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Image
+                src="/images/logos/logo_unesp.png"
+                alt="UNESP Logo"
+                width={1280}
+                height={427}
+                className="rounded w-[125px] h-auto"
+                priority
+              />
+            </a>
             <div className="text-left">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {locale === "pt-BR"
                   ? "Bacharel em Ciência da Computação"
                   : "Bachelor in Computer Science"}
               </p>
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2018</p>
+              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-2">
                 {locale === "pt-BR"
                   ? "Mestre em Ciências Cartográficas"
                   : "Master in Cartographic Sciences"}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2023</p>
             </div>
           </div>
 
           {/* Dissertation Section */}
           <div className="mb-6">
-            <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 text-center md:text-left">
+            <p className="text-base font-bold text-gray-900 dark:text-gray-100 mb-1 text-center md:text-left">
               {locale === "pt-BR"
                 ? "Dissertação de mestrado completa"
                 : "Complete master's dissertation"}
@@ -145,21 +160,57 @@ export default function Hero({ name, title, locale, greeting, ctaText, contactTe
 
           {/* Current Job Section */}
           <div className="mb-8 flex items-center justify-center md:justify-start gap-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <Image
-              src="/images/logos/logo_topaz.webp"
-              alt="Company Logo"
-              width={1280}
-              height={291}
-              className="rounded w-[200px] h-auto"
-              priority
-            />
+            <a
+              href="https://www.topazevolution.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: "https://www.topazevolution.com/",
+                  context: "hero_topaz_logo",
+                })
+              }
+              aria-label="Topaz Evolution"
+              className="transition-opacity hover:opacity-80"
+            >
+              <Image
+                src="/images/logos/logo_topaz.webp"
+                alt="Company Logo"
+                width={1280}
+                height={291}
+                className="rounded w-[200px] h-auto"
+                priority
+              />
+            </a>
             <div className="text-left">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <a
+                href="https://www.topazevolution.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackExternalLinkClick({
+                    url: "https://www.topazevolution.com/",
+                    context: "hero_topaz_text",
+                  })
+                }
+                className="text-base font-bold text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              >
                 {locale === "pt-BR" ? "Desenvolvedor Mobile Sênior" : "Senior Mobile Developer"}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {locale === "pt-BR" ? "Atual" : "Current"}
-              </p>
+              </a>
+              <a
+                href="https://www.topazevolution.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackExternalLinkClick({
+                    url: "https://www.topazevolution.com/",
+                    context: "hero_topaz_date",
+                  })
+                }
+                className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
+              >
+                {locale === "pt-BR" ? "2023 - 2026 (3 anos)" : "2023 - 2026 (3 years)"}
+              </a>
             </div>
           </div>
 

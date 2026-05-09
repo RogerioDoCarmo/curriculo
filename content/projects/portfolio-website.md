@@ -18,7 +18,7 @@ technologies:
 repoUrl: https://github.com/RogerioDoCarmo/curriculo
 liveUrl: https://rogeriodocarmo.com
 images:
-  - /images/projects/portfolio-1.jpg
+  - /images/projects/resume.png
 ---
 
 ## Visão Geral

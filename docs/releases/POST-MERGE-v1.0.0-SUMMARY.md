@@ -31,7 +31,7 @@ This release represents the completion of Task 38 - comprehensive content popula
 
 #### Projects Portfolio (3 major projects)
 
-- **GNSS Logger Analyzer** - Android GNSS data analysis tool
+- **INCT GNSS App** - Android GNSS data analysis tool
 - **Android Study App** - Educational mobile application
 - **Portfolio Website** - This website (meta-project)
 

@@ -167,7 +167,7 @@ This implementation plan breaks down the personal resume website into discrete, 
 
 ## Checkpoint 2 - Core UI Components (v0.2.0-checkpoint-2)
 
-- [ ] 5. Core UI components
+- [x] 5. Core UI components
   - [x] 5.1 Create Button component with variants
     - Implement variants: primary, secondary, ghost
     - Implement sizes: sm, md, lg
@@ -211,7 +211,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test fallback when highlight not found
     - Test empty strings handling
 
-- [ ] 6. Layout components
+- [x] 6. Layout components
   - [x] 6.1 Create RootLayout with theme and language providers
     - Implement `app/[locale]/layout.tsx`
     - Wrap with ThemeProvider and next-intl provider
@@ -580,7 +580,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test that hook triggers at threshold after minimum time
     - Test that hook is disabled on mobile
 
-- [ ] 16. Responsive design implementation
+- [x] 16. Responsive design implementation
   - [x] 16.1 Implement mobile layout (< 768px)
     - Create mobile-optimized navigation (hamburger menu)
     - Stack content vertically
@@ -616,7 +616,7 @@ This implementation plan breaks down the personal resume website into discrete, 
   - Test on multiple devices and browsers
   - Ask the user if questions arise
 
-- [ ] 18. Tech Stack explanation section
+- [x] 18. Tech Stack explanation section
   - [x] 18.1 Create TechStackSection component
     - Build component to display technologies used in the website
     - Organize by category: Framework, Styling, Content, Testing, Analytics, Deployment, Monitoring
@@ -703,7 +703,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test PDF generation
     - _Requirements: 18.2_
 
-- [ ] 20. Storybook setup and component documentation
+- [x] 20. Storybook setup and component documentation
   - [x] 20.1 Install and configure Storybook
     - Run `npx storybook@latest init`
     - Configure Storybook for Next.js and Tailwind
@@ -720,7 +720,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Validates: Requirements 13.1**
     - Test that all UI components have corresponding story files
 
-- [ ] 21. CI/CD pipeline setup
+- [x] 21. CI/CD pipeline setup
   - [x] 21.1 Create GitHub Actions workflow for CI
     - Create `.github/workflows/ci.yml`
     - Add jobs: lint, type-check, test, coverage
@@ -760,7 +760,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - **Validates: Requirements 5.5**
     - Test that all domains serve identical content
 
-- [ ] 22. Performance optimization
+- [x] 22. Performance optimization
   - [x] 22.1 Implement code splitting and lazy loading
     - Use dynamic imports for heavy components
     - Lazy load below-fold images
@@ -787,7 +787,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test Performance score >= 90
     - _Requirements: 6.1, 6.2, 6.5_
 
-- [ ] 23. Version control and documentation
+- [x] 23. Version control and documentation
   - [x] 23.1 Create comprehensive README
     - Document project overview and architecture
     - Include setup instructions
@@ -1099,27 +1099,27 @@ This implementation plan breaks down the personal resume website into discrete, 
       - ⚠️ Circular dependency error confirmed with current setup
       - 📄 Full report: `.kiro/specs/personal-resume-website/eslint-monitoring-report.md`
       - **CONCLUSION:** Cannot fix by upgrading Next.js alone - requires ESLint 9 migration
-  - [ ] 30.2 Plan ESLint 9 migration (NEW - replaces old 30.2-30.6)
+  - [~] 30.2 Plan ESLint 9 migration (NEW - replaces old 30.2-30.6)
     - Research ESLint 9 breaking changes and migration guide
     - Document required changes to ESLint configuration (flat config format)
     - Identify all ESLint plugins that need updating
     - Create migration checklist and testing plan
     - Estimate effort and potential issues
     - _Prerequisite for fixing circular dependency issue_
-  - [ ] 30.3 Migrate to ESLint 9 flat config format
+  - [~] 30.3 Migrate to ESLint 9 flat config format
     - Upgrade ESLint to version 9 or 10: `npm install --save-dev eslint@^10`
     - Convert `.eslintrc.json` to `eslint.config.mjs` (flat config)
     - Update all ESLint plugins to ESLint 9-compatible versions
     - Update `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser`
     - Update `eslint-plugin-storybook` if needed
     - _Major breaking change - requires careful testing_
-  - [ ] 30.4 Update eslint-config-next to 16.2.6
+  - [~] 30.4 Update eslint-config-next to 16.2.6
     - Upgrade: `npm install --save-dev eslint-config-next@^16.2.6`
     - Integrate with new flat config format
     - Verify ESLint runs without circular dependency error
     - Test all Next.js-specific lint rules work correctly
     - _Should resolve circular dependency issue_
-  - [ ] 30.5 Test ESLint configuration
+  - [~] 30.5 Test ESLint configuration
     - Run `npx eslint .` to check for configuration errors
     - Test linting on TypeScript files
     - Test linting on React/Next.js files
@@ -1127,23 +1127,23 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify all existing lint rules still work
     - Fix any linting errors discovered
     - _Ensure no regressions from migration_
-  - [ ] 30.6 Restore lint scripts in package.json
+  - [~] 30.6 Restore lint scripts in package.json
     - Update `"lint": "next lint"` (restore original command)
     - Update `"lint:fix": "next lint --fix"` (restore original command)
     - Remove workaround message
     - Test scripts work correctly
     - _Restore functionality after migration_
-  - [ ] 30.7 Update pre-commit hooks
+  - [~] 30.7 Update pre-commit hooks
     - Verify husky pre-commit hooks work with ESLint 9
     - Test lint-staged configuration
     - Ensure hooks don't break git workflow
     - _Requirements: 12.1_
-  - [ ] 30.8 Update CI/CD pipeline
+  - [~] 30.8 Update CI/CD pipeline
     - Verify lint step in `.github/workflows/ci.yml` works
     - Ensure lint failures block deployment
     - Test full CI/CD pipeline with linting enabled
     - _Requirements: 16.1, 16.2_
-  - [ ] 30.9 Update documentation
+  - [~] 30.9 Update documentation
     - Remove ESLint issue from `NEXTJS-16-UPGRADE-STATUS.md`
     - Document ESLint 9 migration in upgrade notes
     - Update `README.md` with new ESLint version
@@ -1313,8 +1313,8 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Monitor search queries and click-through rates
     - _Requirements: 10.1, 10.3_
 
-- [~] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
-  - [~] 33.1 Analyze data collection and legal requirements
+- [-] 33. Implement Privacy Policy, Cookie Policy, and Terms of Use
+  - [x] 33.1 Analyze data collection and legal requirements
     - Document all data collection points:
       - **Firebase Analytics** (comprehensive user interaction tracking):
         - **Navigation Events**: Page views, link clicks (internal/external), section navigation, header logo clicks, footer links, social media links
@@ -1341,7 +1341,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - **CCPA** (California Consumer Privacy Act) - California users
     - **Cookie consent banner is REQUIRED** due to Firebase Analytics cookie usage
     - _Requirements: 10.1, 10.3, 10.4, 10.5_
-  - [ ] 33.2 Create Privacy Policy page
+  - [x] 33.2 Create Privacy Policy page
     - Create `app/[locale]/privacy/page.tsx` for Privacy Policy
     - Include sections:
       - **Introduction**: What data is collected and why
@@ -1367,7 +1367,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add translations for all three languages (pt-BR, en, es)
     - Ensure GDPR and LGPD compliance
     - _Requirements: 10.1, 10.3, 10.4, 10.5, 11.7_
-  - [ ] 33.3 Create Cookie Policy (REQUIRED)
+  - [x] 33.3 Create Cookie Policy (REQUIRED)
     - **Firebase Analytics uses cookies** - Cookie Policy is mandatory
     - Create `app/[locale]/cookies/page.tsx`
     - Include sections:
@@ -1389,7 +1389,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - **Analytics opt-out**: Link to Google Analytics opt-out browser add-on
     - Add translations for all three languages
     - _Requirements: 10.1, 10.3_
-  - [ ] 33.4 Create Terms of Use page
+  - [~] 33.4 Create Terms of Use page
     - Create `app/[locale]/terms/page.tsx` for Terms of Use
     - Include sections:
       - **Acceptance of Terms**: User agreement to terms
@@ -1403,7 +1403,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - **Contact Information**: How to reach you with questions
     - Add translations for all three languages
     - _Requirements: 11.7_
-  - [ ] 33.5 Implement cookie consent banner (REQUIRED)
+  - [~] 33.5 Implement cookie consent banner (REQUIRED)
     - **Cookie consent banner is mandatory** due to Firebase Analytics cookie usage
     - Create `CookieConsent` component
     - Display banner on first visit with options:
@@ -1425,7 +1425,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Easy way to withdraw consent later
       - No tracking before consent is given
     - _Requirements: 10.1, 10.3, 11.7_
-  - [ ] 33.6 Add privacy links to Footer
+  - [~] 33.6 Add privacy links to Footer
     - Update Footer component to include links to:
       - Privacy Policy (`/privacy`)
       - Cookie Policy (`/cookies`)
@@ -1435,7 +1435,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add to all language versions
     - Group privacy links in a dedicated "Privacy & Legal" section
     - _Requirements: 7.5, 11.7_
-  - [ ] 33.7 Update LICENSE file
+  - [~] 33.7 Update LICENSE file
     - Review current MIT License
     - **Decision**: Keep MIT License for source code (recommended)
       - MIT License applies to the **code/software**, not the website content
@@ -1452,7 +1452,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       # See Terms of Use for website content usage terms.
       ```
     - _Requirements: 15.2_
-  - [ ] 33.8 Add content copyright notice
+  - [~] 33.8 Add content copyright notice
     - Create `COPYRIGHT.md` file for website content
     - Specify that personal content (resume, projects, images) is:
       - © 2024-2026 Rogério do Carmo. All rights reserved.
@@ -1461,7 +1461,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Clarify that source code remains MIT licensed
     - Add to Footer: "© 2024-2026 Rogério do Carmo. All rights reserved."
     - _Requirements: 7.5_
-  - [ ] 33.9 Implement data deletion mechanism (GDPR/LGPD compliance)
+  - [~] 33.9 Implement data deletion mechanism (GDPR/LGPD compliance)
     - Add contact information for data deletion requests
     - Document process for handling deletion requests:
       - **Email subscriptions**: Unsubscribe link or manual removal from Formspree
@@ -1472,7 +1472,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add "Delete My Data" section to Privacy Policy
     - Provide email address for data deletion requests: privacy@rogeriodocarmo.com (or your preferred contact)
     - _Requirements: 10.5_
-  - [ ] 33.10 Test privacy implementation
+  - [~] 33.10 Test privacy implementation
     - Verify all privacy pages load correctly in all languages
     - **Test cookie consent banner**:
       - Verify banner appears on first visit
@@ -1491,7 +1491,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Requirements: 10.1, 10.3, 11.7_
 
 - [ ] 34. Fix GitHub Dependabot security vulnerabilities
-  - [ ] 34.1 Review Dependabot security alerts
+  - [~] 34.1 Review Dependabot security alerts
     - Go to GitHub repository → Security → Dependabot alerts
     - Review all 12 vulnerabilities:
       - 1 critical severity
@@ -1506,7 +1506,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Impact on project
     - Create `docs/SECURITY-VULNERABILITIES.md` with findings
     - _Security: Critical for production deployment_
-  - [ ] 34.2 Update dependencies to fix critical and high severity issues
+  - [~] 34.2 Update dependencies to fix critical and high severity issues
     - Update packages with critical severity vulnerabilities first
     - Update packages with high severity vulnerabilities
     - Run `npm audit` to verify fixes
@@ -1514,18 +1514,18 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Update package.json with new versions
     - Run `npm install` to update package-lock.json
     - _Security: Addresses 4 critical/high severity issues_
-  - [ ] 34.3 Update dependencies to fix moderate severity issues
+  - [~] 34.3 Update dependencies to fix moderate severity issues
     - Update packages with moderate severity vulnerabilities
     - Run `npm audit` to verify fixes
     - Check for breaking changes
     - Test application functionality after updates
     - _Security: Addresses 6 moderate severity issues_
-  - [ ] 34.4 Update dependencies to fix low severity issues
+  - [~] 34.4 Update dependencies to fix low severity issues
     - Update packages with low severity vulnerabilities
     - Run `npm audit` to verify all issues resolved
     - Verify `npm audit` shows 0 vulnerabilities
     - _Security: Addresses 2 low severity issues_
-  - [ ] 34.5 Test application after dependency updates
+  - [~] 34.5 Test application after dependency updates
     - Run full test suite: `npm test`
     - Verify all 91 tests still pass (or fix broken tests)
     - Run E2E tests: `npm run test:e2e`
@@ -1534,7 +1534,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify static export generates correctly
     - Test on all locales (pt-BR, en, es)
     - _Requirements: 14.1, 14.2, 14.3_
-  - [ ] 34.6 Update CI/CD pipeline for security scanning
+  - [~] 34.6 Update CI/CD pipeline for security scanning
     - Verify GitHub Actions workflows still pass
     - Add `npm audit` check to CI pipeline (if not already present)
     - Configure Dependabot auto-merge for patch updates (optional)
@@ -1549,7 +1549,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Bundle size similar or smaller (currently 182KB gzipped)
     - Document any performance changes
     - _Requirements: 6.1, 6.2, 6.5_
-  - [ ] 34.8 Update security documentation
+  - [~] 34.8 Update security documentation
     - Update `docs/SECURITY-CHECKLIST.md` with:
       - Date of security audit
       - Vulnerabilities fixed
@@ -1559,7 +1559,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document any remaining known issues (if any)
     - Add security update to CHANGELOG.md
     - _Requirements: 15.2_
-  - [ ] 34.9 Deploy and verify in production
+  - [~] 34.9 Deploy and verify in production
     - Deploy updated application to Vercel
     - Verify deployment succeeds
     - Test production site on all 11 domains
@@ -1567,7 +1567,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Check Sentry for any new errors
     - Monitor Firebase Analytics for any issues
     - _Requirements: 8.1, 8.2, 10.5_
-  - [ ] 34.10 Set up automated security monitoring
+  - [~] 34.10 Set up automated security monitoring
     - Enable Dependabot security updates in GitHub settings
     - Configure Dependabot to create PRs for security updates
     - Set up email notifications for new vulnerabilities
@@ -1575,22 +1575,22 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document security update process in `docs/SECURITY-CHECKLIST.md`
     - _Security: Proactive vulnerability management_
 
-- [ ] 35. Fix Sentry error logging integration
-  - [ ] 35.1 Verify Sentry configuration and credentials
+- [~] 35. Fix Sentry error logging integration
+  - [~] 35.1 Verify Sentry configuration and credentials
     - Check if Sentry DSN is correctly set in `.env.local`
     - Verify `NEXT_PUBLIC_SENTRY_DSN` environment variable in Vercel
     - Check Sentry project exists and is active in Sentry dashboard
     - Verify Sentry organization and project settings
     - Review Sentry SDK version in package.json (`@sentry/nextjs`)
     - _Requirements: 10.5_
-  - [ ] 34.2 Review Sentry configuration files
+  - [~] 34.2 Review Sentry configuration files
     - Check `sentry.client.config.ts` (or `.js`) exists and is correct
     - Check `sentry.server.config.ts` (or `.js`) exists and is correct
     - Check `sentry.edge.config.ts` (or `.js`) if using Edge runtime
     - Verify `next.config.js` has Sentry webpack plugin configuration
     - Review Sentry initialization options (environment, release, tracesSampleRate)
     - _Requirements: 10.5_
-  - [ ] 34.3 Test Sentry error logging locally
+  - [~] 34.3 Test Sentry error logging locally
     - Create a test error in development environment
     - Trigger the error and verify it appears in Sentry dashboard
     - Test different error types:
@@ -1600,14 +1600,14 @@ This implementation plan breaks down the personal resume website into discrete, 
       - API route errors
     - Verify error context includes useful information (user, environment, breadcrumbs)
     - _Requirements: 10.5_
-  - [ ] 34.4 Check Sentry integration with Next.js 16
+  - [~] 34.4 Check Sentry integration with Next.js 16
     - Verify `@sentry/nextjs` is compatible with Next.js 16.2.4
     - Check Sentry documentation for Next.js 16 compatibility
     - Update `@sentry/nextjs` to latest compatible version if needed
     - Review breaking changes in Sentry SDK updates
     - Test with Next.js App Router (app directory)
     - _Requirements: 10.5, 21.1_
-  - [ ] 34.5 Verify Sentry source maps upload
+  - [~] 34.5 Verify Sentry source maps upload
     - Check if source maps are being uploaded to Sentry
     - Verify `sentry-cli` is configured correctly
     - Check `.sentryclirc` file exists with auth token
@@ -1615,7 +1615,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test source map upload during build: `npm run build`
     - Verify stack traces in Sentry show original source code (not minified)
     - _Requirements: 10.5_
-  - [ ] 34.6 Test Sentry in production environment
+  - [~] 34.6 Test Sentry in production environment
     - Deploy application to Vercel
     - Trigger a test error in production
     - Verify error appears in Sentry dashboard within 1-2 minutes
@@ -1626,7 +1626,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Release version
       - Breadcrumbs (user actions before error)
     - _Requirements: 10.5, 8.2_
-  - [ ] 34.7 Review and update error logging code
+  - [~] 34.7 Review and update error logging code
     - Check `lib/error-logging.ts` (or similar) exists
     - Verify `logError()` function uses Sentry correctly
     - Review error boundaries in React components
@@ -1634,21 +1634,21 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify async error handling (try/catch with Sentry)
     - Add Sentry context where useful (user info, custom tags)
     - _Requirements: 10.5_
-  - [ ] 34.8 Set up Sentry alerts and notifications
+  - [~] 34.8 Set up Sentry alerts and notifications
     - Configure Sentry alert rules for critical errors
     - Set up email notifications for new issues
     - Configure Sentry integrations (Slack, email, etc.)
     - Set up issue assignment rules
     - Configure alert frequency and thresholds
     - _Requirements: 10.5_
-  - [ ] 34.9 Test Sentry performance monitoring (optional)
+  - [~] 34.9 Test Sentry performance monitoring (optional)
     - Verify performance monitoring is enabled in Sentry config
     - Check `tracesSampleRate` is set appropriately (e.g., 0.1 for 10%)
     - Test transaction tracking for page loads
     - Verify API route performance is tracked
     - Review performance data in Sentry dashboard
     - _Optional: Performance monitoring feature_
-  - [ ] 34.10 Document Sentry setup and troubleshooting
+  - [~] 34.10 Document Sentry setup and troubleshooting
     - Update `docs/SECURITY-CHECKLIST.md` with Sentry verification steps
     - Create `docs/SENTRY-SETUP.md` with:
       - Configuration instructions
@@ -1668,7 +1668,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Review Firebase Analytics dashboard for current data
     - Document current tracking implementation
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.2 Design comprehensive event tracking strategy
+  - [~] 35.2 Design comprehensive event tracking strategy
     - Define event taxonomy and naming conventions
     - Map all user interactions to track:
       - Page views (all routes and locales)
@@ -1685,7 +1685,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Define custom parameters for each event
     - Create event tracking documentation
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.3 Implement page view tracking
+  - [~] 35.3 Implement page view tracking
     - Track page views with custom parameters:
       - Page path
       - Page title
@@ -1696,7 +1696,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Track section visibility (when sections scroll into view)
     - Implement scroll depth tracking (25%, 50%, 75%, 100%)
     - _Requirements: 10.3_
-  - [ ] 35.4 Implement navigation tracking
+  - [~] 35.4 Implement navigation tracking
     - Track header navigation clicks:
       - Menu item clicked
       - Destination section
@@ -1707,7 +1707,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Track mobile menu open/close
     - Track anchor navigation (URL hash changes)
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.5 Implement content interaction tracking
+  - [~] 35.5 Implement content interaction tracking
     - Track project interactions:
       - Project card clicks
       - Project detail modal opens
@@ -1721,7 +1721,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Skill category views
       - Skill search/filter usage
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.6 Implement form and conversion tracking
+  - [~] 35.6 Implement form and conversion tracking
     - Track contact form interactions:
       - Form field focus events
       - Form validation errors
@@ -1736,7 +1736,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Social media links (LinkedIn, GitHub, Twitter)
       - Project external links
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.7 Implement user preference tracking
+  - [~] 35.7 Implement user preference tracking
     - Track language changes:
       - From locale
       - To locale
@@ -1749,7 +1749,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Selected path (professional/academic)
       - Session persistence
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.8 Implement engagement and timing tracking
+  - [~] 35.8 Implement engagement and timing tracking
     - Track time on page/section:
       - Total session duration
       - Time spent per section
@@ -1763,7 +1763,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Modal shown
       - Modal action taken (download, connect, dismiss)
     - _Requirements: 10.3, 10.4_
-  - [ ] 35.9 Set up custom dimensions and user properties
+  - [~] 35.9 Set up custom dimensions and user properties
     - Configure custom dimensions in Firebase:
       - User locale preference
       - User theme preference
@@ -1777,7 +1777,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Total visits
       - Last visit date
     - _Requirements: 10.3_
-  - [ ] 35.10 Create Firebase Analytics dashboard and reports
+  - [~] 35.10 Create Firebase Analytics dashboard and reports
     - Set up custom dashboards in Firebase Analytics:
       - Overview dashboard (page views, users, sessions)
       - Navigation flow dashboard
@@ -1792,7 +1792,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Device and browser distribution
     - Set up audience segments for analysis
     - _Requirements: 10.3_
-  - [ ] 35.11 Implement analytics event testing
+  - [~] 35.11 Implement analytics event testing
     - Create test utilities for analytics events
     - Write unit tests for analytics tracking functions
     - Test event firing in development environment
@@ -1800,7 +1800,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test custom parameters are captured correctly
     - Test user properties are set correctly
     - _Requirements: 10.3, 14.1_
-  - [ ] 35.12 Test analytics in production
+  - [~] 35.12 Test analytics in production
     - Deploy analytics implementation to production
     - Use Firebase DebugView to verify events in real-time
     - Test all tracked interactions:
@@ -1812,7 +1812,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Trigger exit intent modal
     - Verify events appear in Firebase Analytics dashboard (24-48 hour delay)
     - _Requirements: 10.3, 8.2_
-  - [ ] 35.13 Set up analytics alerts and monitoring
+  - [~] 35.13 Set up analytics alerts and monitoring
     - Configure Firebase Analytics alerts:
       - Sudden drop in page views
       - Spike in form submission errors
@@ -1821,7 +1821,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure Google Analytics 4 integration (optional)
     - Set up weekly analytics reports
     - _Requirements: 10.3_
-  - [ ] 35.14 Document analytics implementation and usage
+  - [~] 35.14 Document analytics implementation and usage
     - Create `docs/ANALYTICS-TRACKING.md` with:
       - Complete list of tracked events
       - Event parameters and user properties
@@ -1833,7 +1833,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document how to interpret analytics data
     - Add Firebase Analytics dashboard URL
     - _Requirements: 15.2_
-  - [ ] 35.15 Analyze initial data and optimize
+  - [~] 35.15 Analyze initial data and optimize
     - Wait 2-4 weeks for data collection
     - Analyze user behavior patterns:
       - Most popular sections
@@ -1850,7 +1850,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Requirements: 10.3, 10.4_
 
 - [ ] 36. Configure Firebase Crashlytics for error tracking and monitoring
-  - [ ] 36.1 Set up Firebase Crashlytics in Firebase Console
+  - [~] 36.1 Set up Firebase Crashlytics in Firebase Console
     - Go to Firebase Console → Project Settings
     - Navigate to Crashlytics section
     - Enable Crashlytics for the project
@@ -1866,7 +1866,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Set up Crashlytics initialization in app layout
     - Verify Crashlytics is initialized before app renders
     - _Requirements: 10.1, 10.5_
-  - [ ] 36.3 Implement automatic crash reporting
+  - [~] 36.3 Implement automatic crash reporting
     - Configure global error handlers:
       - Window error event listener
       - Unhandled promise rejection handler
@@ -1878,7 +1878,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure automatic crash collection
     - Set crash reporting opt-in/opt-out (GDPR compliance)
     - _Requirements: 10.5_
-  - [ ] 36.4 Implement custom error logging
+  - [~] 36.4 Implement custom error logging
     - Create `lib/crashlytics.ts` with helper functions:
       - `logError(error, context)` - Log errors with context
       - `logMessage(message, level)` - Log custom messages
@@ -1904,7 +1904,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Total visits
     - Add custom keys before error logging
     - _Requirements: 10.5_
-  - [ ] 36.6 Implement breadcrumb logging
+  - [~] 36.6 Implement breadcrumb logging
     - Log user actions as breadcrumbs:
       - Page navigation
       - Button clicks
@@ -1918,14 +1918,14 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Language/theme change flow
     - Limit breadcrumb history (last 50-100 events)
     - _Requirements: 10.5_
-  - [ ] 36.7 Configure crash-free users and stability metrics
+  - [~] 36.7 Configure crash-free users and stability metrics
     - Set up crash-free users tracking
     - Configure stability score calculation
     - Set up crash velocity alerts
     - Define acceptable crash rate thresholds
     - Configure crash grouping and deduplication
     - _Requirements: 10.5_
-  - [ ] 36.8 Test Crashlytics in development
+  - [~] 36.8 Test Crashlytics in development
     - Force a test crash to verify Crashlytics works:
       - Create test button to throw error
       - Trigger test crash
@@ -1935,7 +1935,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify error context is captured correctly
     - Test error boundary integration
     - _Requirements: 10.5_
-  - [ ] 36.9 Test Crashlytics in production
+  - [~] 36.9 Test Crashlytics in production
     - Deploy Crashlytics implementation to production
     - Monitor Crashlytics dashboard for incoming crashes
     - Trigger test errors in production (controlled):
@@ -1949,7 +1949,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Breadcrumbs
       - User attributes
     - _Requirements: 10.5, 8.2_
-  - [ ] 36.10 Set up Crashlytics alerts and notifications
+  - [~] 36.10 Set up Crashlytics alerts and notifications
     - Configure Crashlytics alert rules:
       - New crash types detected
       - Crash rate exceeds threshold
@@ -1960,7 +1960,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Set up daily/weekly crash reports
     - Define alert recipients and escalation
     - _Requirements: 10.5_
-  - [ ] 36.11 Integrate Crashlytics with CI/CD
+  - [~] 36.11 Integrate Crashlytics with CI/CD
     - Upload source maps to Crashlytics for better stack traces
     - Configure Crashlytics CLI for build integration
     - Add Crashlytics verification to CI pipeline
@@ -1968,7 +1968,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Configure release tracking in Crashlytics
     - Tag releases with version numbers
     - _Requirements: 10.5, 16.1_
-  - [ ] 36.12 Create Crashlytics dashboard and monitoring
+  - [~] 36.12 Create Crashlytics dashboard and monitoring
     - Set up custom Crashlytics dashboard:
       - Crash-free users percentage
       - Crash velocity (crashes per hour/day)
@@ -1979,7 +1979,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Set up crash triage workflow
     - Define crash resolution process
     - _Requirements: 10.5_
-  - [ ] 36.13 Compare Crashlytics with Sentry
+  - [~] 36.13 Compare Crashlytics with Sentry
     - Analyze overlap between Crashlytics and Sentry
     - Determine if both are needed or choose one:
       - Crashlytics: Better Firebase integration, free
@@ -1988,7 +1988,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Decide on primary error tracking tool
     - Configure dual logging if keeping both
     - _Requirements: 10.5_
-  - [ ] 36.14 Document Crashlytics implementation
+  - [~] 36.14 Document Crashlytics implementation
     - Create `docs/CRASHLYTICS-SETUP.md` with:
       - Configuration instructions
       - Custom error logging guide
@@ -2000,7 +2000,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document crash triage and resolution process
     - Add Crashlytics dashboard URL
     - _Requirements: 15.2_
-  - [ ] 36.15 Monitor and optimize crash reporting
+  - [~] 36.15 Monitor and optimize crash reporting
     - Monitor Crashlytics for 2-4 weeks
     - Analyze crash patterns:
       - Most common crashes
@@ -2055,7 +2055,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Collaborations
     - Organize academic content for "Academic" career path
     - _Requirements: 1.3, 1.4, 2.1_
-  - [ ] 38.4 Create comprehensive Hero section content
+  - [~] 38.4 Create comprehensive Hero section content
     - Write professional headline based on current role
     - Create compelling introduction paragraph (2-3 sentences)
     - Add professional tagline/subtitle
@@ -2114,7 +2114,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add project images to `/public/images/projects/`
     - Mark featured projects (top 3-4)
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
-  - [ ] 38.9 Update navigation and integrate all components
+  - [~] 38.9 Update navigation and integrate all components
     - Verify Header component displays correctly with:
       - Logo/name
       - Navigation links (Home, Projects, Experience, Skills, Contact, Tech Stack)
@@ -2130,7 +2130,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Resume download link
     - Ensure all components are visible and functional
     - _Requirements: 4.1, 4.2, 4.3, 7.5, 11.5, 17.5_
-  - [ ] 38.10 Create complete homepage layout
+  - [~] 38.10 Create complete homepage layout
     - Integrate all sections in proper order:
       1. **Hero section** with profile photo, headline, intro, CTA
       2. **Career Path Selector** (Professional/Academic toggle)
@@ -2143,7 +2143,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Verify anchor navigation works (/#projects, /#experience, etc.)
     - Test responsive layout on mobile, tablet, desktop
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 3.1, 4.1, 4.2, 4.3_
-  - [ ] 38.11 Translate all content to supported languages
+  - [~] 38.11 Translate all content to supported languages
     - Translate Hero content to pt-BR, en, es
     - Translate section headings and labels
     - Translate experience descriptions (or keep in original language with note)
@@ -2153,7 +2153,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Update all `messages/*.json` files with complete translations
     - Verify translation coverage with property test
     - _Requirements: 11.1, 11.7_
-  - [ ] 38.12 Add professional metadata and SEO content
+  - [~] 38.12 Add professional metadata and SEO content
     - Update page title: "Rogério do Carmo - Frontend Mobile Developer"
     - Write meta description (150-160 characters)
     - Add keywords: React Native, JavaScript, TypeScript, Mobile Development
@@ -2162,7 +2162,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add structured data (Person schema) with complete info
     - Update sitemap with all sections
     - _Requirements: 7.1, 7.2, 7.3, 20.1, 20.2_
-  - [ ] 38.13 Optimize images and assets
+  - [~] 38.13 Optimize images and assets
     - Compress profile photo for web (target: <500KB)
     - Add company/institution logos (optimized)
     - Add project screenshots (optimized, responsive)
@@ -2170,7 +2170,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Use Next.js Image component for all images
     - Implement lazy loading for below-fold images
     - _Requirements: 4.5, 6.3, 9.1_
-  - [ ] 38.14 Test complete website functionality
+  - [~] 38.14 Test complete website functionality
     - Test language switching (pt-BR ↔ en ↔ es)
     - Test theme switching (light ↔ dark)
     - Test career path switching (Professional ↔ Academic)
@@ -2181,7 +2181,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test responsive layout on all breakpoints
     - Test all components render correctly
     - _Requirements: 11.1, 17.1, 1.7, 3.4, 19.4, 4.1, 4.2, 4.3_
-  - [ ] 38.15 Verify content accuracy and professionalism
+  - [~] 38.15 Verify content accuracy and professionalism
     - Review all content for accuracy (dates, companies, roles)
     - Ensure professional tone throughout
     - Remove any placeholder or dummy content
@@ -2192,7 +2192,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - _Requirements: 1.1, 1.3, 1.4, 2.1, 3.1_
 
 - [ ] 37. Configure Firebase Admin SDK and Vercel deployment environment variables
-  - [ ] 37.1 Set up Firebase Admin SDK credentials
+  - [~] 37.1 Set up Firebase Admin SDK credentials
     - Go to Firebase Console → Project Settings → Service Accounts
     - Click "Generate new private key" to download service account JSON
     - Store the JSON file securely (DO NOT commit to repository)
@@ -2202,7 +2202,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - `client_email`
     - Document credential storage location (password manager, secure vault)
     - _Requirements: 10.1, 10.5_
-  - [ ] 37.2 Configure Firebase Admin SDK environment variables locally
+  - [~] 37.2 Configure Firebase Admin SDK environment variables locally
     - Add Firebase Admin SDK variables to `.env.local`:
       - `FIREBASE_ADMIN_PROJECT_ID`
       - `FIREBASE_ADMIN_PRIVATE_KEY` (escape newlines: `\n`)
@@ -2211,7 +2211,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Test Firebase Admin SDK initialization locally
     - Verify admin operations work (e.g., sending FCM notifications)
     - _Requirements: 10.1, 10.5_
-  - [ ] 37.3 Configure Vercel deployment environment variables
+  - [~] 37.3 Configure Vercel deployment environment variables
     - Go to Vercel Dashboard → Project Settings → Environment Variables
     - Add Firebase Admin SDK variables for all environments:
       - Production: `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_PRIVATE_KEY`, `FIREBASE_ADMIN_CLIENT_EMAIL`
@@ -2229,7 +2229,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - `NEXT_PUBLIC_FORMSPREE_ENDPOINT`
     - Verify all variables are correctly set
     - _Requirements: 8.1, 8.3, 10.1_
-  - [ ] 37.4 Create Firebase Admin SDK initialization module
+  - [~] 37.4 Create Firebase Admin SDK initialization module
     - Create `lib/firebase-admin.ts` with Admin SDK initialization
     - Initialize Firebase Admin SDK with environment variables
     - Export admin functions:
@@ -2239,7 +2239,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add error handling for missing credentials
     - Add TypeScript types for admin functions
     - _Requirements: 10.1_
-  - [ ] 37.5 Implement deployment notification using Firebase Admin SDK
+  - [~] 37.5 Implement deployment notification using Firebase Admin SDK
     - Update `.github/workflows/deploy.yml` to send push notification on successful deployment
     - Create API route `/api/notify-deployment` that uses Firebase Admin SDK
     - Send notification with deployment details:
@@ -2249,28 +2249,28 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Call API route from GitHub Actions workflow
     - Test notification delivery after deployment
     - _Requirements: 16.9, 10.1_
-  - [ ] 37.6 Test Firebase Admin SDK in development
+  - [~] 37.6 Test Firebase Admin SDK in development
     - Test sending FCM notifications locally
     - Verify notifications are received on test devices
     - Test error handling for invalid tokens
     - Test multicast notifications (multiple devices)
     - Verify admin operations don't interfere with client SDK
     - _Requirements: 10.1_
-  - [ ] 37.7 Test Firebase Admin SDK in production
+  - [~] 37.7 Test Firebase Admin SDK in production
     - Deploy application with Firebase Admin SDK configuration
     - Trigger deployment notification from CI/CD pipeline
     - Verify notification is received on registered devices
     - Test admin operations in production environment
     - Monitor Firebase Console for admin API usage
     - _Requirements: 10.1, 8.2_
-  - [ ] 37.8 Secure Firebase Admin SDK credentials
+  - [~] 37.8 Secure Firebase Admin SDK credentials
     - Verify private key is not exposed in client-side code
     - Ensure admin operations only run on server-side (API routes, server components)
     - Add security checks to admin API routes (authentication, rate limiting)
     - Review Vercel environment variable access controls
     - Document security best practices for admin credentials
     - _Requirements: 10.5_
-  - [ ] 37.9 Document Firebase Admin SDK setup
+  - [~] 37.9 Document Firebase Admin SDK setup
     - Create `docs/FIREBASE-ADMIN-SETUP.md` with:
       - How to generate service account credentials
       - Environment variable configuration steps
@@ -2282,7 +2282,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Document deployment notification feature
     - Add Firebase Admin SDK to tech stack documentation
     - _Requirements: 15.2_
-  - [ ] 37.10 Monitor Firebase Admin SDK usage and costs
+  - [~] 37.10 Monitor Firebase Admin SDK usage and costs
     - Review Firebase Admin SDK usage in Firebase Console
     - Monitor FCM notification delivery rates
     - Check for any API quota limits or errors
@@ -2321,67 +2321,352 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Add labels: `bug`, `ci-failure`, `automated`
     - Set environment variable `GH_TOKEN: ${{ github.token }}`
     - _Requirements: 16.1, 16.2_
-  - [ ] 33.2 Implement deduplication logic for issues
+  - [~] 33.2 Implement deduplication logic for issues
     - Check if similar issue already exists before creating new one
     - Search for open issues with `ci-failure` label
     - Match by test suite name or error message
     - Add comment to existing issue if duplicate found
     - _Prevents spam from repeated failures_
-  - [ ] 33.3 Add issue creation for performance regressions
+  - [~] 33.3 Add issue creation for performance regressions
     - Trigger when Lighthouse score drops below threshold
     - Include performance metrics in issue body (FCP, TTI, Score)
     - Add labels: `performance`, `regression`, `automated`
     - Link to Lighthouse report artifact
     - _Requirements: 6.1, 6.2, 6.5_
-  - [ ] 33.4 Add issue creation for coverage drops
+  - [~] 33.4 Add issue creation for coverage drops
     - Trigger when test coverage drops below 90%
     - Include coverage percentage and affected files
     - Add labels: `testing`, `coverage`, `automated`
     - Link to coverage report artifact
     - _Requirements: 14.1, 16.3_
-  - [ ] 33.5 Add issue creation for security vulnerabilities
+  - [~] 33.5 Add issue creation for security vulnerabilities
     - Trigger when SonarQube detects critical issues
     - Include vulnerability details and severity
     - Add labels: `security`, `vulnerability`, `automated`
     - Link to SonarQube analysis
     - _Requirements: 16.5, 16.6_
-  - [ ] 33.6 Implement auto-close logic for resolved issues
+  - [~] 33.6 Implement auto-close logic for resolved issues
     - Close issues automatically when CI passes again
     - Add comment explaining resolution
     - Use GitHub Actions Script for complex logic
     - _Keeps issue tracker clean_
-  - [ ] 33.7 Add workflow permissions for issue creation
+  - [~] 33.7 Add workflow permissions for issue creation
     - Add `issues: write` permission to CI workflow
     - Update workflow YAML with permissions block
     - Test that issues can be created successfully
     - _Required for GitHub CLI to create issues_
-  - [ ] 33.8 Test issue creation in staging environment
+  - [~] 33.8 Test issue creation in staging environment
     - Create test workflow that intentionally fails
     - Verify issue is created correctly
     - Verify deduplication works
     - Verify auto-close works when fixed
     - _Validate before enabling in production_
-  - [ ] 33.9 Update documentation
+  - [~] 33.9 Update documentation
     - Document automatic issue creation in CI-CD-PIPELINE.md
     - Add troubleshooting guide for issue creation failures
     - Document how to disable automatic issue creation if needed
     - _Requirements: 15.2_
 
 - [ ] 39. Review and fix skipped E2E tests
-  - [ ] 39.1 Review email validation test
+  - [~] 39.1 Review email validation test
     - Test: `tests/e2e/email-subscribe.spec.ts` - "shows validation error for invalid email"
     - Issue: Test expects "Enter a valid email" but actual translation is "Email must be a valid email address"
     - Current status: Skipped with regex fix applied (`/valid.*email/i`)
     - Action: Review if the regex fix is acceptable or if translations should be updated
     - _Requirements: 3.3, 11.1_
-  - [ ] 39.2 Review print media test
+  - [~] 39.2 Review print media test
     - Test: `tests/e2e/print-pdf.spec.ts` - "should hide non-essential elements in print media"
     - Issue: Language selector parent container with `print:hidden` not being detected correctly
     - Current status: Skipped with parent container check fix applied
     - Action: Review if the fix correctly validates print media hiding behavior
     - _Requirements: 18.2_
-  - [ ] 39.3 Unskip tests after review
+  - [~] 39.3 Unskip tests after review
     - Remove `.skip` from both tests after confirming fixes are correct
     - Run full E2E test suite to ensure no regressions
     - Update CI pipeline if needed
     - _Ensure all E2E tests are active and passing_
+
+- [ ] 40. Review and implement improved push notification strategy
+  - [~] 40.1 Analyze current notification infrastructure
+    - Review existing notification-related files:
+      - `components/NotificationPrompt/index.tsx` - FCM permission prompt component
+      - `components/ClientNotificationWrapper.tsx` - Client-side wrapper
+      - `lib/notifications.ts` - FCM utility functions (requestNotificationPermission, subscribeToTopic)
+      - `lib/lazy-components.tsx` - Lazy loading configuration
+      - `public/firebase-messaging-sw.js` - Service worker for FCM
+    - Document current implementation capabilities:
+      - Firebase Cloud Messaging (FCM) integration
+      - Topic-based subscriptions (e.g., "deployments")
+      - Browser notification API support
+      - Permission request handling
+    - Identify what works and what needs improvement
+    - _Requirements: 10.1_
+  - [~] 40.2 Research UX best practices for notification prompts
+    - Study industry best practices for notification permission requests:
+      - **Timing**: When to ask (after user engagement, not on first visit)
+      - **Context**: Provide clear value proposition before asking
+      - **Frequency**: How often to re-prompt dismissed users
+      - **Segmentation**: Target engaged users vs. new visitors
+    - Research successful notification strategies:
+      - Progressive disclosure (explain benefits first)
+      - Soft permission (custom UI before browser prompt)
+      - Contextual triggers (after specific user actions)
+      - A/B testing different approaches
+    - Analyze conversion rates and user retention impact
+    - Document findings and recommendations
+    - _Focus on user-centric, non-intrusive approaches_
+  - [~] 40.3 Design improved notification strategy
+    - Define notification use cases and value propositions:
+      - New project launches
+      - Blog post updates (if applicable)
+      - Portfolio updates
+      - Important announcements
+    - Design user segmentation strategy:
+      - **New visitors**: No prompt (let them explore first)
+      - **Return visitors**: Soft prompt after 2-3 visits
+      - **Engaged users**: Full prompt after specific actions (e.g., viewing multiple projects, spending 5+ minutes)
+    - Create notification content strategy:
+      - Frequency limits (max 1 per week)
+      - Content types and priorities
+      - Opt-out mechanisms
+    - Design soft permission UI:
+      - Custom modal explaining benefits before browser prompt
+      - Clear value proposition ("Get notified when I launch new projects")
+      - Easy dismiss with "Maybe later" option
+      - Respect user choice (don't re-prompt for 30 days if dismissed)
+    - _Requirements: 10.1, 19.1-19.10 (exit intent patterns)_
+  - [~] 40.4 Implement user engagement tracking
+    - Create engagement scoring system:
+      - Track page views, time on site, interactions
+      - Calculate engagement score (0-100)
+      - Store in localStorage with timestamp
+    - Define engagement thresholds:
+      - Low engagement (0-30): No notification prompt
+      - Medium engagement (31-60): Soft prompt eligible
+      - High engagement (61-100): Full prompt eligible
+    - Implement visit counter:
+      - Track number of visits in localStorage
+      - Track days since first visit
+      - Track last visit timestamp
+    - Create utility functions:
+      - `getEngagementScore()`: Calculate current score
+      - `isEligibleForNotificationPrompt()`: Check eligibility
+      - `shouldShowSoftPrompt()`: Determine if soft prompt should show
+    - _Track user engagement without being intrusive_
+  - [~] 40.5 Implement soft permission UI
+    - Create `SoftNotificationPrompt` component:
+      - Custom modal with clear value proposition
+      - Benefits list (e.g., "Be first to see new projects", "Monthly updates only")
+      - Two-step process: soft prompt → browser prompt
+      - "Enable Notifications" and "Maybe Later" buttons
+      - "Don't ask again" checkbox option
+    - Implement prompt timing logic:
+      - Show only to eligible users (engagement score + visit count)
+      - Delay appearance until user is idle (no interaction for 30 seconds)
+      - Respect dismissal preferences (30-day cooldown)
+    - Add analytics tracking:
+      - Track soft prompt impressions
+      - Track conversion rate (soft prompt → browser prompt → granted)
+      - Track dismissal reasons
+    - Style with Tailwind CSS:
+      - Non-intrusive positioning (bottom-right corner)
+      - Smooth animations (fade in/out)
+      - Mobile-responsive design
+      - Dark mode support
+    - _Requirements: 10.1, 19.3-19.5 (modal patterns)_
+  - [~] 40.6 Implement browser permission request flow
+    - Update `requestNotificationPermission()` in `lib/notifications.ts`:
+      - Only call after soft prompt acceptance
+      - Handle all permission states (granted, denied, default)
+      - Track permission outcomes in analytics
+    - Implement permission state management:
+      - Store permission state in localStorage
+      - Update UI based on current permission
+      - Handle permission revocation
+    - Create post-permission UI:
+      - Success message after granting permission
+      - Instructions for managing notifications
+      - Link to browser notification settings
+    - Handle edge cases:
+      - Browser doesn't support notifications
+      - User blocks notifications
+      - Service worker registration fails
+    - _Requirements: 10.1_
+  - [~] 40.7 Implement notification content management
+    - Create notification templates:
+      - New project launch template
+      - Portfolio update template
+      - General announcement template
+    - Implement notification scheduling:
+      - Server-side notification sending (Firebase Admin SDK)
+      - Topic-based targeting (e.g., "all-users", "engaged-users")
+      - Frequency limits (max 1 per week per user)
+    - Add notification preferences:
+      - Allow users to choose notification types
+      - Frequency preferences (weekly, monthly, major updates only)
+      - Unsubscribe mechanism
+    - Create notification management page:
+      - View notification history
+      - Manage preferences
+      - Unsubscribe from all notifications
+    - _Requirements: 10.1, 37.1-37.10 (Firebase Admin SDK)_
+  - [~] 40.8 Test notification flow end-to-end
+    - Test soft prompt display logic:
+      - Verify engagement score calculation
+      - Test visit counter accuracy
+      - Verify prompt timing (idle detection)
+    - Test permission request flow:
+      - Test all permission states (granted, denied, default)
+      - Test browser compatibility (Chrome, Firefox, Safari, Edge)
+      - Test mobile browsers (iOS Safari, Chrome Mobile)
+    - Test notification delivery:
+      - Send test notifications to subscribed users
+      - Verify notification appearance and content
+      - Test notification click handling
+    - Test edge cases:
+      - User clears localStorage
+      - User revokes permission
+      - Service worker fails to register
+      - Network offline during permission request
+    - _Requirements: 10.1_
+  - [~] 40.9 Implement analytics and monitoring
+    - Track key metrics:
+      - Soft prompt impression rate
+      - Soft prompt → browser prompt conversion rate
+      - Browser prompt → permission granted rate
+      - Overall conversion funnel
+      - Dismissal rate and reasons
+    - Create analytics dashboard:
+      - View notification performance metrics
+      - Track engagement score distribution
+      - Monitor permission grant/deny rates
+      - Analyze notification click-through rates
+    - Set up alerts:
+      - Low conversion rates (< 10%)
+      - High dismissal rates (> 80%)
+      - Service worker errors
+      - Notification delivery failures
+    - _Requirements: 10.3, 10.4_
+  - [~] 40.10 Document notification strategy and implementation
+    - Create comprehensive documentation:
+      - `docs/NOTIFICATION-STRATEGY.md`: Strategy overview and rationale
+      - `docs/NOTIFICATION-IMPLEMENTATION.md`: Technical implementation details
+      - `docs/NOTIFICATION-BEST-PRACTICES.md`: UX guidelines and recommendations
+    - Document user flows:
+      - Engagement tracking flow
+      - Soft prompt flow
+      - Browser permission flow
+      - Notification delivery flow
+    - Create troubleshooting guide:
+      - Common issues and solutions
+      - Browser-specific quirks
+      - Service worker debugging
+      - Permission state management
+    - Add code comments:
+      - Explain engagement scoring logic
+      - Document timing decisions
+      - Clarify permission handling
+    - _Requirements: 15.2_
+  - [~] 40.11 A/B test notification strategies (optional)
+    - Design A/B test variants:
+      - Variant A: Soft prompt after 2 visits
+      - Variant B: Soft prompt after high engagement
+      - Variant C: Contextual prompt after specific actions
+    - Implement A/B testing framework:
+      - Random assignment to variants
+      - Track variant performance separately
+      - Store variant assignment in localStorage
+    - Measure success metrics:
+      - Permission grant rate by variant
+      - User retention by variant
+      - Notification engagement by variant
+    - Analyze results and iterate:
+      - Identify winning variant
+      - Implement winning strategy
+      - Document learnings
+    - _Optimize for best user experience and conversion_
+  - [~] 40.12 Deploy and monitor improved notification system
+    - Deploy to production:
+      - Enable soft prompt for eligible users
+      - Monitor initial performance
+      - Watch for errors or issues
+    - Monitor key metrics:
+      - Permission grant rate (target: 15-25%)
+      - User complaints or negative feedback
+      - Notification click-through rate
+      - Unsubscribe rate
+    - Iterate based on data:
+      - Adjust engagement thresholds
+      - Refine soft prompt messaging
+      - Optimize timing and frequency
+    - Document results:
+      - Compare to previous implementation (10-second prompt)
+      - Measure impact on user experience
+      - Share learnings with team
+    - _Requirements: 10.1, 10.3_
+
+- [x] 41. Fix cookies vs localStorage confusion in Cookie and Privacy Policy pages
+  - [x] 41.1 Analyze current inaccuracies in Cookie Policy
+    - **Current problem**: Cookie Policy incorrectly lists localStorage items as "Essential Cookies"
+    - **Truth**:
+      - **Actual cookies used**: ONLY Firebase Analytics cookies (_ga, \_ga_<container-id>, \_gid, \_gat) - and ONLY if user consents to analytics
+      - **localStorage used**: theme, preferred-locale, cookie-consent, cookie-preferences, fcm_topic_subscriptions
+      - **Key difference**: Cookies are sent to servers with every HTTP request; localStorage stays in browser only
+      - **Critical fact**: If user rejects analytics, ZERO cookies are set. localStorage is always used (no consent needed as it stays local)
+    - Review `app/[locale]/cookies/page.tsx` and identify all misleading sections
+    - Review `app/[locale]/privacy/page.tsx` and identify sections that need localStorage clarification
+    - _Requirements: 10.1, 10.3_
+  - [x] 41.2 Update Cookie Policy page to accurately distinguish cookies from localStorage
+    - Update `app/[locale]/cookies/page.tsx`:
+      - **Remove misleading "Essential Cookies (localStorage)" section** that incorrectly lists localStorage as cookies
+      - Add clarification note at the beginning: "This site uses cookies ONLY for analytics (if you consent). If you reject analytics, NO cookies are set."
+      - Keep only Firebase Analytics cookies in the actual cookies list (they are non-essential and require consent)
+      - Add new section: "Browser Storage (localStorage) - NOT Cookies" that explains:
+        - localStorage is NOT cookies
+        - localStorage data never leaves the user's browser
+        - localStorage is used for: theme preference, language preference, cookie consent status, session data
+        - No consent needed for localStorage as it's purely local
+      - Add comparison table or clear explanation of cookies vs localStorage:
+        - Cookies: Sent to server with every HTTP request, can track across sites, require consent
+        - localStorage: Stays in browser only, never sent to server, no consent needed
+    - Ensure all three languages (en, pt-BR, es) are updated
+    - _Requirements: 10.1, 10.3, 11.7_
+  - [x] 41.3 Update Privacy Policy page to enhance localStorage section
+    - Update `app/[locale]/privacy/page.tsx`:
+      - Enhance "Browser Storage (localStorage)" section to clearly distinguish from cookies
+      - Add comparison explanation: "Unlike cookies, localStorage data never leaves your browser"
+      - Emphasize that localStorage is used for user convenience (remembering preferences) and doesn't require consent
+      - Add note: "If you reject analytics cookies, this site uses ZERO cookies. Only localStorage is used for basic functionality."
+    - Ensure all three languages (en, pt-BR, es) are updated
+    - _Requirements: 10.1, 10.3, 11.7_
+  - [x] 41.4 Update translation files for all languages
+    - Update `messages/en.json`:
+      - Add new translation keys for localStorage clarification
+      - Update existing cookie-related translations for accuracy
+      - Add keys for comparison table/explanation
+    - Update `messages/pt-BR.json`:
+      - Add Portuguese translations for new localStorage clarification keys
+      - Update existing cookie translations
+    - Update `messages/es.json`:
+      - Add Spanish translations for new localStorage clarification keys
+      - Update existing cookie translations
+    - Ensure technical accuracy in all languages
+    - _Requirements: 11.7_
+  - [x] 41.5 Verify implementation accuracy
+    - Review updated Cookie Policy page in all three languages
+    - Review updated Privacy Policy page in all three languages
+    - Verify that:
+      - No localStorage items are listed as "cookies"
+      - Clear distinction between cookies and localStorage is made
+      - Users understand that rejecting analytics = zero cookies
+      - localStorage usage is explained as purely local (no server transmission)
+    - Test build and verify all pages render correctly
+    - _Requirements: 10.1, 10.3, 11.7_
+  - [x] 41.6 Update cookie consent banner messaging (if needed)
+    - Review `CookieConsent` component messaging
+    - Ensure banner clearly states:
+      - "Essential functionality uses localStorage (not cookies)"
+      - "Analytics cookies are optional and require your consent"
+      - "If you reject analytics, NO cookies will be set"
+    - Update translations if messaging changes
+    - _Requirements: 10.1, 10.3, 11.7_
