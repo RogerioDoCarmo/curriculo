@@ -74,9 +74,9 @@ describe("Firebase Remote Config", () => {
 
     it("should return null when Firebase is not configured", async () => {
       // Clear environment variables
-      delete process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-      delete process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-      delete process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_API_KEY = undefined;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_PROJECT_ID = undefined;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_APP_ID = undefined;
 
       const { getFirebaseRemoteConfig } = await import("@/lib/firebase");
       const remoteConfig = await getFirebaseRemoteConfig();

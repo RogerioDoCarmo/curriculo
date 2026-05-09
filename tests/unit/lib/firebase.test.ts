@@ -119,7 +119,7 @@ describe("Firebase Analytics Consent", () => {
     //     });
 
     it("should return null when MEASUREMENT_ID not configured", async () => {
-      delete process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID = undefined;
 
       localStorage.setItem("cookie-consent", "accepted");
 
@@ -253,27 +253,27 @@ describe("Firebase Analytics Consent", () => {
     });
 
     it("should return false when API_KEY is missing", () => {
-      delete process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_API_KEY = undefined;
 
       expect(isFirebaseConfigured()).toBe(false);
     });
 
     it("should return false when PROJECT_ID is missing", () => {
-      delete process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_PROJECT_ID = undefined;
 
       expect(isFirebaseConfigured()).toBe(false);
     });
 
     it("should return false when APP_ID is missing", () => {
-      delete process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_APP_ID = undefined;
 
       expect(isFirebaseConfigured()).toBe(false);
     });
 
     it("should return false when all env vars are missing", () => {
-      delete process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-      delete process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-      delete process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_API_KEY = undefined;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_PROJECT_ID = undefined;
+      (process.env as any).NEXT_PUBLIC_FIREBASE_APP_ID = undefined;
 
       expect(isFirebaseConfigured()).toBe(false);
     });
