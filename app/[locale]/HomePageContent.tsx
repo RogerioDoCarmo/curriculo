@@ -40,6 +40,8 @@ export default function HomePageContent({
 }: HomePageContentProps) {
   const [careerPath, setCareerPath] = useState<CareerPath>("professional");
   const t = useTranslations("techStack");
+  const tCareerPath = useTranslations("careerPath");
+  const tHomepage = useTranslations("homepage");
 
   return (
     <>
@@ -69,7 +71,7 @@ export default function HomePageContent({
               focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2
               font-medium
             "
-            aria-label={t("storybookLink")}
+            aria-label={tHomepage("storybookButton")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +87,7 @@ export default function HomePageContent({
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
             </svg>
-            {t("storybookLink")}
+            {tHomepage("storybookButton")}
             <ExternalLink className="w-4 h-4" aria-hidden="true" />
           </a>
         </div>
@@ -94,6 +96,9 @@ export default function HomePageContent({
       {/* Career Path Selector (Professional/Academic) */}
       <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mx-auto max-w-7xl">
+          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+            {tCareerPath("sectionTitle")}
+          </h2>
           <CareerPathSelector selected={careerPath} onSelect={setCareerPath} />
         </div>
       </div>

@@ -16,6 +16,7 @@
   },
   "careerPath": {
     "title": "Elige un Camino",
+    "sectionTitle": "Explora Mi Trayectoria",
     "professional": "Profesional",
     "academic": "Académico"
   },
@@ -36,7 +37,15 @@
     "collapseDetails": "Contraer detalles",
     "achievements": "Logros",
     "technologies": "Tecnologías",
-    "timeline": "Línea de Tiempo"
+    "timeline": "Línea de Tiempo",
+    "duration": {
+      "lessThanMonth": "< 1 mes",
+      "year": "año",
+      "years": "años",
+      "month": "mes",
+      "months": "meses",
+      "separator": "·"
+    }
   },
   "forms": {
     "name": "Nombre",
@@ -80,11 +89,14 @@
     "downloadDissertationLabel": "Descargar disertación de maestría en formato PDF",
     "printPage": "Imprimir Página",
     "printPageLabel": "Imprimir página del sitio",
+    "privacyPolicy": "Política de Privacidad",
+    "cookiePolicy": "Política de Cookies",
     "languages": {
       "portuguese": "Português (pt-BR)",
       "english": "English (en)",
       "spanish": "Español (es)"
-    }
+    },
+    "termsOfUse": "Términos de Uso"
   },
   "backToTop": {
     "label": "Volver arriba"
@@ -150,11 +162,13 @@
       "buttonLabel": "Enviar",
       "successMessage": "¡Gracias! Me pondré en contacto pronto.",
       "messagePlaceholder": "Escribe un mensaje, haz una pregunta o simplemente saluda..."
-    }
+    },
+    "storybookButton": "Componentes de UI"
   },
   "techStack": {
     "title": "Usado en este sitio",
     "subtitle": "Tecnologías usadas para construir este sitio web",
+    "storybookLink": "Ver Biblioteca de Componentes",
     "labels": {
       "why": "Por qué:",
       "benefits": "Beneficios:",
@@ -272,16 +286,16 @@
   },
   "cookieConsent": {
     "title": "Este sitio usa cookies",
-    "description": "Usamos cookies esenciales para el funcionamiento del sitio y cookies de análisis para entender cómo interactúas con nuestro contenido. Todos los datos de análisis son anónimos y no incluyen información personal.",
-    "essential": "Cookies Esenciales",
-    "essentialDescription": "Necesarias para el funcionamiento básico del sitio (tema, idioma, sesión). Siempre activas.",
-    "analytics": "Cookies de Análisis",
-    "analyticsDescription": "Ayudan a entender cómo los visitantes interactúan con el sitio a través de Firebase Analytics. Datos anónimos.",
-    "analyticsCookies": "Cookies: _ga, _ga_<container-id>, _gid, _gat",
-    "functional": "Cookies Funcionales",
-    "functionalDescription": "Mejoran la experiencia del usuario con características adicionales (notificaciones, preferencias).",
+    "description": "Usamos localStorage (almacenamiento del navegador, NO cookies) para funcionalidad esencial y cookies de análisis para entender cómo interactúas con nuestro contenido. Si rechazas análisis, CERO cookies se establecen. Todos los datos de análisis son anónimos.",
+    "essential": "Esencial (localStorage - NO Cookies)",
+    "essentialDescription": "Almacenamiento del navegador para funcionalidad básica (tema, idioma, sesión). Permanece solo en tu navegador. Siempre activo.",
+    "analytics": "Cookies de Análisis (Opcional)",
+    "analyticsDescription": "Ayudan a entender cómo los visitantes interactúan con el sitio a través de Firebase Analytics. Datos anónimos. Requiere consentimiento.",
+    "analyticsCookies": "Cookies: _ga, _ga_{container-id}, _gid, _gat",
+    "functional": "Funcional (localStorage)",
+    "functionalDescription": "Almacenamiento del navegador para características mejoradas (notificaciones, preferencias). Permanece solo en tu navegador.",
     "acceptAll": "Aceptar Todas",
-    "rejectAll": "Rechazar No-Esenciales",
+    "rejectAll": "Rechazar No-Esenciales (Cero Cookies)",
     "customize": "Personalizar",
     "learnMore": "Más información en nuestra",
     "privacyPolicy": "Política de Privacidad",
@@ -289,8 +303,545 @@
     "and": "y",
     "back": "Volver",
     "customizeTitle": "Personalizar Preferencias de Cookies",
-    "customizeDescription": "Elige qué categorías de cookies deseas permitir. Las cookies esenciales no se pueden desactivar.",
+    "customizeDescription": "Elige qué categorías deseas permitir. localStorage esencial (NO cookies) no se puede desactivar ya que permanece puramente local.",
     "required": "Obligatorio",
     "savePreferences": "Guardar Preferencias"
+  },
+  "cookies": {
+    "metaTitle": "Política de Cookies - Sitio Web de Currículum Personal",
+    "metaDescription": "Aprende sobre las cookies que usamos, cómo gestionarlas y tus opciones. Información detallada sobre cookies de Firebase Analytics.",
+    "title": "Política de Cookies",
+    "lastUpdated": "Última Actualización",
+    "lastUpdatedDate": "Mayo de 2026",
+    "introduction": {
+      "title": "Introducción",
+      "paragraph1": "Esta Política de Cookies explica qué son las cookies, cómo las usamos en nuestro sitio web y tus opciones con respecto a las cookies.",
+      "paragraph2": "Importante: Este sitio usa cookies SOLO para análisis (si consientes). Si rechazas análisis, NO se establecen cookies. Usamos localStorage (almacenamiento del navegador) para funcionalidad esencial, que NO son cookies y permanecen solo en tu navegador."
+    },
+    "whatAreCookies": {
+      "title": "¿Qué Son las Cookies?",
+      "description": "Las cookies son pequeños archivos de texto que se colocan en tu dispositivo (computadora, smartphone o tablet) cuando visitas un sitio web. Las cookies se envían al servidor con cada solicitud HTTP que haces al sitio web.",
+      "purpose": "Las cookies ayudan a los sitios web a recordar tus preferencias, entender cómo usas el sitio y mejorar tu experiencia de navegación. A diferencia de localStorage, las cookies se transmiten al servidor con cada solicitud."
+    },
+    "cookiesVsLocalStorage": {
+      "title": "Cookies vs localStorage: ¿Cuál es la Diferencia?",
+      "intro": "Es importante entender la diferencia entre cookies y localStorage:",
+      "cookies": {
+        "title": "Cookies",
+        "description": "Pequeños archivos de texto enviados al servidor con cada solicitud HTTP. Usadas para seguimiento y análisis. Requieren consentimiento bajo leyes de privacidad."
+      },
+      "localStorage": {
+        "title": "localStorage (Almacenamiento del Navegador)",
+        "description": "Datos almacenados solo en tu navegador que NUNCA salen de tu dispositivo. Usados para preferencias como tema e idioma. No requiere consentimiento ya que es puramente local."
+      },
+      "keyDifference": "Diferencia Clave: Las cookies se envían a los servidores; localStorage permanece en tu navegador."
+    },
+    "actualCookies": {
+      "title": "Cookies Reales Usadas en Este Sitio",
+      "intro": "Este sitio web usa cookies SOLO para análisis, y SOLO si consientes:",
+      "analytics": {
+        "title": "Cookies de Firebase Analytics (No-Esenciales - Requieren Consentimiento)",
+        "description": "Estas cookies son establecidas por Firebase Analytics para rastrear interacciones y compromiso del usuario de forma anónima. Nos ayudan a entender cómo los visitantes usan nuestro sitio web.",
+        "nonEssential": "Estas cookies son no-esenciales y requieren tu consentimiento.",
+        "purpose": "Las cookies de análisis nos ayudan a mejorar el sitio web entendiendo qué páginas son más populares, cómo los visitantes navegan por el sitio y dónde ocurren errores.",
+        "ifRejected": "Si rechazas análisis: CERO cookies se establecen. El sitio funciona perfectamente sin ninguna cookie."
+      }
+    },
+    "cookieList": {
+      "title": "Cookies Específicas Que Usamos",
+      "intro": "A continuación se muestra una lista detallada de las cookies reales utilizadas en nuestro sitio web (SOLO si consientes análisis):",
+      "firebaseAnalytics": {
+        "title": "Cookies de Firebase Analytics (Google)",
+        "category": "Categoría: Análisis (No-Esencial - Requiere Consentimiento)",
+        "purpose": "Estas cookies son establecidas por Firebase Analytics para rastrear interacciones y compromiso del usuario de forma anónima. Nos ayudan a entender cómo los visitantes usan nuestro sitio web.",
+        "cookies": {
+          "ga": {
+            "name": "_ga",
+            "purposeLabel": "Propósito",
+            "purpose": "ID de Google Analytics - Distingue usuarios únicos",
+            "expirationLabel": "Expiración",
+            "expiration": "2 años"
+          },
+          "gaContainer": {
+            "name": "_ga_{container-id}",
+            "purposeLabel": "Propósito",
+            "purpose": "Seguimiento de sesión - Almacena estado de sesión e interacciones del usuario",
+            "expirationLabel": "Expiración",
+            "expiration": "2 años"
+          },
+          "gid": {
+            "name": "_gid",
+            "purposeLabel": "Propósito",
+            "purpose": "Distinción de usuario - Distingue usuarios dentro de un período de 24 horas",
+            "expirationLabel": "Expiración",
+            "expiration": "24 horas"
+          },
+          "gat": {
+            "name": "_gat",
+            "purposeLabel": "Propósito",
+            "purpose": "Limitación de solicitudes - Limita la tasa de solicitudes para prevenir sobrecarga del servidor",
+            "expirationLabel": "Expiración",
+            "expiration": "1 minuto"
+          }
+        }
+      }
+    },
+    "browserStorage": {
+      "title": "Almacenamiento del Navegador (localStorage) - NO Son Cookies",
+      "intro": "Este sitio usa localStorage para funcionalidad esencial. localStorage NO son cookies:",
+      "keyDifference": "Diferencia Clave: los datos de localStorage NUNCA salen de tu navegador. No se envían a ningún servidor.",
+      "noConsentNeeded": "No requiere consentimiento: Como localStorage permanece puramente local, no requiere consentimiento bajo leyes de privacidad.",
+      "whatWeStore": "Lo que almacenamos en localStorage:",
+      "items": {
+        "theme": {
+          "name": "theme",
+          "purpose": "Tu preferencia de tema (modo claro/oscuro)"
+        },
+        "language": {
+          "name": "preferred-locale",
+          "purpose": "Tu preferencia de idioma (pt-BR, en, es)"
+        },
+        "consent": {
+          "name": "cookie-consent",
+          "purpose": "Tu elección de consentimiento de cookies (aceptar/rechazar análisis)"
+        },
+        "preferences": {
+          "name": "cookie-preferences",
+          "purpose": "Tus preferencias detalladas de cookies"
+        },
+        "notifications": {
+          "name": "fcm_topic_subscriptions",
+          "purpose": "Tus preferencias de suscripción de notificaciones"
+        }
+      },
+      "howToManage": "Cómo gestionar localStorage: Puedes limpiar localStorage a través de las herramientas de desarrollador de tu navegador o limpiando todos los datos del sitio. Esto restablecerá tus preferencias pero no afectará las cookies."
+    },
+    "manageCookies": {
+      "title": "Cómo Gestionar Cookies",
+      "intro": "Puedes controlar y gestionar cookies de varias maneras. Ten en cuenta que eliminar o bloquear cookies puede afectar tu experiencia de usuario y algunas características pueden dejar de funcionar correctamente.",
+      "chrome": {
+        "title": "Google Chrome",
+        "step1": "Haz clic en el icono de menú de tres puntos en la esquina superior derecha",
+        "step2": "Selecciona 'Configuración' > 'Privacidad y seguridad' > 'Cookies y otros datos del sitio'",
+        "step3": "Elige tu configuración de cookies preferida",
+        "step4": "Para eliminar cookies existentes, haz clic en 'Ver todos los datos y permisos del sitio' > 'Eliminar todo'"
+      },
+      "firefox": {
+        "title": "Mozilla Firefox",
+        "step1": "Haz clic en el icono de menú de tres líneas en la esquina superior derecha",
+        "step2": "Selecciona 'Configuración' > 'Privacidad y Seguridad'",
+        "step3": "En 'Cookies y Datos del Sitio', elige tu configuración preferida",
+        "step4": "Para eliminar cookies existentes, haz clic en 'Limpiar Datos'"
+      },
+      "safari": {
+        "title": "Safari",
+        "step1": "Haz clic en 'Safari' en la barra de menú > 'Preferencias'",
+        "step2": "Haz clic en la pestaña 'Privacidad'",
+        "step3": "Elige tus preferencias de cookies en 'Cookies y datos de sitios web'",
+        "step4": "Para eliminar cookies existentes, haz clic en 'Gestionar Datos de Sitios Web' > 'Eliminar Todo'"
+      },
+      "edge": {
+        "title": "Microsoft Edge",
+        "step1": "Haz clic en el icono de menú de tres puntos en la esquina superior derecha",
+        "step2": "Selecciona 'Configuración' > 'Cookies y permisos de sitio' > 'Cookies y datos de sitio'",
+        "step3": "Elige tu configuración de cookies preferida",
+        "step4": "Para eliminar cookies existentes, haz clic en 'Ver todas las cookies y datos de sitio' > 'Eliminar todo'"
+      }
+    },
+    "thirdPartyCookies": {
+      "title": "Cookies de Terceros",
+      "intro": "Usamos servicios de terceros que pueden establecer cookies en tu dispositivo:",
+      "firebaseAnalytics": {
+        "title": "Firebase Analytics (Google)",
+        "description": "Firebase Analytics es un servicio proporcionado por Google que nos ayuda a entender cómo los visitantes usan nuestro sitio web.",
+        "providerLabel": "Proveedor",
+        "provider": "Google LLC",
+        "purposeLabel": "Propósito",
+        "purpose": "Análisis anónimo y seguimiento de uso",
+        "privacyPolicyLabel": "Política de Privacidad",
+        "privacyPolicyLink": "Política de Privacidad de Google"
+      }
+    },
+    "cookieConsent": {
+      "title": "Consentimiento de Cookies",
+      "description": "Cuando visitas nuestro sitio web por primera vez, verás un banner de consentimiento de cookies que te permite elegir qué tipos de cookies deseas aceptar:",
+      "acceptAll": {
+        "title": "Aceptar Todas",
+        "description": "Acepta cookies de análisis. localStorage siempre se usa independientemente de tu elección."
+      },
+      "rejectAll": {
+        "title": "Rechazar No-Esenciales",
+        "description": "Rechaza cookies de análisis. CERO cookies se establecerán. localStorage aún se usa para funcionalidad esencial."
+      },
+      "customize": {
+        "title": "Personalizar",
+        "description": "Te permite elegir qué categorías de cookies aceptar"
+      },
+      "changePreferences": "Puedes cambiar tus preferencias de cookies en cualquier momento limpiando las cookies de tu navegador y volviendo a visitar el sitio web, o ajustando la configuración de tu navegador."
+    },
+    "analyticsOptOut": {
+      "title": "Exclusión de Análisis",
+      "description": "Si deseas excluirte del seguimiento de análisis, tienes varias opciones:",
+      "cookieBanner": "Usa el banner de consentimiento de cookies para rechazar cookies de análisis",
+      "browserSettings": "Desactiva las cookies en la configuración de tu navegador (ver instrucciones arriba)",
+      "googleOptOut": "Instala el complemento de navegador de exclusión de Google Analytics:",
+      "googleOptOutLink": "Complemento de Exclusión de Google Analytics"
+    },
+    "contact": {
+      "title": "Información de Contacto",
+      "description": "Si tienes preguntas o inquietudes sobre nuestro uso de cookies, contáctanos:",
+      "email": "Correo electrónico",
+      "website": "Sitio web"
+    },
+    "policyUpdates": {
+      "title": "Actualizaciones de la Política",
+      "description": "Podemos actualizar esta Política de Cookies periódicamente para reflejar cambios en nuestras prácticas o requisitos legales.",
+      "notification": "Notificaremos a los usuarios sobre cambios significativos actualizando la fecha de 'Última Actualización' en la parte superior de esta página."
+    },
+    "moreInformation": {
+      "title": "Más Información",
+      "description": "Para más información sobre cómo recopilamos, usamos y protegemos tus datos, consulta nuestra",
+      "privacyPolicyLink": "Política de Privacidad"
+    }
+  },
+  "privacy": {
+    "metaTitle": "Política de Privacidad - Sitio Web de Currículum Personal",
+    "metaDescription": "Aprende cómo recopilamos, usamos y protegemos tus datos. Política de privacidad conforme con GDPR y LGPD.",
+    "title": "Política de Privacidad",
+    "lastUpdated": "Última Actualización",
+    "lastUpdatedDate": "Mayo de 2026",
+    "introduction": {
+      "title": "Introducción",
+      "paragraph1": "Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web.",
+      "paragraph2": "Estamos comprometidos a proteger tu privacidad y garantizar transparencia sobre nuestras prácticas de datos. Esta política cumple con el GDPR (Reglamento General de Protección de Datos) y la LGPD (Lei Geral de Proteção de Dados)."
+    },
+    "dataCollection": {
+      "title": "Recopilación de Datos",
+      "intro": "Recopilamos los siguientes tipos de datos:",
+      "analytics": {
+        "title": "Datos de Análisis (Firebase Analytics - Anónimos)",
+        "important": "Importante: Todos los datos de análisis son anónimos y no incluyen información personal.",
+        "description": "Usamos Firebase Analytics para entender cómo los visitantes interactúan con nuestro sitio web. Esto nos ayuda a mejorar la experiencia del usuario.",
+        "navigation": {
+          "title": "Navegación",
+          "pageViews": "Vistas de página y secciones visitadas",
+          "linkClicks": "Clics en enlaces (navegación, pie de página, redes sociales)",
+          "sectionNav": "Navegación por secciones y comportamiento de desplazamiento",
+          "preferences": "Cambios de preferencias de idioma y tema"
+        },
+        "forms": {
+          "title": "Interacciones con Formularios",
+          "fieldFocus": "Eventos de enfoque y desenfoque de campos (con qué campos interactúan los usuarios)",
+          "validationErrors": "Tipos de errores de validación (no los datos reales ingresados)",
+          "submissionEvents": "Eventos de envío de formulario (éxito/fallo)",
+          "timing": "Tiempo dedicado a completar formularios"
+        },
+        "engagement": {
+          "title": "Compromiso con el Contenido",
+          "scrollDepth": "Profundidad de desplazamiento (25%, 50%, 75%, 100%)",
+          "timeOnPage": "Tiempo dedicado en cada página",
+          "interactions": "Interacciones con tarjetas de proyectos, experiencias y habilidades"
+        },
+        "userPreferences": {
+          "title": "Preferencias del Usuario",
+          "theme": "Selección de tema (modo claro/oscuro)",
+          "language": "Preferencia de idioma",
+          "careerPath": "Selecciones de trayectoria profesional (profesional/académica)"
+        },
+        "errors": {
+          "title": "Eventos de Error",
+          "componentErrors": "Errores de componentes (activaciones de error boundary)",
+          "apiFailures": "Fallos de API (sin datos sensibles incluidos)"
+        }
+      },
+      "email": {
+        "title": "Direcciones de Correo Electrónico",
+        "description": "Recopilamos direcciones de correo electrónico cuando:",
+        "contactForm": "Envías el formulario de contacto",
+        "subscription": "Te suscribes a actualizaciones por correo electrónico",
+        "storage": "Las direcciones de correo electrónico son almacenadas por Formspree (nuestro servicio de procesamiento de formularios)"
+      },
+      "notifications": {
+        "title": "Tokens de Notificación",
+        "description": "Si concedes permiso para notificaciones del navegador:",
+        "optIn": "Recopilamos tokens de Firebase Cloud Messaging (FCM)",
+        "tokens": "Los tokens se usan solo para enviarte notificaciones sobre nuevo contenido",
+        "revoke": "Puedes revocar el permiso de notificación en cualquier momento en la configuración de tu navegador"
+      },
+      "browserStorage": {
+        "title": "Almacenamiento del Navegador (localStorage) - NO Son Cookies",
+        "description": "Almacenamos los siguientes datos localmente en tu navegador usando localStorage. Importante: localStorage NO son cookies y nunca salen de tu navegador.",
+        "keyDifference": "A diferencia de las cookies, los datos de localStorage NUNCA salen de tu navegador. No se envían a ningún servidor.",
+        "noConsentNeeded": "No requiere consentimiento: Como localStorage permanece puramente local, no requiere consentimiento bajo leyes de privacidad (GDPR/LGPD).",
+        "theme": "Preferencia de tema (modo claro/oscuro)",
+        "language": "Preferencia de idioma (pt-BR, en, es)",
+        "consent": "Preferencias de consentimiento de cookies",
+        "session": "Datos de sesión (estado del modal de intención de salida)",
+        "notifications": "Preferencias de suscripción de notificaciones"
+      }
+    },
+    "dataUsage": {
+      "title": "Uso de Datos",
+      "intro": "Usamos los datos recopilados para los siguientes propósitos:",
+      "analytics": {
+        "title": "Análisis y Mejora del Sitio",
+        "description": "Entender cómo los visitantes usan el sitio para mejorar la experiencia del usuario y el contenido"
+      },
+      "communication": {
+        "title": "Comunicación",
+        "description": "Responder a envíos de formularios de contacto y enviar actualizaciones a suscriptores"
+      },
+      "personalization": {
+        "title": "Personalización",
+        "description": "Recordar tus preferencias (tema, idioma) para una mejor experiencia"
+      },
+      "improvement": {
+        "title": "Detección de Errores y Mejora",
+        "description": "Identificar y corregir problemas técnicos para mejorar la confiabilidad del sitio"
+      }
+    },
+    "dataStorage": {
+      "title": "Almacenamiento de Datos",
+      "intro": "Tus datos se almacenan en las siguientes ubicaciones:",
+      "firebase": {
+        "title": "Firebase (Google Cloud)",
+        "description": "Los datos de análisis y tokens de notificación se almacenan en la plataforma Firebase de Google"
+      },
+      "formspree": {
+        "title": "Formspree",
+        "description": "Los envíos de formularios de contacto y suscripciones de correo electrónico son procesados y almacenados por Formspree"
+      },
+      "localStorage": {
+        "title": "localStorage del Navegador",
+        "description": "Las preferencias y datos de sesión se almacenan localmente en tu navegador"
+      }
+    },
+    "dataSharing": {
+      "title": "Compartir Datos",
+      "intro": "Compartimos datos con los siguientes servicios de terceros:",
+      "firebase": {
+        "title": "Google Analytics/Firebase",
+        "description": "Los datos de análisis anónimos son procesados por el servicio Firebase Analytics de Google"
+      },
+      "formspree": {
+        "title": "Formspree",
+        "description": "Los datos de formularios de contacto son procesados por Formspree para entregar mensajes a nuestro correo electrónico"
+      },
+      "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros."
+    },
+    "userRights": {
+      "title": "Tus Derechos (Cumplimiento GDPR/LGPD)",
+      "intro": "Tienes los siguientes derechos con respecto a tus datos personales:",
+      "access": {
+        "title": "Derecho de Acceso",
+        "description": "Solicitar una copia de los datos personales que tenemos sobre ti"
+      },
+      "deletion": {
+        "title": "Derecho de Eliminación",
+        "description": "Solicitar la eliminación de tus datos personales de nuestros sistemas"
+      },
+      "export": {
+        "title": "Derecho a la Portabilidad de Datos",
+        "description": "Solicitar tus datos en un formato legible por máquina"
+      },
+      "correction": {
+        "title": "Derecho de Corrección",
+        "description": "Solicitar corrección de datos personales inexactos"
+      },
+      "optOut": {
+        "title": "Derecho de Exclusión",
+        "description": "Excluirte del seguimiento de análisis y comunicaciones por correo electrónico en cualquier momento"
+      },
+      "contact": "Para ejercer cualquiera de estos derechos, contáctanos en:"
+    },
+    "cookies": {
+      "title": "Cookies",
+      "intro": "Este sitio usa cookies SOLO para análisis (si consientes). Si rechazas análisis, NO se establecen cookies.",
+      "localStorage": "Usamos localStorage (almacenamiento del navegador) para funcionalidad esencial. localStorage NO son cookies y nunca sale de tu navegador.",
+      "seeMore": "Para información detallada sobre las cookies que usamos y la diferencia entre cookies y localStorage, consulta nuestra",
+      "cookiePolicyLink": "Política de Cookies"
+    },
+    "analyticsOptOut": {
+      "title": "Exclusión de Análisis",
+      "description": "Puedes desactivar el seguimiento de análisis:",
+      "cookieBanner": "Usando el banner de consentimiento de cookies para rechazar cookies de análisis",
+      "browserSettings": "Desactivando cookies en la configuración de tu navegador",
+      "localStorage": "Limpiando los datos del localStorage de tu navegador"
+    },
+    "contact": {
+      "title": "Información de Contacto",
+      "description": "Si tienes preguntas o inquietudes sobre esta Política de Privacidad o tus datos personales, contáctanos:",
+      "email": "Correo electrónico",
+      "website": "Sitio web"
+    },
+    "policyUpdates": {
+      "title": "Actualizaciones de la Política",
+      "description": "Podemos actualizar esta Política de Privacidad periódicamente para reflejar cambios en nuestras prácticas o requisitos legales.",
+      "notification": "Notificaremos a los usuarios sobre cambios significativos actualizando la fecha de 'Última Actualización' en la parte superior de esta página."
+    },
+    "compliance": {
+      "title": "Cumplimiento",
+      "description": "Esta Política de Privacidad cumple con:",
+      "gdpr": {
+        "title": "GDPR (Reglamento General de Protección de Datos)",
+        "description": "Ley de protección de datos de la Unión Europea"
+      },
+      "lgpd": {
+        "title": "LGPD (Lei Geral de Proteção de Dados)",
+        "description": "Ley de protección de datos brasileña"
+      }
+    }
+  },
+  "terms": {
+    "metaTitle": "Términos de Uso - Sitio Web de Currículum Personal",
+    "metaDescription": "Lea los términos y condiciones de uso de nuestro sitio web. Comprenda sus derechos y responsabilidades al usar nuestro sitio de portafolio.",
+    "title": "Términos de Uso",
+    "lastUpdated": "Última Actualización",
+    "lastUpdatedDate": "Mayo de 2026",
+    "introduction": {
+      "title": "Introducción",
+      "paragraph1": "Bienvenido a mi sitio web de portafolio personal. Estos Términos de Uso rigen su acceso y uso de este sitio web.",
+      "paragraph2": "Este sitio web es un portafolio personal que muestra mi trabajo, experiencia e información de contacto profesional. No es un sitio web comercial y no ofrece productos o servicios para la venta.",
+      "paragraph3": "Al acceder o usar este sitio web, usted acepta cumplir con estos términos. Si no está de acuerdo con alguna parte de estos términos, por favor no use este sitio web."
+    },
+    "acceptance": {
+      "title": "Aceptación de los Términos",
+      "description": "Al usar este sitio web, usted confirma que:",
+      "browsing": "Ha leído y comprendido estos Términos de Uso",
+      "contactForm": "Acepta usar el formulario de contacto de manera responsable",
+      "downloads": "Entiende que cualquier contenido descargado es para uso personal",
+      "interactions": "No usará este sitio web para fines ilegales o no autorizados",
+      "disagreement": "Si no está de acuerdo con estos términos, por favor no use este sitio web."
+    },
+    "acceptableUse": {
+      "title": "Uso Aceptable",
+      "description": "Usted acepta usar este sitio web solo para fines legales y de una manera que no infrinja los derechos de otros.",
+      "permitted": {
+        "title": "Usos Permitidos",
+        "viewing": "Ver y navegar por el contenido del sitio web",
+        "contact": "Usar el formulario de contacto para comunicación profesional legítima",
+        "sharing": "Compartir enlaces al sitio web en redes sociales o plataformas profesionales",
+        "learning": "Ver el código fuente del sitio web en GitHub con fines educativos"
+      },
+      "prohibited": {
+        "title": "Usos Prohibidos",
+        "scraping": "Hacer scraping, copiar o extraer datos automáticamente del sitio web",
+        "hacking": "Intentar hackear, comprometer o probar la seguridad del sitio web sin autorización",
+        "spam": "Usar el formulario de contacto para spam, marketing no solicitado o comunicación abusiva",
+        "malware": "Cargar o transmitir virus, malware o código malicioso",
+        "impersonation": "Hacerse pasar por mí o representar falsamente su afiliación conmigo",
+        "harassment": "Acosar, amenazar o intimidar a través de cualquier función del sitio web",
+        "illegal": "Usar el sitio web para cualquier propósito ilegal o no autorizado"
+      }
+    },
+    "intellectualProperty": {
+      "title": "Propiedad Intelectual",
+      "description": "Todo el contenido de este sitio web, incluido texto, imágenes, código y diseño, está protegido por leyes de derechos de autor y propiedad intelectual.",
+      "ownership": {
+        "title": "Propiedad del Contenido",
+        "content": "Todo el contenido textual, imágenes de portafolio y materiales originales son de mi propiedad",
+        "design": "El diseño, diseño y elementos visuales del sitio web son de mi propiedad",
+        "code": "El código fuente del sitio web está disponible bajo licencia MIT en GitHub",
+        "trademarks": "Cualquier marca registrada o logotipo mostrado pertenece a sus respectivos propietarios"
+      },
+      "license": {
+        "title": "Licencia Limitada",
+        "description": "Le otorgo una licencia limitada, no exclusiva y no transferible para:",
+        "viewing": "Ver y navegar por el sitio web con fines personales y no comerciales",
+        "personal": "Descargar materiales (como mi currículum) para uso personal",
+        "sharing": "Compartir enlaces al sitio web con la atribución adecuada"
+      },
+      "sourceCode": {
+        "title": "Código Fuente Abierto",
+        "description": "El código fuente de este sitio web está disponible en GitHub bajo la licencia MIT.",
+        "link": "Ver en GitHub"
+      }
+    },
+    "userContent": {
+      "title": "Contenido del Usuario",
+      "description": "Cuando usa el formulario de contacto o interactúa con el sitio web, puede proporcionar información o contenido.",
+      "contactForm": {
+        "title": "Envíos del Formulario de Contacto",
+        "description": "Al enviar el formulario de contacto, usted garantiza que:",
+        "accurate": "La información proporcionada es precisa y veraz",
+        "respectful": "Su mensaje es respetuoso y profesional",
+        "noSpam": "No está enviando spam o contenido no solicitado",
+        "legal": "Su contenido no viola ninguna ley o derecho de terceros"
+      },
+      "rights": {
+        "title": "Sus Derechos",
+        "description": "Usted conserva todos los derechos sobre el contenido que envía a través del formulario de contacto. Usaré su información solo para responder a su consulta, como se describe en nuestra Política de Privacidad."
+      }
+    },
+    "thirdPartyLinks": {
+      "title": "Enlaces de Terceros",
+      "description": "Este sitio web contiene enlaces a sitios web y servicios de terceros, incluyendo:",
+      "examples": "Ejemplos de enlaces de terceros en este sitio web:",
+      "github": "GitHub (repositorio de código y perfil)",
+      "linkedin": "LinkedIn (perfil profesional)",
+      "projects": "Enlaces de proyectos a demos en vivo o repositorios",
+      "disclaimer": "No soy responsable del contenido, políticas de privacidad o prácticas de sitios web de terceros. Usted accede a estos sitios web bajo su propio riesgo."
+    },
+    "disclaimer": {
+      "title": "Descargo de Garantías",
+      "important": "Importante: Lea Esta Sección Cuidadosamente",
+      "description": "Este sitio web se proporciona \"tal cual\" y \"según disponibilidad\" sin garantías de ningún tipo, ya sean expresas o implícitas, incluyendo pero no limitado a:",
+      "asIs": "El sitio web se proporciona sin garantías de idoneidad para un propósito particular",
+      "noWarranty": "No garantizo que el sitio web esté libre de errores o sea ininterrumpido",
+      "accuracy": "No garantizo la precisión, integridad o actualidad de la información",
+      "availability": "No garantizo que el sitio web esté siempre disponible o accesible",
+      "errors": "Puedo hacer cambios en el sitio web en cualquier momento sin previo aviso"
+    },
+    "liability": {
+      "title": "Limitación de Responsabilidad",
+      "description": "En la máxima medida permitida por la ley, no seré responsable de ningún daño que surja de o esté relacionado con su uso de este sitio web, incluyendo pero no limitado a:",
+      "direct": "Daños directos, indirectos, incidentales o consecuentes",
+      "indirect": "Pérdida de ganancias, ingresos, datos u oportunidades comerciales",
+      "dataLoss": "Pérdida o corrupción de datos",
+      "businessLoss": "Interrupción del negocio o pérdida de buena voluntad",
+      "thirdParty": "Daños causados por sitios web o servicios de terceros",
+      "maximum": "En ningún caso mi responsabilidad total excederá la cantidad que pagó para acceder a este sitio web (que es cero, ya que el sitio web es gratuito)."
+    },
+    "indemnification": {
+      "title": "Indemnización",
+      "description": "Usted acepta indemnizar, defender y mantenerme indemne de y contra todas las reclamaciones, responsabilidades, daños, pérdidas y gastos que surjan de o estén relacionados con:",
+      "violations": "Su violación de estos Términos de Uso",
+      "content": "Su uso del formulario de contacto o cualquier contenido que envíe",
+      "infringement": "Su violación de cualquier derecho de terceros, incluidos los derechos de propiedad intelectual",
+      "harm": "Cualquier daño causado a terceros a través de su uso del sitio web"
+    },
+    "privacy": {
+      "title": "Privacidad y Protección de Datos",
+      "description": "Su uso de este sitio web también está regido por nuestra Política de Privacidad y Política de Cookies, que explican cómo recopilamos, usamos y protegemos su información personal.",
+      "seeMore": "Para obtener información detallada sobre las prácticas de datos, consulte nuestra",
+      "privacyPolicyLink": "Política de Privacidad",
+      "and": "y",
+      "cookiePolicyLink": "Política de Cookies"
+    },
+    "changes": {
+      "title": "Cambios en los Términos",
+      "description": "Me reservo el derecho de modificar o reemplazar estos Términos de Uso en cualquier momento. Los cambios significativos se indicarán actualizando la fecha de \"Última Actualización\" en la parte superior de esta página.",
+      "notification": "Es su responsabilidad revisar estos términos periódicamente. No proporcionaré notificación individual de cambios.",
+      "continued": "Su uso continuado del sitio web después de cualquier cambio constituye la aceptación de los nuevos términos."
+    },
+    "governingLaw": {
+      "title": "Ley Aplicable",
+      "description": "Estos Términos de Uso se rigen e interpretan de acuerdo con las leyes de Brasil, sin tener en cuenta sus disposiciones sobre conflictos de leyes.",
+      "jurisdiction": "Cualquier disputa que surja de estos términos estará sujeta a la jurisdicción exclusiva de los tribunales de Brasil."
+    },
+    "severability": {
+      "title": "Divisibilidad",
+      "description": "Si alguna disposición de estos Términos de Uso se considera inválida o inaplicable, las disposiciones restantes continuarán en pleno vigor y efecto."
+    },
+    "contact": {
+      "title": "Información de Contacto",
+      "description": "Si tiene preguntas o inquietudes sobre estos Términos de Uso, por favor contácteme:",
+      "email": "Correo electrónico",
+      "website": "Sitio web"
+    },
+    "acknowledgment": {
+      "title": "Reconocimiento",
+      "description": "Al usar este sitio web, usted reconoce que ha leído, comprendido y acepta estar sujeto a estos Términos de Uso."
+    }
   }
 }
