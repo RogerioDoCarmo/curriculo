@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { ExternalLink } from "lucide-react";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
 import CareerPathSelector from "@/components/CareerPathSelector";
@@ -37,6 +39,7 @@ export default function HomePageContent({
   skills,
 }: HomePageContentProps) {
   const [careerPath, setCareerPath] = useState<CareerPath>("professional");
+  const t = useTranslations("techStack");
 
   return (
     <>
@@ -52,9 +55,45 @@ export default function HomePageContent({
         />
       </div>
 
+      {/* Storybook Link Section */}
+      <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mx-auto max-w-7xl text-center">
+          <a
+            href="/storybook/index.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center gap-2 px-6 py-3
+              bg-primary-600 text-white rounded-lg
+              hover:bg-primary-700 transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2
+              font-medium
+            "
+            aria-label={t("storybookLink")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            {t("storybookLink")}
+            <ExternalLink className="w-4 h-4" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+
       {/* Career Path Selector (Professional/Academic) */}
       <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mx-auto max-w-7xl flex justify-center">
+        <div className="mx-auto max-w-7xl">
           <CareerPathSelector selected={careerPath} onSelect={setCareerPath} />
         </div>
       </div>
