@@ -148,7 +148,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               loading="lazy"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
