@@ -16,6 +16,7 @@
   },
   "careerPath": {
     "title": "Choose a Path",
+    "sectionTitle": "Explore My Journey",
     "professional": "Professional",
     "academic": "Academic"
   },
@@ -36,7 +37,15 @@
     "collapseDetails": "Collapse details",
     "achievements": "Achievements",
     "technologies": "Technologies",
-    "timeline": "Timeline"
+    "timeline": "Timeline",
+    "duration": {
+      "lessThanMonth": "< 1 month",
+      "year": "yr",
+      "years": "yrs",
+      "month": "mo",
+      "months": "mos",
+      "separator": "·"
+    }
   },
   "forms": {
     "name": "Name",
@@ -80,11 +89,14 @@
     "downloadDissertationLabel": "Download master's dissertation in PDF format",
     "printPage": "Print Page",
     "printPageLabel": "Print site page",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy",
     "languages": {
       "portuguese": "Português (pt-BR)",
       "english": "English (en)",
       "spanish": "Español (es)"
-    }
+    },
+    "termsOfUse": "Terms of Use"
   },
   "backToTop": {
     "label": "Back to top"
@@ -150,11 +162,13 @@
       "buttonLabel": "Send",
       "successMessage": "Thanks! I'll be in touch soon.",
       "messagePlaceholder": "Write a message, ask a question, or just say hi..."
-    }
+    },
+    "storybookButton": "Site UI Components"
   },
   "techStack": {
     "title": "Used in this site",
     "subtitle": "Technologies used to build this website",
+    "storybookLink": "View Component Library",
     "labels": {
       "why": "Why:",
       "benefits": "Benefits:",
@@ -268,6 +282,566 @@
         "benefits": "Catches bugs early, identifies vulnerabilities, improves maintainability",
         "url": "https://www.sonarqube.org"
       }
+    }
+  },
+  "cookieConsent": {
+    "title": "This site uses cookies",
+    "description": "We use localStorage (browser storage, NOT cookies) for essential functionality and analytics cookies to understand how you interact with our content. If you reject analytics, ZERO cookies are set. All analytics data is anonymous.",
+    "essential": "Essential (localStorage - NOT Cookies)",
+    "essentialDescription": "Browser storage for basic functionality (theme, language, session). Stays in your browser only. Always active.",
+    "analytics": "Analytics Cookies (Optional)",
+    "analyticsDescription": "Help understand how visitors interact with the site through Firebase Analytics. Anonymous data. Requires consent.",
+    "analyticsCookies": "Cookies: _ga, _ga_{container-id}, _gid, _gat",
+    "functional": "Functional (localStorage)",
+    "functionalDescription": "Browser storage for enhanced features (notifications, preferences). Stays in your browser only.",
+    "acceptAll": "Accept All",
+    "rejectAll": "Reject Non-Essential (Zero Cookies)",
+    "customize": "Customize",
+    "learnMore": "Learn more in our",
+    "privacyPolicy": "Privacy Policy",
+    "cookiePolicy": "Cookie Policy",
+    "and": "and",
+    "back": "Back",
+    "customizeTitle": "Customize Cookie Preferences",
+    "customizeDescription": "Choose which categories you want to allow. Essential localStorage (NOT cookies) cannot be disabled as it stays purely local.",
+    "required": "Required",
+    "savePreferences": "Save Preferences"
+  },
+  "cookies": {
+    "metaTitle": "Cookie Policy - Personal Resume Website",
+    "metaDescription": "Learn about the cookies we use, how to manage them, and your choices. Detailed information about Firebase Analytics cookies.",
+    "title": "Cookie Policy",
+    "lastUpdated": "Last Updated",
+    "lastUpdatedDate": "May 2026",
+    "introduction": {
+      "title": "Introduction",
+      "paragraph1": "This Cookie Policy explains what cookies are, how we use them on our website, and your choices regarding cookies.",
+      "paragraph2": "Important: This site uses cookies ONLY for analytics (if you consent). If you reject analytics, NO cookies are set. We use localStorage (browser storage) for essential functionality, which is NOT cookies and stays only in your browser."
+    },
+    "whatAreCookies": {
+      "title": "What Are Cookies?",
+      "description": "Cookies are small text files that are placed on your device (computer, smartphone, or tablet) when you visit a website. Cookies are sent to the server with every HTTP request you make to the website.",
+      "purpose": "Cookies help websites remember your preferences, understand how you use the site, and improve your browsing experience. Unlike localStorage, cookies are transmitted to the server with each request."
+    },
+    "cookiesVsLocalStorage": {
+      "title": "Cookies vs localStorage: What's the Difference?",
+      "intro": "It's important to understand the difference between cookies and localStorage:",
+      "cookies": {
+        "title": "Cookies",
+        "description": "Small text files sent to the server with every HTTP request. Used for tracking and analytics. Require consent under privacy laws."
+      },
+      "localStorage": {
+        "title": "localStorage (Browser Storage)",
+        "description": "Data stored only in your browser that NEVER leaves your device. Used for preferences like theme and language. No consent needed as it's purely local."
+      },
+      "keyDifference": "Key Difference: Cookies are sent to servers; localStorage stays in your browser."
+    },
+    "actualCookies": {
+      "title": "Actual Cookies Used on This Site",
+      "intro": "This website uses cookies ONLY for analytics, and ONLY if you consent:",
+      "analytics": {
+        "title": "Firebase Analytics Cookies (Non-Essential - Require Consent)",
+        "description": "These cookies are set by Firebase Analytics to track user interactions and engagement anonymously. They help us understand how visitors use our website.",
+        "nonEssential": "These cookies are non-essential and require your consent.",
+        "purpose": "Analytics cookies help us improve the website by understanding which pages are most popular, how visitors navigate the site, and where errors occur.",
+        "ifRejected": "If you reject analytics: ZERO cookies are set. The site works perfectly without any cookies."
+      }
+    },
+    "cookieList": {
+      "title": "Specific Cookies We Use",
+      "intro": "Below is a detailed list of the actual cookies used on our website (ONLY if you consent to analytics):",
+      "firebaseAnalytics": {
+        "title": "Firebase Analytics Cookies (Google)",
+        "category": "Category: Analytics (Non-Essential - Require Consent)",
+        "purpose": "These cookies are set by Firebase Analytics to track user interactions and engagement anonymously. They help us understand how visitors use our website.",
+        "cookies": {
+          "ga": {
+            "name": "_ga",
+            "purposeLabel": "Purpose",
+            "purpose": "Google Analytics ID - Distinguishes unique users",
+            "expirationLabel": "Expiration",
+            "expiration": "2 years"
+          },
+          "gaContainer": {
+            "name": "_ga_{container-id}",
+            "purposeLabel": "Purpose",
+            "purpose": "Session tracking - Stores session state and user interactions",
+            "expirationLabel": "Expiration",
+            "expiration": "2 years"
+          },
+          "gid": {
+            "name": "_gid",
+            "purposeLabel": "Purpose",
+            "purpose": "User distinction - Distinguishes users within a 24-hour period",
+            "expirationLabel": "Expiration",
+            "expiration": "24 hours"
+          },
+          "gat": {
+            "name": "_gat",
+            "purposeLabel": "Purpose",
+            "purpose": "Request throttling - Throttles request rate to prevent server overload",
+            "expirationLabel": "Expiration",
+            "expiration": "1 minute"
+          }
+        }
+      }
+    },
+    "browserStorage": {
+      "title": "Browser Storage (localStorage) - NOT Cookies",
+      "intro": "This site uses localStorage for essential functionality. localStorage is NOT cookies:",
+      "keyDifference": "Key Difference: localStorage data NEVER leaves your browser. It is not sent to any server.",
+      "noConsentNeeded": "No consent needed: Because localStorage stays purely local, it doesn't require consent under privacy laws.",
+      "whatWeStore": "What we store in localStorage:",
+      "items": {
+        "theme": {
+          "name": "theme",
+          "purpose": "Your theme preference (light/dark mode)"
+        },
+        "language": {
+          "name": "preferred-locale",
+          "purpose": "Your language preference (pt-BR, en, es)"
+        },
+        "consent": {
+          "name": "cookie-consent",
+          "purpose": "Your cookie consent choice (accept/reject analytics)"
+        },
+        "preferences": {
+          "name": "cookie-preferences",
+          "purpose": "Your detailed cookie preferences"
+        },
+        "notifications": {
+          "name": "fcm_topic_subscriptions",
+          "purpose": "Your notification subscription preferences"
+        }
+      },
+      "howToManage": "How to manage localStorage: You can clear localStorage through your browser's developer tools or by clearing all site data. This will reset your preferences but won't affect cookies."
+    },
+    "manageCookies": {
+      "title": "How to Manage Cookies",
+      "intro": "You can control and manage cookies in several ways. Please note that removing or blocking cookies may impact your user experience and some features may no longer work properly.",
+      "chrome": {
+        "title": "Google Chrome",
+        "step1": "Click the three-dot menu icon in the top-right corner",
+        "step2": "Select 'Settings' > 'Privacy and security' > 'Cookies and other site data'",
+        "step3": "Choose your preferred cookie settings",
+        "step4": "To delete existing cookies, click 'See all site data and permissions' > 'Remove all'"
+      },
+      "firefox": {
+        "title": "Mozilla Firefox",
+        "step1": "Click the three-line menu icon in the top-right corner",
+        "step2": "Select 'Settings' > 'Privacy & Security'",
+        "step3": "Under 'Cookies and Site Data', choose your preferred settings",
+        "step4": "To delete existing cookies, click 'Clear Data'"
+      },
+      "safari": {
+        "title": "Safari",
+        "step1": "Click 'Safari' in the menu bar > 'Preferences'",
+        "step2": "Click the 'Privacy' tab",
+        "step3": "Choose your cookie preferences under 'Cookies and website data'",
+        "step4": "To delete existing cookies, click 'Manage Website Data' > 'Remove All'"
+      },
+      "edge": {
+        "title": "Microsoft Edge",
+        "step1": "Click the three-dot menu icon in the top-right corner",
+        "step2": "Select 'Settings' > 'Cookies and site permissions' > 'Cookies and site data'",
+        "step3": "Choose your preferred cookie settings",
+        "step4": "To delete existing cookies, click 'See all cookies and site data' > 'Remove all'"
+      }
+    },
+    "thirdPartyCookies": {
+      "title": "Third-Party Cookies",
+      "intro": "We use third-party services that may set cookies on your device:",
+      "firebaseAnalytics": {
+        "title": "Firebase Analytics (Google)",
+        "description": "Firebase Analytics is a service provided by Google that helps us understand how visitors use our website.",
+        "providerLabel": "Provider",
+        "provider": "Google LLC",
+        "purposeLabel": "Purpose",
+        "purpose": "Anonymous analytics and usage tracking",
+        "privacyPolicyLabel": "Privacy Policy",
+        "privacyPolicyLink": "Google Privacy Policy"
+      }
+    },
+    "cookieConsent": {
+      "title": "Cookie Consent",
+      "description": "When you first visit our website, you will see a cookie consent banner that allows you to choose which types of cookies you want to accept:",
+      "acceptAll": {
+        "title": "Accept All",
+        "description": "Accepts analytics cookies. localStorage is always used regardless of your choice."
+      },
+      "rejectAll": {
+        "title": "Reject Non-Essential",
+        "description": "Rejects analytics cookies. ZERO cookies will be set. localStorage is still used for essential functionality."
+      },
+      "customize": {
+        "title": "Customize",
+        "description": "Allows you to choose which cookie categories to accept"
+      },
+      "changePreferences": "You can change your cookie preferences at any time by clearing your browser's cookies and revisiting the website, or by adjusting your browser settings."
+    },
+    "analyticsOptOut": {
+      "title": "Analytics Opt-Out",
+      "description": "If you want to opt-out of analytics tracking, you have several options:",
+      "cookieBanner": "Use the cookie consent banner to reject analytics cookies",
+      "browserSettings": "Disable cookies in your browser settings (see instructions above)",
+      "googleOptOut": "Install the Google Analytics Opt-out Browser Add-on:",
+      "googleOptOutLink": "Google Analytics Opt-out Add-on"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have questions or concerns about our use of cookies, please contact us:",
+      "email": "Email",
+      "website": "Website"
+    },
+    "policyUpdates": {
+      "title": "Policy Updates",
+      "description": "We may update this Cookie Policy from time to time to reflect changes in our practices or legal requirements.",
+      "notification": "We will notify users of significant changes by updating the 'Last Updated' date at the top of this page."
+    },
+    "moreInformation": {
+      "title": "More Information",
+      "description": "For more information about how we collect, use, and protect your data, please see our",
+      "privacyPolicyLink": "Privacy Policy"
+    }
+  },
+  "privacy": {
+    "metaTitle": "Privacy Policy - Personal Resume Website",
+    "metaDescription": "Learn how we collect, use, and protect your data. GDPR and LGPD compliant privacy policy.",
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated",
+    "lastUpdatedDate": "May 2026",
+    "introduction": {
+      "title": "Introduction",
+      "paragraph1": "This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website.",
+      "paragraph2": "We are committed to protecting your privacy and ensuring transparency about our data practices. This policy complies with GDPR (General Data Protection Regulation) and LGPD (Lei Geral de Proteção de Dados)."
+    },
+    "dataCollection": {
+      "title": "Data Collection",
+      "intro": "We collect the following types of data:",
+      "analytics": {
+        "title": "Analytics Data (Firebase Analytics - Anonymous)",
+        "important": "Important: Analytics cookies are ONLY set if you consent. If you reject analytics, ZERO cookies are set.",
+        "description": "We use Firebase Analytics to understand how visitors interact with our website. This helps us improve the user experience.",
+        "navigation": {
+          "title": "Navigation",
+          "pageViews": "Page views and visited sections",
+          "linkClicks": "Link clicks (navigation, footer, social media)",
+          "sectionNav": "Section navigation and scroll behavior",
+          "preferences": "Language and theme preference changes"
+        },
+        "forms": {
+          "title": "Form Interactions",
+          "fieldFocus": "Field focus and blur events (which fields users interact with)",
+          "validationErrors": "Validation error types (not the actual data entered)",
+          "submissionEvents": "Form submission events (success/failure)",
+          "timing": "Time spent filling out forms"
+        },
+        "engagement": {
+          "title": "Content Engagement",
+          "scrollDepth": "Scroll depth (25%, 50%, 75%, 100%)",
+          "timeOnPage": "Time spent on each page",
+          "interactions": "Project, experience, and skill card interactions"
+        },
+        "userPreferences": {
+          "title": "User Preferences",
+          "theme": "Theme selection (light/dark mode)",
+          "language": "Language preference",
+          "careerPath": "Career path selections (professional/academic)"
+        },
+        "errors": {
+          "title": "Error Events",
+          "componentErrors": "Component errors (error boundary triggers)",
+          "apiFailures": "API failures (no sensitive data included)"
+        }
+      },
+      "email": {
+        "title": "Email Addresses",
+        "description": "We collect email addresses when you:",
+        "contactForm": "Submit the contact form",
+        "subscription": "Subscribe to email updates",
+        "storage": "Email addresses are stored by Formspree (our form processing service)"
+      },
+      "notifications": {
+        "title": "Notification Tokens",
+        "description": "If you grant permission for browser notifications:",
+        "optIn": "We collect Firebase Cloud Messaging (FCM) tokens",
+        "tokens": "Tokens are used only to send you notifications about new content",
+        "revoke": "You can revoke notification permission at any time in your browser settings"
+      },
+      "browserStorage": {
+        "title": "Browser Storage (localStorage) - NOT Cookies",
+        "description": "We store the following data locally in your browser using localStorage. Important: localStorage is NOT cookies and never leaves your browser.",
+        "keyDifference": "Unlike cookies, localStorage data NEVER leaves your browser. It is not sent to any server.",
+        "noConsentNeeded": "No consent needed: Because localStorage stays purely local, it doesn't require consent under privacy laws (GDPR/LGPD).",
+        "theme": "Theme preference (light/dark mode)",
+        "language": "Language preference (pt-BR, en, es)",
+        "consent": "Cookie consent preferences",
+        "session": "Session data (exit intent modal state)",
+        "notifications": "Notification subscription preferences"
+      }
+    },
+    "dataUsage": {
+      "title": "Data Usage",
+      "intro": "We use collected data for the following purposes:",
+      "analytics": {
+        "title": "Analytics and Site Improvement",
+        "description": "Understanding how visitors use the site to improve user experience and content"
+      },
+      "communication": {
+        "title": "Communication",
+        "description": "Responding to contact form submissions and sending updates to subscribers"
+      },
+      "personalization": {
+        "title": "Personalization",
+        "description": "Remembering your preferences (theme, language) for a better experience"
+      },
+      "improvement": {
+        "title": "Error Detection and Improvement",
+        "description": "Identifying and fixing technical issues to improve site reliability"
+      }
+    },
+    "dataStorage": {
+      "title": "Data Storage",
+      "intro": "Your data is stored in the following locations:",
+      "firebase": {
+        "title": "Firebase (Google Cloud)",
+        "description": "Analytics data and notification tokens are stored on Google's Firebase platform"
+      },
+      "formspree": {
+        "title": "Formspree",
+        "description": "Contact form submissions and email subscriptions are processed and stored by Formspree"
+      },
+      "localStorage": {
+        "title": "Browser localStorage",
+        "description": "Preferences and session data are stored locally in your browser"
+      }
+    },
+    "dataSharing": {
+      "title": "Data Sharing",
+      "intro": "We share data with the following third-party services:",
+      "firebase": {
+        "title": "Google Analytics/Firebase",
+        "description": "Anonymous analytics data is processed by Google's Firebase Analytics service"
+      },
+      "formspree": {
+        "title": "Formspree",
+        "description": "Contact form data is processed by Formspree to deliver messages to our email"
+      },
+      "noSale": "We do not sell, rent, or trade your personal information to third parties."
+    },
+    "userRights": {
+      "title": "Your Rights (GDPR/LGPD Compliance)",
+      "intro": "You have the following rights regarding your personal data:",
+      "access": {
+        "title": "Right to Access",
+        "description": "Request a copy of the personal data we hold about you"
+      },
+      "deletion": {
+        "title": "Right to Deletion",
+        "description": "Request deletion of your personal data from our systems"
+      },
+      "export": {
+        "title": "Right to Data Portability",
+        "description": "Request your data in a machine-readable format"
+      },
+      "correction": {
+        "title": "Right to Correction",
+        "description": "Request correction of inaccurate personal data"
+      },
+      "optOut": {
+        "title": "Right to Opt-Out",
+        "description": "Opt-out of analytics tracking and email communications at any time"
+      },
+      "contact": "To exercise any of these rights, please contact us at:"
+    },
+    "cookies": {
+      "title": "Cookies",
+      "intro": "This site uses cookies ONLY for analytics (if you consent). If you reject analytics, NO cookies are set.",
+      "localStorage": "We use localStorage (browser storage) for essential functionality. localStorage is NOT cookies and never leaves your browser.",
+      "seeMore": "For detailed information about the cookies we use and the difference between cookies and localStorage, please see our",
+      "cookiePolicyLink": "Cookie Policy"
+    },
+    "analyticsOptOut": {
+      "title": "Analytics Opt-Out",
+      "description": "You can disable analytics tracking by:",
+      "cookieBanner": "Using the cookie consent banner to reject analytics cookies",
+      "browserSettings": "Disabling cookies in your browser settings",
+      "localStorage": "Clearing your browser's localStorage data"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have questions or concerns about this Privacy Policy or your personal data, please contact us:",
+      "email": "Email",
+      "website": "Website"
+    },
+    "policyUpdates": {
+      "title": "Policy Updates",
+      "description": "We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements.",
+      "notification": "We will notify users of significant changes by updating the 'Last Updated' date at the top of this page."
+    },
+    "compliance": {
+      "title": "Compliance",
+      "description": "This Privacy Policy complies with:",
+      "gdpr": {
+        "title": "GDPR (General Data Protection Regulation)",
+        "description": "European Union data protection law"
+      },
+      "lgpd": {
+        "title": "LGPD (Lei Geral de Proteção de Dados)",
+        "description": "Brazilian data protection law"
+      }
+    }
+  },
+  "terms": {
+    "metaTitle": "Terms of Use - Personal Resume Website",
+    "metaDescription": "Read the terms and conditions for using our website. Understand your rights and responsibilities when using our portfolio site.",
+    "title": "Terms of Use",
+    "lastUpdated": "Last Updated",
+    "lastUpdatedDate": "May 2026",
+    "introduction": {
+      "title": "Introduction",
+      "paragraph1": "Welcome to my personal portfolio website. These Terms of Use govern your access to and use of this website.",
+      "paragraph2": "This website is a personal portfolio showcasing my work, experience, and professional contact information. It is not a commercial website and does not offer products or services for sale.",
+      "paragraph3": "By accessing or using this website, you agree to comply with these terms. If you do not agree with any part of these terms, please do not use this website."
+    },
+    "acceptance": {
+      "title": "Acceptance of Terms",
+      "description": "By using this website, you confirm that:",
+      "browsing": "You have read and understood these Terms of Use",
+      "contactForm": "You agree to use the contact form responsibly",
+      "downloads": "You understand that any downloaded content is for personal use",
+      "interactions": "You will not use this website for illegal or unauthorized purposes",
+      "disagreement": "If you do not agree with these terms, please do not use this website."
+    },
+    "acceptableUse": {
+      "title": "Acceptable Use",
+      "description": "You agree to use this website only for lawful purposes and in a manner that does not infringe the rights of others.",
+      "permitted": {
+        "title": "Permitted Uses",
+        "viewing": "Viewing and browsing the website content",
+        "contact": "Using the contact form for legitimate professional communication",
+        "sharing": "Sharing links to the website on social media or professional platforms",
+        "learning": "Viewing the website source code on GitHub for educational purposes"
+      },
+      "prohibited": {
+        "title": "Prohibited Uses",
+        "scraping": "Scraping, copying, or automatically extracting data from the website",
+        "hacking": "Attempting to hack, compromise, or test the security of the website without authorization",
+        "spam": "Using the contact form for spam, unsolicited marketing, or abusive communication",
+        "malware": "Uploading or transmitting viruses, malware, or malicious code",
+        "impersonation": "Impersonating me or falsely representing your affiliation with me",
+        "harassment": "Harassing, threatening, or intimidating through any website feature",
+        "illegal": "Using the website for any illegal or unauthorized purpose"
+      }
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "description": "All content on this website, including text, images, code, and design, is protected by copyright and intellectual property laws.",
+      "ownership": {
+        "title": "Content Ownership",
+        "content": "All textual content, portfolio images, and original materials are owned by me",
+        "design": "The website design, layout, and visual elements are owned by me",
+        "code": "The website source code is available under MIT license on GitHub",
+        "trademarks": "Any trademarks or logos displayed belong to their respective owners"
+      },
+      "license": {
+        "title": "Limited License",
+        "description": "I grant you a limited, non-exclusive, non-transferable license to:",
+        "viewing": "View and browse the website for personal, non-commercial purposes",
+        "personal": "Download materials (such as my resume) for personal use",
+        "sharing": "Share links to the website with proper attribution"
+      },
+      "sourceCode": {
+        "title": "Open Source Code",
+        "description": "The source code for this website is available on GitHub under the MIT license.",
+        "link": "View on GitHub"
+      }
+    },
+    "userContent": {
+      "title": "User Content",
+      "description": "When you use the contact form or interact with the website, you may provide information or content.",
+      "contactForm": {
+        "title": "Contact Form Submissions",
+        "description": "By submitting the contact form, you warrant that:",
+        "accurate": "The information provided is accurate and truthful",
+        "respectful": "Your message is respectful and professional",
+        "noSpam": "You are not submitting spam or unsolicited content",
+        "legal": "Your content does not violate any laws or third-party rights"
+      },
+      "rights": {
+        "title": "Your Rights",
+        "description": "You retain all rights to the content you submit through the contact form. I will use your information only to respond to your inquiry, as described in our Privacy Policy."
+      }
+    },
+    "thirdPartyLinks": {
+      "title": "Third-Party Links",
+      "description": "This website contains links to third-party websites and services, including:",
+      "examples": "Examples of third-party links on this website:",
+      "github": "GitHub (code repository and profile)",
+      "linkedin": "LinkedIn (professional profile)",
+      "projects": "Project links to live demos or repositories",
+      "disclaimer": "I am not responsible for the content, privacy policies, or practices of third-party websites. You access these websites at your own risk."
+    },
+    "disclaimer": {
+      "title": "Disclaimer of Warranties",
+      "important": "Important: Read This Section Carefully",
+      "description": "This website is provided \"as is\" and \"as available\" without warranties of any kind, either express or implied, including but not limited to:",
+      "asIs": "The website is provided without warranties of fitness for a particular purpose",
+      "noWarranty": "I do not warrant that the website will be error-free or uninterrupted",
+      "accuracy": "I do not warrant the accuracy, completeness, or currentness of information",
+      "availability": "I do not warrant that the website will always be available or accessible",
+      "errors": "I may make changes to the website at any time without notice"
+    },
+    "liability": {
+      "title": "Limitation of Liability",
+      "description": "To the maximum extent permitted by law, I shall not be liable for any damages arising from or related to your use of this website, including but not limited to:",
+      "direct": "Direct, indirect, incidental, or consequential damages",
+      "indirect": "Loss of profits, revenue, data, or business opportunities",
+      "dataLoss": "Loss or corruption of data",
+      "businessLoss": "Business interruption or loss of goodwill",
+      "thirdParty": "Damages caused by third-party websites or services",
+      "maximum": "In no event shall my total liability exceed the amount you paid to access this website (which is zero, as the website is free)."
+    },
+    "indemnification": {
+      "title": "Indemnification",
+      "description": "You agree to indemnify, defend, and hold me harmless from and against all claims, liabilities, damages, losses, and expenses arising from or related to:",
+      "violations": "Your violation of these Terms of Use",
+      "content": "Your use of the contact form or any content you submit",
+      "infringement": "Your violation of any third-party rights, including intellectual property rights",
+      "harm": "Any harm caused to third parties through your use of the website"
+    },
+    "privacy": {
+      "title": "Privacy and Data Protection",
+      "description": "Your use of this website is also governed by our Privacy Policy and Cookie Policy, which explain how we collect, use, and protect your personal information.",
+      "seeMore": "For detailed information about data practices, please see our",
+      "privacyPolicyLink": "Privacy Policy",
+      "and": "and",
+      "cookiePolicyLink": "Cookie Policy"
+    },
+    "changes": {
+      "title": "Changes to Terms",
+      "description": "I reserve the right to modify or replace these Terms of Use at any time. Significant changes will be indicated by updating the \"Last Updated\" date at the top of this page.",
+      "notification": "It is your responsibility to review these terms periodically. I will not provide individual notification of changes.",
+      "continued": "Your continued use of the website after any changes constitutes acceptance of the new terms."
+    },
+    "governingLaw": {
+      "title": "Governing Law",
+      "description": "These Terms of Use are governed by and construed in accordance with the laws of Brazil, without regard to its conflict of law provisions.",
+      "jurisdiction": "Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Brazil."
+    },
+    "severability": {
+      "title": "Severability",
+      "description": "If any provision of these Terms of Use is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect."
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have questions or concerns about these Terms of Use, please contact me:",
+      "email": "Email",
+      "website": "Website"
+    },
+    "acknowledgment": {
+      "title": "Acknowledgment",
+      "description": "By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use."
     }
   }
 }

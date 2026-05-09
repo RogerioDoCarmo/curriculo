@@ -4,10 +4,12 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe("EmailSubscribeForm - main page", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/en");
+    await dismissCookieBanner(page);
     // Scroll to the contact section
     await page.locator("#contact").scrollIntoViewIfNeeded();
   });
@@ -69,15 +71,18 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
   // These tests only run on desktop browsers.
   test.skip(({ isMobile }) => isMobile, "Exit intent is disabled on mobile viewports");
 
-  test("email form is present in exit intent modal", async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await page.goto("/en");
+    await dismissCookieBanner(page);
+  });
 
+  test("email form is present in exit intent modal", async ({ page }) => {
     // Trigger exit intent by moving mouse to top of viewport
     await page.waitForTimeout(6000); // wait past minTimeOnPage (5s)
     await page.mouse.move(400, 100);
     await page.mouse.move(400, 5); // cross the threshold
 
-    const modal = page.locator('[role="dialog"]');
+    const modal = page.getByRole("dialog", { name: "Hey, wait!" });
     await expect(modal).toBeVisible({ timeout: 2000 });
 
     await expect(modal.locator('input[type="email"]')).toBeVisible();
@@ -89,12 +94,11 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
       route.fulfill({ status: 200, body: JSON.stringify({ ok: true }) });
     });
 
-    await page.goto("/en");
     await page.waitForTimeout(6000);
     await page.mouse.move(400, 100);
     await page.mouse.move(400, 5);
 
-    const modal = page.locator('[role="dialog"]');
+    const modal = page.getByRole("dialog", { name: "Hey, wait!" });
     await expect(modal).toBeVisible({ timeout: 2000 });
 
     await modal.locator('input[type="email"]').fill("modal@example.com");

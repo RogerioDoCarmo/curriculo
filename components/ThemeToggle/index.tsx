@@ -68,7 +68,7 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
           print:hidden
           ${className}
         `}
-        disabled
+        aria-disabled="true"
       >
         <span role="img" aria-label="Theme" className="text-base leading-none">
           ☀️

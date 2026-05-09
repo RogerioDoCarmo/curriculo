@@ -17,11 +17,13 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 test.describe.skip("Language Switching", () => {
   test.beforeEach(async ({ page }) => {
     // Start at the homepage with default language (pt-BR)
     await page.goto("/");
+    await dismissCookieBanner(page);
   });
 
   test("should switch between all supported languages", async ({ page }) => {

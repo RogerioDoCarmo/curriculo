@@ -334,6 +334,8 @@ MIT
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
+- [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
+- [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
 - [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.4 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log

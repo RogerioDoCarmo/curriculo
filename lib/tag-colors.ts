@@ -157,21 +157,38 @@ export function getTechTheme(tech: string): TagTheme {
  */
 export function getTechColorClasses(tech: string): string {
   const theme = getTechTheme(tech);
-  const colors = TAG_COLORS[theme];
 
-  // Safety check: if colors is undefined, use default 'tools' theme
-  if (!colors) {
-    const defaultColors = TAG_COLORS["tools"];
-    return `${defaultColors.bg} ${defaultColors.text} ${defaultColors.darkBg} ${defaultColors.darkText}`;
+  // Return complete class strings so Tailwind JIT can detect them
+  switch (theme) {
+    case "mobile":
+      return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
+    case "web":
+      return "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300";
+    case "backend":
+      return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
+    case "devops":
+      return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
+    case "tools":
+      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
+    default:
+      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
   }
-
-  return `${colors.bg} ${colors.text} ${colors.darkBg} ${colors.darkText}`;
 }
 
 /**
  * Get color classes for a specific theme
  */
 export function getThemeColorClasses(theme: TagTheme): string {
-  const colors = TAG_COLORS[theme];
-  return `${colors.bg} ${colors.text} ${colors.darkBg} ${colors.darkText}`;
+  switch (theme) {
+    case "mobile":
+      return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
+    case "web":
+      return "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300";
+    case "backend":
+      return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
+    case "devops":
+      return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
+    case "tools":
+      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
+  }
 }

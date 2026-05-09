@@ -3,6 +3,15 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ContactFormData } from "@/types/index";
+import {
+  trackFormFieldFocus,
+  trackFormFieldBlur,
+  trackFormValidationError,
+  trackFormSubmissionStart,
+  trackFormSubmissionSuccess,
+  trackFormSubmissionError,
+} from "@/lib/analytics";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 interface ContactFormProps {
   readonly locale: string;
@@ -42,6 +51,8 @@ export default function ContactForm({ locale }: ContactFormProps) {
   );
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submissionStartTime, setSubmissionStartTime] = useState<number>(0);
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState<boolean>(false);
 
   function validateForm(
     data: Partial<ContactFormData>
@@ -49,18 +60,48 @@ export default function ContactForm({ locale }: ContactFormProps) {
     const errors: Partial<Record<keyof ContactFormData, string>> = {};
     if (!data.name || data.name.trim().length === 0) {
       errors.name = t("nameRequired");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "name",
+        error_type: "required",
+      });
     } else if (data.name.trim().length < 2) {
       errors.name = t("nameMinLength");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "name",
+        error_type: "min_length",
+      });
     }
     if (!data.email || data.email.trim().length === 0) {
       errors.email = t("emailRequired");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "email",
+        error_type: "required",
+      });
     } else if (!isValidEmail(data.email.trim())) {
       errors.email = t("emailInvalid");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "email",
+        error_type: "invalid_format",
+      });
     }
     if (!data.message || data.message.trim().length === 0) {
       errors.message = t("messageRequired");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "message",
+        error_type: "required",
+      });
     } else if (data.message.trim().length < 10) {
       errors.message = t("messageMinLength");
+      trackFormValidationError({
+        form_name: "contact_form",
+        field_name: "message",
+        error_type: "min_length",
+      });
     }
     return errors;
   }
@@ -78,6 +119,18 @@ export default function ContactForm({ locale }: ContactFormProps) {
     setTouched((prev) => ({ ...prev, [field]: true }));
     const errs = validateForm(formData);
     setFieldErrors((prev) => ({ ...prev, [field]: errs[field] }));
+    trackFormFieldBlur({
+      form_name: "contact_form",
+      field_name: field,
+      has_value: !!formData[field] && formData[field]!.trim().length > 0,
+    });
+  }
+
+  function handleFocus(field: keyof ContactFormData) {
+    trackFormFieldFocus({
+      form_name: "contact_form",
+      field_name: field,
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -89,6 +142,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
     if (Object.keys(errs).length > 0) return;
 
     setStatus("submitting");
+    const startTime = Date.now();
+    setSubmissionStartTime(startTime);
+    trackFormSubmissionStart({ form_name: "contact_form" });
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;
     const endpoint = formId
@@ -104,14 +160,42 @@ export default function ContactForm({ locale }: ContactFormProps) {
 
       if (response.ok) {
         setStatus("success");
+        const submissionTime = Date.now() - startTime;
+        trackFormSubmissionSuccess({
+          form_name: "contact_form",
+          submission_time_ms: submissionTime,
+        });
         setFormData({ name: "", email: "", message: "" });
         setTouched({});
         setFieldErrors({});
+
+        // Show notification prompt after successful submission
+        // Check if notification permission hasn't been decided yet and prompt wasn't shown before
+        if (
+          typeof window !== "undefined" &&
+          "Notification" in window &&
+          Notification.permission === "default" &&
+          !localStorage.getItem("notification-prompt-shown-after-contact")
+        ) {
+          // Delay showing the prompt by 2 seconds to let user see success message
+          setTimeout(() => {
+            setShowNotificationPrompt(true);
+            localStorage.setItem("notification-prompt-shown-after-contact", "true");
+          }, 2000);
+        }
       } else {
         setStatus("error");
+        trackFormSubmissionError({
+          form_name: "contact_form",
+          error_message: `HTTP ${response.status}`,
+        });
       }
-    } catch {
+    } catch (error) {
       setStatus("error");
+      trackFormSubmissionError({
+        form_name: "contact_form",
+        error_message: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
 
@@ -176,6 +260,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             aria-invalid={!!fieldErrors.name}
             value={formData.name ?? ""}
             onChange={(e) => handleChange("name", e.target.value)}
+            onFocus={() => handleFocus("name")}
             onBlur={() => handleBlur("name")}
             className={[
               "w-full rounded-md border px-4 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500",
@@ -213,6 +298,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             aria-invalid={!!fieldErrors.email}
             value={formData.email ?? ""}
             onChange={(e) => handleChange("email", e.target.value)}
+            onFocus={() => handleFocus("email")}
             onBlur={() => handleBlur("email")}
             className={[
               "w-full rounded-md border px-4 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500",
@@ -249,6 +335,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             aria-invalid={!!fieldErrors.message}
             value={formData.message ?? ""}
             onChange={(e) => handleChange("message", e.target.value)}
+            onFocus={() => handleFocus("message")}
             onBlur={() => handleBlur("message")}
             className={[
               "w-full resize-y rounded-md border px-4 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500",
@@ -326,6 +413,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
           )}
         </button>
       </form>
+
+      {/* Notification Prompt - shown after successful form submission */}
+      {showNotificationPrompt && <NotificationPrompt show={true} />}
     </>
   );
 }

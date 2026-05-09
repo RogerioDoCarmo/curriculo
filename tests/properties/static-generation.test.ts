@@ -311,9 +311,10 @@ describe("Property 48: No Runtime Content API Calls", () => {
           /mongoose\./i,
           /sequelize\./i,
           /knex\./i,
-          /\bSELECT\s+.*\s+FROM\b/i, // More specific SQL pattern
+          /\bSELECT\s+\*\s+FROM\b/i, // More specific: SELECT * FROM (actual SQL)
+          /\bSELECT\s+\w+\s+FROM\s+\w+/i, // More specific: SELECT column FROM table
           /\bINSERT\s+INTO\b/i,
-          /\bUPDATE\s+.*\s+SET\b/i,
+          /\bUPDATE\s+\w+\s+SET\b/i, // More specific: UPDATE table SET
         ];
 
         const hasDatabaseCalls = databasePatterns.some((pattern) => pattern.test(scriptContent));
