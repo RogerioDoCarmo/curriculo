@@ -28,18 +28,23 @@ jest.mock("firebase/remote-config", () => ({
 
 describe("Firebase Remote Config", () => {
   let originalWindow: typeof global.window;
+  const originalEnv = process.env;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.resetModules();
     originalWindow = global.window;
     // Mock environment variables
-    process.env.NEXT_PUBLIC_FIREBASE_API_KEY = "test-api-key";
-    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = "test-project";
-    process.env.NEXT_PUBLIC_FIREBASE_APP_ID = "test-app-id";
+    process.env = {
+      ...originalEnv,
+      NEXT_PUBLIC_FIREBASE_API_KEY: "test-api-key",
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: "test-project",
+      NEXT_PUBLIC_FIREBASE_APP_ID: "test-app-id",
+    };
   });
 
   afterEach(() => {
-    jest.resetModules();
+    process.env = originalEnv;
     // Restore window if it was deleted
     if (!global.window && originalWindow) {
       global.window = originalWindow;
@@ -73,7 +78,10 @@ describe("Firebase Remote Config", () => {
     });
 
     it("should return null when Firebase is not configured", async () => {
-      // Clear environment variables
+      // Clear environment variables for this test
+      process.env = {
+        ...originalEnv,
+      };
       (process.env as any).NEXT_PUBLIC_FIREBASE_API_KEY = undefined;
       (process.env as any).NEXT_PUBLIC_FIREBASE_PROJECT_ID = undefined;
       (process.env as any).NEXT_PUBLIC_FIREBASE_APP_ID = undefined;
