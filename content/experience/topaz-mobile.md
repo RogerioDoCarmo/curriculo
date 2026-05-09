@@ -2,9 +2,10 @@
 id: topaz-mobile
 type: professional
 organization: Topaz
-role: Desenvolvedor Mobile React Native
+role: Desenvolvedor Front Mobile Senior
 location: Remoto, Brasil
 startDate: 2023-03-01
+endDate: 2026-03-01
 technologies:
   - React Native
   - TypeScript

@@ -7,8 +7,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "rm -rf .next && next dev",
     "build": "next build",
     "build:analyze": "ANALYZE=true npm run build",
+    "build:with-storybook": "npm run build-storybook && npm run copy-storybook && npm run build",
+    "copy-storybook": "rm -rf public/storybook && cp -r storybook-static public/storybook",
     "start": "next start",
     "serve": "npx serve@latest out -l 3000",
     "lint": "echo 'ESLint temporarily disabled due to eslint-config-next@16.2.4 circular dependency bug. Will be fixed in next Next.js release.'",

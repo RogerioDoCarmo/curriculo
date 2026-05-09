@@ -1,0 +1,806 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: cookie-consent.spec.ts >> Cookie Consent Banner >> Multi-language support >> should display banner in English
+- Location: tests/e2e/cookie-consent.spec.ts:407:9
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByRole('dialog').getByText(/cookies/i)
+Expected: visible
+Error: strict mode violation: getByRole('dialog').getByText(/cookies/i) resolved to 4 elements:
+    1) <h2 id="cookie-consent-title" class="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">This site uses cookies</h2> aka getByRole('heading', { name: 'This site uses cookies' })
+    2) <p class="mb-6 text-sm text-gray-600 dark:text-gray-300">We use essential cookies for site functionality a…</p> aka getByText('We use essential cookies for')
+    3) <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Essential Cookies</p> aka getByText('Essential Cookies', { exact: true })
+    4) <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Analytics Cookies</p> aka getByText('Analytics Cookies', { exact: true })
+
+Call log:
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for getByRole('dialog').getByText(/cookies/i)
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+    - banner [ref=e2]:
+        - generic [ref=e4]:
+            - navigation "Main navigation" [ref=e5]:
+                - link "Home" [ref=e6] [cursor=pointer]:
+                    - /url: "#home"
+                - link "Projects" [ref=e7] [cursor=pointer]:
+                    - /url: "#projects"
+                - link "Experience" [ref=e8] [cursor=pointer]:
+                    - /url: "#experience"
+                - link "Skills" [ref=e9] [cursor=pointer]:
+                    - /url: "#skills"
+                - link "Contact" [ref=e10] [cursor=pointer]:
+                    - /url: "#contact"
+                - link "Used in this site" [ref=e11] [cursor=pointer]:
+                    - /url: /en/tech-stack/
+            - generic [ref=e12]:
+                - link "Linktree profile" [ref=e13] [cursor=pointer]:
+                    - /url: https://linktr.ee/rogeriodocarmo
+                    - img [ref=e14]
+                    - generic [ref=e16]: Linktree
+                - generic [ref=e17]:
+                    - generic [ref=e18]: Select language
+                    - generic [ref=e19]: 🇺🇸
+                    - combobox "Select language" [ref=e20] [cursor=pointer]:
+                        - option "🇧🇷 Português (BR)"
+                        - option "🇺🇸 English" [selected]
+                        - option "🇪🇸 Español"
+                    - generic: ▾
+                - button "Switch to dark mode" [ref=e21] [cursor=pointer]:
+                    - img "Moon" [ref=e22]: 🌙
+    - main [ref=e23]:
+        - region "Hero section" [ref=e25]:
+            - generic [ref=e26]:
+                - generic [ref=e27]:
+                    - paragraph [ref=e28]: Hello, I'm
+                    - heading "Rogério do Carmo" [level=1] [ref=e29]
+                    - paragraph [ref=e30]: Frontend Mobile React Native Developer
+                    - generic [ref=e31]:
+                        - img "UNESP Logo" [ref=e32]
+                        - generic [ref=e33]:
+                            - paragraph [ref=e34]: Bachelor in Computer Science
+                            - paragraph [ref=e35]: Master in Cartographic Sciences
+                            - paragraph [ref=e36]: UNESP
+                    - generic [ref=e37]:
+                        - paragraph [ref=e38]: Complete master's dissertation
+                        - link "Evaluation of GNSS measurement quality and positioning in Android smartphones" [ref=e40] [cursor=pointer]:
+                            - /url: http://hdl.handle.net/11449/243430
+                            - img [ref=e41]
+                            - text: Evaluation of GNSS measurement quality and positioning in Android smartphones
+                        - link "Download master's dissertation in PDF" [ref=e46] [cursor=pointer]:
+                            - /url: /academic/masters_degree_dissertation_rogerio_do_carmo.pdf
+                            - img [ref=e47]
+                            - generic [ref=e49]: Download Dissertation (PDF)
+                    - generic [ref=e50]:
+                        - img "Company Logo" [ref=e51]
+                        - generic [ref=e52]:
+                            - paragraph [ref=e53]: Senior Mobile Developer
+                            - paragraph [ref=e54]: Current
+                    - generic [ref=e55]:
+                        - link "View My Work" [ref=e56] [cursor=pointer]:
+                            - /url: "#projects"
+                        - link "Get in Touch" [ref=e57] [cursor=pointer]:
+                            - /url: mailto:contact@rogeriodocarmo.com
+                            - img [ref=e58]
+                            - text: Get in Touch
+                    - paragraph [ref=e61]:
+                        - link "contact@rogeriodocarmo.com" [ref=e62] [cursor=pointer]:
+                            - /url: mailto:contact@rogeriodocarmo.com
+                - img "Rogério do Carmo — Mobile React Native Developer" [ref=e65]
+        - tablist "Choose a Path" [ref=e68]:
+            - generic [ref=e69]:
+                - tab "Professional" [selected] [ref=e70] [cursor=pointer]:
+                    - img [ref=e71]
+                    - text: Professional
+                - tab "Academic" [ref=e73] [cursor=pointer]:
+                    - img [ref=e74]
+                    - text: Academic
+        - region "Professional Experience experience" [ref=e79]:
+            - generic [ref=e80]:
+                - heading "Professional Experience" [level=2] [ref=e81]
+                - generic [ref=e82]:
+                    - article [ref=e83]:
+                        - generic [ref=e84]:
+                            - generic [ref=e85]:
+                                - heading "Desenvolvedor Mobile React Native" [level=3] [ref=e86]
+                                - paragraph [ref=e87]: Topaz · Remoto, Brasil
+                                - paragraph [ref=e88]: Feb 2023 – Present · 3 yrs 3 mo
+                            - button "Expand details" [ref=e89] [cursor=pointer]:
+                                - img [ref=e90]
+                        - paragraph [ref=e92]: "Atuação no produto interno da empresa, voltado ao setor bancário. Desenvolvimento e manutenção de aplicativos móveis para instituições financeiras, com foco em funcionalidades críticas e experiência do usuário. ### Conquistas - Desenvolveu e implementou módulo Pix completo para aplicativos bancários, incluindo integração com DICT (Diretório de Identificadores de Contas Transacionais) - Implementou Login Biométrico com integração Daon para autenticação segura - Criou módulo de Empréstimo com fluxo completo de solicitação e aprovação - Prestou manutenção e correção de bugs em aplicativos bancários críticos - Atuou em projetos para clientes específicos: CrediSIS (Brasil), Bradescard (México), Banco Macro (Argentina) e Banco do Nordeste - BNB (Brasil) - Trabalhou com Google Play Console, Apple Developer e TestFlight para distribuição de apps - Implementou testes unitários com Jest para garantir qualidade do código - Utilizou ferramentas de monitoramento (Elastic, Kibana, Grafana) para análise de performance - Experiência com metodologias ágeis e comunicação eficiente com stakeholders (POs, BAs, QAs, SMs) - Orientação de desenvolvedores júnior em boas práticas de desenvolvimento React Native"
+                    - article [ref=e93]:
+                        - generic [ref=e94]:
+                            - generic [ref=e95]:
+                                - heading "Desenvolvedor Flutter" [level=3] [ref=e96]
+                                - paragraph [ref=e97]: Rubcube · Remoto, Brasil
+                                - paragraph [ref=e98]: Oct 2021 – Jan 2022 · 3 mo
+                            - button "Expand details" [ref=e99] [cursor=pointer]:
+                                - img [ref=e100]
+                        - paragraph [ref=e102]: "Atuação no aplicativo móvel do cliente Virtus Pay, focando em manutenção e qualidade do código. ### Conquistas - Efetuou manutenção e correções de bugs no aplicativo Virtus Pay - Trabalhou com Flutter para desenvolvimento multiplataforma - Experiência com aplicativos de pagamento digital"
+                    - article [ref=e103]:
+                        - generic [ref=e104]:
+                            - generic [ref=e105]:
+                                - heading "Desenvolvedor Mobile React Native" [level=3] [ref=e106]
+                                - paragraph [ref=e107]: Rubcube · Remoto, Brasil
+                                - paragraph [ref=e108]: Jan 2022 – Mar 2023 · 1 yr 2 mo
+                            - button "Expand details" [ref=e109] [cursor=pointer]:
+                                - img [ref=e110]
+                        - paragraph [ref=e112]: "Atuação no desenvolvimento do aplicativo móvel do cliente Banco Digi+, com foco em funcionalidades bancárias e experiência do usuário. ### Conquistas - Criou módulo Pix completo do zero para o Banco Digi+, incluindo todas as funcionalidades de transferência e pagamento - Efetuou manutenção e correções de bugs no aplicativo bancário - Trabalhou com MongoDB para persistência de dados - Desenvolveu componentes React Native em formato funcional e de classes - Desenvolveu website da empresa utilizando React JS - Experiência com integração de APIs REST para serviços bancários"
+                    - article [ref=e113]:
+                        - generic [ref=e114]:
+                            - generic [ref=e115]:
+                                - heading "Desenvolvedor Android/Flutter" [level=3] [ref=e116]
+                                - paragraph [ref=e117]: Engeselt · Remoto, Brasil
+                                - paragraph [ref=e118]: Apr 2021 – Oct 2021 · 6 mo
+                            - button "Expand details" [ref=e119] [cursor=pointer]:
+                                - img [ref=e120]
+                        - paragraph [ref=e122]: "Entrada na empresa para efetuar prova de conceito do mestrado sobre dados GNSS (GPS). Após conclusão, permaneceu na empresa para atuação em produtos próprios do setor elétrico. ### Conquistas - Desenvolveu prova de conceito utilizando dados GNSS (GPS) do mestrado - Efetuou manutenção e correções de bugs no aplicativo da empresa do setor elétrico - Trabalhou com Flutter MobX para gerenciamento de estado - Implementou funcionalidades offline-first com SQFlite e OpenStreetMaps - Desenvolveu em Android Nativo utilizando Java e XML - Aplicou conhecimentos acadêmicos de GNSS em aplicações práticas"
+                - generic [ref=e124]:
+                    - heading "Timeline" [level=3] [ref=e125]
+                    - list "Timeline" [ref=e126]:
+                        - listitem [ref=e128]:
+                            - generic "Work" [ref=e129]:
+                                - generic [ref=e130]: Work
+                            - time [ref=e131]: Feb 2023 – Present · 3 yrs 3 mo
+                            - generic [ref=e132]:
+                                - heading "Desenvolvedor Mobile React Native" [level=3] [ref=e133]
+                                - paragraph [ref=e134]: Topaz · Remoto, Brasil
+                                - paragraph [ref=e135]: "Atuação no produto interno da empresa, voltado ao setor bancário. Desenvolvimento e manutenção de aplicativos móveis para instituições financeiras, com foco em funcionalidades críticas e experiência do usuário. ### Conquistas - Desenvolveu e implementou módulo Pix completo para aplicativos bancários, incluindo integração com DICT (Diretório de Identificadores de Contas Transacionais) - Implementou Login Biométrico com integração Daon para autenticação segura - Criou módulo de Empréstimo com fluxo completo de solicitação e aprovação - Prestou manutenção e correção de bugs em aplicativos bancários críticos - Atuou em projetos para clientes específicos: CrediSIS (Brasil), Bradescard (México), Banco Macro (Argentina) e Banco do Nordeste - BNB (Brasil) - Trabalhou com Google Play Console, Apple Developer e TestFlight para distribuição de apps - Implementou testes unitários com Jest para garantir qualidade do código - Utilizou ferramentas de monitoramento (Elastic, Kibana, Grafana) para análise de performance - Experiência com metodologias ágeis e comunicação eficiente com stakeholders (POs, BAs, QAs, SMs) - Orientação de desenvolvedores júnior em boas práticas de desenvolvimento React Native"
+                        - listitem [ref=e136]:
+                            - generic "Work" [ref=e137]:
+                                - generic [ref=e138]: Work
+                            - time [ref=e139]: Oct 2021 – Jan 2022 · 3 mo
+                            - generic [ref=e140]:
+                                - heading "Desenvolvedor Flutter" [level=3] [ref=e141]
+                                - paragraph [ref=e142]: Rubcube · Remoto, Brasil
+                                - paragraph [ref=e143]: "Atuação no aplicativo móvel do cliente Virtus Pay, focando em manutenção e qualidade do código. ### Conquistas - Efetuou manutenção e correções de bugs no aplicativo Virtus Pay - Trabalhou com Flutter para desenvolvimento multiplataforma - Experiência com aplicativos de pagamento digital"
+                        - listitem [ref=e144]:
+                            - generic "Work" [ref=e145]:
+                                - generic [ref=e146]: Work
+                            - time [ref=e147]: Jan 2022 – Mar 2023 · 1 yr 2 mo
+                            - generic [ref=e148]:
+                                - heading "Desenvolvedor Mobile React Native" [level=3] [ref=e149]
+                                - paragraph [ref=e150]: Rubcube · Remoto, Brasil
+                                - paragraph [ref=e151]: "Atuação no desenvolvimento do aplicativo móvel do cliente Banco Digi+, com foco em funcionalidades bancárias e experiência do usuário. ### Conquistas - Criou módulo Pix completo do zero para o Banco Digi+, incluindo todas as funcionalidades de transferência e pagamento - Efetuou manutenção e correções de bugs no aplicativo bancário - Trabalhou com MongoDB para persistência de dados - Desenvolveu componentes React Native em formato funcional e de classes - Desenvolveu website da empresa utilizando React JS - Experiência com integração de APIs REST para serviços bancários"
+                        - listitem [ref=e152]:
+                            - generic "Work" [ref=e153]:
+                                - generic [ref=e154]: Work
+                            - time [ref=e155]: Apr 2021 – Oct 2021 · 6 mo
+                            - generic [ref=e156]:
+                                - heading "Desenvolvedor Android/Flutter" [level=3] [ref=e157]
+                                - paragraph [ref=e158]: Engeselt · Remoto, Brasil
+                                - paragraph [ref=e159]: "Entrada na empresa para efetuar prova de conceito do mestrado sobre dados GNSS (GPS). Após conclusão, permaneceu na empresa para atuação em produtos próprios do setor elétrico. ### Conquistas - Desenvolveu prova de conceito utilizando dados GNSS (GPS) do mestrado - Efetuou manutenção e correções de bugs no aplicativo da empresa do setor elétrico - Trabalhou com Flutter MobX para gerenciamento de estado - Implementou funcionalidades offline-first com SQFlite e OpenStreetMaps - Desenvolveu em Android Nativo utilizando Java e XML - Aplicou conhecimentos acadêmicos de GNSS em aplicações práticas"
+        - region "Skills" [ref=e161]:
+            - generic [ref=e162]:
+                - heading "Skills" [level=2] [ref=e163]
+                - generic [ref=e164]:
+                    - generic [ref=e165]: Filter skills
+                    - searchbox "Filter skills by name" [ref=e166]
+                - generic [ref=e167]:
+                    - generic [ref=e168]:
+                        - heading "Mobile Development" [level=2] [ref=e169]
+                        - list "Mobile Development skills" [ref=e170]:
+                            - listitem [ref=e171]:
+                                - generic [ref=e172]: React Native
+                                - 'generic "Level: expert" [ref=e173]': expert
+                            - listitem [ref=e174]:
+                                - generic [ref=e175]: Flutter
+                                - 'generic "Level: intermediate" [ref=e176]': intermediate
+                            - listitem [ref=e177]:
+                                - generic [ref=e178]: Android Nativo (Java)
+                                - 'generic "Level: advanced" [ref=e179]': advanced
+                            - listitem [ref=e180]:
+                                - generic [ref=e181]: TypeScript
+                                - 'generic "Level: advanced" [ref=e182]': advanced
+                            - listitem [ref=e183]:
+                                - generic [ref=e184]: JavaScript
+                                - 'generic "Level: expert" [ref=e185]': expert
+                    - generic [ref=e186]:
+                        - heading "State Management & Architecture" [level=2] [ref=e187]
+                        - list "State Management & Architecture skills" [ref=e188]:
+                            - listitem [ref=e189]:
+                                - generic [ref=e190]: Redux/Saga
+                                - 'generic "Level: advanced" [ref=e191]': advanced
+                            - listitem [ref=e192]:
+                                - generic [ref=e193]: Jotai
+                                - 'generic "Level: intermediate" [ref=e194]': intermediate
+                            - listitem [ref=e195]:
+                                - generic [ref=e196]: TankStack
+                                - 'generic "Level: intermediate" [ref=e197]': intermediate
+                            - listitem [ref=e198]:
+                                - generic [ref=e199]: MobX
+                                - 'generic "Level: intermediate" [ref=e200]': intermediate
+                    - generic [ref=e201]:
+                        - heading "UI & Styling" [level=2] [ref=e202]
+                        - list "UI & Styling skills" [ref=e203]:
+                            - listitem [ref=e204]:
+                                - generic [ref=e205]: React Native StyleSheet
+                                - 'generic "Level: expert" [ref=e206]': expert
+                            - listitem [ref=e207]:
+                                - generic [ref=e208]: Styled Components
+                                - 'generic "Level: advanced" [ref=e209]': advanced
+                            - listitem [ref=e210]:
+                                - generic [ref=e211]: React JS
+                                - 'generic "Level: advanced" [ref=e212]': advanced
+                    - generic [ref=e213]:
+                        - heading "Forms & Validation" [level=2] [ref=e214]
+                        - list "Forms & Validation skills" [ref=e215]:
+                            - listitem [ref=e216]:
+                                - generic [ref=e217]: react-hook-form
+                                - 'generic "Level: advanced" [ref=e218]': advanced
+                            - listitem [ref=e219]:
+                                - generic [ref=e220]: Validação de Formulários
+                                - 'generic "Level: expert" [ref=e221]': expert
+                    - generic [ref=e222]:
+                        - heading "Testing" [level=2] [ref=e223]
+                        - list "Testing skills" [ref=e224]:
+                            - listitem [ref=e225]:
+                                - generic [ref=e226]: Jest
+                                - 'generic "Level: advanced" [ref=e227]': advanced
+                            - listitem [ref=e228]:
+                                - generic [ref=e229]: Testes Unitários
+                                - 'generic "Level: advanced" [ref=e230]': advanced
+                    - generic [ref=e231]:
+                        - heading "Firebase & Cloud Services" [level=2] [ref=e232]
+                        - list "Firebase & Cloud Services skills" [ref=e233]:
+                            - listitem [ref=e234]:
+                                - generic [ref=e235]: Firebase Analytics
+                                - 'generic "Level: advanced" [ref=e236]': advanced
+                            - listitem [ref=e237]:
+                                - generic [ref=e238]: Firebase Crashlytics
+                                - 'generic "Level: advanced" [ref=e239]': advanced
+                            - listitem [ref=e240]:
+                                - generic [ref=e241]: Firebase Distribution
+                                - 'generic "Level: intermediate" [ref=e242]': intermediate
+                            - listitem [ref=e243]:
+                                - generic [ref=e244]: Firebase Storage
+                                - 'generic "Level: intermediate" [ref=e245]': intermediate
+                    - generic [ref=e246]:
+                        - heading "APIs & Integration" [level=2] [ref=e247]
+                        - list "APIs & Integration skills" [ref=e248]:
+                            - listitem [ref=e249]:
+                                - generic [ref=e250]: REST APIs
+                                - 'generic "Level: expert" [ref=e251]': expert
+                            - listitem [ref=e252]:
+                                - generic [ref=e253]: AsyncStorage
+                                - 'generic "Level: expert" [ref=e254]': expert
+                            - listitem [ref=e255]:
+                                - generic [ref=e256]: MongoDB
+                                - 'generic "Level: intermediate" [ref=e257]': intermediate
+                    - generic [ref=e258]:
+                        - heading "Internationalization" [level=2] [ref=e259]
+                        - list "Internationalization skills" [ref=e260]:
+                            - listitem [ref=e261]:
+                                - generic [ref=e262]: i18next
+                                - 'generic "Level: advanced" [ref=e263]': advanced
+                            - listitem [ref=e264]:
+                                - generic [ref=e265]: Localização de Apps
+                                - 'generic "Level: advanced" [ref=e266]': advanced
+                    - generic [ref=e267]:
+                        - heading "Native Modules & Integrations" [level=2] [ref=e268]
+                        - list "Native Modules & Integrations skills" [ref=e269]:
+                            - listitem [ref=e270]:
+                                - generic [ref=e271]: Expo Modules
+                                - 'generic "Level: intermediate" [ref=e272]': intermediate
+                            - listitem [ref=e273]:
+                                - generic [ref=e274]: Daon (Biometria)
+                                - 'generic "Level: intermediate" [ref=e275]': intermediate
+                            - listitem [ref=e276]:
+                                - generic [ref=e277]: Qualtrics
+                                - 'generic "Level: intermediate" [ref=e278]': intermediate
+                    - generic [ref=e279]:
+                        - heading "Database & Storage" [level=2] [ref=e280]
+                        - list "Database & Storage skills" [ref=e281]:
+                            - listitem [ref=e282]:
+                                - generic [ref=e283]: SQFlite
+                                - 'generic "Level: intermediate" [ref=e284]': intermediate
+                            - listitem [ref=e285]:
+                                - generic [ref=e286]: AsyncStorage
+                                - 'generic "Level: expert" [ref=e287]': expert
+                            - listitem [ref=e288]:
+                                - generic [ref=e289]: MongoDB
+                                - 'generic "Level: intermediate" [ref=e290]': intermediate
+                    - generic [ref=e291]:
+                        - heading "Maps & Location" [level=2] [ref=e292]
+                        - list "Maps & Location skills" [ref=e293]:
+                            - listitem [ref=e294]:
+                                - generic [ref=e295]: OpenStreetMaps
+                                - 'generic "Level: intermediate" [ref=e296]': intermediate
+                            - listitem [ref=e297]:
+                                - generic [ref=e298]: GNSS/GPS
+                                - 'generic "Level: expert" [ref=e299]': expert
+                            - listitem [ref=e300]:
+                                - generic [ref=e301]: Geolocalização
+                                - 'generic "Level: advanced" [ref=e302]': advanced
+                    - generic [ref=e303]:
+                        - heading "DevOps & CI/CD" [level=2] [ref=e304]
+                        - list "DevOps & CI/CD skills" [ref=e305]:
+                            - listitem [ref=e306]:
+                                - generic [ref=e307]: Google Play Console
+                                - 'generic "Level: advanced" [ref=e308]': advanced
+                            - listitem [ref=e309]:
+                                - generic [ref=e310]: Apple Developer
+                                - 'generic "Level: advanced" [ref=e311]': advanced
+                            - listitem [ref=e312]:
+                                - generic [ref=e313]: TestFlight
+                                - 'generic "Level: advanced" [ref=e314]': advanced
+                            - listitem [ref=e315]:
+                                - generic [ref=e316]: Jenkins
+                                - 'generic "Level: intermediate" [ref=e317]': intermediate
+                            - listitem [ref=e318]:
+                                - generic [ref=e319]: Fastlane
+                                - 'generic "Level: intermediate" [ref=e320]': intermediate
+                            - listitem [ref=e321]:
+                                - generic [ref=e322]: Git/GitHub/GitLab
+                                - 'generic "Level: expert" [ref=e323]': expert
+                    - generic [ref=e324]:
+                        - heading "Monitoring & Analytics" [level=2] [ref=e325]
+                        - list "Monitoring & Analytics skills" [ref=e326]:
+                            - listitem [ref=e327]:
+                                - generic [ref=e328]: Elastic
+                                - 'generic "Level: intermediate" [ref=e329]': intermediate
+                            - listitem [ref=e330]:
+                                - generic [ref=e331]: Kibana
+                                - 'generic "Level: intermediate" [ref=e332]': intermediate
+                            - listitem [ref=e333]:
+                                - generic [ref=e334]: Grafana
+                                - 'generic "Level: intermediate" [ref=e335]': intermediate
+                    - generic [ref=e336]:
+                        - heading "Project Management" [level=2] [ref=e337]
+                        - list "Project Management skills" [ref=e338]:
+                            - listitem [ref=e339]:
+                                - generic [ref=e340]: Jira
+                                - 'generic "Level: advanced" [ref=e341]': advanced
+                            - listitem [ref=e342]:
+                                - generic [ref=e343]: Confluence
+                                - 'generic "Level: intermediate" [ref=e344]': intermediate
+                            - listitem [ref=e345]:
+                                - generic [ref=e346]: Metodologias Ágeis
+                                - 'generic "Level: advanced" [ref=e347]': advanced
+                    - generic [ref=e348]:
+                        - heading "Backend & Desktop" [level=2] [ref=e349]
+                        - list "Backend & Desktop skills" [ref=e350]:
+                            - listitem [ref=e351]:
+                                - generic [ref=e352]: Java
+                                - 'generic "Level: advanced" [ref=e353]': advanced
+                            - listitem [ref=e354]:
+                                - generic [ref=e355]: Java Swing
+                                - 'generic "Level: intermediate" [ref=e356]': intermediate
+                            - listitem [ref=e357]:
+                                - generic [ref=e358]: Python
+                                - 'generic "Level: intermediate" [ref=e359]': intermediate
+                            - listitem [ref=e360]:
+                                - generic [ref=e361]: C++
+                                - 'generic "Level: intermediate" [ref=e362]': intermediate
+                    - generic [ref=e363]:
+                        - heading "Domain Knowledge" [level=2] [ref=e364]
+                        - list "Domain Knowledge skills" [ref=e365]:
+                            - listitem [ref=e366]:
+                                - generic [ref=e367]: Sistema Pix (DICT)
+                                - 'generic "Level: expert" [ref=e368]': expert
+                            - listitem [ref=e369]:
+                                - generic [ref=e370]: Aplicações Bancárias
+                                - 'generic "Level: expert" [ref=e371]': expert
+                            - listitem [ref=e372]:
+                                - generic [ref=e373]: Biometria e Autenticação
+                                - 'generic "Level: advanced" [ref=e374]': advanced
+                            - listitem [ref=e375]:
+                                - generic [ref=e376]: Processamento de Imagens
+                                - 'generic "Level: intermediate" [ref=e377]': intermediate
+                            - listitem [ref=e378]:
+                                - generic [ref=e379]: Ciências Cartográficas
+                                - 'generic "Level: advanced" [ref=e380]': advanced
+                    - generic [ref=e381]:
+                        - heading "Languages" [level=2] [ref=e382]
+                        - list "Languages skills" [ref=e383]:
+                            - listitem [ref=e384]:
+                                - generic [ref=e385]: Português (Nativo)
+                                - 'generic "Level: expert" [ref=e386]': expert
+                            - listitem [ref=e387]:
+                                - generic [ref=e388]: Inglês (Intermediário-Avançado B2)
+                                - 'generic "Level: advanced" [ref=e389]': advanced
+                    - generic [ref=e390]:
+                        - heading "Soft Skills" [level=2] [ref=e391]
+                        - list "Soft Skills skills" [ref=e392]:
+                            - listitem [ref=e393]:
+                                - generic [ref=e394]: Comunicação com Stakeholders
+                                - 'generic "Level: expert" [ref=e395]': expert
+                            - listitem [ref=e396]:
+                                - generic [ref=e397]: Orientação de Desenvolvedores
+                                - 'generic "Level: advanced" [ref=e398]': advanced
+                            - listitem [ref=e399]:
+                                - generic [ref=e400]: Trabalho em Equipe
+                                - 'generic "Level: expert" [ref=e401]': expert
+                            - listitem [ref=e402]:
+                                - generic [ref=e403]: Resolução de Problemas
+                                - 'generic "Level: expert" [ref=e404]': expert
+                            - listitem [ref=e405]:
+                                - generic [ref=e406]: Metodologias Ágeis
+                                - 'generic "Level: advanced" [ref=e407]': advanced
+        - region "Projects" [ref=e409]:
+            - generic [ref=e410]:
+                - heading "Projects" [level=2] [ref=e411]
+                - group "Filter by technology" [ref=e412]:
+                    - button "All" [pressed] [ref=e413] [cursor=pointer]
+                    - button "Android Architecture Components" [ref=e414] [cursor=pointer]
+                    - button "Android SDK" [ref=e415] [cursor=pointer]
+                    - button "Data Processing" [ref=e416] [cursor=pointer]
+                    - button "Firebase Analytics" [ref=e417] [cursor=pointer]
+                    - button "Firebase Crashlytics" [ref=e418] [cursor=pointer]
+                    - button "GNSS/GPS" [ref=e419] [cursor=pointer]
+                    - button "Java" [ref=e420] [cursor=pointer]
+                    - button "Jest" [ref=e421] [cursor=pointer]
+                    - button "Material Design" [ref=e422] [cursor=pointer]
+                    - button "NMEA Protocol" [ref=e423] [cursor=pointer]
+                    - button "Next.js 16" [ref=e424] [cursor=pointer]
+                    - button "Playwright" [ref=e425] [cursor=pointer]
+                    - button "SQLite" [ref=e426] [cursor=pointer]
+                    - button "Scientific Computing" [ref=e427] [cursor=pointer]
+                    - button "Sentry" [ref=e428] [cursor=pointer]
+                    - button "Tailwind CSS" [ref=e429] [cursor=pointer]
+                    - button "TypeScript" [ref=e430] [cursor=pointer]
+                    - button "Vercel" [ref=e431] [cursor=pointer]
+                    - button "next-intl" [ref=e432] [cursor=pointer]
+                - generic [ref=e433]:
+                    - button "View details for Personal Resume Website" [ref=e435] [cursor=pointer]:
+                        - img "Personal Resume Website screenshot 1" [ref=e437]
+                        - generic [ref=e438]:
+                            - heading "Personal Resume Website" [level=3] [ref=e439]
+                            - generic [ref=e441]: Featured
+                        - paragraph [ref=e442]: Site de currículo pessoal moderno e responsivo com suporte multilíngue, modo escuro, e integração completa com Firebase Analytics
+                        - generic [ref=e443]:
+                            - generic [ref=e444]: Next.js 16
+                            - generic [ref=e445]: TypeScript
+                            - generic [ref=e446]: Tailwind CSS
+                            - generic [ref=e447]: Firebase Analytics
+                            - generic [ref=e448]: +6 more
+                    - button "View details for Android Native Crud" [ref=e450] [cursor=pointer]:
+                        - img "Android Native Crud screenshot 1" [ref=e452]
+                        - heading "Android Native Crud" [level=3] [ref=e454]
+                        - paragraph [ref=e455]: Aplicação de exemplo para estudo inicial do ambiente Android, explorando componentes fundamentais e padrões de desenvolvimento
+                        - generic [ref=e456]:
+                            - generic [ref=e457]: Java
+                            - generic [ref=e458]: Android SDK
+                            - generic [ref=e459]: Material Design
+                            - generic [ref=e460]: SQLite
+                            - generic [ref=e461]: +1 more
+                    - button "View details for INCT GNSS App" [ref=e463] [cursor=pointer]:
+                        - img "INCT GNSS App screenshot 1" [ref=e465]
+                        - generic [ref=e466]:
+                            - heading "INCT GNSS App" [level=3] [ref=e467]
+                            - generic [ref=e469]: Featured
+                        - paragraph [ref=e470]: Aplicação Android para análise de dados GNSS (GPS) coletados pelo Google GNSSLogger, com processamento de medições NMEA
+                        - generic [ref=e471]:
+                            - generic [ref=e472]: Java
+                            - generic [ref=e473]: Android SDK
+                            - generic [ref=e474]: GNSS/GPS
+                            - generic [ref=e475]: NMEA Protocol
+                            - generic [ref=e476]: +2 more
+        - region "Get in Touch" [ref=e477]:
+            - generic [ref=e478]:
+                - heading "Get in Touch" [level=2] [ref=e479]
+                - paragraph [ref=e480]: Have a project in mind or want to chat? Send me a message!
+                - generic [ref=e482]:
+                    - img [ref=e483]
+                    - generic [ref=e486]:
+                        - paragraph [ref=e487]: Professional Email
+                        - link "contact@rogeriodocarmo.com" [ref=e488] [cursor=pointer]:
+                            - /url: mailto:contact@rogeriodocarmo.com
+                        - paragraph [ref=e489]: Or use the form below to send me a message
+                - form "Contact form" [ref=e490]:
+                    - generic [ref=e491]:
+                        - generic [ref=e492]: Name *
+                        - textbox "Name" [ref=e493]:
+                            - /placeholder: Your name
+                    - generic [ref=e494]:
+                        - generic [ref=e495]: Email *
+                        - textbox "Email" [ref=e496]:
+                            - /placeholder: your@email.com
+                    - generic [ref=e497]:
+                        - generic [ref=e498]: Message *
+                        - textbox "Message" [ref=e499]:
+                            - /placeholder: Your message (at least 10 characters)
+                    - button "Send Message" [ref=e500] [cursor=pointer]
+    - contentinfo [ref=e501]:
+        - generic [ref=e502]:
+            - generic [ref=e503]:
+                - generic [ref=e504]:
+                    - heading "Navigate" [level=2] [ref=e505]
+                    - list [ref=e506]:
+                        - listitem [ref=e507]:
+                            - link "Home" [ref=e508] [cursor=pointer]:
+                                - /url: "#home"
+                        - listitem [ref=e509]:
+                            - link "Projects" [ref=e510] [cursor=pointer]:
+                                - /url: "#projects"
+                        - listitem [ref=e511]:
+                            - link "Experience" [ref=e512] [cursor=pointer]:
+                                - /url: "#experience"
+                        - listitem [ref=e513]:
+                            - link "Skills" [ref=e514] [cursor=pointer]:
+                                - /url: "#skills"
+                        - listitem [ref=e515]:
+                            - link "Contact" [ref=e516] [cursor=pointer]:
+                                - /url: "#contact"
+                        - listitem [ref=e517]:
+                            - link "Used in this site" [ref=e518] [cursor=pointer]:
+                                - /url: "#tech-stack"
+                - generic [ref=e519]:
+                    - heading "Languages" [level=2] [ref=e520]
+                    - list [ref=e521]:
+                        - listitem [ref=e522]:
+                            - link "Português (pt-BR)" [ref=e523] [cursor=pointer]:
+                                - /url: /pt-BR
+                        - listitem [ref=e524]:
+                            - link "English (en)" [ref=e525] [cursor=pointer]:
+                                - /url: /en
+                        - listitem [ref=e526]:
+                            - link "Español (es)" [ref=e527] [cursor=pointer]:
+                                - /url: /es
+                - generic [ref=e528]:
+                    - heading "Connect" [level=2] [ref=e529]
+                    - list [ref=e530]:
+                        - listitem [ref=e531]:
+                            - link "Professional Email" [ref=e532] [cursor=pointer]:
+                                - /url: mailto:contact@rogeriodocarmo.com
+                                - img [ref=e533]
+                                - generic [ref=e536]: contact@rogeriodocarmo.com
+                        - listitem [ref=e537]:
+                            - link "Download resume in PDF format" [ref=e538] [cursor=pointer]:
+                                - /url: /resumes/resume.pdf
+                                - img [ref=e539]
+                                - generic [ref=e541]: Download Resume
+                        - listitem [ref=e542]:
+                            - link "Download master's dissertation in PDF format" [ref=e543] [cursor=pointer]:
+                                - /url: /academic/masters_degree_dissertation_rogerio_do_carmo.pdf
+                                - img [ref=e544]
+                                - generic [ref=e546]: Download Dissertation
+                        - listitem [ref=e547]:
+                            - link "Linktree profile" [ref=e548] [cursor=pointer]:
+                                - /url: https://linktr.ee/rogeriodocarmo
+                                - img [ref=e549]
+                                - generic [ref=e551]: Linktree
+                        - listitem [ref=e552]:
+                            - link "LinkedIn profile" [ref=e553] [cursor=pointer]:
+                                - /url: https://www.linkedin.com/in/rogeriodocarmo/
+                                - img [ref=e554]
+                                - generic [ref=e556]: LinkedIn
+                        - listitem [ref=e557]:
+                            - link "GitHub profile" [ref=e558] [cursor=pointer]:
+                                - /url: https://github.com/RogerioDoCarmo/curriculo
+                                - img [ref=e559]
+                                - generic [ref=e561]: GitHub
+                        - listitem [ref=e562]:
+                            - button "Print site page" [ref=e563] [cursor=pointer]:
+                                - img [ref=e564]
+                                - generic [ref=e568]: Print Page
+            - paragraph [ref=e570]: © 2026 Rogério do Carmo. All rights reserved.
+    - alert [ref=e571]
+    - dialog "This site uses cookies" [ref=e572]:
+        - generic [ref=e573]:
+            - heading "This site uses cookies" [level=2] [ref=e574]
+            - paragraph [ref=e575]: We use essential cookies for site functionality and analytics cookies to understand how you interact with our content. All analytics data is anonymous and does not include personal information.
+            - generic [ref=e576]:
+                - generic [ref=e577]:
+                    - img [ref=e579]
+                    - generic [ref=e581]:
+                        - paragraph [ref=e582]: Essential Cookies
+                        - paragraph [ref=e583]: Required for basic site functionality (theme, language, session). Always active.
+                - generic [ref=e584]:
+                    - img [ref=e586]
+                    - generic [ref=e588]:
+                        - paragraph [ref=e589]: Analytics Cookies
+                        - paragraph [ref=e590]: Help understand how visitors interact with the site through Firebase Analytics. Anonymous data.
+            - generic [ref=e591]:
+                - button "Accept All" [ref=e592] [cursor=pointer]
+                - button "Reject Non-Essential" [ref=e593] [cursor=pointer]
+                - button "Customize" [ref=e594] [cursor=pointer]
+            - paragraph [ref=e595]:
+                - text: Learn more in our
+                - link "Privacy Policy" [ref=e596] [cursor=pointer]:
+                    - /url: /privacy
+                - text: and
+                - link "Cookie Policy" [ref=e597] [cursor=pointer]:
+                    - /url: /cookies
+```
+
+# Test source
+
+```ts
+  314 |       await banner.getByRole("button", { name: /personalizar|customize/i }).click();
+  315 |
+  316 |       // Disable analytics
+  317 |       await banner.getByRole("checkbox", { name: /analíticos|analytics/i }).click();
+  318 |       await banner.getByRole("button", { name: /salvar|save/i }).click();
+  319 |
+  320 |       // Wait for reload
+  321 |       await page.waitForLoadState("networkidle");
+  322 |
+  323 |       // Verify analytics is disabled
+  324 |       const hasAnalyticsConsent = await page.evaluate(() => {
+  325 |         const status = localStorage.getItem("cookie-consent");
+  326 |         const prefs = JSON.parse(localStorage.getItem("cookie-preferences") || "{}");
+  327 |         return status === "accepted" || (status === "customized" && prefs.analytics === true);
+  328 |       });
+  329 |       expect(hasAnalyticsConsent).toBe(false);
+  330 |     });
+  331 |
+  332 |     test("should return to main view when back button clicked", async ({ page }) => {
+  333 |       await page.goto("/");
+  334 |
+  335 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  336 |       await banner.getByRole("button", { name: /personalizar|customize/i }).click();
+  337 |
+  338 |       // Verify we're in customize view
+  339 |       await expect(banner.getByText(/personalizar|customize preferences/i)).toBeVisible();
+  340 |
+  341 |       // Click back button
+  342 |       await banner.getByRole("button", { name: /voltar|back/i }).click();
+  343 |
+  344 |       // Verify we're back in main view
+  345 |       await expect(banner.getByRole("button", { name: /aceitar|accept/i })).toBeVisible();
+  346 |       await expect(banner.getByRole("button", { name: /rejeitar|reject/i })).toBeVisible();
+  347 |       await expect(banner.getByRole("button", { name: /personalizar|customize/i })).toBeVisible();
+  348 |     });
+  349 |   });
+  350 |
+  351 |   test.describe("Change preferences", () => {
+  352 |     test("should reopen banner from footer link", async ({ page }) => {
+  353 |       await page.goto("/");
+  354 |
+  355 |       // Accept cookies first
+  356 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  357 |       await banner.getByRole("button", { name: /aceitar|accept/i }).click();
+  358 |       await page.waitForLoadState("networkidle");
+  359 |
+  360 |       // Banner should be hidden
+  361 |       await expect(banner).not.toBeVisible();
+  362 |
+  363 |       // Find and click cookie settings link in footer
+  364 |       const cookieSettingsLink = page.getByRole("link", {
+  365 |         name: /configurações de cookies|cookie settings/i,
+  366 |       });
+  367 |       await cookieSettingsLink.click();
+  368 |
+  369 |       // Banner should reappear
+  370 |       await expect(banner).toBeVisible();
+  371 |     });
+  372 |
+  373 |     test("should allow changing existing consent", async ({ page }) => {
+  374 |       await page.goto("/");
+  375 |
+  376 |       // Accept cookies first
+  377 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  378 |       await banner.getByRole("button", { name: /aceitar|accept/i }).click();
+  379 |       await page.waitForLoadState("networkidle");
+  380 |
+  381 |       // Reopen banner
+  382 |       await page.getByRole("link", { name: /configurações de cookies|cookie settings/i }).click();
+  383 |       await expect(banner).toBeVisible();
+  384 |
+  385 |       // Change to reject
+  386 |       await banner.getByRole("button", { name: /rejeitar|reject/i }).click();
+  387 |
+  388 |       // Verify consent changed
+  389 |       const consentStatus = await page.evaluate(() => localStorage.getItem("cookie-consent"));
+  390 |       expect(consentStatus).toBe("rejected");
+  391 |     });
+  392 |   });
+  393 |
+  394 |   test.describe("Multi-language support", () => {
+  395 |     test("should display banner in Portuguese", async ({ page }) => {
+  396 |       await page.goto("/pt-BR");
+  397 |
+  398 |       const banner = page.getByRole("dialog");
+  399 |       await expect(banner).toBeVisible();
+  400 |
+  401 |       // Check Portuguese text
+  402 |       await expect(banner.getByText(/cookies/i)).toBeVisible();
+  403 |       await expect(banner.getByRole("button", { name: /aceitar/i })).toBeVisible();
+  404 |       await expect(banner.getByRole("button", { name: /rejeitar/i })).toBeVisible();
+  405 |     });
+  406 |
+  407 |     test("should display banner in English", async ({ page }) => {
+  408 |       await page.goto("/en");
+  409 |
+  410 |       const banner = page.getByRole("dialog");
+  411 |       await expect(banner).toBeVisible();
+  412 |
+  413 |       // Check English text
+> 414 |       await expect(banner.getByText(/cookies/i)).toBeVisible();
+      |                                                  ^ Error: expect(locator).toBeVisible() failed
+  415 |       await expect(banner.getByRole("button", { name: /accept/i })).toBeVisible();
+  416 |       await expect(banner.getByRole("button", { name: /reject/i })).toBeVisible();
+  417 |     });
+  418 |
+  419 |     test("should display banner in Spanish", async ({ page }) => {
+  420 |       await page.goto("/es");
+  421 |
+  422 |       const banner = page.getByRole("dialog");
+  423 |       await expect(banner).toBeVisible();
+  424 |
+  425 |       // Check Spanish text
+  426 |       await expect(banner.getByText(/cookies/i)).toBeVisible();
+  427 |       await expect(banner.getByRole("button", { name: /aceptar/i })).toBeVisible();
+  428 |       await expect(banner.getByRole("button", { name: /rechazar/i })).toBeVisible();
+  429 |     });
+  430 |   });
+  431 |
+  432 |   test.describe("Accessibility", () => {
+  433 |     test("should be keyboard navigable", async ({ page }) => {
+  434 |       await page.goto("/");
+  435 |
+  436 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  437 |       await expect(banner).toBeVisible();
+  438 |
+  439 |       // Tab to first button (Accept All)
+  440 |       await page.keyboard.press("Tab");
+  441 |       const acceptButton = banner.getByRole("button", { name: /aceitar|accept/i });
+  442 |       await expect(acceptButton).toBeFocused();
+  443 |
+  444 |       // Tab to second button (Reject)
+  445 |       await page.keyboard.press("Tab");
+  446 |       const rejectButton = banner.getByRole("button", { name: /rejeitar|reject/i });
+  447 |       await expect(rejectButton).toBeFocused();
+  448 |
+  449 |       // Tab to third button (Customize)
+  450 |       await page.keyboard.press("Tab");
+  451 |       const customizeButton = banner.getByRole("button", { name: /personalizar|customize/i });
+  452 |       await expect(customizeButton).toBeFocused();
+  453 |
+  454 |       // Press Enter to activate Customize
+  455 |       await page.keyboard.press("Enter");
+  456 |       await expect(banner.getByText(/personalizar|customize preferences/i)).toBeVisible();
+  457 |     });
+  458 |
+  459 |     test("should have proper ARIA labels", async ({ page }) => {
+  460 |       await page.goto("/");
+  461 |
+  462 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  463 |       await expect(banner).toBeVisible();
+  464 |
+  465 |       // Check ARIA attributes
+  466 |       await expect(banner).toHaveAttribute("role", "dialog");
+  467 |       await expect(banner).toHaveAttribute("aria-modal", "true");
+  468 |
+  469 |       // Go to customize view
+  470 |       await banner.getByRole("button", { name: /personalizar|customize/i }).click();
+  471 |
+  472 |       // Check checkboxes have labels
+  473 |       const analyticsCheckbox = banner.getByRole("checkbox", { name: /analíticos|analytics/i });
+  474 |       await expect(analyticsCheckbox).toHaveAttribute("aria-label");
+  475 |     });
+  476 |
+  477 |     test("should trap focus in modal", async ({ page }) => {
+  478 |       await page.goto("/");
+  479 |
+  480 |       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+  481 |       await expect(banner).toBeVisible();
+  482 |
+  483 |       // Tab through all focusable elements
+  484 |       await page.keyboard.press("Tab"); // Accept button
+  485 |       await page.keyboard.press("Tab"); // Reject button
+  486 |       await page.keyboard.press("Tab"); // Customize button
+  487 |       await page.keyboard.press("Tab"); // Should wrap back to Accept button
+  488 |
+  489 |       const acceptButton = banner.getByRole("button", { name: /aceitar|accept/i });
+  490 |       await expect(acceptButton).toBeFocused();
+  491 |     });
+  492 |   });
+  493 | });
+  494 |
+```
