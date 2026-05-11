@@ -1,6 +1,4 @@
 {
   "installCommand": "npm ci --legacy-peer-deps",
-  "buildCommand": "npm run build:with-storybook",
-  "outputDirectory": "out",
-  "framework": "nextjs"
+  "buildCommand": "npm run build:with-storybook"
 }
