@@ -9,7 +9,7 @@
  * Requirements: 10.1, 10.3, 11.7
  */
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useCookieConsent, type CookiePreferences } from "@/hooks/useCookieConsent";
 
@@ -23,6 +23,53 @@ export default function CookieConsent() {
     analytics: preferences.analytics,
     functional: preferences.functional,
   });
+
+  // Refs for focus management
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const firstButtonRef = useRef<HTMLButtonElement>(null);
+  const lastButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Auto-focus first button when banner opens
+  useEffect(() => {
+    if (showBanner && firstButtonRef.current) {
+      firstButtonRef.current.focus();
+    }
+  }, [showBanner, showCustomize]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!showBanner) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusableElements = dialogRef.current?.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showBanner]);
 
   if (!showBanner) return null;
 
@@ -40,6 +87,7 @@ export default function CookieConsent() {
 
   return (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
@@ -109,6 +157,7 @@ export default function CookieConsent() {
             {/* Action buttons */}
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
+                ref={firstButtonRef}
                 onClick={acceptAll}
                 className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
               >
@@ -121,6 +170,7 @@ export default function CookieConsent() {
                 {t("rejectAll")}
               </button>
               <button
+                ref={lastButtonRef}
                 onClick={handleCustomize}
                 className="flex-1 rounded-md border-2 border-primary-600 bg-white px-4 py-2.5 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-primary-400 dark:bg-gray-800 dark:text-primary-400 dark:hover:bg-primary-900/20"
               >
@@ -151,6 +201,7 @@ export default function CookieConsent() {
           <>
             <div className="mb-4 flex items-center gap-2">
               <button
+                ref={firstButtonRef}
                 onClick={handleBack}
                 className="rounded-md p-1 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
                 aria-label={t("back")}
@@ -170,7 +221,10 @@ export default function CookieConsent() {
                   />
                 </svg>
               </button>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+              <h2
+                id="cookie-consent-title"
+                className="text-xl font-bold text-gray-900 dark:text-gray-100"
+              >
                 {t("customizeTitle")}
               </h2>
             </div>
@@ -260,6 +314,7 @@ export default function CookieConsent() {
             {/* Save button */}
             <div className="flex gap-3">
               <button
+                ref={lastButtonRef}
                 onClick={handleSaveCustom}
                 className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
               >
