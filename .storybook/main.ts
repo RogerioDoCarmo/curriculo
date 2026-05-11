@@ -14,5 +14,14 @@ const config: StorybookConfig = {
   core: {
     disableTelemetry: true,
   },
+  // Configure base path for deployment at /storybook/
+  managerHead: (head) => `
+    ${head}
+    <base href="/storybook/" />
+  `,
+  viteFinal: async (config) => {
+    config.base = "/storybook/";
+    return config;
+  },
 };
 export default config;
