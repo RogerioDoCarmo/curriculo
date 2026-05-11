@@ -376,19 +376,31 @@ test.describe("Cookie Consent Banner", () => {
       // Accept cookies first
       const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /accept/i }).click();
+
+      // Wait for reload to complete
+      await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
-      // Banner should be hidden
+      // Banner should be hidden after reload
       await expect(banner).not.toBeVisible();
 
-      // Scroll to footer
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      // Wait a bit for page to stabilize after reload
+      await page.waitForTimeout(1000);
+
+      // Scroll to footer using a more reliable method
+      await page.evaluate(() => {
+        const footer = document.querySelector("footer");
+        if (footer) {
+          footer.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+      });
       await page.waitForTimeout(500);
 
       // Find and click cookie settings link in footer
       const cookieSettingsLink = page.getByRole("link", {
         name: /cookie settings/i,
       });
+      await expect(cookieSettingsLink).toBeVisible();
       await cookieSettingsLink.click();
 
       // Banner should reappear
@@ -401,14 +413,27 @@ test.describe("Cookie Consent Banner", () => {
       // Accept cookies first
       const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /accept/i }).click();
+
+      // Wait for reload to complete
+      await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
-      // Scroll to footer
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      // Wait for page to stabilize after reload
+      await page.waitForTimeout(1000);
+
+      // Scroll to footer using a more reliable method
+      await page.evaluate(() => {
+        const footer = document.querySelector("footer");
+        if (footer) {
+          footer.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+      });
       await page.waitForTimeout(500);
 
       // Reopen banner
-      await page.getByRole("link", { name: /cookie settings/i }).click();
+      const cookieSettingsLink = page.getByRole("link", { name: /cookie settings/i });
+      await expect(cookieSettingsLink).toBeVisible();
+      await cookieSettingsLink.click();
       await expect(banner).toBeVisible();
 
       // Change to reject
