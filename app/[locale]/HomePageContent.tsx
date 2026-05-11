@@ -60,7 +60,7 @@ export default function HomePageContent({
         <div className="pb-16 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl text-center">
             <a
-              href="/storybook/index.html"
+              href="/storybook/"
               target="_blank"
               rel="noopener noreferrer"
               className="

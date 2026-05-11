@@ -18,5 +18,5 @@ export const metadata: Metadata = {
  */
 export default function StorybookPage() {
   // Redirect to the static Storybook build
-  redirect("/storybook/index.html");
+  redirect("/storybook/");
 }

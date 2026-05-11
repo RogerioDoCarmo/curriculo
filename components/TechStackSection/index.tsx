@@ -50,7 +50,7 @@ export default function TechStackSection() {
           {/* Storybook Link */}
           <div className="flex justify-center">
             <a
-              href="/storybook/index.html"
+              href="/storybook/"
               target="_blank"
               rel="noopener noreferrer"
               className="
