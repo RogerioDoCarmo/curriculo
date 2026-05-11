@@ -45,41 +45,7 @@ export default function TechStackSection() {
           <h2 id="tech-stack-title" className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
             {t("title")}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">{t("subtitle")}</p>
-
-          {/* Storybook Link */}
-          <div className="flex justify-center">
-            <a
-              href="/storybook/index.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center gap-2 px-6 py-3
-                bg-primary-600 text-white rounded-lg
-                hover:bg-primary-700 transition-colors duration-200
-                focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2
-                font-medium
-              "
-              aria-label={t("storybookLink")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-              </svg>
-              {t("storybookLink")}
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-            </a>
-          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("subtitle")}</p>
         </div>
 
         {/* Technologies by Category */}
