@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+    <!-- Background -->
+    <rect width="1200" height="630" fill="#3b82f6"/>
+
+    <!-- Gradient overlay for depth -->
+    <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <rect width="1200" height="630" fill="url(#grad)"/>
+
+    <!-- Large "R" initial -->
+    <text x="600" y="280" font-size="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="bold">R</text>
+
+    <!-- Name -->
+    <text x="600" y="400" font-size="48" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="600">Rogério do Carmo</text>
+
+    <!-- Title/Role -->
+    <text x="600" y="460" font-size="32" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif">Full Stack Developer</text>
+
+    <!-- Subtitle -->
+    <text x="600" y="510" font-size="24" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Arial, sans-serif">React • Next.js • TypeScript • Node.js</text>
+</svg>
