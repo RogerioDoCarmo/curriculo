@@ -160,8 +160,8 @@ jspm_packages/
 *storybook.log
 storybook-static
 
-# Storybook build copied to public directory (generated during build)
-public/storybook
+# Note: public/storybook is committed to git for Vercel deployment
+# It's generated during build and copied from storybook-static
 
 # Build archives and release artifacts
 *.tar.gz
