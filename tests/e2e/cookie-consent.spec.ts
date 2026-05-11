@@ -23,12 +23,20 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Cookie Consent Banner", () => {
   test.beforeEach(async ({ page, context }) => {
-    // Clear all cookies and localStorage before each test
-    await context.clearCookies();
-    await page.goto("/");
+    // Clear localStorage by navigating to about:blank first
+    await page.goto("about:blank");
     await page.evaluate(() => {
-      localStorage.clear();
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {
+        // Ignore errors
+      }
     });
+
+    // Clear all cookies and permissions
+    await context.clearCookies();
+    await context.clearPermissions();
   });
 
   test.describe("First visit", () => {
@@ -47,7 +55,7 @@ test.describe("Cookie Consent Banner", () => {
     test("should show essential and analytics cookie categories", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Check for cookie categories (use .first() to avoid strict mode violations)
@@ -186,11 +194,25 @@ test.describe("Cookie Consent Banner", () => {
     test("should show customize view when clicked", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
-      // Click Customize button
-      await banner.getByRole("button", { name: /customize/i }).click();
+      // Count how many customize buttons exist
+      const customizeButtons = await page.getByRole("button", { name: /customize/i }).count();
+      console.log(`Found ${customizeButtons} customize button(s)`);
+
+      // Click Customize button directly without scoping to banner
+      await page.getByRole("button", { name: /customize/i }).click();
+
+      // Wait for React state to update
+      await page.waitForTimeout(500);
+
+      // Check if banner still exists
+      const bannerCount = await page.getByRole("dialog").count();
+      console.log(`Banner count after click: ${bannerCount}`);
+
+      // Verify banner is still visible
+      await expect(banner).toBeVisible();
 
       // Verify customize view is shown - look for the heading
       await expect(banner.getByRole("heading", { name: /customize/i })).toBeVisible();
@@ -204,7 +226,7 @@ test.describe("Cookie Consent Banner", () => {
     test("should have essential cookies always enabled", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
       // Essential checkbox should be checked and disabled
@@ -216,52 +238,52 @@ test.describe("Cookie Consent Banner", () => {
     test("should allow toggling analytics preference", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
       const analyticsCheckbox = banner.getByRole("checkbox", { name: /analytics/i });
 
-      // Should be checked by default
-      await expect(analyticsCheckbox).toBeChecked();
-
-      // Uncheck analytics
-      await analyticsCheckbox.click();
+      // Should be unchecked by default (opt-in approach)
       await expect(analyticsCheckbox).not.toBeChecked();
 
-      // Check analytics again
+      // Check analytics
       await analyticsCheckbox.click();
       await expect(analyticsCheckbox).toBeChecked();
+
+      // Uncheck analytics again
+      await analyticsCheckbox.click();
+      await expect(analyticsCheckbox).not.toBeChecked();
     });
 
     test("should allow toggling functional preference", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
       const functionalCheckbox = banner.getByRole("checkbox", { name: /functional/i });
 
-      // Should be checked by default
-      await expect(functionalCheckbox).toBeChecked();
-
-      // Uncheck functional
-      await functionalCheckbox.click();
+      // Should be unchecked by default (opt-in approach)
       await expect(functionalCheckbox).not.toBeChecked();
 
-      // Check functional again
+      // Check functional
       await functionalCheckbox.click();
       await expect(functionalCheckbox).toBeChecked();
+
+      // Uncheck functional again
+      await functionalCheckbox.click();
+      await expect(functionalCheckbox).not.toBeChecked();
     });
 
     test("should save custom preferences", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
-      // Disable analytics, keep functional enabled
+      // Enable analytics, keep functional disabled (both start unchecked)
       const analyticsCheckbox = banner.getByRole("checkbox", { name: /analytics/i });
-      await analyticsCheckbox.click(); // Uncheck
+      await analyticsCheckbox.click(); // Check analytics
 
       // Save preferences
       await banner.getByRole("button", { name: /save/i }).click();
@@ -276,18 +298,18 @@ test.describe("Cookie Consent Banner", () => {
       const preferences = await page.evaluate(() =>
         JSON.parse(localStorage.getItem("cookie-preferences") || "{}")
       );
-      expect(preferences.analytics).toBe(false);
-      expect(preferences.functional).toBe(true);
+      expect(preferences.analytics).toBe(true);
+      expect(preferences.functional).toBe(false);
     });
 
     test("should persist custom preferences across reloads", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
-      // Enable only functional, disable analytics
-      await banner.getByRole("checkbox", { name: /analytics/i }).click();
+      // Enable functional, keep analytics disabled (both start unchecked)
+      await banner.getByRole("checkbox", { name: /functional/i }).click();
       await banner.getByRole("button", { name: /save/i }).click();
 
       // Wait for reload
@@ -310,11 +332,10 @@ test.describe("Cookie Consent Banner", () => {
     test("should respect analytics preference for tracking", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
-      // Disable analytics
-      await banner.getByRole("checkbox", { name: /analytics/i }).click();
+      // Keep analytics disabled (it starts unchecked, so don't click it)
       await banner.getByRole("button", { name: /save/i }).click();
 
       // Wait for reload
@@ -332,7 +353,7 @@ test.describe("Cookie Consent Banner", () => {
     test("should return to main view when back button clicked", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /customize/i }).click();
 
       // Verify we're in customize view - look for heading
@@ -353,12 +374,16 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/en");
 
       // Accept cookies first
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /accept/i }).click();
       await page.waitForLoadState("networkidle");
 
       // Banner should be hidden
       await expect(banner).not.toBeVisible();
+
+      // Scroll to footer
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.waitForTimeout(500);
 
       // Find and click cookie settings link in footer
       const cookieSettingsLink = page.getByRole("link", {
@@ -374,9 +399,13 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/en");
 
       // Accept cookies first
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await banner.getByRole("button", { name: /accept/i }).click();
       await page.waitForLoadState("networkidle");
+
+      // Scroll to footer
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.waitForTimeout(500);
 
       // Reopen banner
       await page.getByRole("link", { name: /cookie settings/i }).click();
@@ -407,7 +436,7 @@ test.describe("Cookie Consent Banner", () => {
     test("should display banner in English", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
       // Check English text (use .first() to avoid strict mode violations)
@@ -433,11 +462,10 @@ test.describe("Cookie Consent Banner", () => {
     test("should be keyboard navigable", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
-      // Tab to first button (Accept All)
-      await page.keyboard.press("Tab");
+      // First button (Accept All) should be auto-focused when modal opens
       const acceptButton = banner.getByRole("button", { name: /accept/i });
       await expect(acceptButton).toBeFocused();
 
@@ -459,7 +487,7 @@ test.describe("Cookie Consent Banner", () => {
     test("should have proper ARIA labels", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
       // Check ARIA attributes
@@ -477,16 +505,20 @@ test.describe("Cookie Consent Banner", () => {
     test("should trap focus in modal", async ({ page }) => {
       await page.goto("/en");
 
-      const banner = page.getByRole("dialog", { name: /cookies|privacy/i });
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
-      // Tab through all focusable elements
-      await page.keyboard.press("Tab"); // Accept button
+      // First button should be auto-focused
+      const acceptButton = banner.getByRole("button", { name: /accept/i });
+      await expect(acceptButton).toBeFocused();
+
+      // Tab through all focusable elements (3 buttons + 2 links)
       await page.keyboard.press("Tab"); // Reject button
       await page.keyboard.press("Tab"); // Customize button
+      await page.keyboard.press("Tab"); // Privacy Policy link
+      await page.keyboard.press("Tab"); // Cookie Policy link
       await page.keyboard.press("Tab"); // Should wrap back to Accept button
 
-      const acceptButton = banner.getByRole("button", { name: /accept/i });
       await expect(acceptButton).toBeFocused();
     });
   });
