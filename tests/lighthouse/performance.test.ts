@@ -33,14 +33,33 @@ describe("Lighthouse Performance Audits", () => {
   beforeAll(() => {
     console.log(`Running Lighthouse audit on ${testUrl}...`);
 
-    // First, verify the server is accessible
+    // First, verify the server is accessible with retries
     try {
       console.log("Checking if server is accessible...");
-      execSync(`curl -f ${testUrl}`, {
-        stdio: "pipe",
-        timeout: 5000,
-      });
-      console.log("Server is accessible!");
+      let attempts = 0;
+      const maxAttempts = 10;
+      let serverReady = false;
+
+      while (attempts < maxAttempts && !serverReady) {
+        try {
+          execSync(`curl -f -s -o /dev/null -w "%{http_code}" ${testUrl}`, {
+            stdio: "pipe",
+            timeout: 5000,
+          });
+          serverReady = true;
+          console.log("Server is accessible!");
+        } catch (error) {
+          attempts++;
+          if (attempts < maxAttempts) {
+            console.log(`Server not ready, attempt ${attempts}/${maxAttempts}, retrying in 2s...`);
+            execSync("sleep 2");
+          }
+        }
+      }
+
+      if (!serverReady) {
+        throw new Error(`Server not accessible after ${maxAttempts} attempts`);
+      }
     } catch (error) {
       console.error(`Server is not accessible at ${testUrl}`);
       console.error("Make sure the production build is running:");
@@ -62,6 +81,7 @@ describe("Lighthouse Performance Audits", () => {
         "--disable-setuid-sandbox",
         "--disable-background-networking",
         "--disable-default-apps",
+        "--disable-web-security", // Allow loading resources in CI
       ].join(" ");
 
       execSync(
