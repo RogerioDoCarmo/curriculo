@@ -13,6 +13,7 @@ import {
   trackExternalLinkClick,
 } from "@/lib/analytics";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 interface FooterProps {
   readonly locale: string;
@@ -102,6 +103,7 @@ const NAV_SECTIONS = [
   { labelKey: "footer.privacyPolicy", href: "/privacy", external: true },
   { labelKey: "footer.cookiePolicy", href: "/cookies", external: true },
   { labelKey: "footer.termsOfUse", href: "/terms", external: true },
+  { labelKey: "footer.cookieSettings", href: "#cookie-settings", cookieSettings: true },
 ];
 
 const LANGUAGE_LINKS = [
@@ -113,11 +115,17 @@ const LANGUAGE_LINKS = [
 export default function Footer({ locale }: FooterProps) {
   const t = useTranslations();
   const year = new Date().getFullYear();
+  const { openBanner } = useCookieConsent();
 
   // Get feature flag for locale-specific PDFs
   const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
+
+  const handleCookieSettingsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    openBanner();
+  };
 
   return (
     <footer
@@ -138,25 +146,42 @@ export default function Footer({ locale }: FooterProps) {
               {t("footer.navigate")}
             </h2>
             <ul className="space-y-2">
-              {NAV_SECTIONS.map(({ labelKey, href, external }) => (
+              {NAV_SECTIONS.map(({ labelKey, href, external, cookieSettings }) => (
                 <li key={href}>
-                  <a
-                    href={external ? `/${locale}${href}` : href}
-                    onClick={() =>
-                      trackFooterLinkClick({
-                        link_text: t(labelKey),
-                        link_url: href,
-                        link_type: external ? "page" : "navigation",
-                      })
-                    }
-                    className="
-                      text-sm hover:text-primary-600 dark:hover:text-primary-400
-                      transition-colors duration-200
-                      focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
-                    "
-                  >
-                    {t(labelKey)}
-                  </a>
+                  {cookieSettings ? (
+                    <a
+                      href="#cookie-settings"
+                      onClick={handleCookieSettingsClick}
+                      role="link"
+                      aria-label={t(labelKey)}
+                      className="
+                        text-sm hover:text-primary-600 dark:hover:text-primary-400
+                        transition-colors duration-200
+                        focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                        cursor-pointer
+                      "
+                    >
+                      {t(labelKey)}
+                    </a>
+                  ) : (
+                    <a
+                      href={external ? `/${locale}${href}` : href}
+                      onClick={() =>
+                        trackFooterLinkClick({
+                          link_text: t(labelKey),
+                          link_url: href,
+                          link_type: external ? "page" : "navigation",
+                        })
+                      }
+                      className="
+                        text-sm hover:text-primary-600 dark:hover:text-primary-400
+                        transition-colors duration-200
+                        focus:outline-none focus:ring-2 focus:ring-primary-500 rounded
+                      "
+                    >
+                      {t(labelKey)}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
