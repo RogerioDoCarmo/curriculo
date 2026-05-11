@@ -19,6 +19,10 @@ const config: StorybookConfig = {
     ${head}
     <base href="/storybook/" />
   `,
+  previewHead: (head) => `
+    ${head}
+    <base href="/storybook/" />
+  `,
   viteFinal: async (config) => {
     config.base = "/storybook/";
     return config;
