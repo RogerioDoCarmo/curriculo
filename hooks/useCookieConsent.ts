@@ -117,6 +117,17 @@ export function useCookieConsent() {
       setPreferences(DEFAULT_PREFERENCES);
       setShowBanner(true);
     }
+
+    // Listen for requests to reopen the banner
+    const handleReopenBanner = () => {
+      setShowBanner(true);
+    };
+
+    window.addEventListener("reopenCookieBanner", handleReopenBanner);
+
+    return () => {
+      window.removeEventListener("reopenCookieBanner", handleReopenBanner);
+    };
   }, []);
 
   /**
@@ -188,6 +199,10 @@ export function useCookieConsent() {
    */
   const openBanner = useCallback(() => {
     setShowBanner(true);
+    // Dispatch event to notify other instances of the hook
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("reopenCookieBanner"));
+    }
   }, []);
 
   /**

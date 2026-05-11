@@ -91,6 +91,7 @@
     "printPageLabel": "Imprimir página do site",
     "privacyPolicy": "Política de Privacidade",
     "cookiePolicy": "Política de Cookies",
+    "cookieSettings": "Configurações de Cookies",
     "languages": {
       "portuguese": "Português (pt-BR)",
       "english": "English (en)",
@@ -291,7 +292,7 @@
     "essentialDescription": "Armazenamento do navegador para funcionalidade básica (tema, idioma, sessão). Fica apenas no seu navegador. Sempre ativo.",
     "analytics": "Cookies de Análise (Opcional)",
     "analyticsDescription": "Ajudam a entender como os visitantes interagem com o site através do Firebase Analytics. Dados anônimos. Requer consentimento.",
-    "analyticsCookies": "Cookies: _ga, _ga_{container-id}, _gid, _gat",
+    "analyticsCookies": "Cookies: _ga, _ga_'{'container-id'}', _gid, _gat",
     "functional": "Funcional (localStorage)",
     "functionalDescription": "Armazenamento do navegador para recursos aprimorados (notificações, preferências). Fica apenas no seu navegador.",
     "acceptAll": "Aceitar Todos",
@@ -363,7 +364,7 @@
             "expiration": "2 anos"
           },
           "gaContainer": {
-            "name": "_ga_{container-id}",
+            "name": "_ga_'{'container-id'}'",
             "purposeLabel": "Propósito",
             "purpose": "Rastreamento de sessão - Armazena estado da sessão e interações do usuário",
             "expirationLabel": "Expiração",
