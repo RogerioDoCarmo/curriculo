@@ -163,8 +163,8 @@ storybook-static
 # Storybook build copied to public directory (generated during build)
 public/storybook
 
-# Storybook PDF (generated during build)
-public/storybook-components.pdf
+# Storybook
+storybook-static/
 
 # Build archives and release artifacts
 *.tar.gz
