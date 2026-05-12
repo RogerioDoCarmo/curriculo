@@ -7,6 +7,55 @@
     "contact": "Contacto",
     "techStack": "Usado en este sitio"
   },
+  "ComponentGallery": {
+    "title": "Galería de Componentes | Rogério do Carmo",
+    "description": "Explora los componentes de UI reutilizables utilizados en este sitio web",
+    "heading": "Galería de Componentes",
+    "subheading": "Explora los componentes de UI reutilizables que impulsan este sitio web. Cada componente está construido con React, TypeScript y Tailwind CSS.",
+    "button": {
+      "title": "Botón",
+      "description": "Un componente de botón versátil con múltiples variantes, tamaños y estados",
+      "primary": "Botón Primario",
+      "secondary": "Botón Secundario",
+      "ghost": "Botón Fantasma",
+      "small": "Pequeño",
+      "medium": "Mediano",
+      "large": "Grande",
+      "disabled": "Deshabilitado",
+      "loading": "Cargando..."
+    },
+    "card": {
+      "title": "Tarjeta",
+      "description": "Un componente contenedor flexible para agrupar contenido relacionado",
+      "withTitle": "Tarjeta con Título",
+      "withoutTitle": "Tarjeta sin título",
+      "content": "Este es un ejemplo de contenido de tarjeta. Las tarjetas pueden contener cualquier tipo de contenido, incluyendo texto, imágenes y otros componentes."
+    },
+    "highlightedText": {
+      "title": "Texto Resaltado",
+      "description": "Un componente para enfatizar texto importante con resaltado visual",
+      "example1": "Este es texto resaltado",
+      "example2": "Puedes usarlo en línea con",
+      "highlighted": "porciones resaltadas"
+    },
+    "modal": {
+      "title": "Modal",
+      "description": "Un componente de diálogo para mostrar contenido en una superposición",
+      "openButton": "Abrir Modal",
+      "exampleTitle": "Modal de Ejemplo",
+      "exampleContent": "Este es un modal de ejemplo. Los modales son útiles para mostrar información importante o recopilar entrada del usuario sin navegar fuera de la página actual."
+    },
+    "languageSelector": {
+      "title": "Selector de Idioma",
+      "description": "Un componente desplegable para cambiar entre idiomas disponibles",
+      "label": "Seleccionar Idioma"
+    },
+    "themeToggle": {
+      "title": "Cambiar Tema",
+      "description": "Un componente de botón para cambiar entre temas claro y oscuro",
+      "label": "Cambiar Tema"
+    }
+  },
   "hero": {
     "greeting": "Hola, soy",
     "title": "Desarrollador React Native Mobile",
@@ -170,6 +219,7 @@
     "title": "Usado en este sitio",
     "subtitle": "Tecnologías usadas para construir este sitio web",
     "storybookLink": "Ver Biblioteca de Componentes",
+    "componentGalleryLink": "Ver Galería de Componentes",
     "labels": {
       "why": "Por qué:",
       "benefits": "Beneficios:",
