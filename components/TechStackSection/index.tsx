@@ -14,8 +14,10 @@
  * Requirements: 23.1, 23.2, 23.5, 23.6, 23.7, 23.8, 23.9, 23.10
  */
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { DEFAULT_LOCALE } from "@/types/index";
 
 // Technology category mapping
 const TECH_CATEGORIES = {
@@ -32,6 +34,10 @@ type CategoryKey = keyof typeof TECH_CATEGORIES;
 
 export default function TechStackSection() {
   const t = useTranslations("techStack");
+  const locale = useLocale();
+
+  // Construct locale-aware URL (default locale doesn't need prefix)
+  const componentsUrl = locale === DEFAULT_LOCALE ? "/components" : `/${locale}/components`;
 
   return (
     <section
@@ -45,7 +51,23 @@ export default function TechStackSection() {
           <h2 id="tech-stack-title" className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
             {t("title")}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("subtitle")}</p>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">{t("subtitle")}</p>
+
+          {/* Component Gallery Link */}
+          <Link
+            href={componentsUrl}
+            className="
+              inline-flex items-center gap-2 px-6 py-3
+              text-base font-medium text-white
+              bg-primary-700 hover:bg-primary-800
+              rounded-lg shadow-md hover:shadow-lg
+              focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+              transition-all duration-200
+            "
+          >
+            {t("componentGalleryLink")}
+            <ExternalLink className="w-5 h-5" aria-hidden="true" />
+          </Link>
         </div>
 
         {/* Technologies by Category */}
