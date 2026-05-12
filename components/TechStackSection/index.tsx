@@ -17,7 +17,6 @@
 import { useTranslations, useLocale } from "next-intl";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { DEFAULT_LOCALE } from "@/types/index";
 
 // Technology category mapping
 const TECH_CATEGORIES = {
@@ -36,9 +35,6 @@ export default function TechStackSection() {
   const t = useTranslations("techStack");
   const locale = useLocale();
 
-  // Construct locale-aware URL (default locale doesn't need prefix)
-  const componentsUrl = locale === DEFAULT_LOCALE ? "/components" : `/${locale}/components`;
-
   return (
     <section
       id="tech-stack"
@@ -55,7 +51,7 @@ export default function TechStackSection() {
 
           {/* Component Gallery Link */}
           <Link
-            href={componentsUrl}
+            href={`/${locale}/components/`}
             className="
               inline-flex items-center gap-2 px-6 py-3
               text-base font-medium text-white
