@@ -77,7 +77,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               >
                 {currentLocale === "pt-BR"
                   ? "Bacharel em Ciência da Computação"
-                  : "Bachelor in Computer Science"}
+                  : currentLocale === "es"
+                    ? "Licenciado en Ciencias de la Computación"
+                    : "Bachelor in Computer Science"}
               </a>
               <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2018</p>
               <a
@@ -94,7 +96,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               >
                 {currentLocale === "pt-BR"
                   ? "Mestre em Ciências Cartográficas"
-                  : "Master in Cartographic Sciences"}
+                  : currentLocale === "es"
+                    ? "Máster en Ciencias Cartográficas"
+                    : "Master in Cartographic Sciences"}
               </a>
               <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2023</p>
             </div>
@@ -105,7 +109,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
             <p className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1 text-center md:text-left">
               {currentLocale === "pt-BR"
                 ? "Dissertação de mestrado completa:"
-                : "Complete master's dissertation:"}
+                : currentLocale === "es"
+                  ? "Disertación de maestría completa:"
+                  : "Complete master's dissertation:"}
             </p>
             <div className="flex items-center justify-center md:justify-start mb-2">
               <a
@@ -138,7 +144,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 </svg>
                 {currentLocale === "pt-BR"
                   ? "Avaliação da qualidade das medidas e posicionamento GNSS em smartphones Android"
-                  : "Evaluation of GNSS measurement quality and positioning in Android smartphones"}
+                  : currentLocale === "es"
+                    ? "Evaluación de la calidad de las medidas y posicionamiento GNSS en smartphones Android"
+                    : "Evaluation of GNSS measurement quality and positioning in Android smartphones"}
               </a>
             </div>
             {/* Download Dissertation Button */}
@@ -152,7 +160,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     link_text:
                       currentLocale === "pt-BR"
                         ? "Baixar Dissertação (PDF)"
-                        : "Download Dissertation (PDF)",
+                        : currentLocale === "es"
+                          ? "Descargar Disertación (PDF)"
+                          : "Download Dissertation (PDF)",
                     link_url: "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf",
                     link_type: "dissertation_download",
                   })
@@ -160,7 +170,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 aria-label={
                   currentLocale === "pt-BR"
                     ? "Baixar dissertação de mestrado em PDF"
-                    : "Download master's dissertation in PDF"
+                    : currentLocale === "es"
+                      ? "Descargar disertación de maestría en PDF"
+                      : "Download master's dissertation in PDF"
                 }
                 className="inline-flex items-center gap-2 text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
@@ -181,7 +193,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 <span>
                   {currentLocale === "pt-BR"
                     ? "Baixar Dissertação (PDF)"
-                    : "Download Dissertation (PDF)"}
+                    : currentLocale === "es"
+                      ? "Descargar Disertación (PDF)"
+                      : "Download Dissertation (PDF)"}
                 </span>
               </a>
             </div>
@@ -226,7 +240,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               >
                 {currentLocale === "pt-BR"
                   ? "Desenvolvedor Mobile Sênior"
-                  : "Senior Mobile Developer"}
+                  : currentLocale === "es"
+                    ? "Desarrollador Mobile Senior"
+                    : "Senior Mobile Developer"}
               </a>
               <a
                 href="https://www.topazevolution.com/"
@@ -240,7 +256,11 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 }
                 className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
               >
-                {currentLocale === "pt-BR" ? "2023 - 2026 (3 anos)" : "2023 - 2026 (3 years)"}
+                {currentLocale === "pt-BR"
+                  ? "2023 - 2026 (3 anos)"
+                  : currentLocale === "es"
+                    ? "2023 - 2026 (3 años)"
+                    : "2023 - 2026 (3 years)"}
               </a>
             </div>
           </div>

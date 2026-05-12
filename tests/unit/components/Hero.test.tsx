@@ -276,6 +276,47 @@ describe("Hero Component", () => {
     expect(companyLogo).toBeInTheDocument();
   });
 
+  it("renders current job section for Spanish locale", () => {
+    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    expect(screen.getByText("Desarrollador Mobile Senior")).toBeInTheDocument();
+    expect(screen.getByText("2023 - 2026 (3 años)")).toBeInTheDocument();
+    const companyLogo = screen.getByAltText("Company Logo");
+    expect(companyLogo).toBeInTheDocument();
+  });
+
+  it("renders education section with UNESP logo for Spanish locale", () => {
+    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    expect(screen.getByText("Licenciado en Ciencias de la Computación")).toBeInTheDocument();
+    expect(screen.getByText("Máster en Ciencias Cartográficas")).toBeInTheDocument();
+    const unespLogo = screen.getByAltText("UNESP Logo");
+    expect(unespLogo).toBeInTheDocument();
+  });
+
+  it("renders dissertation link for Spanish locale", () => {
+    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    expect(screen.getByText("Disertación de maestría completa:")).toBeInTheDocument();
+    const dissertationLink = screen.getByRole("link", {
+      name: /Evaluación de la calidad de las medidas y posicionamiento GNSS en smartphones Android/i,
+    });
+    expect(dissertationLink).toBeInTheDocument();
+    expect(dissertationLink).toHaveAttribute("href", "http://hdl.handle.net/11449/243430");
+    expect(dissertationLink).toHaveAttribute("target", "_blank");
+    expect(dissertationLink).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("renders download dissertation button for Spanish locale", () => {
+    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    const downloadButton = screen.getByRole("link", { name: /descargar disertación/i });
+    expect(downloadButton).toBeInTheDocument();
+    expect(downloadButton).toHaveAttribute(
+      "href",
+      "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf"
+    );
+    expect(downloadButton).toHaveAttribute("target", "_blank");
+    expect(downloadButton).toHaveAttribute("rel", "noopener noreferrer");
+    expect(downloadButton).toHaveTextContent("Descargar Disertación (PDF)");
+  });
+
   it("all required props are provided", () => {
     const { container } = renderWithIntl(<Hero {...defaultProps} />, "en");
     expect(container.firstChild).toBeInTheDocument();
