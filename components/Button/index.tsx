@@ -34,9 +34,9 @@ const variantClasses: Record<ButtonProps["variant"], string> = {
 };
 
 const sizeClasses: Record<ButtonProps["size"], string> = {
-  sm: "sm px-3 py-1.5 text-sm",
-  md: "md px-4 py-2 text-base",
-  lg: "lg px-6 py-3 text-lg",
+  sm: "sm px-4 py-2 text-sm",
+  md: "md px-6 py-2.5 text-base",
+  lg: "lg px-8 py-3.5 text-lg",
 };
 
 /**

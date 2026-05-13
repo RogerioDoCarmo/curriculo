@@ -14,8 +14,9 @@
  * Requirements: 23.1, 23.2, 23.5, 23.6, 23.7, 23.8, 23.9, 23.10
  */
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 // Technology category mapping
 const TECH_CATEGORIES = {
@@ -32,6 +33,7 @@ type CategoryKey = keyof typeof TECH_CATEGORIES;
 
 export default function TechStackSection() {
   const t = useTranslations("techStack");
+  const locale = useLocale();
 
   return (
     <section
@@ -47,39 +49,21 @@ export default function TechStackSection() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">{t("subtitle")}</p>
 
-          {/* Storybook Link */}
-          <div className="flex justify-center">
-            <a
-              href="/storybook/index.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                inline-flex items-center gap-2 px-6 py-3
-                bg-primary-600 text-white rounded-lg
-                hover:bg-primary-700 transition-colors duration-200
-                focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2
-                font-medium
-              "
-              aria-label={t("storybookLink")}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-              </svg>
-              {t("storybookLink")}
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-            </a>
-          </div>
+          {/* Component Gallery Link */}
+          <Link
+            href={`/${locale}/components/`}
+            className="
+              inline-flex items-center gap-2 px-6 py-3
+              text-base font-medium text-white
+              bg-primary-700 hover:bg-primary-800
+              rounded-lg shadow-md hover:shadow-lg
+              focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+              transition-all duration-200
+            "
+          >
+            {t("componentGalleryLink")}
+            <ExternalLink className="w-5 h-5" aria-hidden="true" />
+          </Link>
         </div>
 
         {/* Technologies by Category */}
