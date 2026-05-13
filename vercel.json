@@ -1,4 +1,4 @@
 {
   "installCommand": "npm ci --legacy-peer-deps",
-  "buildCommand": "npm run build:with-storybook"
+  "buildCommand": "npm run build"
 }
