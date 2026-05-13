@@ -7,6 +7,55 @@
     "contact": "Contact",
     "techStack": "Used in this site"
   },
+  "ComponentGallery": {
+    "title": "Component Gallery | Rogério do Carmo",
+    "description": "Explore the reusable UI components used throughout this website",
+    "heading": "Component Gallery",
+    "subheading": "Explore the reusable UI components that power this website. Each component is built with React, TypeScript, and Tailwind CSS.",
+    "button": {
+      "title": "Button",
+      "description": "A versatile button component with multiple variants, sizes, and states",
+      "primary": "Primary Button",
+      "secondary": "Secondary Button",
+      "ghost": "Ghost Button",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "disabled": "Disabled",
+      "loading": "Loading..."
+    },
+    "card": {
+      "title": "Card",
+      "description": "A flexible container component for grouping related content",
+      "withTitle": "Card with Title",
+      "withoutTitle": "Card without title",
+      "content": "This is an example of card content. Cards can contain any type of content including text, images, and other components."
+    },
+    "highlightedText": {
+      "title": "Highlighted Text",
+      "description": "A component for emphasizing important text with visual highlighting",
+      "example1": "This is highlighted text",
+      "example2": "You can use it inline with",
+      "highlighted": "highlighted portions"
+    },
+    "modal": {
+      "title": "Modal",
+      "description": "A dialog component for displaying content in an overlay",
+      "openButton": "Open Modal",
+      "exampleTitle": "Example Modal",
+      "exampleContent": "This is an example modal. Modals are useful for displaying important information or collecting user input without navigating away from the current page."
+    },
+    "languageSelector": {
+      "title": "Language Selector",
+      "description": "A dropdown component for switching between available languages",
+      "label": "Select Language"
+    },
+    "themeToggle": {
+      "title": "Theme Toggle",
+      "description": "A button component for switching between light and dark themes",
+      "label": "Toggle Theme"
+    }
+  },
   "hero": {
     "greeting": "Hello, I'm",
     "title": "Mobile React Native Developer",
@@ -170,6 +219,7 @@
     "title": "Used in this site",
     "subtitle": "Technologies used to build this website",
     "storybookLink": "View Component Library",
+    "componentGalleryLink": "View Component Gallery",
     "labels": {
       "why": "Why:",
       "benefits": "Benefits:",

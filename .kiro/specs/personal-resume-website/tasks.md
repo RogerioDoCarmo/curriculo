@@ -15,6 +15,7 @@ This implementation plan breaks down the personal resume website into discrete, 
 | Checkpoint 5 | `v0.5.0-checkpoint-5` | Task 11     | ✅ Complete | Firebase integration                               |
 | Checkpoint 6 | `v1.2.0`              | Tasks 12-17 | ✅ Complete | SEO, accessibility, print, exit intent, responsive |
 | Checkpoint 7 | `v1.2.1`              | Tasks 18-26 | ✅ Complete | Tech stack, testing, CI/CD, deployment, SEO        |
+| Checkpoint 8 | TBD                   | Task 27     | 🔄 Pending  | Storybook Vercel deployment fix                    |
 
 ## TDD Workflow Requirements
 
@@ -2670,3 +2671,30 @@ This implementation plan breaks down the personal resume website into discrete, 
       - "If you reject analytics, NO cookies will be set"
     - Update translations if messaging changes
     - _Requirements: 10.1, 10.3, 11.7_
+
+## Checkpoint 8 - Storybook Vercel Deployment Fix (TBD)
+
+- [ ] 28. Fix Storybook deployment on Vercel
+  - [ ] 28.1 Investigate and document root cause
+    - Analyze why Storybook files return 404 on Vercel
+    - Document the interaction between Next.js static export and Vercel deployment
+    - Identify why files in `public/storybook` are not being served
+    - Create detailed analysis in bugfix spec document
+    - _Bugfix Spec: `.kiro/specs/storybook-vercel-deployment-fix/`_
+  - [ ] 28.2 Implement and test solution
+    - Implement the chosen solution from the design document
+    - Test locally that Storybook loads correctly at `/storybook/`
+    - Verify all Storybook assets load without 404 errors
+    - Test that main website functionality remains unaffected
+    - _Bugfix Spec: `.kiro/specs/storybook-vercel-deployment-fix/`_
+  - [ ] 28.3 Deploy and verify on Vercel
+    - Deploy to Vercel preview environment
+    - Verify Storybook is accessible at `/storybook/`
+    - Test all Storybook features (navigation, component preview, docs)
+    - Verify no regression in main website functionality
+    - _Bugfix Spec: `.kiro/specs/storybook-vercel-deployment-fix/`_
+  - [ ] 28.4 Update documentation
+    - Document the solution in README
+    - Update build process documentation
+    - Add troubleshooting guide for similar issues
+    - _Bugfix Spec: `.kiro/specs/storybook-vercel-deployment-fix/`_

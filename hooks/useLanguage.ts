@@ -127,11 +127,14 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
       const localeIndex = SUPPORTED_LOCALES.includes(segments[1] as SupportedLocale) ? 1 : -1;
 
       if (localeIndex !== -1) {
-        segments[1] = newLocale === DEFAULT_LOCALE ? "" : newLocale;
-        const newPath = segments.filter(Boolean).join("/") || "/";
-        router.push(`/${newPath}`);
+        // Always include locale in URL for static export
+        segments[1] = newLocale;
+        const newPath = segments.join("/");
+        router.push(newPath);
       } else {
-        router.push(`/${newLocale === DEFAULT_LOCALE ? "" : newLocale + "/"}${pathname}`);
+        // Always include locale prefix for static export
+        const pathWithoutLeadingSlash = pathname.startsWith("/") ? pathname.slice(1) : pathname;
+        router.push(`/${newLocale}/${pathWithoutLeadingSlash}`);
       }
     },
     [pathname, router]

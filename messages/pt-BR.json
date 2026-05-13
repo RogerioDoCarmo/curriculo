@@ -7,6 +7,55 @@
     "contact": "Contato",
     "techStack": "Usado neste site"
   },
+  "ComponentGallery": {
+    "title": "Galeria de Componentes | Rogério do Carmo",
+    "description": "Explore os componentes de UI reutilizáveis usados neste site",
+    "heading": "Galeria de Componentes",
+    "subheading": "Explore os componentes de UI reutilizáveis que impulsionam este site. Cada componente é construído com React, TypeScript e Tailwind CSS.",
+    "button": {
+      "title": "Botão",
+      "description": "Um componente de botão versátil com múltiplas variantes, tamanhos e estados",
+      "primary": "Botão Primário",
+      "secondary": "Botão Secundário",
+      "ghost": "Botão Fantasma",
+      "small": "Pequeno",
+      "medium": "Médio",
+      "large": "Grande",
+      "disabled": "Desabilitado",
+      "loading": "Carregando..."
+    },
+    "card": {
+      "title": "Card",
+      "description": "Um componente container flexível para agrupar conteúdo relacionado",
+      "withTitle": "Card com Título",
+      "withoutTitle": "Card sem título",
+      "content": "Este é um exemplo de conteúdo de card. Cards podem conter qualquer tipo de conteúdo, incluindo texto, imagens e outros componentes."
+    },
+    "highlightedText": {
+      "title": "Texto Destacado",
+      "description": "Um componente para enfatizar texto importante com destaque visual",
+      "example1": "Este é texto destacado",
+      "example2": "Você pode usá-lo inline com",
+      "highlighted": "porções destacadas"
+    },
+    "modal": {
+      "title": "Modal",
+      "description": "Um componente de diálogo para exibir conteúdo em uma sobreposição",
+      "openButton": "Abrir Modal",
+      "exampleTitle": "Modal de Exemplo",
+      "exampleContent": "Este é um modal de exemplo. Modais são úteis para exibir informações importantes ou coletar entrada do usuário sem navegar para fora da página atual."
+    },
+    "languageSelector": {
+      "title": "Seletor de Idioma",
+      "description": "Um componente dropdown para alternar entre idiomas disponíveis",
+      "label": "Selecionar Idioma"
+    },
+    "themeToggle": {
+      "title": "Alternar Tema",
+      "description": "Um componente de botão para alternar entre temas claro e escuro",
+      "label": "Alternar Tema"
+    }
+  },
   "hero": {
     "greeting": "Olá, eu sou",
     "title": "Desenvolvedor React Native Mobile",
@@ -170,6 +219,7 @@
     "title": "Usado neste site",
     "subtitle": "Ferramentas e tecnologias usadas para construir este site",
     "storybookLink": "Ver Biblioteca de Componentes",
+    "componentGalleryLink": "Ver Galeria de Componentes",
     "labels": {
       "why": "Por quê:",
       "benefits": "Benefícios:",
