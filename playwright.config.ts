@@ -21,13 +21,14 @@ export default defineConfig({
   // Test execution settings
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0, // Reduced from 2 to 1
-  workers: process.env.CI ? 2 : undefined, // Increased from 1 to 2 for parallel execution
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 4 : undefined, // Increased to 4 workers for faster parallel execution
 
-  // Reporter configuration
+  // Reporter configuration with timer
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
-    ["list"],
+    ["list", { printSteps: true }], // Show test steps for better visibility
+    ["json", { outputFile: "playwright-report/results.json" }],
     ...(process.env.CI ? [["github", {}] as const] : []),
   ],
 
@@ -36,7 +37,7 @@ export default defineConfig({
     // Base URL for tests
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
 
-    // Collect trace on first retry
+    // Collect trace on first retry only (reduces overhead)
     trace: "on-first-retry",
 
     // Screenshot on failure only
@@ -46,10 +47,20 @@ export default defineConfig({
     video: "retain-on-failure",
 
     // Faster navigation timeout
-    navigationTimeout: 15 * 1000, // 15s instead of default 30s
+    navigationTimeout: 10 * 1000, // Reduced to 10s
 
     // Faster action timeout
-    actionTimeout: 10 * 1000, // 10s instead of default 30s
+    actionTimeout: 8 * 1000, // Reduced to 8s
+
+    // Disable animations for faster tests
+    launchOptions: {
+      args: [
+        "--disable-blink-features=AutomationControlled",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-sandbox",
+      ],
+    },
   },
 
   // Test projects for different browsers and devices
