@@ -11,6 +11,7 @@
  */
 
 import { test, expect } from "@playwright/test";
+import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
 
 const LOCALES = ["pt-BR", "en", "es"];
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
@@ -20,6 +21,7 @@ test.describe("Component Gallery Page", () => {
     for (const locale of LOCALES) {
       test(`should load component gallery page for ${locale} locale`, async ({ page }) => {
         await page.goto(`${BASE_URL}/${locale}/components/`);
+        await dismissCookieBanner(page);
 
         // Wait for page to load
         await expect(page).toHaveTitle(/Component Gallery/i);
@@ -34,6 +36,7 @@ test.describe("Component Gallery Page", () => {
   test.describe("Component Showcases", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
     });
 
     test("should display all 6 component showcases", async ({ page }) => {
@@ -117,6 +120,7 @@ test.describe("Component Gallery Page", () => {
   test.describe("Modal Interactions", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
     });
 
     test("should open and close basic modal", async ({ page }) => {
@@ -190,6 +194,7 @@ test.describe("Component Gallery Page", () => {
     test("should navigate from Tech Stack page to Component Gallery", async ({ page }) => {
       // Start at Tech Stack page
       await page.goto(`${BASE_URL}/pt-BR/tech-stack/`);
+      await dismissCookieBanner(page);
 
       // Find and click component gallery link
       const galleryLink = page.getByRole("link", { name: /Component Gallery/i });
@@ -204,6 +209,7 @@ test.describe("Component Gallery Page", () => {
     test("should maintain locale when navigating from Tech Stack", async ({ page }) => {
       for (const locale of LOCALES) {
         await page.goto(`${BASE_URL}/${locale}/tech-stack/`);
+        await dismissCookieBanner(page);
 
         const galleryLink = page.getByRole("link", { name: /Component Gallery/i });
         await galleryLink.click();
@@ -218,6 +224,7 @@ test.describe("Component Gallery Page", () => {
     test("should display correctly on mobile", async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -229,6 +236,7 @@ test.describe("Component Gallery Page", () => {
     test("should display correctly on tablet", async ({ page }) => {
       await page.setViewportSize({ width: 768, height: 1024 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -240,6 +248,7 @@ test.describe("Component Gallery Page", () => {
     test("should display correctly on desktop", async ({ page }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -252,6 +261,7 @@ test.describe("Component Gallery Page", () => {
   test.describe("Accessibility", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
     });
 
     test("should have proper heading hierarchy", async ({ page }) => {
@@ -304,6 +314,7 @@ test.describe("Component Gallery Page", () => {
     test("should load page within acceptable time", async ({ page }) => {
       const startTime = Date.now();
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
       await page.waitForLoadState("networkidle");
       const loadTime = Date.now() - startTime;
 
@@ -321,6 +332,7 @@ test.describe("Component Gallery Page", () => {
       });
 
       await page.goto(`${BASE_URL}/pt-BR/components/`);
+      await dismissCookieBanner(page);
       await page.waitForLoadState("networkidle");
 
       // Should not have any console errors
