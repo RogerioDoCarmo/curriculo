@@ -11,19 +11,21 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { setCookieConsent } from "./helpers/dismissCookieBanner";
+import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 const LOCALES = ["pt-BR", "en", "es"];
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 test.describe("Component Gallery Page", () => {
+  // Set cookie consent before any page loads to prevent banner from appearing
+  test.beforeEach(async ({ context }) => {
+    await setCookieConsentBeforeLoad(context);
+  });
+
   test.describe("Page Loading", () => {
     for (const locale of LOCALES) {
       test(`should load component gallery page for ${locale} locale`, async ({ page }) => {
-        // Set cookie consent before navigation to prevent banner
         await page.goto(`${BASE_URL}/${locale}/components/`);
-        await setCookieConsent(page);
-        await page.reload();
 
         // Wait for page to load - match localized titles
         await expect(page).toHaveTitle(
@@ -40,45 +42,54 @@ test.describe("Component Gallery Page", () => {
   test.describe("Component Showcases", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
     });
 
     test("should display all 6 component showcases", async ({ page }) => {
-      // Check for all component sections
+      // Check for all component sections (locale-aware: pt-BR, en, es)
+      // Using .first() to avoid strict mode violations when text appears multiple times
       const componentTitles = [
-        /Button/i,
-        /Card/i,
-        /Highlighted Text/i,
-        /Modal/i,
-        /Language Selector/i,
-        /Theme Toggle/i,
+        { name: /Button|Botão|Botón/i },
+        { name: /Card/i },
+        { name: /Highlighted Text|Texto Destacado/i },
+        { name: /Modal/i },
+        { name: /Language Selector|Seletor de Idioma|Selector de Idioma/i },
+        { name: /Theme Toggle|Alternar Tema/i },
       ];
 
-      for (const title of componentTitles) {
-        const heading = page.getByRole("heading", { level: 2, name: title });
+      for (const { name } of componentTitles) {
+        const heading = page.getByRole("heading", { level: 2, name }).first();
         await expect(heading).toBeVisible();
       }
     });
 
     test("should display Button component with all variants", async ({ page }) => {
-      // Check for button variants
-      await expect(page.getByRole("button", { name: /Primary Button/i })).toBeVisible();
-      await expect(page.getByRole("button", { name: /Secondary Button/i })).toBeVisible();
-      await expect(page.getByRole("button", { name: /Ghost Button/i })).toBeVisible();
+      // Check for button variants (locale-aware: pt-BR, en, es)
+      await expect(
+        page.getByRole("button", { name: /Primary Button|Botão Primário|Botón Primario/i })
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: /Secondary Button|Botão Secundário|Botón Secundario/i })
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: /Ghost Button|Botão Fantasma|Botón Fantasma/i })
+      ).toBeVisible();
     });
 
     test("should display Button component with all sizes", async ({ page }) => {
-      // Check for button sizes
-      await expect(page.getByRole("button", { name: /Small/i })).toBeVisible();
-      await expect(page.getByRole("button", { name: /Medium/i })).toBeVisible();
-      await expect(page.getByRole("button", { name: /Large/i })).toBeVisible();
+      // Check for button sizes (locale-aware: pt-BR, en, es)
+      await expect(page.getByRole("button", { name: /Small|Pequeno|Pequeño/i })).toBeVisible();
+      await expect(page.getByRole("button", { name: /Medium|Médio|Mediano/i })).toBeVisible();
+      await expect(page.getByRole("button", { name: /Large|Grande/i })).toBeVisible();
     });
 
     test("should display Button component with states", async ({ page }) => {
-      // Check for button states
-      await expect(page.getByRole("button", { name: /Disabled/i })).toBeVisible();
-      await expect(page.getByRole("button", { name: /Loading/i })).toBeVisible();
+      // Check for button states (locale-aware: pt-BR, en, es)
+      await expect(
+        page.getByRole("button", { name: /Disabled|Desabilitado|Deshabilitado/i })
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: /Loading|Carregando|Cargando/i })
+      ).toBeVisible();
     });
 
     test("should display Card component examples", async ({ page }) => {
@@ -92,8 +103,10 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should display HighlightedText component with bold text", async ({ page }) => {
-      // Check for highlighted text section
-      const highlightSection = page.locator("section").filter({ hasText: /Highlighted Text/i });
+      // Check for highlighted text section (locale-aware)
+      const highlightSection = page
+        .locator("section")
+        .filter({ hasText: /Highlighted Text|Texto Destacado/i });
       await expect(highlightSection).toBeVisible();
 
       // Check for bold text within highlighted section
@@ -102,8 +115,10 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should display LanguageSelector component", async ({ page }) => {
-      // Check for language selector section
-      const langSection = page.locator("section").filter({ hasText: /Language Selector/i });
+      // Check for language selector section (locale-aware)
+      const langSection = page
+        .locator("section")
+        .filter({ hasText: /Language Selector|Seletor de Idioma|Selector de Idioma/i });
       await expect(langSection).toBeVisible();
 
       // Language selector should be present
@@ -112,8 +127,10 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should display ThemeToggle component", async ({ page }) => {
-      // Check for theme toggle section
-      const themeSection = page.locator("section").filter({ hasText: /Theme Toggle/i });
+      // Check for theme toggle section (locale-aware)
+      const themeSection = page
+        .locator("section")
+        .filter({ hasText: /Theme Toggle|Alternar Tema/i });
       await expect(themeSection).toBeVisible();
 
       // Theme toggle button should be present
@@ -125,13 +142,13 @@ test.describe("Component Gallery Page", () => {
   test.describe("Modal Interactions", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
     });
 
     test("should open and close basic modal", async ({ page }) => {
-      // Find and click the basic modal button
-      const modalButton = page.getByRole("button", { name: /Open Modal/i }).first();
+      // Find and click the basic modal button (locale-aware: pt-BR, en, es)
+      const modalButton = page
+        .getByRole("button", { name: /Open Modal|Abrir Modal|Abrir Modal/i })
+        .first();
       await modalButton.click();
 
       // Modal should be visible
@@ -142,7 +159,7 @@ test.describe("Component Gallery Page", () => {
       await expect(modal.getByRole("heading")).toBeVisible();
 
       // Close modal by clicking close button
-      const closeButton = modal.getByRole("button", { name: /close/i });
+      const closeButton = modal.getByRole("button", { name: /close|fechar|cerrar/i });
       await closeButton.click();
 
       // Modal should be hidden
@@ -150,23 +167,27 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should open confirmation modal", async ({ page }) => {
-      // Find and click confirmation modal button
-      const confirmButton = page.getByRole("button", { name: /Confirmation Modal/i });
+      // Find and click confirmation modal button (locale-aware)
+      const confirmButton = page.getByRole("button", {
+        name: /Confirmation Modal|Modal de Confirmação|Modal de Confirmación/i,
+      });
       await confirmButton.click();
 
       // Modal should be visible with confirmation content
       const modal = page.locator('[role="dialog"]');
       await expect(modal).toBeVisible();
-      await expect(modal.getByText(/Are you sure/i)).toBeVisible();
+      await expect(modal.getByText(/Are you sure|Tem certeza|Estás seguro/i)).toBeVisible();
 
-      // Should have Cancel and Confirm buttons
-      await expect(modal.getByRole("button", { name: /Cancel/i })).toBeVisible();
-      await expect(modal.getByRole("button", { name: /Confirm/i })).toBeVisible();
+      // Should have Cancel and Confirm buttons (locale-aware)
+      await expect(modal.getByRole("button", { name: /Cancel|Cancelar/i })).toBeVisible();
+      await expect(modal.getByRole("button", { name: /Confirm|Confirmar/i })).toBeVisible();
     });
 
     test("should open info modal with list", async ({ page }) => {
-      // Find and click info modal button
-      const infoButton = page.getByRole("button", { name: /Info Modal/i });
+      // Find and click info modal button (locale-aware)
+      const infoButton = page.getByRole("button", {
+        name: /Info Modal|Modal de Informação|Modal de Información/i,
+      });
       await infoButton.click();
 
       // Modal should be visible with list
@@ -179,20 +200,22 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should open form modal with inputs", async ({ page }) => {
-      // Find and click form modal button
-      const formButton = page.getByRole("button", { name: /Form Modal/i });
+      // Find and click form modal button (locale-aware)
+      const formButton = page.getByRole("button", {
+        name: /Form Modal|Modal de Formulário|Modal de Formulario/i,
+      });
       await formButton.click();
 
       // Modal should be visible with form inputs
       const modal = page.locator('[role="dialog"]');
       await expect(modal).toBeVisible();
 
-      // Should have name and email inputs
-      await expect(modal.getByLabel(/Name/i)).toBeVisible();
-      await expect(modal.getByLabel(/Email/i)).toBeVisible();
+      // Should have name and email inputs (locale-aware)
+      await expect(modal.getByLabel(/Name|Nome/i)).toBeVisible();
+      await expect(modal.getByLabel(/Email|E-mail/i)).toBeVisible();
 
-      // Should have Submit button
-      await expect(modal.getByRole("button", { name: /Submit/i })).toBeVisible();
+      // Should have Submit button (locale-aware)
+      await expect(modal.getByRole("button", { name: /Submit|Enviar/i })).toBeVisible();
     });
   });
 
@@ -200,11 +223,11 @@ test.describe("Component Gallery Page", () => {
     test("should navigate from Tech Stack page to Component Gallery", async ({ page }) => {
       // Start at Tech Stack page
       await page.goto(`${BASE_URL}/pt-BR/tech-stack/`);
-      await setCookieConsent(page);
-      await page.reload();
 
-      // Find and click component gallery link
-      const galleryLink = page.getByRole("link", { name: /Component Gallery/i });
+      // Find and click component gallery link (locale-aware)
+      const galleryLink = page.getByRole("link", {
+        name: /Component Gallery|Galeria de Componentes|Galería de Componentes/i,
+      });
       await expect(galleryLink).toBeVisible();
       await galleryLink.click();
 
@@ -216,10 +239,11 @@ test.describe("Component Gallery Page", () => {
     test("should maintain locale when navigating from Tech Stack", async ({ page }) => {
       for (const locale of LOCALES) {
         await page.goto(`${BASE_URL}/${locale}/tech-stack/`);
-        await setCookieConsent(page);
-        await page.reload();
 
-        const galleryLink = page.getByRole("link", { name: /Component Gallery/i });
+        // Find and click component gallery link (locale-aware)
+        const galleryLink = page.getByRole("link", {
+          name: /Component Gallery|Galeria de Componentes|Galería de Componentes/i,
+        });
         await galleryLink.click();
 
         // Should maintain the locale in URL
@@ -232,48 +256,46 @@ test.describe("Component Gallery Page", () => {
     test("should display correctly on mobile", async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-      // Components should be visible
-      await expect(page.getByRole("heading", { level: 2, name: /Button/i })).toBeVisible();
+      // Components should be visible (locale-aware)
+      await expect(
+        page.getByRole("heading", { level: 2, name: /Button|Botão|Botón/i })
+      ).toBeVisible();
     });
 
     test("should display correctly on tablet", async ({ page }) => {
       await page.setViewportSize({ width: 768, height: 1024 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-      // Components should be visible
-      await expect(page.getByRole("heading", { level: 2, name: /Button/i })).toBeVisible();
+      // Components should be visible (locale-aware)
+      await expect(
+        page.getByRole("heading", { level: 2, name: /Button|Botão|Botón/i })
+      ).toBeVisible();
     });
 
     test("should display correctly on desktop", async ({ page }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
 
       // Page should load
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-      // Components should be visible
-      await expect(page.getByRole("heading", { level: 2, name: /Button/i })).toBeVisible();
+      // Components should be visible (locale-aware)
+      await expect(
+        page.getByRole("heading", { level: 2, name: /Button|Botão|Botón/i })
+      ).toBeVisible();
     });
   });
 
   test.describe("Accessibility", () => {
     test.beforeEach(async ({ page }) => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
     });
 
     test("should have proper heading hierarchy", async ({ page }) => {
@@ -308,8 +330,10 @@ test.describe("Component Gallery Page", () => {
     });
 
     test("should have proper ARIA attributes on modals", async ({ page }) => {
-      // Open a modal
-      const modalButton = page.getByRole("button", { name: /Open Modal/i }).first();
+      // Open a modal (locale-aware)
+      const modalButton = page
+        .getByRole("button", { name: /Open Modal|Abrir Modal|Abrir Modal/i })
+        .first();
       await modalButton.click();
 
       // Modal should have role="dialog"
@@ -326,8 +350,6 @@ test.describe("Component Gallery Page", () => {
     test("should load page within acceptable time", async ({ page }) => {
       const startTime = Date.now();
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
       await page.waitForLoadState("networkidle");
       const loadTime = Date.now() - startTime;
 
@@ -345,8 +367,6 @@ test.describe("Component Gallery Page", () => {
       });
 
       await page.goto(`${BASE_URL}/pt-BR/components/`);
-      await setCookieConsent(page);
-      await page.reload();
       await page.waitForLoadState("networkidle");
 
       // Should not have any console errors
