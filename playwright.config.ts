@@ -51,16 +51,6 @@ export default defineConfig({
 
     // Faster action timeout
     actionTimeout: 8 * 1000, // Reduced to 8s
-
-    // Disable animations for faster tests
-    launchOptions: {
-      args: [
-        "--disable-blink-features=AutomationControlled",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--no-sandbox",
-      ],
-    },
   },
 
   // Test projects for different browsers and devices
@@ -72,14 +62,36 @@ export default defineConfig({
           // PR builds: Chromium only for speed
           {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: {
+              ...devices["Desktop Chrome"],
+              // Chromium-specific launch options for better performance
+              launchOptions: {
+                args: [
+                  "--disable-blink-features=AutomationControlled",
+                  "--disable-dev-shm-usage",
+                  "--disable-gpu",
+                  "--no-sandbox",
+                ],
+              },
+            },
           },
         ]
       : [
           // Main/develop builds and local: Full browser matrix
           {
             name: "chromium",
-            use: { ...devices["Desktop Chrome"] },
+            use: {
+              ...devices["Desktop Chrome"],
+              // Chromium-specific launch options for better performance
+              launchOptions: {
+                args: [
+                  "--disable-blink-features=AutomationControlled",
+                  "--disable-dev-shm-usage",
+                  "--disable-gpu",
+                  "--no-sandbox",
+                ],
+              },
+            },
           },
           {
             name: "firefox",
@@ -91,7 +103,18 @@ export default defineConfig({
           },
           {
             name: "mobile-chrome",
-            use: { ...devices["Pixel 5"] },
+            use: {
+              ...devices["Pixel 5"],
+              // Chromium-specific launch options for mobile Chrome
+              launchOptions: {
+                args: [
+                  "--disable-blink-features=AutomationControlled",
+                  "--disable-dev-shm-usage",
+                  "--disable-gpu",
+                  "--no-sandbox",
+                ],
+              },
+            },
           },
           {
             name: "mobile-safari",
