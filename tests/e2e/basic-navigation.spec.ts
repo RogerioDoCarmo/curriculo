@@ -6,11 +6,11 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
+import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 test.describe("Basic Navigation", () => {
-  test.beforeEach(async ({ page }) => {
-    await dismissCookieBanner(page);
+  test.beforeEach(async ({ page, context }) => {
+    await setCookieConsentBeforeLoad(context);
   });
 
   test("should load the homepage successfully", async ({ page }) => {

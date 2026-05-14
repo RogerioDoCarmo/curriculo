@@ -16,12 +16,12 @@
  */
 
 import { test, expect } from "@playwright/test";
-import { dismissCookieBanner } from "./helpers/dismissCookieBanner";
+import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 test.describe("Print and PDF Output", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
+    await setCookieConsentBeforeLoad(context);
     await page.goto("/");
-    await dismissCookieBanner(page);
   });
 
   test.skip("should hide non-essential elements in print media", async ({ page }) => {
