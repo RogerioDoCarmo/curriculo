@@ -2,7 +2,7 @@
 
 ## Phase 1: Exploratory Bug Condition Testing
 
-- [ ] 1. Write bug condition exploration test - Run unfixed tests to confirm failures
+- [x] 1. Write bug condition exploration test - Run unfixed tests to confirm failures
   - **Property 1: Bug Condition** - E2E Tests Fail Due to Cookie Banner Interference
   - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
   - **DO NOT attempt to fix the test or the code when it fails**
@@ -65,7 +65,7 @@
 ## Phase 3: Implementation
 
 - [ ] 3. Fix E2E test failures caused by cookie banner blocking interactions
-  - [ ] 3.1 Fix strict mode violations in cookie-consent.spec.ts
+  - [x] 3.1 Fix strict mode violations in cookie-consent.spec.ts
     - Replace generic text selectors with specific role-based selectors
     - Change `banner.getByText(/cookies/i)` to `banner.getByRole("heading", { name: /cookies/i })`
     - Change `banner.getByText(/essential|essencial/i)` to `banner.getByText(/essential|essencial/i).first()`
