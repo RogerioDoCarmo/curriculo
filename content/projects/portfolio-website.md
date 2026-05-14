@@ -9,7 +9,6 @@ technologies:
   - TypeScript
   - Tailwind CSS
   - Firebase Analytics
-  - Firebase Crashlytics
   - Sentry
   - Vercel
   - Jest
@@ -53,7 +52,6 @@ Este website de currículo pessoal foi desenvolvido como uma plataforma profissi
 ### Monitoramento e Analytics
 
 - Firebase Analytics para rastreamento de usuários
-- Firebase Crashlytics para monitoramento de erros
 - Sentry para error tracking detalhado
 - Métricas de performance em tempo real
 
