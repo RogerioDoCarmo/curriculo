@@ -90,7 +90,7 @@ This project uses a **Git Flow** branching strategy with two main branches:
 
 **Workflow:**
 
-```
+```text
 main (production) ← PR ← develop (integration) ← PR ← feature/task-name (development)
 ```
 
