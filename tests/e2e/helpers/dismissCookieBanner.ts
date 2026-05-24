@@ -87,3 +87,30 @@ export async function setCookieConsent(
     );
   }, preferences);
 }
+
+/**
+ * Sets cookie consent preferences via context init script.
+ * This sets localStorage BEFORE any page loads, preventing the banner from ever appearing.
+ * Use this in test.beforeEach or test.beforeAll for better performance.
+ *
+ * @param context - Playwright browser context
+ * @param preferences - Cookie preferences to set
+ */
+export async function setCookieConsentBeforeLoad(
+  context: any,
+  preferences: {
+    analytics?: boolean;
+    functional?: boolean;
+  } = { analytics: true, functional: true }
+): Promise<void> {
+  await context.addInitScript((prefs: any) => {
+    localStorage.setItem("cookie-consent", "customized");
+    localStorage.setItem(
+      "cookie-preferences",
+      JSON.stringify({
+        analytics: prefs.analytics ?? true,
+        functional: prefs.functional ?? true,
+      })
+    );
+  }, preferences);
+}

@@ -122,7 +122,7 @@ export function isFirebaseConfigured(): boolean {
  * Requirements: 10.1
  */
 const REMOTE_CONFIG_DEFAULTS = {
-  use_locale_specific_pdfs: false,
+  use_locale_specific_pdfs: true, // Enable locale-specific resume PDFs
   // Add more feature flags here as needed
 };
 

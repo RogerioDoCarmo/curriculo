@@ -2,7 +2,7 @@
 
 ## Phase 1: Exploratory Bug Condition Testing
 
-- [ ] 1. Write bug condition exploration test - Run unfixed tests to confirm failures
+- [x] 1. Write bug condition exploration test - Run unfixed tests to confirm failures
   - **Property 1: Bug Condition** - E2E Tests Fail Due to Cookie Banner Interference
   - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
   - **DO NOT attempt to fix the test or the code when it fails**
@@ -38,7 +38,7 @@
 
 ## Phase 2: Preservation Property Testing
 
-- [ ] 2. Write preservation property tests - Verify non-affected functionality (BEFORE implementing fix)
+- [x] 2. Write preservation property tests - Verify non-affected functionality (BEFORE implementing fix)
   - **Property 2: Preservation** - Non-Affected Tests and Production Functionality
   - **IMPORTANT**: Follow observation-first methodology
   - Observe behavior on UNFIXED code for non-buggy inputs (tests not affected by cookie banner issues)
@@ -64,8 +64,8 @@
 
 ## Phase 3: Implementation
 
-- [ ] 3. Fix E2E test failures caused by cookie banner blocking interactions
-  - [ ] 3.1 Fix strict mode violations in cookie-consent.spec.ts
+- [x] 3. Fix E2E test failures caused by cookie banner blocking interactions
+  - [x] 3.1 Fix strict mode violations in cookie-consent.spec.ts
     - Replace generic text selectors with specific role-based selectors
     - Change `banner.getByText(/cookies/i)` to `banner.getByRole("heading", { name: /cookies/i })`
     - Change `banner.getByText(/essential|essencial/i)` to `banner.getByText(/essential|essencial/i).first()`
@@ -76,7 +76,7 @@
     - _Preservation: Cookie banner production functionality unchanged (display, consent, persistence)_
     - _Requirements: 2.1, 3.1, 3.2, 3.3_
 
-  - [ ] 3.2 Update test expectations to match actual UI implementation
+  - [x] 3.2 Update test expectations to match actual UI implementation
     - Inspect actual cookie banner component (`components/CookieConsent/index.tsx`)
     - Verify customize view structure and update selectors accordingly
     - Update checkbox selectors to match actual `aria-label` attributes from translations
@@ -88,7 +88,7 @@
     - _Preservation: Cookie banner UI structure and translations unchanged_
     - _Requirements: 2.2, 3.6, 3.7_
 
-  - [ ] 3.3 Fix Webkit navigation issues
+  - [x] 3.3 Fix Webkit navigation issues
     - Replace all `await page.goto("/")` with explicit locale paths
     - Use `await page.goto("/pt-BR")` for Portuguese tests
     - Use `await page.goto("/en")` for English tests
@@ -99,7 +99,7 @@
     - _Preservation: Application routing and locale detection unchanged_
     - _Requirements: 2.3, 3.6_
 
-  - [ ] 3.4 Verify email-subscribe.spec.ts fixes are working
+  - [x] 3.4 Verify email-subscribe.spec.ts fixes are working
     - Confirm `dismissCookieBanner(page)` is called in both test suite `beforeEach` hooks
     - Run email-subscribe.spec.ts tests to verify they pass
     - Specifically verify Webkit-specific failure in "submits email from exit intent modal" is resolved
@@ -109,7 +109,7 @@
     - _Preservation: Email form functionality and exit intent modal behavior unchanged_
     - _Requirements: 2.5, 2.6, 2.7, 2.8, 3.4, 3.5, 3.8_
 
-  - [ ] 3.5 Verify bug condition exploration test now passes
+  - [x] 3.5 Verify bug condition exploration test now passes
     - **Property 1: Expected Behavior** - E2E Tests Interact Successfully Without Cookie Banner Interference
     - **IMPORTANT**: Re-run the SAME tests from task 1 - do NOT write new tests
     - The tests from task 1 encode the expected behavior
@@ -126,7 +126,7 @@
     - Document test results and any remaining issues
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8_
 
-  - [ ] 3.6 Verify preservation tests still pass
+  - [x] 3.6 Verify preservation tests still pass
     - **Property 2: Preservation** - Non-Affected Tests and Production Functionality
     - **IMPORTANT**: Re-run the SAME verification from task 2 - do NOT write new tests
     - Run preservation verification from step 2:
@@ -145,8 +145,8 @@
 
 ## Phase 4: Integration Testing
 
-- [ ] 4. Run comprehensive E2E testing across all browsers
-  - [ ] 4.1 Run full E2E test suite on all browsers
+- [x] 4. Run comprehensive E2E testing across all browsers
+  - [x] 4.1 Run full E2E test suite on all browsers
     - Execute: `npm run test:e2e` (runs all browsers: Chromium, Firefox, Webkit)
     - Target: Reduce failures from 109 to near-zero
     - Expected results by browser:
@@ -158,21 +158,21 @@
     - Document any remaining failures and investigate root causes
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8_
 
-  - [ ] 4.2 Verify cookie banner + email form integration
+  - [x] 4.2 Verify cookie banner + email form integration
     - Run both test suites together: `npm run test:e2e -- tests/e2e/cookie-consent.spec.ts tests/e2e/email-subscribe.spec.ts`
     - Verify cookie banner dismissal doesn't interfere with email form tests
     - Verify email form tests don't interfere with cookie banner tests
     - Check for any test isolation issues or race conditions
     - _Requirements: 2.5, 2.6, 2.7, 2.8, 3.4, 3.5, 3.8_
 
-  - [ ] 4.3 Verify cookie banner + exit intent modal integration
+  - [x] 4.3 Verify cookie banner + exit intent modal integration
     - Test interaction between cookie banner and exit intent modal
     - Verify cookie banner is dismissed before exit intent triggers
     - Verify exit intent modal interactions work correctly after cookie banner dismissal
     - Test on Webkit specifically (where this was failing)
     - _Requirements: 2.8, 3.5_
 
-  - [ ] 4.4 Verify multi-browser consistency
+  - [x] 4.4 Verify multi-browser consistency
     - Run fixed tests on all browsers: Chromium, Firefox, Webkit
     - Verify tests pass consistently across all browsers
     - Run mobile browser tests: Mobile Chrome, Mobile Safari
@@ -181,22 +181,22 @@
 
 ## Phase 5: CI/CD Pipeline Verification
 
-- [ ] 5. Verify fixes work in CI/CD environment
-  - [ ] 5.1 Run E2E tests in CI pipeline
+- [x] 5. Verify fixes work in CI/CD environment
+  - [x] 5.1 Run E2E tests in CI pipeline
     - Push changes to a feature branch
     - Trigger CI workflow (`.github/workflows/ci.yml`)
     - Verify E2E tests pass in CI environment (not just locally)
     - Check test execution time remains reasonable (no significant slowdown)
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8_
 
-  - [ ] 5.2 Verify no flaky tests introduced
+  - [x] 5.2 Verify no flaky tests introduced
     - Run E2E test suite multiple times (at least 3 runs)
     - Check for any intermittent failures or flaky tests
     - If flaky tests found, investigate and fix (may need additional waits or more robust selectors)
     - Document test stability and any known issues
     - _Requirements: 3.9, 3.10_
 
-  - [ ] 5.3 Update documentation
+  - [x] 5.3 Update documentation
     - Update E2E-TEST-FAILURES.md with fix summary and results
     - Document any remaining known issues or limitations
     - Add notes about cookie banner dismissal pattern for future test development
@@ -205,7 +205,7 @@
 
 ## Phase 6: Final Checkpoint
 
-- [ ] 6. Final checkpoint - Ensure all tests pass and requirements are met
+- [x] 6. Final checkpoint - Ensure all tests pass and requirements are met
   - Verify all E2E tests pass across all browsers
   - Verify cookie banner production functionality unchanged
   - Verify non-affected test suites still pass
