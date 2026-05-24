@@ -81,7 +81,7 @@ npx serve out -p 3000
 
 ### Images
 
-- **`logo_topaz.webp`** (42 KB) - Topaz company logo
+- **`logo_topaz.svg`** - Topaz company logo (SVG format)
 - **`logo_unesp.png`** (28 KB) - UNESP university logo
 - **`rogeriodocarmo.png`** (1.1 MB) - Professional profile photo
 - **`og-image.png`** (122 KB) - Open Graph social media image
