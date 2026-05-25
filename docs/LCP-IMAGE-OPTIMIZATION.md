@@ -26,7 +26,7 @@ Fixed Next.js warnings about Largest Contentful Paint (LCP) images and aspect ra
    - Replaced `style={{ width: "125px", height: "auto" }}` with Tailwind `w-[125px] h-auto`
    - Location: Education section in Hero component
 
-2. **Topaz Company Logo** (`/images/logos/logo_topaz.webp`)
+2. **Topaz Company Logo** (`/images/logos/logo_topaz.svg`)
    - Added `priority` prop
    - Changed to actual dimensions: `width={1280}` `height={291}`
    - Replaced `style={{ width: "200px", height: "auto" }}` with Tailwind `w-[200px] h-auto`
@@ -183,7 +183,7 @@ npm run dev
 
 ```tsx
 <Image
-  src="/images/logos/logo_topaz.webp"
+  src="/images/logos/logo_topaz.svg"
   alt="Company Logo"
   width={200}
   height={0}
@@ -196,7 +196,7 @@ npm run dev
 
 ```tsx
 <Image
-  src="/images/logos/logo_topaz.webp"
+  src="/images/logos/logo_topaz.svg"
   alt="Company Logo"
   width={1280}
   height={291}

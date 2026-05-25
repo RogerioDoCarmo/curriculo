@@ -217,7 +217,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               className="transition-opacity hover:opacity-80"
             >
               <Image
-                src="/images/logos/logo_topaz.webp"
+                src="/images/logos/logo_topaz.svg"
                 alt="Company Logo"
                 width={1280}
                 height={291}
