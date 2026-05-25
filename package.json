@@ -37,7 +37,7 @@
   "dependencies": {
     "@sentry/nextjs": "^10.50.0",
     "autoprefixer": "^10.x",
-    "fast-check": "^3.x",
+    "fast-check": "^4.x",
     "firebase": "^12.12.1",
     "gray-matter": "^4.x",
     "lucide-react": "^1.8.0",
