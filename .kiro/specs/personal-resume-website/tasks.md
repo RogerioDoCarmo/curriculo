@@ -2698,3 +2698,186 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Update build process documentation
     - Add troubleshooting guide for similar issues
     - _Bugfix Spec: `.kiro/specs/storybook-vercel-deployment-fix/`_
+
+---
+
+## Task Dependency Graph
+
+```mermaid
+graph TD
+    T1[1. Project setup and core infrastructure]
+    T2[2. Content management system and data layer]
+    T3[3. Internationalization setup]
+    T4[4. Theme system and dark mode]
+    T5[5. Core UI components]
+    T6[6. Layout components]
+    T7[7. Hero section and career path selection]
+    T8[8. Projects portfolio section]
+    T9[9. Contact form]
+    T10[10. Checkpoint 4 - Core functionality complete]
+    T11[11. Firebase integration]
+    T12[12. SEO and structured data]
+    T13[13. Accessibility implementation]
+    T14[14. Print and PDF optimization]
+    T15[15. Exit intent detection]
+    T16[16. Responsive design implementation]
+    T17[17. Performance optimization]
+    T18[18. Testing infrastructure]
+    T19[19. E2E testing]
+    T20[20. Property-based testing]
+    T21[21. CI/CD pipeline]
+    T22[22. Deployment]
+    T23[23. Documentation]
+    T24[24. Monitoring and analytics]
+    T25[25. Security hardening]
+    T26[26. Final QA and launch]
+    T27[27. Post-launch optimization]
+    T28[28. Fix Storybook deployment on Vercel]
+    T29[29. Implement URL anchor navigation]
+    T30[30. Implement Back to Top button]
+    T31[31. Implement text-based sitemap in footer]
+    T32[32. Implement cookie consent banner]
+    T33[33. Implement cookie preferences management]
+    T34[34. Implement cookie policy and privacy policy pages]
+    T35[35. Implement Firebase Analytics integration]
+    T36[36. Implement Sentry error tracking]
+    T37[37. Implement notification system]
+    T38[38. Implement soft prompt for engagement]
+    T39[39. Implement exit intent modal]
+    T40[40. Optimize soft prompt implementation]
+    T41[41. Fix cookies vs localStorage confusion]
+
+    T1 --> T2
+    T1 --> T3
+    T1 --> T4
+    T2 --> T5
+    T3 --> T5
+    T4 --> T5
+    T5 --> T6
+    T6 --> T7
+    T6 --> T8
+    T6 --> T9
+    T7 --> T10
+    T8 --> T10
+    T9 --> T10
+    T10 --> T11
+    T10 --> T12
+    T10 --> T13
+    T10 --> T14
+    T10 --> T15
+    T10 --> T16
+    T11 --> T17
+    T12 --> T17
+    T13 --> T17
+    T14 --> T17
+    T15 --> T17
+    T16 --> T17
+    T17 --> T18
+    T18 --> T19
+    T18 --> T20
+    T19 --> T21
+    T20 --> T21
+    T21 --> T22
+    T22 --> T23
+    T22 --> T24
+    T22 --> T25
+    T23 --> T26
+    T24 --> T26
+    T25 --> T26
+    T26 --> T27
+    T27 --> T28
+    T6 --> T29
+    T6 --> T30
+    T6 --> T31
+    T11 --> T32
+    T32 --> T33
+    T33 --> T34
+    T11 --> T35
+    T11 --> T36
+    T11 --> T37
+    T15 --> T38
+    T15 --> T39
+    T38 --> T40
+    T34 --> T41
+```
+
+```json
+{
+  "waves": [
+    {
+      "name": "Wave 1: Foundation",
+      "tasks": ["1"],
+      "description": "Project setup and core infrastructure"
+    },
+    {
+      "name": "Wave 2: Core Systems",
+      "tasks": ["2", "3", "4"],
+      "description": "Content management, i18n, and theme system"
+    },
+    {
+      "name": "Wave 3: UI Components",
+      "tasks": ["5", "6"],
+      "description": "Core UI components and layout"
+    },
+    {
+      "name": "Wave 4: Content Sections",
+      "tasks": ["7", "8", "9"],
+      "description": "Hero, projects, and contact form"
+    },
+    {
+      "name": "Wave 5: Checkpoint",
+      "tasks": ["10"],
+      "description": "Core functionality validation"
+    },
+    {
+      "name": "Wave 6: Integrations",
+      "tasks": ["11", "12", "13", "14", "15", "16"],
+      "description": "Firebase, SEO, accessibility, print, exit intent, responsive"
+    },
+    {
+      "name": "Wave 7: Performance & Testing",
+      "tasks": ["17", "18", "19", "20"],
+      "description": "Performance optimization and comprehensive testing"
+    },
+    {
+      "name": "Wave 8: Deployment",
+      "tasks": ["21", "22"],
+      "description": "CI/CD and deployment"
+    },
+    {
+      "name": "Wave 9: Launch Preparation",
+      "tasks": ["23", "24", "25", "26"],
+      "description": "Documentation, monitoring, security, and QA"
+    },
+    {
+      "name": "Wave 10: Post-Launch",
+      "tasks": ["27"],
+      "description": "Post-launch optimization"
+    },
+    {
+      "name": "Wave 11: Enhancements",
+      "tasks": ["28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41"],
+      "description": "Additional features and fixes"
+    }
+  ]
+}
+```
+
+**Dependency Explanation:**
+
+- **Task 1 → Tasks 2, 3, 4**: Project setup must be complete before implementing content management, i18n, and theme systems
+- **Tasks 2, 3, 4 → Task 5**: Core systems must be in place before building UI components
+- **Task 5 → Task 6**: Core UI components must exist before building layout components
+- **Task 6 → Tasks 7, 8, 9**: Layout must be established before implementing content sections
+- **Tasks 7, 8, 9 → Task 10**: All core content sections must be complete before checkpoint
+- **Task 10 → Tasks 11-16**: Core functionality must be validated before adding integrations
+- **Tasks 11-16 → Task 17**: All integrations must be complete before performance optimization
+- **Task 17 → Task 18**: Performance optimization must be done before setting up testing infrastructure
+- **Task 18 → Tasks 19, 20**: Testing infrastructure must be in place before writing tests
+- **Tasks 19, 20 → Task 21**: Tests must be written before setting up CI/CD
+- **Task 21 → Task 22**: CI/CD must be configured before deployment
+- **Task 22 → Tasks 23, 24, 25**: Deployment must be complete before documentation, monitoring, and security
+- **Tasks 23, 24, 25 → Task 26**: All launch preparation tasks must be complete before final QA
+- **Task 26 → Task 27**: Final QA must pass before post-launch optimization
+- **Task 27 → Task 28**: Post-launch optimization should be complete before fixing Storybook deployment
+- **Enhancement tasks (29-41)**: Can be worked on in parallel after their dependencies are met
