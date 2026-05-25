@@ -232,3 +232,108 @@ This implementation plan pivots from deploying Storybook HTML files (which have 
 - 3 failing tests are unrelated (Lighthouse performance tests expected to pass in production)
 
 **Ready for merge**: Feature branch `feat/storybook-deployment-alternative` is ready to be merged to main
+
+---
+
+## Task Dependency Graph
+
+```mermaid
+graph TD
+    T1[1. Clean up failed approaches]
+    T1_1[1.1 Remove obsolete test files]
+    T1_2[1.2 Remove deployment scripts from package.json]
+    T2[2. Create component gallery page structure]
+    T2_1[2.1 Create components page route]
+    T2_2[2.2 Create ComponentShowcase component]
+    T3[3. Implement component gallery content]
+    T3_1[3.1 Add Button component showcase]
+    T3_2[3.2 Add Card component showcase]
+    T3_3[3.3 Add Modal component showcase]
+    T3_4[3.4 Add LanguageSelector component showcase]
+    T3_5[3.5 Add ThemeToggle component showcase]
+    T3_6[3.6 Add HighlightedText component showcase]
+    T4[4. Add navigation and styling]
+    T4_1[4.1 Update Tech Stack page link]
+    T4_2[4.2 Add component gallery styling]
+    T5[5. Write tests for component gallery]
+    T5_1[5.1 Write unit tests for ComponentShowcase]
+    T5_2[5.2 Write E2E test for component gallery page]
+    T6[6. Deploy and validate on Vercel - CANCELLED]
+    T7[7. Checkpoint - Ensure all requirements met - CANCELLED]
+
+    T1 --> T1_1
+    T1 --> T1_2
+    T1_1 --> T2
+    T1_2 --> T2
+    T2 --> T2_1
+    T2 --> T2_2
+    T2_1 --> T3
+    T2_2 --> T3
+    T3 --> T3_1
+    T3 --> T3_2
+    T3 --> T3_3
+    T3 --> T3_4
+    T3 --> T3_5
+    T3 --> T3_6
+    T3_1 --> T4
+    T3_2 --> T4
+    T3_3 --> T4
+    T3_4 --> T4
+    T3_5 --> T4
+    T3_6 --> T4
+    T4 --> T4_1
+    T4 --> T4_2
+    T4_1 --> T5
+    T4_2 --> T5
+    T5 --> T5_1
+    T5 --> T5_2
+    T5_1 --> T6
+    T5_2 --> T6
+    T6 --> T7
+```
+
+```json
+{
+  "waves": [
+    {
+      "name": "Wave 1: Cleanup",
+      "tasks": ["1.1", "1.2"],
+      "description": "Remove obsolete files and scripts from failed approaches"
+    },
+    {
+      "name": "Wave 2: Foundation",
+      "tasks": ["2.1", "2.2"],
+      "description": "Create component gallery page structure and showcase component"
+    },
+    {
+      "name": "Wave 3: Content",
+      "tasks": ["3.1", "3.2", "3.3", "3.4", "3.5", "3.6"],
+      "description": "Add all component showcases (can be done in parallel)"
+    },
+    {
+      "name": "Wave 4: Navigation & Styling",
+      "tasks": ["4.1", "4.2"],
+      "description": "Add navigation links and apply styling"
+    },
+    {
+      "name": "Wave 5: Testing",
+      "tasks": ["5.1", "5.2"],
+      "description": "Write unit and E2E tests"
+    },
+    {
+      "name": "Wave 6: Deployment (Cancelled)",
+      "tasks": ["6", "7"],
+      "description": "Deployment and validation tasks (cancelled - using automated tests instead)"
+    }
+  ]
+}
+```
+
+**Dependency Explanation:**
+
+- **Tasks 1.1, 1.2 → Task 2**: Cleanup must be complete before creating new page structure
+- **Tasks 2.1, 2.2 → Task 3**: Page route and showcase component must exist before adding content
+- **Tasks 3.1-3.6 → Task 4**: All component showcases can be added in parallel, but must be complete before navigation and styling
+- **Tasks 4.1, 4.2 → Task 5**: Navigation and styling must be complete before writing tests
+- **Tasks 5.1, 5.2 → Task 6**: Tests must be written before deployment (though deployment was cancelled)
+- **Task 6 → Task 7**: Deployment must be complete before final checkpoint (both cancelled)
