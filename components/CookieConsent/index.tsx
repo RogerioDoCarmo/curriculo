@@ -15,8 +15,14 @@ import { useCookieConsent, type CookiePreferences } from "@/hooks/useCookieConse
 
 export default function CookieConsent() {
   const t = useTranslations("cookieConsent");
-  const { showBanner, preferences, acceptAll, rejectAll, saveCustomPreferences, closeBanner } =
-    useCookieConsent();
+  const {
+    showBanner,
+    preferences,
+    acceptAll,
+    rejectAll,
+    saveCustomPreferences,
+    closeBanner: _closeBanner,
+  } = useCookieConsent();
 
   const [showCustomize, setShowCustomize] = useState(false);
   const [customPrefs, setCustomPrefs] = useState<Partial<CookiePreferences>>({

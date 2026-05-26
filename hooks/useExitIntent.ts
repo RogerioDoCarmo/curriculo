@@ -33,7 +33,7 @@ export function useExitIntent(options: UseExitIntentOptions): UseExitIntentRetur
   const [showModal, setShowModal] = useState(false);
   const [canTrigger, setCanTrigger] = useState(false);
   const previousYRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(Date.now());
+  const _startTimeRef = useRef<number>(Date.now());
 
   // Check if modal was already dismissed in this session
   const isDismissed = useCallback(() => {

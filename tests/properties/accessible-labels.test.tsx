@@ -116,7 +116,6 @@ jest.mock("next/image", () => ({
     loading?: "eager" | "lazy";
     className?: string;
   }) => {
-    /* eslint-disable @next/next/no-img-element */
     return (
       <img
         src={src}
@@ -127,7 +126,6 @@ jest.mock("next/image", () => ({
         data-sizes={sizes}
       />
     );
-    /* eslint-enable @next/next/no-img-element */
   },
 }));
 
@@ -291,7 +289,10 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
             technologies: fc.array(fc.string({ minLength: 1 }), { minLength: 1 }),
             images: fc.array(fc.webUrl(), { minLength: 0, maxLength: 2 }),
             featured: fc.boolean(),
-            date: fc.date().map((d) => d.toISOString().split("T")[0]),
+            date: fc
+              .date()
+              .filter((d) => !isNaN(d.getTime()))
+              .map((d) => d.toISOString().split("T")[0]),
             liveUrl: fc.option(fc.webUrl(), { nil: undefined }),
             repoUrl: fc.option(fc.webUrl(), { nil: undefined }),
           }),

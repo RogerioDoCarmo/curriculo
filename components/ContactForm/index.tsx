@@ -51,7 +51,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
   );
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [submissionStartTime, setSubmissionStartTime] = useState<number>(0);
+  const [_submissionStartTime, setSubmissionStartTime] = useState<number>(0);
   const [showNotificationPrompt, setShowNotificationPrompt] = useState<boolean>(false);
 
   function validateForm(

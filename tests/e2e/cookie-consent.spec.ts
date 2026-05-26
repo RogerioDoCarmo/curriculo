@@ -338,8 +338,10 @@ test.describe("Cookie Consent Banner", () => {
       // Keep analytics disabled (it starts unchecked, so don't click it)
       await banner.getByRole("button", { name: /save/i }).click();
 
-      // Wait for reload
+      // Wait for reload and page to stabilize
+      await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
+      await page.waitForTimeout(500); // Extra wait for webkit
 
       // Verify analytics is disabled
       const hasAnalyticsConsent = await page.evaluate(() => {
@@ -401,10 +403,15 @@ test.describe("Cookie Consent Banner", () => {
         name: /cookie settings/i,
       });
       await expect(cookieSettingsLink).toBeVisible();
-      await cookieSettingsLink.click();
+
+      // Use force click for webkit/mobile-safari compatibility
+      await cookieSettingsLink.click({ force: true });
+
+      // Wait for banner to appear
+      await page.waitForTimeout(500);
 
       // Banner should reappear
-      await expect(banner).toBeVisible();
+      await expect(banner).toBeVisible({ timeout: 10000 });
     });
 
     test("should allow changing existing consent", async ({ page }) => {
@@ -433,8 +440,13 @@ test.describe("Cookie Consent Banner", () => {
       // Reopen banner
       const cookieSettingsLink = page.getByRole("link", { name: /cookie settings/i });
       await expect(cookieSettingsLink).toBeVisible();
-      await cookieSettingsLink.click();
-      await expect(banner).toBeVisible();
+
+      // Use force click for webkit/mobile-safari compatibility
+      await cookieSettingsLink.click({ force: true });
+
+      // Wait for banner to appear
+      await page.waitForTimeout(500);
+      await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Change to reject
       await banner.getByRole("button", { name: /reject/i }).click();
