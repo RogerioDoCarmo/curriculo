@@ -15,11 +15,11 @@ technologies:
   - REST APIs
 ---
 
-Worked on developing the mobile application for client Banco Digi+, focusing on banking features and user experience.
+Worked on developing the mobile application for client **Banco Digi+**, focusing on banking features and user experience.
 
 ### Achievements
 
-- Created complete Pix module from scratch for Banco Digi+, including all transfer and payment functionalities
+- Created complete **Pix module** from scratch for **Banco Digi+**, including all transfer and payment functionalities
 - Performed maintenance and bug fixes on the banking application
 - Worked with MongoDB for data persistence
 - Developed React Native components in both functional and class formats

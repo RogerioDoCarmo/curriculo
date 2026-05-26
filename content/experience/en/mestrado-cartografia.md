@@ -14,7 +14,7 @@ Research in Cartographic Sciences focusing on quality assessment of GNSS measure
 
 ### Achievements
 
-- Used Java for Android, Java Swing (desktop), and Python for data capture via app and post-processing and analysis of GPS data
+- Used **Java** for Android, **Java Swing** (desktop), and Python for data capture via app and post-processing and analysis of GPS data
 - Used Firebase solutions for data storage and distribution
 - **Publication**: Assessment of Raw GNSS Measurements from Android Smartphones. In: XI Brazilian Colloquium on Geodetic Sciences, 2020, Curitiba
 - **Teaching Internship**: Taught Graph Theory classes in the Data Structures II course for the Computer Science Bachelor's program at UNESP
