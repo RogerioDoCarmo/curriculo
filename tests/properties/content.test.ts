@@ -25,10 +25,11 @@ const isoDateArb = fc
 
 /** Generates a non-empty slug-safe string for IDs */
 const slugArb = fc
-  .stringOf(fc.constantFrom(..."abcdefghijklmnopqrstuvwxyz0123456789-".split("")), {
+  .array(fc.constantFrom(..."abcdefghijklmnopqrstuvwxyz0123456789-".split("")), {
     minLength: 3,
     maxLength: 30,
   })
+  .map((chars) => chars.join(""))
   .filter((s) => /^[a-z]/.test(s) && !s.endsWith("-"));
 
 /** Generates a non-empty title string */
