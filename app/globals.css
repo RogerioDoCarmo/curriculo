@@ -1,9 +1,105 @@
 /* Import print styles - must precede all other statements */
 @import "../styles/print.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4 theme configuration */
+@theme {
+  /* Primary color palette */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* Semantic color tokens */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  /* Font families */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: Fira Code, monospace;
+
+  /* Animations */
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  --animate-slide-in-left: slideInLeft 0.3s ease-out;
+}
+
+/* Safelist - ensure these classes are always generated */
+@utility bg-blue-100 {
+  background-color: #dbeafe;
+}
+@utility text-blue-700 {
+  color: #1d4ed8;
+}
+@utility bg-purple-100 {
+  background-color: #f3e8ff;
+}
+@utility text-purple-700 {
+  color: #7e22ce;
+}
+@utility bg-green-100 {
+  background-color: #dcfce7;
+}
+@utility text-green-700 {
+  color: #15803d;
+}
+@utility bg-orange-100 {
+  background-color: #ffedd5;
+}
+@utility text-orange-700 {
+  color: #c2410c;
+}
+@utility bg-pink-100 {
+  background-color: #fce7f3;
+}
+@utility text-pink-700 {
+  color: #be123c;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
 
 @layer base {
   :root {
@@ -69,5 +165,14 @@
   /* Smooth scrolling for anchor navigation */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Ensure all buttons and clickable elements have pointer cursor */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled) {
+    cursor: pointer;
   }
 }
