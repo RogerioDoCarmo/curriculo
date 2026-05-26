@@ -12,8 +12,8 @@
     "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "serve": "npx serve@latest out -l 3000",
-    "lint": "echo 'ESLint temporarily disabled due to eslint-config-next@16.2.4 circular dependency bug. Will be fixed in next Next.js release.'",
-    "lint:fix": "echo 'ESLint temporarily disabled due to eslint-config-next@16.2.4 circular dependency bug. Will be fixed in next Next.js release.'",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "test": "jest",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest --testPathPattern=integration",
@@ -88,6 +88,7 @@
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
     "typescript": "^5",
+    "typescript-eslint": "^8.60.0",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"
   },
