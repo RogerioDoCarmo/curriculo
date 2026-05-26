@@ -11,10 +11,10 @@ technologies:
   - Dart
 ---
 
-Atuação no aplicativo móvel do cliente Virtus Pay, focando em manutenção e qualidade do código.
+Atuação no aplicativo móvel do cliente **Virtus Pay**, focando em manutenção e qualidade do código.
 
 ### Conquistas
 
-- Efetuou manutenção e correções de bugs no aplicativo Virtus Pay
+- Efetuou manutenção e correções de bugs no aplicativo **Virtus Pay**
 - Trabalhou com Flutter para desenvolvimento multiplataforma
 - Experiência com aplicativos de pagamento digital

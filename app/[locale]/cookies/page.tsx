@@ -45,7 +45,7 @@ function CookiePolicyContent() {
         <h2 className="text-2xl font-semibold mb-4">{t("introduction.title")}</h2>
         <p className="mb-4">{t("introduction.paragraph1")}</p>
         <p className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
-          <strong className="text-blue-700 dark:text-blue-300">⚠️ Important:</strong>{" "}
+          <strong className="text-blue-700 dark:text-blue-300">⚠️</strong>{" "}
           {t("introduction.paragraph2")}
         </p>
       </section>

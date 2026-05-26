@@ -16,11 +16,11 @@ This task list implements the fix for the Lighthouse CI server startup issue usi
   - **GOAL**: Surface counterexamples that demonstrate the bug exists
   - **Scoped PBT Approach**: For deterministic bugs, scope the property to the concrete failing case(s) to ensure reproducibility
   - Test implementation details from Bug Condition in design:
-    - Server process starts but is not accessible at http://localhost:3000 within timeout
+    - Server process starts but is not accessible at <http://localhost:3000> within timeout
     - Readiness check exits successfully even when server is not accessible
     - Lighthouse tests fail with "Server not accessible" error
   - The test assertions should match the Expected Behavior Properties from design:
-    - Server SHALL start successfully and become accessible at http://localhost:3000
+    - Server SHALL start successfully and become accessible at <http://localhost:3000>
     - Server SHALL respond to HTTP requests with successful status codes (200-299)
     - Readiness check SHALL accurately detect server accessibility
   - Run test on UNFIXED code
@@ -119,6 +119,77 @@ This task list implements the fix for the Lighthouse CI server startup issue usi
   - Verify CI job completes successfully on main branch
   - Verify no regressions in other CI jobs
   - Document any edge cases or limitations discovered during testing
+
+---
+
+## Task Dependency Graph
+
+```mermaid
+graph TD
+    T1[1. Write bug condition exploration test]
+    T2[2. Write preservation property tests]
+    T3[3. Fix for Lighthouse CI server startup and readiness detection]
+    T3_1[3.1 Implement enhanced logging and process validation]
+    T3_2[3.2 Implement robust readiness checking]
+    T3_3[3.3 Implement error messaging and diagnostics]
+    T3_4[3.4 Verify bug condition exploration test now passes]
+    T3_5[3.5 Verify preservation tests still pass]
+    T4[4. Manual CI testing]
+    T5[5. Checkpoint - Ensure all tests pass]
+
+    T1 --> T3
+    T2 --> T3
+    T3 --> T3_1
+    T3 --> T3_2
+    T3 --> T3_3
+    T3_1 --> T3_4
+    T3_2 --> T3_4
+    T3_3 --> T3_4
+    T3_4 --> T3_5
+    T3_5 --> T4
+    T4 --> T5
+```
+
+```json
+{
+  "waves": [
+    {
+      "name": "Wave 1: Exploration & Preservation Tests",
+      "tasks": ["1", "2"],
+      "description": "Write bug condition exploration test and preservation tests BEFORE implementing the fix"
+    },
+    {
+      "name": "Wave 2: Implementation",
+      "tasks": ["3.1", "3.2", "3.3"],
+      "description": "Implement the fix: enhanced logging, robust readiness checking, and error messaging"
+    },
+    {
+      "name": "Wave 3: Verification",
+      "tasks": ["3.4", "3.5"],
+      "description": "Verify bug fix and preservation (no regressions)"
+    },
+    {
+      "name": "Wave 4: Manual Testing & Checkpoint",
+      "tasks": ["4", "5"],
+      "description": "Manual CI testing and final checkpoint"
+    }
+  ]
+}
+```
+
+**Dependency Explanation:**
+
+- **Tasks 1 & 2 → Task 3**: Bug condition exploration test (Task 1) and preservation tests (Task 2) must be written BEFORE implementing the fix (Task 3). This follows the bugfix methodology: understand the bug first, then fix it.
+
+- **Task 3 → Subtasks 3.1, 3.2, 3.3**: The implementation subtasks can be worked on in parallel as they address different aspects of the fix (logging, readiness checking, error messaging).
+
+- **Subtasks 3.1, 3.2, 3.3 → Subtask 3.4**: All implementation changes must be complete before verifying the bug condition test passes.
+
+- **Subtask 3.4 → Subtask 3.5**: Bug fix verification must pass before checking preservation (no regressions).
+
+- **Subtask 3.5 → Task 4**: Automated tests must pass before manual CI testing.
+
+- **Task 4 → Task 5**: Manual CI testing must complete before final checkpoint.
 
 ---
 

@@ -83,7 +83,7 @@ export default function Button({
         "print:hidden",
         variantClasses[variant],
         sizeClasses[size],
-        isDisabled ? "opacity-50 cursor-not-allowed" : "",
+        isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
         className,
       ]
         .filter(Boolean)

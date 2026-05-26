@@ -99,19 +99,27 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
 // ─── Experiences ─────────────────────────────────────────────────────────────
 
 /**
- * Reads all `.md` files from `<contentDir>/experience/`, parses their frontmatter,
- * and optionally filters by type.
+ * Reads all `.md` files from `<contentDir>/experience/<locale>/`, parses their frontmatter,
+ * and optionally filters by type. Falls back to default locale if specific locale not found.
  *
  * @param type - Optional filter: `'professional'` or `'academic'`.
+ * @param locale - Locale code (e.g., 'pt-BR', 'en', 'es'). Defaults to 'pt-BR'.
  * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
  * @returns Array of {@link Experience} objects.
  * @throws If a file has missing required fields.
  */
 export async function getExperiences(
   type?: "professional" | "academic",
+  locale: string = "pt-BR",
   contentDir: string = DEFAULT_CONTENT_DIR
 ): Promise<Experience[]> {
-  const experienceDir = path.join(contentDir, "experience");
+  // Try locale-specific directory first, fall back to root experience directory
+  const localeExperienceDir = path.join(contentDir, "experience", locale);
+  const defaultExperienceDir = path.join(contentDir, "experience");
+
+  const experienceDir = fs.existsSync(localeExperienceDir)
+    ? localeExperienceDir
+    : defaultExperienceDir;
 
   if (!fs.existsSync(experienceDir)) {
     if (process.env.NODE_ENV === "development") {

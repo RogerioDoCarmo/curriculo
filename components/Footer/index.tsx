@@ -152,7 +152,6 @@ export default function Footer({ locale }: FooterProps) {
                     <a
                       href="#cookie-settings"
                       onClick={handleCookieSettingsClick}
-                      role="link"
                       aria-label={t(labelKey)}
                       className="
                         text-sm hover:text-primary-600 dark:hover:text-primary-400
