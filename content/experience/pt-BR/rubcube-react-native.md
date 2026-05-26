@@ -15,11 +15,11 @@ technologies:
   - REST APIs
 ---
 
-Atuação no desenvolvimento do aplicativo móvel do cliente Banco Digi+, com foco em funcionalidades bancárias e experiência do usuário.
+Atuação no desenvolvimento do aplicativo móvel do cliente **Banco Digi+**, com foco em funcionalidades bancárias e experiência do usuário.
 
 ### Conquistas
 
-- Criou módulo Pix completo do zero para o Banco Digi+, incluindo todas as funcionalidades de transferência e pagamento
+- Criou **módulo Pix completo** do zero para o **Banco Digi+**, incluindo todas as funcionalidades de transferência e pagamento
 - Efetuou manutenção e correções de bugs no aplicativo bancário
 - Trabalhou com MongoDB para persistência de dados
 - Desenvolveu componentes React Native em formato funcional e de classes
