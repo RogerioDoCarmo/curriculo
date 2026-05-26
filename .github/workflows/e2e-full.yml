@@ -39,7 +39,8 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ matrix.browser == 'mobile-chrome' &&
+        run:
+          npx playwright install --with-deps ${{ matrix.browser == 'mobile-chrome' &&
           'chromium' || matrix.browser == 'mobile-safari' && 'webkit' ||
           matrix.browser }}
 
@@ -48,14 +49,14 @@ jobs:
 
       - name: Upload test results for ${{ matrix.browser }}
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report-${{ matrix.browser }}
           path: playwright-report/
 
       - name: Upload test videos for ${{ matrix.browser }}
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: test-videos-${{ matrix.browser }}
           path: test-results/

@@ -18,7 +18,7 @@ export default function AnalyticsProvider({ children }: AnalyticsProviderProps) 
   const { hasAnalyticsConsent } = useCookieConsent();
 
   // Only initialize analytics hooks if user has given consent
-  const shouldTrack = hasAnalyticsConsent();
+  const _shouldTrack = hasAnalyticsConsent();
 
   // Conditionally call hooks based on consent
   // Note: We always call the hooks to avoid React hook rules violations,

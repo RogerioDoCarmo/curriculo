@@ -1,0 +1,28 @@
+# Red Hat Dependency Analytics - Known False Positives
+# This file documents false positives reported by RHDA that have been verified as safe
+
+## Next.js 16.2.6 - FALSE POSITIVE
+# Package: next@16.2.6
+# Reported Severity: MEDIUM
+# Status: FALSE POSITIVE - This is the PATCHED version
+# 
+# Details:
+# - Next.js 16.2.6 was released on May 7, 2026 WITH 13 security fixes
+# - This version FIXES vulnerabilities, it does not contain them
+# - Vulnerabilities fixed include:
+#   * 7 High severity (middleware bypasses, WebSocket SSRF, React DoS)
+#   * 4 Moderate severity (XSS, cache poisoning)
+#   * 2 Low severity (cache-related issues)
+# 
+# Verification:
+# - npm audit: 0 vulnerabilities
+# - Official release: https://github.com/vercel/next.js/releases/tag/v16.2.6
+# - Security advisory: https://vercel.com/changelog/next-js-may-2026-security-release
+# 
+# RHDA database appears to be outdated and does not recognize 16.2.6 as the patched version.
+# This warning can be safely ignored.
+#
+# Last verified: 2026-05-08
+# Next review: When Next.js 16.2.7+ is released
+
+next@16.2.6

@@ -21,14 +21,16 @@ import { getProjects } from "@/lib/content";
 /** Generates a valid ISO date string like "2024-01-15" */
 const isoDateArb = fc
   .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
+  .filter((d) => !isNaN(d.getTime()))
   .map((d) => d.toISOString().split("T")[0]);
 
 /** Generates a non-empty slug-safe string for IDs */
 const slugArb = fc
-  .stringOf(fc.constantFrom(..."abcdefghijklmnopqrstuvwxyz0123456789-".split("")), {
+  .array(fc.constantFrom(..."abcdefghijklmnopqrstuvwxyz0123456789-".split("")), {
     minLength: 3,
     maxLength: 30,
   })
+  .map((chars) => chars.join(""))
   .filter((s) => /^[a-z]/.test(s) && !s.endsWith("-"));
 
 /** Generates a non-empty title string */

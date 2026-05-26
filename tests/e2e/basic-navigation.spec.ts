@@ -35,9 +35,12 @@ test.describe("Basic Navigation", () => {
   test("should have accessible navigation", async ({ page }) => {
     await page.goto("/");
 
+    // Wait for page to be fully loaded (fixes webkit timing issue)
+    await page.waitForLoadState("networkidle");
+
     // Verify hero section exists
     const heroSection = page.locator('section[id="home"]');
-    await expect(heroSection).toBeVisible();
+    await expect(heroSection).toBeVisible({ timeout: 10000 });
 
     // Verify heading is accessible (varies by locale)
     const heading = page.getByRole("heading", { level: 1 });

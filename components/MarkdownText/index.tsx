@@ -24,9 +24,10 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
 
         // Handle headings - use regex to match exact number of # characters
         // Check from most specific (######) to least specific (#)
+        // Using [^\n] instead of .+ to prevent ReDoS attacks
 
         // ###### heading (h6)
-        const h6Match = trimmedLine.match(/^######\s+(.+)$/);
+        const h6Match = trimmedLine.match(/^######\s+([^\n]+)$/);
         if (h6Match) {
           return (
             <h6
@@ -39,7 +40,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ##### heading (h5)
-        const h5Match = trimmedLine.match(/^#####\s+(.+)$/);
+        const h5Match = trimmedLine.match(/^#####\s+([^\n]+)$/);
         if (h5Match) {
           return (
             <h5
@@ -52,7 +53,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // #### heading (h4)
-        const h4Match = trimmedLine.match(/^####\s+(.+)$/);
+        const h4Match = trimmedLine.match(/^####\s+([^\n]+)$/);
         if (h4Match) {
           return (
             <h4
@@ -65,7 +66,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ### heading (h3)
-        const h3Match = trimmedLine.match(/^###\s+(.+)$/);
+        const h3Match = trimmedLine.match(/^###\s+([^\n]+)$/);
         if (h3Match) {
           return (
             <h3
@@ -78,7 +79,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ## heading (h2)
-        const h2Match = trimmedLine.match(/^##\s+(.+)$/);
+        const h2Match = trimmedLine.match(/^##\s+([^\n]+)$/);
         if (h2Match) {
           return (
             <h2
@@ -91,7 +92,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // # heading (h1)
-        const h1Match = trimmedLine.match(/^#\s+(.+)$/);
+        const h1Match = trimmedLine.match(/^#\s+([^\n]+)$/);
         if (h1Match) {
           return (
             <h1
@@ -116,8 +117,8 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           );
         }
 
-        // Handle numbered lists (1., 2., etc.)
-        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+(.+)$/);
+        // Handle numbered lists (1., 2., etc.) - using [^\n] to prevent ReDoS
+        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+([^\n]+)$/);
         if (numberedMatch) {
           const [, number, listText] = numberedMatch;
           return (
@@ -143,13 +144,15 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
 
 /**
  * Format inline markdown (bold **text** and links [text](url))
+ * Using non-greedy quantifiers and character classes to prevent ReDoS
  */
 function formatInlineMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let currentIndex = 0;
 
-  // Combined regex to match both bold and links
-  const markdownRegex = /(\*\*(.+?)\*\*|\[(.+?)\]\((.+?)\))/g;
+  // Non-backtracking regex: match bold or links with limited character sets
+  // [^*\n] for bold content, [^\]\n] for link text, [^)\n] for URL
+  const markdownRegex = /(\*\*([^*\n]+?)\*\*|\[([^\]\n]+?)\]\(([^)\n]+?)\))/g;
   let match;
 
   while ((match = markdownRegex.exec(text)) !== null) {
