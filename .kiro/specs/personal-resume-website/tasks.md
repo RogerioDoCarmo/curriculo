@@ -1088,7 +1088,7 @@ This implementation plan breaks down the personal resume website into discrete, 
 - [ ] 30. Fix ESLint circular dependency issue (Post Next.js 16 upgrade)
   - [x] 30.1 Monitor Next.js releases for eslint-config-next fix
     - Check Next.js release notes for eslint-config-next updates
-    - Monitor GitHub issue: https://github.com/vercel/next.js/issues
+    - Monitor GitHub issue: <https://github.com/vercel/next.js/issues>
     - Test with each new Next.js patch release (16.2.5+)
     - _Issue: eslint-config-next@16.2.4 has circular dependency bug_
     - **FINDINGS (May 8, 2026):**
@@ -1156,7 +1156,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Check next-intl release notes for Jest/ESM compatibility updates
     - Monitor Jest 30 release for native ESM support
     - Test with each new next-intl release (4.x+)
-    - Monitor GitHub issues: https://github.com/amannn/next-intl/issues
+    - Monitor GitHub issues: <https://github.com/amannn/next-intl/issues>
     - _Issue: next-intl 4.x ESM modules not compatible with Jest 29_
   - [~] 31.2 Unskip and fix ExitIntentModal-resume.test.tsx
     - Remove `.skip` from test suite in `tests/unit/components/ExitIntentModal-resume.test.tsx`
@@ -1446,13 +1446,16 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Update copyright holder from "Your Name" to "Rogério do Carmo"
     - Update copyright year to current year (2024 or 2024-2026)
     - Add clarification comment at top of LICENSE:
-      ```
+
+      ```text
       # License for Source Code
       # This MIT License applies to the source code of this project.
       # Content, images, and personal information are not covered by this license.
       # See Terms of Use for website content usage terms.
       ```
+
     - _Requirements: 15.2_
+
   - [~] 33.8 Add content copyright notice
     - Create `COPYRIGHT.md` file for website content
     - Specify that personal content (resume, projects, images) is:
@@ -1471,7 +1474,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - **localStorage**: User can clear browser data manually
       - **Cookies**: User can delete cookies via browser settings or reject via consent banner
     - Add "Delete My Data" section to Privacy Policy
-    - Provide email address for data deletion requests: privacy@rogeriodocarmo.com (or your preferred contact)
+    - Provide email address for data deletion requests: <privacy@rogeriodocarmo.com> (or your preferred contact)
     - _Requirements: 10.5_
   - [~] 33.10 Test privacy implementation
     - Verify all privacy pages load correctly in all languages
@@ -2027,7 +2030,7 @@ This implementation plan breaks down the personal resume website into discrete, 
     - Create content files in `/content/` directory following existing schema
     - _Requirements: 1.3, 1.4, 1.5, 2.1, 2.2_
   - [x] 38.2 Gather professional information from LinkedIn profile
-    - Visit https://www.linkedin.com/in/rogeriodocarmo/ to extract:
+    - Visit <https://www.linkedin.com/in/rogeriodocarmo/> to extract:
       - Current position and company
       - Professional headline
       - About/summary section
@@ -2124,7 +2127,7 @@ This implementation plan breaks down the personal resume website into discrete, 
       - Linktree link
       - Mobile hamburger menu
     - Verify Footer component displays correctly with:
-      - Professional email (contato@rogeriodocarmo.com)
+      - Professional email (<contato@rogeriodocarmo.com>)
       - Social links (LinkedIn, GitHub, Linktree)
       - Sitemap sections
       - Copyright notice
@@ -2610,7 +2613,7 @@ This implementation plan breaks down the personal resume website into discrete, 
   - [x] 41.1 Analyze current inaccuracies in Cookie Policy
     - **Current problem**: Cookie Policy incorrectly lists localStorage items as "Essential Cookies"
     - **Truth**:
-      - **Actual cookies used**: ONLY Firebase Analytics cookies (_ga, \_ga_<container-id>, \_gid, \_gat) - and ONLY if user consents to analytics
+      - **Actual cookies used**: ONLY Firebase Analytics cookies (_ga, `\_ga_<container-id>`, \_gid, \_gat) - and ONLY if user consents to analytics
       - **localStorage used**: theme, preferred-locale, cookie-consent, cookie-preferences, fcm_topic_subscriptions
       - **Key difference**: Cookies are sent to servers with every HTTP request; localStorage stays in browser only
       - **Critical fact**: If user rejects analytics, ZERO cookies are set. localStorage is always used (no consent needed as it stays local)
