@@ -99,7 +99,9 @@ describe("Property 10: Responsive Image Optimization", () => {
             technologies: fc.array(fc.string({ minLength: 1 }), { minLength: 1 }),
             images: fc.array(fc.webUrl(), { minLength: 1, maxLength: 3 }),
             featured: fc.boolean(),
-            date: fc.date().map((d) => d.toISOString().split("T")[0]),
+            date: fc
+              .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
+              .map((d) => d.toISOString().split("T")[0]),
             liveUrl: fc.option(fc.webUrl(), { nil: undefined }),
             repoUrl: fc.option(fc.webUrl(), { nil: undefined }),
           }),
@@ -208,7 +210,9 @@ describe("Property 10: Responsive Image Optimization", () => {
             technologies: fc.array(fc.string({ minLength: 1 }), { minLength: 1 }),
             images: fc.array(fc.webUrl(), { minLength: 1, maxLength: 3 }),
             featured: fc.boolean(),
-            date: fc.date().map((d) => d.toISOString().split("T")[0]),
+            date: fc
+              .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
+              .map((d) => d.toISOString().split("T")[0]),
           }),
           { minLength: 1, maxLength: 3 }
         ),
