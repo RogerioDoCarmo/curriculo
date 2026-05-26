@@ -47,10 +47,7 @@ jest.mock("next/image", () => ({
     fill?: boolean;
     sizes?: string;
     [key: string]: unknown;
-  }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={alt} data-loading={loading} data-sizes={sizes} {...rest} />
-  ),
+  }) => <img src={src} alt={alt} data-loading={loading} data-sizes={sizes} {...rest} />,
 }));
 
 const sampleProjects: Project[] = [

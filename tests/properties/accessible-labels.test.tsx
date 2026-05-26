@@ -116,7 +116,6 @@ jest.mock("next/image", () => ({
     loading?: "eager" | "lazy";
     className?: string;
   }) => {
-    /* eslint-disable @next/next/no-img-element */
     return (
       <img
         src={src}
@@ -127,7 +126,6 @@ jest.mock("next/image", () => ({
         data-sizes={sizes}
       />
     );
-    /* eslint-enable @next/next/no-img-element */
   },
 }));
 
