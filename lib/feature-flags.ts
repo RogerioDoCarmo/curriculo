@@ -14,7 +14,7 @@
 
 import { getFirebaseRemoteConfig } from "./firebase";
 import { trackFeatureFlagChecked } from "./analytics";
-import type { RemoteConfig, Value } from "firebase/remote-config";
+import type { RemoteConfig as _RemoteConfig, Value as _Value } from "firebase/remote-config";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

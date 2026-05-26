@@ -29,7 +29,7 @@ export default function Header({ locale }: HeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [_isMobile, _setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { isActive, navigateTo } = useAnchorNavigation([...NAV_SECTIONS]);
@@ -43,7 +43,7 @@ export default function Header({ locale }: HeaderProps) {
   useEffect(() => {
     setMounted(true);
     function checkMobile() {
-      setIsMobile(window.innerWidth < 768);
+      _setIsMobile(window.innerWidth < 768);
     }
     checkMobile();
     window.addEventListener("resize", checkMobile);
