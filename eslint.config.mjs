@@ -11,9 +11,7 @@ export default [
       "coverage/**",
       "playwright-report/**",
       "test-results/**",
-      "*.config.js",
-      "*.config.mjs",
-      "*.config.ts",
+      "lighthouse-report.json",
     ],
   },
   ...tseslint.configs.recommended,
@@ -31,6 +29,7 @@ export default [
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
         },
       ],
       "@typescript-eslint/no-explicit-any": "warn",
@@ -42,6 +41,31 @@ export default [
           allow: ["warn", "error"],
         },
       ],
+    },
+  },
+  {
+    // Relax rules for config files
+    files: ["*.config.{js,mjs,cjs,ts}", "jest.setup.js", "jest.environment.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-console": "off",
+    },
+  },
+  {
+    // Relax rules for test files
+    files: ["**/*.test.{js,jsx,ts,tsx}", "**/*.spec.{js,jsx,ts,tsx}", "tests/**/*"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-console": "off",
+    },
+  },
+  {
+    // Ignore unknown rules in inline comments (legacy Next.js rules)
+    linterOptions: {
+      reportUnusedDisableDirectives: false,
     },
   },
 ];
