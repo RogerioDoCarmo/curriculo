@@ -24,7 +24,7 @@ export default function CareerPathSelector({ onSelect, selected }: CareerPathSel
     } catch {
       // sessionStorage not available (SSR or private mode)
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleSelect(path: CareerPath) {
     try {

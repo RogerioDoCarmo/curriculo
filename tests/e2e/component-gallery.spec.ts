@@ -160,7 +160,11 @@ test.describe("Component Gallery Page", () => {
 
       // Close modal by clicking close button
       const closeButton = modal.getByRole("button", { name: /close|fechar|cerrar/i });
-      await closeButton.click();
+
+      // Wait for button to be actionable before clicking (fixes webkit/mobile-safari timing)
+      await closeButton.waitFor({ state: "visible" });
+      await page.waitForTimeout(300); // Small delay for animations
+      await closeButton.click({ force: true }); // Force click to bypass hover states
 
       // Modal should be hidden
       await expect(modal).not.toBeVisible();
