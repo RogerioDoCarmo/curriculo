@@ -86,7 +86,8 @@ describe("ClientNotificationWrapper Component", () => {
       render(<ClientNotificationWrapper />);
 
       // Verify LazyNotificationPrompt is called without any props
-      expect(MockLazyNotificationPrompt).toHaveBeenCalledWith({}, {});
+      // React 19 changed the second parameter from {} to undefined
+      expect(MockLazyNotificationPrompt).toHaveBeenCalledWith({}, undefined);
     });
   });
 
@@ -351,7 +352,8 @@ describe("ClientNotificationWrapper Component", () => {
       render(<ClientNotificationWrapper />);
 
       // Verify the mock was called with empty props
-      expect(MockLazyNotificationPrompt).toHaveBeenCalledWith({}, {});
+      // React 19 changed the second parameter from {} to undefined
+      expect(MockLazyNotificationPrompt).toHaveBeenCalledWith({}, undefined);
     });
 
     it("should not wrap child in additional elements", () => {

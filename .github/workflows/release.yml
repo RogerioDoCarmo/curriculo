@@ -34,7 +34,7 @@ jobs:
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.tag_info.outputs.tag_name }}
           body: ${{ steps.tag_info.outputs.tag_message }}

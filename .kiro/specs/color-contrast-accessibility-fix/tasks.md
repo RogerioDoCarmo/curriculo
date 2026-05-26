@@ -1,5 +1,13 @@
 # Implementation Plan
 
+## Overview
+
+This task list implements the fix for color contrast accessibility issues in the TechStack section using the bug condition methodology. The workflow follows: Explore → Preserve → Implement → Validate.
+
+---
+
+## Tasks
+
 - [x] 1. Write bug condition exploration test
   - **Property 1: Bug Condition** - TechStack Links Meet WCAG AA Contrast
   - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
@@ -81,3 +89,70 @@
   - Run Vercel Debug tool or Lighthouse to confirm zero color contrast violations
   - Verify visual appearance in both light and dark modes
   - Verify across different browsers and viewport sizes
+
+---
+
+## Task Dependency Graph
+
+```mermaid
+graph TD
+    T1[1. Write bug condition exploration test]
+    T2[2. Write preservation property tests]
+    T3[3. Fix for color contrast accessibility in TechStack section]
+    T3_1[3.1 Implement the fix]
+    T3_2[3.2 Verify bug condition exploration test now passes]
+    T3_3[3.3 Verify preservation tests still pass]
+    T4[4. Checkpoint - Ensure all tests pass]
+
+    T1 --> T3
+    T2 --> T3
+    T3 --> T3_1
+    T3_1 --> T3_2
+    T3_2 --> T3_3
+    T3_3 --> T4
+```
+
+```json
+{
+  "waves": [
+    {
+      "name": "Wave 1: Exploration & Preservation Tests",
+      "tasks": ["1", "2"],
+      "description": "Write bug condition exploration test and preservation tests BEFORE implementing the fix"
+    },
+    {
+      "name": "Wave 2: Implementation",
+      "tasks": ["3.1"],
+      "description": "Implement the fix for color contrast"
+    },
+    {
+      "name": "Wave 3: Verification",
+      "tasks": ["3.2", "3.3"],
+      "description": "Verify bug fix and preservation (no regressions)"
+    },
+    {
+      "name": "Wave 4: Checkpoint",
+      "tasks": ["4"],
+      "description": "Final validation and checkpoint"
+    }
+  ]
+}
+```
+
+**Dependency Explanation:**
+
+- **Tasks 1 & 2 → Task 3**: Bug condition exploration test (Task 1) and preservation tests (Task 2) must be written BEFORE implementing the fix (Task 3). This follows the bugfix methodology: understand the bug first, then fix it.
+- **Task 3 → Subtask 3.1**: The parent task must be started before the implementation subtask.
+- **Subtask 3.1 → Subtask 3.2**: Implementation must be complete before verifying the bug condition test passes.
+- **Subtask 3.2 → Subtask 3.3**: Bug fix verification must pass before checking preservation (no regressions).
+- **Subtask 3.3 → Task 4**: All verification must be complete before final checkpoint.
+
+---
+
+## Notes
+
+- This workflow uses the bug condition methodology: C(X) identifies buggy inputs, P(result) defines expected behavior, ¬C(X) identifies behavior to preserve
+- Exploration test (task 1) should FAIL on unfixed code - this confirms the bug exists
+- Preservation tests (task 2) should PASS on unfixed code - this confirms baseline behavior
+- After implementation, exploration test should PASS and preservation tests should still PASS
+- The fix is scoped to TechStack section links only to minimize risk of regressions
