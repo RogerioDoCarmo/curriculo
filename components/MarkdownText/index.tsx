@@ -22,42 +22,84 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           return <div key={index} className="h-2" />;
         }
 
-        // Handle headings (#) - must check before ## and ###
-        if (trimmedLine.startsWith("#") && !trimmedLine.startsWith("##")) {
-          const headingText = trimmedLine.replace(/^#\s*/, "");
+        // Handle headings - use regex to match exact number of # characters
+        // Check from most specific (######) to least specific (#)
+
+        // ###### heading (h6)
+        const h6Match = trimmedLine.match(/^######\s+(.+)$/);
+        if (h6Match) {
           return (
-            <h1
+            <h6
               key={index}
-              className="mt-8 mb-4 text-xl font-bold text-gray-900 dark:text-gray-100"
+              className="mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100"
             >
-              {formatInlineMarkdown(headingText)}
-            </h1>
+              {formatInlineMarkdown(h6Match[1])}
+            </h6>
           );
         }
 
-        // Handle headings (##)
-        if (trimmedLine.startsWith("##") && !trimmedLine.startsWith("###")) {
-          const headingText = trimmedLine.replace(/^##\s*/, "");
+        // ##### heading (h5)
+        const h5Match = trimmedLine.match(/^#####\s+(.+)$/);
+        if (h5Match) {
           return (
-            <h2
+            <h5
               key={index}
-              className="mt-6 mb-3 text-lg font-bold text-gray-900 dark:text-gray-100"
+              className="mt-2 mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100"
             >
-              {formatInlineMarkdown(headingText)}
-            </h2>
+              {formatInlineMarkdown(h5Match[1])}
+            </h5>
           );
         }
 
-        // Handle headings (###)
-        if (trimmedLine.startsWith("###")) {
-          const headingText = trimmedLine.replace(/^###\s*/, "");
+        // #### heading (h4)
+        const h4Match = trimmedLine.match(/^####\s+(.+)$/);
+        if (h4Match) {
+          return (
+            <h4
+              key={index}
+              className="mt-3 mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100"
+            >
+              {formatInlineMarkdown(h4Match[1])}
+            </h4>
+          );
+        }
+
+        // ### heading (h3)
+        const h3Match = trimmedLine.match(/^###\s+(.+)$/);
+        if (h3Match) {
           return (
             <h3
               key={index}
               className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100"
             >
-              {formatInlineMarkdown(headingText)}
+              {formatInlineMarkdown(h3Match[1])}
             </h3>
+          );
+        }
+
+        // ## heading (h2)
+        const h2Match = trimmedLine.match(/^##\s+(.+)$/);
+        if (h2Match) {
+          return (
+            <h2
+              key={index}
+              className="mt-6 mb-3 text-lg font-bold text-gray-900 dark:text-gray-100"
+            >
+              {formatInlineMarkdown(h2Match[1])}
+            </h2>
+          );
+        }
+
+        // # heading (h1)
+        const h1Match = trimmedLine.match(/^#\s+(.+)$/);
+        if (h1Match) {
+          return (
+            <h1
+              key={index}
+              className="mt-8 mb-4 text-xl font-bold text-gray-900 dark:text-gray-100"
+            >
+              {formatInlineMarkdown(h1Match[1])}
+            </h1>
           );
         }
 

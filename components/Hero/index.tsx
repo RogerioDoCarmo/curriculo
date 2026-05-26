@@ -318,8 +318,11 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
         </div>
 
         {/* Profile photo */}
-        <div className="flex-shrink-0">
-          <div className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48">
+        <div className="shrink-0">
+          <div
+            className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48"
+            style={{ minHeight: "160px", minWidth: "160px" }}
+          >
             <Image
               src="/images/profile/rogeriodocarmo.png"
               alt="Rogério do Carmo — Mobile React Native Developer"
