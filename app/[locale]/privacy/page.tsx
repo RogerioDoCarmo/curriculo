@@ -248,8 +248,7 @@ function PrivacyPolicyContent() {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">{t("cookies.title")}</h2>
         <p className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
-          <strong className="text-blue-700 dark:text-blue-300">⚠️ Important:</strong>{" "}
-          {t("cookies.intro")}
+          <strong className="text-blue-700 dark:text-blue-300">⚠️</strong> {t("cookies.intro")}
         </p>
         <p className="mb-4">{t("cookies.localStorage")}</p>
         <p className="mb-4">

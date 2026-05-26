@@ -14,7 +14,7 @@ Pesquisa em Ciências Cartográficas com foco em avaliação da qualidade das me
 
 ### Conquistas
 
-- Utilizou Java para Android, Java Swing (desktop) e Python para captura de dados pelo app e o pós-processamento e análise dos dados GPS
+- Utilizou **Java** para Android, **Java Swing** (desktop) e Python para captura de dados pelo app e o pós-processamento e análise dos dados GPS
 - Utilizou soluções do Firebase para o armazenamento e distribuição dos dados
 - **Publicação**: Assessment of Raw GNSS Measurements from Android Smartphones. In: XI Colóquio Brasileiro de Ciências Geodésicas, 2020, Curitiba
 - **Estágio Docência**: Ministrou aulas sobre Teoria dos Grafos na disciplina Estrutura de Dados II, para o curso de Bacharelado em Ciência da Computação da UNESP
