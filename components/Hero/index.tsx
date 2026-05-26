@@ -114,6 +114,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                   : "Complete master's dissertation:"}
             </p>
             <div className="flex items-center justify-center md:justify-start mb-2">
+              {/* Note: hdl.handle.net institutional repository only supports HTTP protocol */}
               <a
                 href="http://hdl.handle.net/11449/243430"
                 target="_blank"
