@@ -54,7 +54,8 @@
       "title": "Cambiar Tema",
       "description": "Un componente de botón para cambiar entre temas claro y oscuro",
       "label": "Cambiar Tema"
-    }
+    },
+    "storybookButton": "Ver en Chromatic"
   },
   "hero": {
     "greeting": "Hola, soy",
