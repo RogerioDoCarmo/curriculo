@@ -430,9 +430,9 @@ test.describe("Cookie Consent Banner", () => {
         document.querySelector("footer")?.scrollIntoView({ behavior: "instant", block: "end" });
       });
 
-      // Reopen banner — scroll the exact link into view before clicking so
+      // Reopen banner — scroll the exact button into view before clicking so
       // the element is in the composited layer and the React onClick fires reliably
-      const cookieSettingsLink = page.getByRole("link", { name: /cookie settings/i });
+      const cookieSettingsLink = page.getByRole("button", { name: /cookie settings/i });
       await expect(cookieSettingsLink).toBeVisible({ timeout: 5000 });
       await cookieSettingsLink.scrollIntoViewIfNeeded();
       await cookieSettingsLink.click();
