@@ -121,7 +121,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 
 ## Project Structure
 
-```
+```text
 personal-resume-website/
 ├── app/                          # Next.js App Router
 │   ├── [locale]/                 # Internationalized routes
@@ -142,6 +142,31 @@ personal-resume-website/
 ├── .storybook/                   # Storybook configuration
 └── .github/                      # GitHub Actions workflows
 ```
+
+## Architecture & Design Patterns
+
+The codebase follows a set of consistent design patterns and clean code conventions across all layers.
+
+| Pattern                  | Where                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| Provider (Context)       | `ThemeProvider`, `AnalyticsProvider`, `NextIntlClientProvider` composed in layout |
+| Custom Hook              | All stateful logic lives in `hooks/` — components are thin shells                 |
+| Strategy (lookup tables) | `Button` variant/size maps replace if/switch chains                               |
+| Error Boundary           | `ErrorBoundary` integrates error logging + analytics in `componentDidCatch`       |
+| Cache-Aside              | `feature-flags.ts` — in-memory Map → Remote Config → default value                |
+| Lazy Loading Registry    | `lib/lazy-components.tsx` centralizes all `next/dynamic` imports                  |
+
+Key conventions enforced across the project:
+
+- **Readonly props** on every interface — no accidental mutation
+- **`import type`** for type-only imports throughout
+- **No `!` non-null assertions** — type guards only (enforced in CI and CLAUDE.md)
+- **Pure helpers extracted** from hooks for direct testability (e.g. `getStoredTheme`, `getInitialTheme`)
+- **Named constants** over magic values (`THEME_STORAGE_KEY`, `CACHE_TTL`, `SUPPORTED_LOCALES`)
+- **Graceful degradation** — `localStorage` and Firebase calls always have try/catch + defaults
+- **SSR guards** — `typeof window === "undefined"` before any browser API
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of patterns, layer responsibilities, and testing architecture.
 
 ## Development
 
@@ -339,6 +364,7 @@ MIT
 
 ## Documentation
 
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
 - [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
