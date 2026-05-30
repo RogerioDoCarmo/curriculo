@@ -123,8 +123,7 @@ export default function Footer({ locale }: FooterProps) {
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
-  const handleCookieSettingsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleCookieSettingsClick = () => {
     openBanner();
   };
 
@@ -150,8 +149,8 @@ export default function Footer({ locale }: FooterProps) {
               {NAV_SECTIONS.map(({ labelKey, href, external, cookieSettings }) => (
                 <li key={href}>
                   {cookieSettings ? (
-                    <a
-                      href="#cookie-settings"
+                    <button
+                      type="button"
                       onClick={handleCookieSettingsClick}
                       aria-label={t(labelKey)}
                       className="
@@ -162,7 +161,7 @@ export default function Footer({ locale }: FooterProps) {
                       "
                     >
                       {t(labelKey)}
-                    </a>
+                    </button>
                   ) : (
                     <a
                       href={external ? `/${locale}${href}` : href}
