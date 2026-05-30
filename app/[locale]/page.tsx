@@ -45,6 +45,7 @@ export default async function HomePage({ params }: HomePageProps) {
       experiences={experiences}
       projects={projects}
       skills={skills}
+      now={Date.now()}
     />
   );
 }

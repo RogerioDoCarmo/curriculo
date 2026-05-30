@@ -18,6 +18,9 @@ npm run lint                 # Run ESLint to check code quality
 npm run format:check         # Check code formatting without fixing
 
 npx prettier --write .       # Auto-fix all formatting issues
+
+# Publish Storybook to Chromatic (token passed as env variable, never stored in code)
+CHROMATIC_PROJECT_TOKEN=<your-token> npm run chromatic:publish
 ```
 
 ## Development Server

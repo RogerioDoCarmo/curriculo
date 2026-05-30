@@ -166,6 +166,10 @@ public/storybook
 # Storybook
 storybook-static/
 
+# Chromatic
+.chromatic/
+chromatic.config.*
+
 # Build archives and release artifacts
 *.tar.gz
 *.zip

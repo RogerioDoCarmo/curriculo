@@ -20,11 +20,12 @@ console.error = (...args) => {
       return;
     }
   }
-  // Also check if it's an Error object with the jsdom navigation message
-  if (args[0] instanceof Error) {
-    const errorMsg = args[0].message || "";
-    const errorType = args[0].type || "";
-    if (errorMsg.includes("Not implemented: navigation") || errorType === "not implemented") {
+  // Also check if it's an Error-like object (may be from a different vm realm)
+  if (args[0] && typeof args[0].message === "string") {
+    if (
+      args[0].message.includes("Not implemented: navigation") ||
+      args[0].type === "not implemented"
+    ) {
       return;
     }
   }
