@@ -139,6 +139,7 @@ describe("HomePageContent Component", () => {
     experiences: mockExperiences,
     projects: mockProjects,
     skills: mockSkills,
+    now: 1748563200000,
   };
 
   // Mock translation messages
