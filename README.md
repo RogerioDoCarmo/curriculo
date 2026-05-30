@@ -36,6 +36,7 @@
 
 [![Built with Kiro](https://img.shields.io/badge/Built_with-Kiro_IDE-7C3AED?logo=amazon-aws&logoColor=white)](https://kiro.dev)
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97706?logo=anthropic&logoColor=white)](https://claude.ai/code)
+[![Chromatic](https://img.shields.io/badge/storybook-chromatic-FC521F?logo=storybook&logoColor=white)](https://www.chromatic.com/builds?appId=6a1b4e8a78d533ad545f5bc0)
 
 A modern, responsive personal resume website built with Next.js 16.2.4, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
