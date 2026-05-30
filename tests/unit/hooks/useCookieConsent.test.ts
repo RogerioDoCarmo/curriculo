@@ -12,14 +12,20 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 
+const reloadMock = jest.fn();
+
 describe("useCookieConsent", () => {
+  beforeAll(() => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { ...window.location, reload: reloadMock },
+    });
+  });
+
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear();
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: { ...window.location, reload: jest.fn() },
-    });
+    reloadMock.mockClear();
   });
 
   describe("Initial state", () => {
