@@ -180,7 +180,9 @@
     "filterAriaLabel": "Filtrar habilidades por nombre",
     "noMatch": "Ninguna habilidad coincide con tu filtro.",
     "skillsLabel": "habilidades",
-    "levelLabel": "Nivel"
+    "levelLabel": "Nivel",
+    "expandDetails": "Expandir habilidades",
+    "collapseDetails": "Contraer habilidades"
   },
   "projects": {
     "filterByTech": "Filtrar por tecnología",

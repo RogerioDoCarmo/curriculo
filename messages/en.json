@@ -180,7 +180,9 @@
     "filterAriaLabel": "Filter skills by name",
     "noMatch": "No skills match your filter.",
     "skillsLabel": "skills",
-    "levelLabel": "Level"
+    "levelLabel": "Level",
+    "expandDetails": "Expand skills",
+    "collapseDetails": "Collapse skills"
   },
   "projects": {
     "filterByTech": "Filter by technology",
