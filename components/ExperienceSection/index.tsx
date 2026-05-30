@@ -204,7 +204,11 @@ export default function ExperienceSection({
               <h3 className="mb-6 text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {t("timeline")}
               </h3>
-              <Timeline items={timelineItems} />
+              <Timeline
+                items={timelineItems}
+                expandLabel={t("expandDetails")}
+                collapseLabel={t("collapseDetails")}
+              />
             </div>
           </div>
         )}
