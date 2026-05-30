@@ -162,9 +162,9 @@ export default function ExperienceSection({
                     <div id={`exp-details-${exp.id}`} className="mt-4 space-y-3">
                       {exp.achievements.length > 0 && (
                         <div>
-                          <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            {t("achievements")}
-                          </h4>
+                          <h3 className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
+                            {t("details")}
+                          </h3>
                           <div className="space-y-1">
                             {exp.achievements.map((achievement, i) => (
                               <MarkdownText key={i} text={achievement} />
