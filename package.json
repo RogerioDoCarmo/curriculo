@@ -29,7 +29,7 @@
     "test:coverage": "jest --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic:publish": "npm run build-storybook && npx chromatic --storybook-build-dir=storybook-static --project-token=$npm_config_token",
+    "chromatic:publish": "npm run build-storybook && npx chromatic --storybook-build-dir=storybook-static",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "commitlint": "commitlint --edit",
