@@ -223,6 +223,7 @@
     "subtitle": "Ferramentas e tecnologias usadas para construir este site",
     "storybookLink": "Ver Biblioteca de Componentes",
     "componentGalleryLink": "Ver Galeria de Componentes",
+    "chromaticLink": "Ver no Chromatic",
     "labels": {
       "why": "Por quê:",
       "benefits": "Benefícios:",

@@ -223,6 +223,7 @@
     "subtitle": "Technologies used to build this website",
     "storybookLink": "View Component Library",
     "componentGalleryLink": "View Component Gallery",
+    "chromaticLink": "View on Chromatic",
     "labels": {
       "why": "Why:",
       "benefits": "Benefits:",
