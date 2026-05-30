@@ -75,7 +75,8 @@
     "projects": "Proyectos",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "techStack": "Usado en este sitio"
+    "techStack": "Usado en este sitio",
+    "componentGallery": "Galería de Componentes"
   },
   "experience": {
     "section": "experiencia",
