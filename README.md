@@ -20,15 +20,27 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
 
 <!-- Project Info -->
 
+[![GitHub Release](https://img.shields.io/github/v/release/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
+[![Open Issues](https://img.shields.io/github/issues/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js)](https://nodejs.org/)
 [![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
 [![Last Commit](https://img.shields.io/github/last-commit/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/commits/main)
 
+<!-- AI Development Tools -->
+
+[![Built with Kiro](https://img.shields.io/badge/Built_with-Kiro_IDE-7C3AED?logo=amazon-aws&logoColor=white)](https://kiro.dev)
+[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97706?logo=anthropic&logoColor=white)](https://claude.ai/code)
+[![Chromatic](https://img.shields.io/badge/storybook-chromatic-FC521F?logo=storybook&logoColor=white)](https://www.chromatic.com/builds?appId=6a1b4e8a78d533ad545f5bc0)
+
 A modern, responsive personal resume website built with Next.js 16.2.4, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+
+> **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
 
 ## Development Progress
 
@@ -109,7 +121,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 
 ## Project Structure
 
-```
+```text
 personal-resume-website/
 ├── app/                          # Next.js App Router
 │   ├── [locale]/                 # Internationalized routes
@@ -130,6 +142,31 @@ personal-resume-website/
 ├── .storybook/                   # Storybook configuration
 └── .github/                      # GitHub Actions workflows
 ```
+
+## Architecture & Design Patterns
+
+The codebase follows a set of consistent design patterns and clean code conventions across all layers.
+
+| Pattern                  | Where                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| Provider (Context)       | `ThemeProvider`, `AnalyticsProvider`, `NextIntlClientProvider` composed in layout |
+| Custom Hook              | All stateful logic lives in `hooks/` — components are thin shells                 |
+| Strategy (lookup tables) | `Button` variant/size maps replace if/switch chains                               |
+| Error Boundary           | `ErrorBoundary` integrates error logging + analytics in `componentDidCatch`       |
+| Cache-Aside              | `feature-flags.ts` — in-memory Map → Remote Config → default value                |
+| Lazy Loading Registry    | `lib/lazy-components.tsx` centralizes all `next/dynamic` imports                  |
+
+Key conventions enforced across the project:
+
+- **Readonly props** on every interface — no accidental mutation
+- **`import type`** for type-only imports throughout
+- **No `!` non-null assertions** — type guards only (enforced in CI and CLAUDE.md)
+- **Pure helpers extracted** from hooks for direct testability (e.g. `getStoredTheme`, `getInitialTheme`)
+- **Named constants** over magic values (`THEME_STORAGE_KEY`, `CACHE_TTL`, `SUPPORTED_LOCALES`)
+- **Graceful degradation** — `localStorage` and Firebase calls always have try/catch + defaults
+- **SSR guards** — `typeof window === "undefined"` before any browser API
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of patterns, layer responsibilities, and testing architecture.
 
 ## Development
 
@@ -327,6 +364,7 @@ MIT
 
 ## Documentation
 
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
 - [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
 - [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱

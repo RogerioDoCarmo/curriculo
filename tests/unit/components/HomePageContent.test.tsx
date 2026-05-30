@@ -139,6 +139,7 @@ describe("HomePageContent Component", () => {
     experiences: mockExperiences,
     projects: mockProjects,
     skills: mockSkills,
+    now: 1748563200000,
   };
 
   // Mock translation messages
@@ -148,6 +149,7 @@ describe("HomePageContent Component", () => {
       viewFullStack: "View Full Tech Stack",
     },
     careerPath: {
+      sectionTitle: "Explore My Journey",
       professional: "Professional",
       academic: "Academic",
     },
@@ -401,8 +403,8 @@ describe("HomePageContent Component", () => {
         "hero",
         "career-path-selector",
         "experience-section",
-        "skills-section",
         "projects-section",
+        "skills-section",
         "contact-form",
         "back-to-top",
         "exit-intent-modal",

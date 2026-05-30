@@ -5,7 +5,8 @@
     "experience": "Experience",
     "skills": "Skills",
     "contact": "Contact",
-    "techStack": "Used in this site"
+    "techStack": "Used in this site",
+    "componentGallery": "Component Gallery"
   },
   "ComponentGallery": {
     "title": "Component Gallery | Rogério do Carmo",
@@ -54,7 +55,8 @@
       "title": "Theme Toggle",
       "description": "A button component for switching between light and dark themes",
       "label": "Toggle Theme"
-    }
+    },
+    "storybookButton": "View on Chromatic"
   },
   "hero": {
     "greeting": "Hello, I'm",
@@ -74,7 +76,8 @@
     "projects": "Projects",
     "skills": "Skills",
     "contact": "Contact",
-    "techStack": "Used in this site"
+    "techStack": "Used in this site",
+    "componentGallery": "Component Gallery"
   },
   "experience": {
     "section": "experience",
@@ -85,6 +88,7 @@
     "expandDetails": "Expand details",
     "collapseDetails": "Collapse details",
     "achievements": "Achievements",
+    "details": "Details",
     "technologies": "Technologies",
     "timeline": "Timeline",
     "duration": {
@@ -179,7 +183,9 @@
     "filterAriaLabel": "Filter skills by name",
     "noMatch": "No skills match your filter.",
     "skillsLabel": "skills",
-    "levelLabel": "Level"
+    "levelLabel": "Level",
+    "expandDetails": "Expand skills",
+    "collapseDetails": "Collapse skills"
   },
   "projects": {
     "filterByTech": "Filter by technology",
@@ -220,6 +226,7 @@
     "subtitle": "Technologies used to build this website",
     "storybookLink": "View Component Library",
     "componentGalleryLink": "View Component Gallery",
+    "chromaticLink": "View on Chromatic",
     "labels": {
       "why": "Why:",
       "benefits": "Benefits:",

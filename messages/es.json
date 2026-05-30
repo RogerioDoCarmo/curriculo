@@ -5,7 +5,8 @@
     "experience": "Experiencia",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "techStack": "Usado en este sitio"
+    "techStack": "Usado en este sitio",
+    "componentGallery": "Galería de Componentes"
   },
   "ComponentGallery": {
     "title": "Galería de Componentes | Rogério do Carmo",
@@ -54,7 +55,8 @@
       "title": "Cambiar Tema",
       "description": "Un componente de botón para cambiar entre temas claro y oscuro",
       "label": "Cambiar Tema"
-    }
+    },
+    "storybookButton": "Ver en Chromatic"
   },
   "hero": {
     "greeting": "Hola, soy",
@@ -74,7 +76,8 @@
     "projects": "Proyectos",
     "skills": "Habilidades",
     "contact": "Contacto",
-    "techStack": "Usado en este sitio"
+    "techStack": "Usado en este sitio",
+    "componentGallery": "Galería de Componentes"
   },
   "experience": {
     "section": "experiencia",
@@ -85,6 +88,7 @@
     "expandDetails": "Expandir detalles",
     "collapseDetails": "Contraer detalles",
     "achievements": "Logros",
+    "details": "Detalles",
     "technologies": "Tecnologías",
     "timeline": "Línea de Tiempo",
     "duration": {
@@ -179,7 +183,9 @@
     "filterAriaLabel": "Filtrar habilidades por nombre",
     "noMatch": "Ninguna habilidad coincide con tu filtro.",
     "skillsLabel": "habilidades",
-    "levelLabel": "Nivel"
+    "levelLabel": "Nivel",
+    "expandDetails": "Expandir habilidades",
+    "collapseDetails": "Contraer habilidades"
   },
   "projects": {
     "filterByTech": "Filtrar por tecnología",
@@ -220,6 +226,7 @@
     "subtitle": "Tecnologías usadas para construir este sitio web",
     "storybookLink": "Ver Biblioteca de Componentes",
     "componentGalleryLink": "Ver Galería de Componentes",
+    "chromaticLink": "Ver en Chromatic",
     "labels": {
       "why": "Por qué:",
       "benefits": "Beneficios:",
