@@ -54,7 +54,8 @@
       "title": "Alternar Tema",
       "description": "Um componente de botão para alternar entre temas claro e escuro",
       "label": "Alternar Tema"
-    }
+    },
+    "storybookButton": "Ver no Chromatic"
   },
   "hero": {
     "greeting": "Olá, eu sou",

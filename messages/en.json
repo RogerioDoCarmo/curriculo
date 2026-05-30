@@ -54,7 +54,8 @@
       "title": "Theme Toggle",
       "description": "A button component for switching between light and dark themes",
       "label": "Toggle Theme"
-    }
+    },
+    "storybookButton": "View on Chromatic"
   },
   "hero": {
     "greeting": "Hello, I'm",
