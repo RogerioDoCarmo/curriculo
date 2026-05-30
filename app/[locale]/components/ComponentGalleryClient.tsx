@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { ExternalLink } from "lucide-react";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Modal from "@/components/Modal";
@@ -35,10 +36,8 @@ export default function ComponentGalleryClient({ locale }: ComponentGalleryClien
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-[#FC521F] hover:bg-[#e04519] shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FC521F] focus:ring-offset-2 transition-all duration-200"
           >
-            <svg viewBox="0 0 14 14" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <path d="M1.17 0L0 .065l.234 2.814 1.17-.065L1.17 0zm12.35.065L12.35 0l-.234 2.814 1.17.065L13.52.065zM.52 5.41l-.052 1.17 2.814.13.052-1.17L.52 5.41zm12.376.13l2.814-.13-.052-1.17-2.814.13.052 1.17zM3.9 0H2.73v2.814H3.9V0zm6.5 0H9.23v2.814H10.4V0zM.52 8.59l-.052 1.17 2.814.13.052-1.17L.52 8.59zm12.376.13l2.814-.13-.052-1.17-2.814.13.052 1.17z" />
-            </svg>
             {t("storybookButton")}
+            <ExternalLink className="w-4 h-4" aria-hidden="true" />
           </a>
         </header>
 
