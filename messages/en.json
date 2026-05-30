@@ -5,7 +5,8 @@
     "experience": "Experience",
     "skills": "Skills",
     "contact": "Contact",
-    "techStack": "Used in this site"
+    "techStack": "Used in this site",
+    "componentGallery": "Component Gallery"
   },
   "ComponentGallery": {
     "title": "Component Gallery | Rogério do Carmo",

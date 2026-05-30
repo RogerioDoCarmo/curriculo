@@ -5,7 +5,8 @@
     "experience": "Experiência",
     "skills": "Habilidades",
     "contact": "Contato",
-    "techStack": "Usado neste site"
+    "techStack": "Usado neste site",
+    "componentGallery": "Galeria de Componentes"
   },
   "ComponentGallery": {
     "title": "Galeria de Componentes | Rogério do Carmo",
@@ -75,8 +76,7 @@
     "projects": "Projetos",
     "skills": "Habilidades",
     "contact": "Contato",
-    "techStack": "Usado neste site",
-    "componentGallery": "Galeria de Componentes"
+    "techStack": "Usado neste site"
   },
   "experience": {
     "section": "experiência",
