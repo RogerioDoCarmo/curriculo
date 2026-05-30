@@ -148,6 +148,7 @@ describe("HomePageContent Component", () => {
       viewFullStack: "View Full Tech Stack",
     },
     careerPath: {
+      sectionTitle: "Explore My Journey",
       professional: "Professional",
       academic: "Academic",
     },
@@ -401,8 +402,8 @@ describe("HomePageContent Component", () => {
         "hero",
         "career-path-selector",
         "experience-section",
-        "skills-section",
         "projects-section",
+        "skills-section",
         "contact-form",
         "back-to-top",
         "exit-intent-modal",

@@ -425,27 +425,19 @@ test.describe("Cookie Consent Banner", () => {
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
-      // Wait for page to stabilize after reload
-      await page.waitForTimeout(1000);
-
-      // Scroll to footer using a more reliable method
+      // Scroll to footer using instant behavior so the scroll completes synchronously
       await page.evaluate(() => {
-        const footer = document.querySelector("footer");
-        if (footer) {
-          footer.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
+        document.querySelector("footer")?.scrollIntoView({ behavior: "instant", block: "end" });
       });
-      await page.waitForTimeout(500);
 
-      // Reopen banner
+      // Reopen banner — scroll the exact link into view before clicking so
+      // the element is in the composited layer and the React onClick fires reliably
       const cookieSettingsLink = page.getByRole("link", { name: /cookie settings/i });
-      await expect(cookieSettingsLink).toBeVisible();
+      await expect(cookieSettingsLink).toBeVisible({ timeout: 5000 });
+      await cookieSettingsLink.scrollIntoViewIfNeeded();
+      await cookieSettingsLink.click();
 
-      // Use force click for webkit/mobile-safari compatibility
-      await cookieSettingsLink.click({ force: true });
-
-      // Wait for banner to appear
-      await page.waitForTimeout(500);
+      // Banner should reappear — no blind wait needed, toBeVisible retries internally
       await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Change to reject
