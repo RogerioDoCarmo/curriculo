@@ -398,8 +398,8 @@ test.describe("Cookie Consent Banner", () => {
       });
       await page.waitForTimeout(500);
 
-      // Find and click cookie settings link in footer
-      const cookieSettingsLink = page.getByRole("link", {
+      // Find and click cookie settings button in footer
+      const cookieSettingsLink = page.getByRole("button", {
         name: /cookie settings/i,
       });
       await expect(cookieSettingsLink).toBeVisible();

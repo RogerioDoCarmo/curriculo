@@ -228,8 +228,8 @@ test.describe("Component Gallery Page", () => {
       // Start at Tech Stack page
       await page.goto(`${BASE_URL}/pt-BR/tech-stack/`);
 
-      // Find and click component gallery link (locale-aware)
-      const galleryLink = page.getByRole("link", {
+      // Find and click component gallery link inside main content (footer has a duplicate nav link)
+      const galleryLink = page.locator("main").getByRole("link", {
         name: /Component Gallery|Galeria de Componentes|Galería de Componentes/i,
       });
       await expect(galleryLink).toBeVisible();
@@ -244,8 +244,8 @@ test.describe("Component Gallery Page", () => {
       for (const locale of LOCALES) {
         await page.goto(`${BASE_URL}/${locale}/tech-stack/`);
 
-        // Find and click component gallery link (locale-aware)
-        const galleryLink = page.getByRole("link", {
+        // Find and click component gallery link inside main content (footer has a duplicate nav link)
+        const galleryLink = page.locator("main").getByRole("link", {
           name: /Component Gallery|Galeria de Componentes|Galería de Componentes/i,
         });
         await galleryLink.click();
