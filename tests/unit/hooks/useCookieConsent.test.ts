@@ -16,6 +16,10 @@ describe("useCookieConsent", () => {
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear();
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { ...window.location, reload: jest.fn() },
+    });
   });
 
   describe("Initial state", () => {
