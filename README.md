@@ -20,9 +20,13 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
 
 <!-- Project Info -->
 
+[![GitHub Release](https://img.shields.io/github/v/release/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
+[![Open Issues](https://img.shields.io/github/issues/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js)](https://nodejs.org/)
 [![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
