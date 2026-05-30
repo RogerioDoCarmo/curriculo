@@ -39,6 +39,7 @@ interface ModalProps {
 export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // ESC key handler
   useEffect(() => {
@@ -54,17 +55,34 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Focus trap: move focus inside modal when it opens
+  // Body scroll lock
   useEffect(() => {
-    if (!isOpen || !dialogRef.current) return;
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen]);
 
-    const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusable.length > 0) {
-      focusable[0].focus();
+  // Focus management: save previously focused element, restore on close
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+
+      if (!dialogRef.current) return;
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      } else {
+        dialogRef.current.focus();
+      }
     } else {
-      dialogRef.current.focus();
+      // Restore focus to the element that was active before the modal opened
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
     }
   }, [isOpen]);
 
@@ -73,7 +91,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
   return (
     <div
       data-testid="modal-backdrop"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
