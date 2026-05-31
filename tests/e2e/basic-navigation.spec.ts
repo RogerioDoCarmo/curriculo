@@ -69,12 +69,14 @@ test.describe("Basic Navigation", () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
+    // WebKit on mobile is slower to settle — wait for network idle before asserting.
+    await page.waitForLoadState("networkidle");
 
     // Verify page loads on mobile (text varies by locale)
     const heading = page.getByRole("heading", {
       name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
     });
-    await expect(heading).toBeVisible();
+    await expect(heading).toBeVisible({ timeout: 10000 });
   });
 
   test("should be responsive on tablet", async ({ page }) => {
