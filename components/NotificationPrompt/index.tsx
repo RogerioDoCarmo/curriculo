@@ -10,6 +10,7 @@
 
 import React, { useEffect, useState } from "react";
 import { requestNotificationPermission, subscribeToTopic } from "@/lib/notifications";
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 type PromptState = "idle" | "visible" | "dismissed";
 
@@ -24,9 +25,13 @@ export default function NotificationPrompt({
   show = false,
   delay = 10_000,
 }: NotificationPromptProps) {
+  const { hasFunctionalConsent } = useCookieConsent();
   const [state, setState] = useState<PromptState>("idle");
 
   useEffect(() => {
+    // Push notifications require functional consent
+    if (!hasFunctionalConsent()) return;
+
     // If show prop is true, display immediately
     if (show) {
       setState("visible");
@@ -42,7 +47,7 @@ export default function NotificationPrompt({
     // Show prompt after delay
     const timer = setTimeout(() => setState("visible"), delay);
     return () => clearTimeout(timer);
-  }, [show, delay]);
+  }, [show, delay, hasFunctionalConsent]);
 
   async function handleAllow() {
     setState("dismissed");
@@ -73,12 +78,14 @@ export default function NotificationPrompt({
       </p>
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={handleAllow}
           className="rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
         >
           Allow
         </button>
         <button
+          type="button"
           onClick={handleDismiss}
           aria-label="Dismiss notification prompt"
           className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
