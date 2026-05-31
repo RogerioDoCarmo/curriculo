@@ -24,10 +24,18 @@ jest.mock("@/lib/lazy-components", () => ({
   },
 }));
 
+const mockHasFunctionalConsent = jest.fn(() => true);
+
+jest.mock("@/hooks/useCookieConsent", () => ({
+  useCookieConsent: () => ({
+    hasFunctionalConsent: mockHasFunctionalConsent,
+  }),
+}));
+
 describe("ClientNotificationWrapper Component", () => {
   beforeEach(() => {
-    // Clear call history
     MockLazyNotificationPrompt.mockClear();
+    mockHasFunctionalConsent.mockReturnValue(true);
   });
 
   afterEach(() => {
@@ -336,6 +344,22 @@ describe("ClientNotificationWrapper Component", () => {
       render(<ClientNotificationWrapper />);
 
       expect(screen.getByText("Content without testid")).toBeInTheDocument();
+    });
+  });
+
+  describe("without functional consent", () => {
+    beforeEach(() => {
+      mockHasFunctionalConsent.mockReturnValue(false);
+    });
+
+    it("renders nothing when functional consent is absent", () => {
+      const { container } = render(<ClientNotificationWrapper />);
+      expect(container.firstChild).toBeNull();
+    });
+
+    it("does not mount LazyNotificationPrompt when functional consent is absent", () => {
+      render(<ClientNotificationWrapper />);
+      expect(MockLazyNotificationPrompt).not.toHaveBeenCalled();
     });
   });
 
