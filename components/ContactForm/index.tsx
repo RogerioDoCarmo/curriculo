@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ContactFormData } from "@/types/index";
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 import {
   trackFormFieldFocus,
   trackFormFieldBlur,
@@ -40,6 +41,7 @@ function isValidEmail(email: string): boolean {
 export default function ContactForm({ locale }: ContactFormProps) {
   const t = useTranslations("forms");
   const footer = useTranslations("footer");
+  const { hasFunctionalConsent } = useCookieConsent();
 
   const [formData, setFormData] = useState<Partial<ContactFormData>>({
     name: "",
@@ -169,9 +171,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
         setTouched({});
         setFieldErrors({});
 
-        // Show notification prompt after successful submission
-        // Check if notification permission hasn't been decided yet and prompt wasn't shown before
+        // Show notification prompt after successful submission only when functional consent is given
         if (
+          hasFunctionalConsent() &&
           typeof window !== "undefined" &&
           "Notification" in window &&
           Notification.permission === "default" &&
