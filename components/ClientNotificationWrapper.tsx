@@ -6,8 +6,13 @@
  * and cannot be directly imported in Server Components
  */
 
+import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { LazyNotificationPrompt } from "@/lib/lazy-components";
 
 export default function ClientNotificationWrapper() {
+  const { hasFunctionalConsent } = useCookieConsent();
+
+  if (!hasFunctionalConsent()) return null;
+
   return <LazyNotificationPrompt />;
 }

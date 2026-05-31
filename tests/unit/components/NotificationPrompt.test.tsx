@@ -14,9 +14,18 @@ jest.mock("@/lib/notifications", () => ({
   subscribeToTopic: jest.fn(),
 }));
 
+const mockHasFunctionalConsent = jest.fn(() => true);
+
+jest.mock("@/hooks/useCookieConsent", () => ({
+  useCookieConsent: () => ({
+    hasFunctionalConsent: mockHasFunctionalConsent,
+  }),
+}));
+
 describe("NotificationPrompt Component", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockHasFunctionalConsent.mockReturnValue(true);
     jest.useFakeTimers();
     sessionStorage.clear();
 
@@ -249,6 +258,23 @@ describe("NotificationPrompt Component", () => {
       expect(dialog).toHaveClass("bottom-4");
       expect(dialog).toHaveClass("left-4");
       expect(dialog).toHaveClass("z-50");
+    });
+  });
+
+  describe("without functional consent", () => {
+    beforeEach(() => {
+      mockHasFunctionalConsent.mockReturnValue(false);
+    });
+
+    it("does not show after delay when functional consent is absent", () => {
+      render(<NotificationPrompt />);
+      jest.advanceTimersByTime(10000);
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("does not show when show=true and functional consent is absent", () => {
+      render(<NotificationPrompt show={true} />);
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
   });
 
