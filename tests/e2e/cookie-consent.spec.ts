@@ -103,15 +103,19 @@ test.describe("Cookie Consent Banner", () => {
         page.waitForLoadState("load"),
         banner.getByRole("button", { name: /aceitar|accept/i }).click(),
       ]);
+      // Second waitForLoadState catches any secondary navigation (e.g. locale redirect)
+      // that follows the reload — safe no-op when there is no second navigation.
+      await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
-      // Check localStorage
-      const consentStatus = await page.evaluate(() => localStorage.getItem("cookie-consent"));
+      // Single evaluate reads both values in one call, eliminating the timing
+      // window between two separate page.evaluate calls in which WebKit can
+      // tear down the execution context mid-sequence.
+      const { consentStatus, preferences } = await page.evaluate(() => ({
+        consentStatus: localStorage.getItem("cookie-consent"),
+        preferences: JSON.parse(localStorage.getItem("cookie-preferences") || "{}"),
+      }));
       expect(consentStatus).toBe("accepted");
-
-      const preferences = await page.evaluate(() =>
-        JSON.parse(localStorage.getItem("cookie-preferences") || "{}")
-      );
       expect(preferences.analytics).toBe(true);
       expect(preferences.functional).toBe(true);
 
@@ -429,6 +433,14 @@ test.describe("Cookie Consent Banner", () => {
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
+      // Confirm banner is gone before proceeding
+      await expect(banner).not.toBeVisible();
+
+      // Wait for page to fully stabilize after reload — mobile Safari needs extra
+      // time to settle composited layers before footer interactions register reliably
+      // (mirrors the guard already present in "should reopen banner from footer link")
+      await page.waitForTimeout(1000);
+
       // Scroll to footer using instant behavior so the scroll completes synchronously
       await page.evaluate(() => {
         document.querySelector("footer")?.scrollIntoView({ behavior: "instant", block: "end" });
@@ -441,7 +453,10 @@ test.describe("Cookie Consent Banner", () => {
       await cookieSettingsLink.scrollIntoViewIfNeeded();
       await cookieSettingsLink.click();
 
-      // Banner should reappear — no blind wait needed, toBeVisible retries internally
+      // Allow React state update to propagate before asserting visibility
+      await page.waitForTimeout(500);
+
+      // Banner should reappear
       await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Change to reject
