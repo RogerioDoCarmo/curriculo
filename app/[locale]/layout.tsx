@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import Script from "next/script";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { generateStructuredDataScript } from "@/lib/structured-data";
@@ -193,24 +192,15 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        {/* Schema.org structured data for Person */}
-        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
-            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
-        <Script id="person-schema" type="application/ld+json" strategy="beforeInteractive">
-          {personSchema}
-        </Script>
-        {/* Schema.org structured data for WebSite */}
-        {/* SECURITY: JSON.stringify() automatically escapes special characters, preventing XSS.
-            The data comes from a controlled source (generateStructuredDataScript) with no user input. */}
-        <Script id="website-schema" type="application/ld+json" strategy="beforeInteractive">
-          {webSiteSchema}
-        </Script>
-        {/* FOUC prevention: apply theme before React hydration */}
-        {/* SECURITY: This inline script is safe - it only reads from localStorage and applies a CSS class.
-            No user input is involved. The script is static and controlled by the application. */}
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`(function(){try{var saved=localStorage.getItem('theme');if(saved==='dark'||saved==='light'){if(saved==='dark')document.documentElement.classList.add('dark');}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark');}}catch(e){}})();`}
-        </Script>
+        {/* Schema.org structured data — dangerouslySetInnerHTML avoids the React 19
+            "script tag while rendering" warning; data is from a controlled source only. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
+        {/* FOUC prevention: async + src makes React 19 treat this as a hoistable resource,
+            avoiding the "script tag while rendering" warning. preload ensures the browser
+            fetches the tiny file during early head parsing so it runs before first paint. */}
+        <link rel="preload" as="script" href="/theme-init.js" />
+        <script src="/theme-init.js" async />
       </head>
       <body
         className={`${inter.variable} font-sans bg-background text-foreground`}
