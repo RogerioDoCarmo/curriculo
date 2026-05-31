@@ -23,6 +23,8 @@ interface HomePageContentProps {
   readonly experiences: Experience[];
   readonly projects: Project[];
   readonly skills: SkillCategory[];
+  /** Unix timestamp (ms) captured server-side, used to stabilise duration calculations. */
+  readonly now: number;
 }
 
 export default function HomePageContent({
@@ -36,6 +38,7 @@ export default function HomePageContent({
   experiences,
   projects,
   skills,
+  now,
 }: HomePageContentProps) {
   const [careerPath, setCareerPath] = useState<CareerPath>("professional");
   const tCareerPath = useTranslations("careerPath");
@@ -66,17 +69,22 @@ export default function HomePageContent({
 
       {/* Experience Section with Timeline */}
       <div className="bg-white dark:bg-gray-900">
-        <ExperienceSection careerPath={careerPath} experiences={experiences} locale={locale} />
-      </div>
-
-      {/* Skills Section */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
-        <SkillsSection skills={skills} locale={locale} />
+        <ExperienceSection
+          careerPath={careerPath}
+          experiences={experiences}
+          locale={locale}
+          now={now}
+        />
       </div>
 
       {/* Projects Portfolio Section */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <ProjectsSection projects={projects} locale={locale} />
+      </div>
+
+      {/* Skills Section */}
+      <div className="bg-white dark:bg-gray-900">
+        <SkillsSection skills={skills} locale={locale} />
       </div>
 
       {/* Contact Form Section */}

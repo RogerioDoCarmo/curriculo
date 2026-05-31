@@ -11,6 +11,8 @@ interface ExperienceSectionProps {
   readonly careerPath: CareerPath;
   readonly experiences: Experience[];
   readonly locale: string;
+  /** Unix timestamp (ms) from the server — keeps duration strings stable across SSR/hydration. */
+  readonly now?: number;
 }
 
 /**
@@ -29,14 +31,18 @@ function formatDate(dateStr: string, locale: string): string {
 /**
  * Calculate duration between two dates in years/months.
  * Uses translations for proper localization of duration text.
+ *
+ * @param now - Unix timestamp (ms) to use as "today" for open-ended positions.
+ *   Pass a server-captured value so SSR and client hydration produce the same string.
  */
 function calcDuration(
   startDate: string,
   endDate: string | undefined,
-  t: (key: string) => string
+  t: (key: string) => string,
+  now?: number
 ): string {
   const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date();
+  const end = endDate ? new Date(endDate) : new Date(now ?? Date.now());
   const months =
     (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
 
@@ -63,11 +69,12 @@ function calcDuration(
 function experienceToTimelineItem(
   exp: Experience,
   locale: string,
-  t: (key: string) => string
+  t: (key: string) => string,
+  now?: number
 ): TimelineItem {
   const startFormatted = formatDate(exp.startDate, locale);
   const endFormatted = exp.endDate ? formatDate(exp.endDate, locale) : t("present");
-  const duration = calcDuration(exp.startDate, exp.endDate, t);
+  const duration = calcDuration(exp.startDate, exp.endDate, t, now);
   const separator = t("duration.separator");
   const dateLabel = `${startFormatted} – ${endFormatted} ${separator} ${duration}`;
 
@@ -86,13 +93,14 @@ export default function ExperienceSection({
   careerPath,
   experiences,
   locale,
+  now,
 }: ExperienceSectionProps) {
   const t = useTranslations("experience");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = experiences.filter((e) => e.type === careerPath);
 
-  const timelineItems = filtered.map((exp) => experienceToTimelineItem(exp, locale, t));
+  const timelineItems = filtered.map((exp) => experienceToTimelineItem(exp, locale, t, now));
 
   return (
     <section
@@ -127,7 +135,7 @@ export default function ExperienceSection({
                       <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
                         {formatDate(exp.startDate, locale)} –{" "}
                         {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
-                        {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t)}
+                        {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t, now)}
                       </p>
                     </div>
                     <button
@@ -162,9 +170,9 @@ export default function ExperienceSection({
                     <div id={`exp-details-${exp.id}`} className="mt-4 space-y-3">
                       {exp.achievements.length > 0 && (
                         <div>
-                          <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            {t("achievements")}
-                          </h4>
+                          <h3 className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
+                            {t("details")}
+                          </h3>
                           <div className="space-y-1">
                             {exp.achievements.map((achievement, i) => (
                               <MarkdownText key={i} text={achievement} />
@@ -204,7 +212,11 @@ export default function ExperienceSection({
               <h3 className="mb-6 text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {t("timeline")}
               </h3>
-              <Timeline items={timelineItems} />
+              <Timeline
+                items={timelineItems}
+                expandLabel={t("expandDetails")}
+                collapseLabel={t("collapseDetails")}
+              />
             </div>
           </div>
         )}

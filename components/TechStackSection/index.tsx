@@ -49,21 +49,39 @@ export default function TechStackSection() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">{t("subtitle")}</p>
 
-          {/* Component Gallery Link */}
-          <Link
-            href={`/${locale}/components/`}
-            className="
-              inline-flex items-center gap-2 px-6 py-3
-              text-base font-medium text-white
-              bg-primary-700 hover:bg-primary-800
-              rounded-lg shadow-md hover:shadow-lg
-              focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
-              transition-all duration-200
-            "
-          >
-            {t("componentGalleryLink")}
-            <ExternalLink className="w-5 h-5" aria-hidden="true" />
-          </Link>
+          {/* Component Gallery + Chromatic Links */}
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href={`/${locale}/components/`}
+              className="
+                inline-flex items-center gap-2 px-6 py-3
+                text-base font-medium text-white
+                bg-primary-700 hover:bg-primary-800
+                rounded-lg shadow-md hover:shadow-lg
+                focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                transition-all duration-200
+              "
+            >
+              {t("componentGalleryLink")}
+              <ExternalLink className="w-5 h-5" aria-hidden="true" />
+            </Link>
+            <a
+              href="https://www.chromatic.com/library?appId=6a1b4e8a78d533ad545f5bc0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                inline-flex items-center gap-2 px-6 py-3
+                text-base font-medium
+                text-white bg-[#FC521F] hover:bg-[#e04519]
+                rounded-lg shadow-md hover:shadow-lg
+                focus:outline-none focus:ring-2 focus:ring-[#FC521F] focus:ring-offset-2
+                transition-all duration-200
+              "
+            >
+              {t("chromaticLink")}
+              <ExternalLink className="w-5 h-5" aria-hidden="true" />
+            </a>
+          </div>
         </div>
 
         {/* Technologies by Category */}

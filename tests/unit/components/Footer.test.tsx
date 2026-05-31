@@ -102,7 +102,7 @@ describe("Footer", () => {
       expect(screen.getByRole("link", { name: /contact/i })).toHaveAttribute("href", "#contact");
       expect(screen.getByRole("link", { name: /tech stack/i })).toHaveAttribute(
         "href",
-        "#tech-stack"
+        "/en/tech-stack"
       );
     });
   });

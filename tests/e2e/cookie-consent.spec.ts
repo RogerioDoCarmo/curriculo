@@ -389,23 +389,21 @@ test.describe("Cookie Consent Banner", () => {
       // Wait a bit for page to stabilize after reload
       await page.waitForTimeout(1000);
 
-      // Scroll to footer using a more reliable method
+      // Scroll to footer using instant behavior so the scroll completes synchronously
       await page.evaluate(() => {
-        const footer = document.querySelector("footer");
-        if (footer) {
-          footer.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
+        document.querySelector("footer")?.scrollIntoView({ behavior: "instant", block: "end" });
       });
-      await page.waitForTimeout(500);
 
-      // Find and click cookie settings link in footer
-      const cookieSettingsLink = page.getByRole("link", {
+      // Find and click cookie settings button in footer
+      const cookieSettingsLink = page.getByRole("button", {
         name: /cookie settings/i,
       });
       await expect(cookieSettingsLink).toBeVisible();
 
-      // Use force click for webkit/mobile-safari compatibility
-      await cookieSettingsLink.click({ force: true });
+      // Scroll the exact button into view before clicking so
+      // the element is in the composited layer and the React onClick fires reliably
+      await cookieSettingsLink.scrollIntoViewIfNeeded();
+      await cookieSettingsLink.click();
 
       // Wait for banner to appear
       await page.waitForTimeout(500);
@@ -425,27 +423,19 @@ test.describe("Cookie Consent Banner", () => {
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
-      // Wait for page to stabilize after reload
-      await page.waitForTimeout(1000);
-
-      // Scroll to footer using a more reliable method
+      // Scroll to footer using instant behavior so the scroll completes synchronously
       await page.evaluate(() => {
-        const footer = document.querySelector("footer");
-        if (footer) {
-          footer.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
+        document.querySelector("footer")?.scrollIntoView({ behavior: "instant", block: "end" });
       });
-      await page.waitForTimeout(500);
 
-      // Reopen banner
-      const cookieSettingsLink = page.getByRole("link", { name: /cookie settings/i });
-      await expect(cookieSettingsLink).toBeVisible();
+      // Reopen banner — scroll the exact button into view before clicking so
+      // the element is in the composited layer and the React onClick fires reliably
+      const cookieSettingsLink = page.getByRole("button", { name: /cookie settings/i });
+      await expect(cookieSettingsLink).toBeVisible({ timeout: 5000 });
+      await cookieSettingsLink.scrollIntoViewIfNeeded();
+      await cookieSettingsLink.click();
 
-      // Use force click for webkit/mobile-safari compatibility
-      await cookieSettingsLink.click({ force: true });
-
-      // Wait for banner to appear
-      await page.waitForTimeout(500);
+      // Banner should reappear — no blind wait needed, toBeVisible retries internally
       await expect(banner).toBeVisible({ timeout: 10000 });
 
       // Change to reject

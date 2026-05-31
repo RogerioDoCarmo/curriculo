@@ -14,7 +14,6 @@ import { useCookieConsent } from "@/hooks/useCookieConsent";
 
 describe("useCookieConsent", () => {
   beforeEach(() => {
-    // Clear localStorage before each test
     localStorage.clear();
   });
 

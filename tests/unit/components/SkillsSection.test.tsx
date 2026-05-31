@@ -21,6 +21,8 @@ const messages: AbstractIntlMessages = {
     noMatch: "No skills match your filter",
     skillsLabel: "skills",
     levelLabel: "Level",
+    expandDetails: "Expand skills",
+    collapseDetails: "Collapse skills",
   },
 };
 
@@ -62,19 +64,33 @@ describe("SkillsSection Component", () => {
     expect(screen.getByText("Backend")).toBeInTheDocument();
   });
 
-  it("renders all skills within categories", () => {
+  it("renders all skills within categories after expanding a card", async () => {
+    const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+
+    // Skills are collapsed by default — expand the first card (Mobile Development)
+    const expandButtons = screen.getAllByRole("button", { name: /expand skills/i });
+    await user.click(expandButtons[0]);
     expect(screen.getByText("React Native")).toBeInTheDocument();
     expect(screen.getByText("TypeScript")).toBeInTheDocument();
-    expect(screen.getByText("Next.js")).toBeInTheDocument();
-    expect(screen.getByText("Tailwind CSS")).toBeInTheDocument();
-    expect(screen.getByText("Node.js")).toBeInTheDocument();
+
+    // Other categories are still collapsed
+    expect(screen.queryByText("Next.js")).not.toBeInTheDocument();
+    expect(screen.queryByText("Node.js")).not.toBeInTheDocument();
   });
 
-  it("renders skill level indicators when level is provided", () => {
+  it("renders skill level indicators when the card is expanded", async () => {
+    const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+
+    // Expand the first card (Mobile Development)
+    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
     expect(screen.getAllByText("expert").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("advanced").length).toBeGreaterThan(0);
+
+    // Expand Backend card to see "intermediate"
+    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]); // this collapses Mobile
+    const buttons = screen.getAllByRole("button", { name: /expand skills/i });
+    await user.click(buttons[buttons.length - 1]); // expand Backend (last card)
     expect(screen.getByText("intermediate")).toBeInTheDocument();
   });
 
@@ -84,7 +100,7 @@ describe("SkillsSection Component", () => {
     expect(input).toBeInTheDocument();
   });
 
-  it("filters skills by name when typing in search input", async () => {
+  it("auto-expands cards and filters skills by name when typing in search input", async () => {
     const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
     const input = screen.getByRole("searchbox");
@@ -110,14 +126,17 @@ describe("SkillsSection Component", () => {
     });
   });
 
-  it("shows all skills when filter is cleared", async () => {
+  it("shows all category titles when filter is cleared", async () => {
     const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
     const input = screen.getByRole("searchbox");
     await user.type(input, "React");
     await user.clear(input);
     await waitFor(() => {
-      expect(screen.getByText("Node.js")).toBeInTheDocument();
+      // After clearing the filter cards return to collapsed state;
+      // category titles are always visible
+      expect(screen.getByText("Backend")).toBeInTheDocument();
+      expect(screen.getByText("Frontend Web")).toBeInTheDocument();
     });
   });
 
@@ -128,21 +147,45 @@ describe("SkillsSection Component", () => {
 
   it("renders skills in a responsive grid", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
-    // Grid container should exist
     const grid = document.querySelector(".grid");
     expect(grid).toBeInTheDocument();
   });
 
-  it("renders category headings as h2 (Card component uses h2)", () => {
+  it("renders category headings as h3", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
-    const headings = screen.getAllByRole("heading", { level: 2 });
-    // Should have at least 4 h2 headings: 1 main "Skills" + 3 category headings
-    expect(headings.length).toBeGreaterThanOrEqual(4);
+    const headings = screen.getAllByRole("heading", { level: 3 });
+    // Should have 3 category h3 headings
+    expect(headings.length).toBeGreaterThanOrEqual(3);
+    expect(headings.map((h) => h.textContent)).toEqual(
+      expect.arrayContaining(["Mobile Development", "Frontend Web", "Backend"])
+    );
   });
 
   it("renders empty skills array gracefully", () => {
     renderWithIntl(<SkillsSection skills={[]} locale="en" />);
-    // Should not crash, just show empty state or nothing
+    // Should not crash, section heading still present
     expect(screen.getByRole("heading", { level: 2 })).toBeInTheDocument();
+  });
+
+  it("shows a toggle button per category card", () => {
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+    const buttons = screen.getAllByRole("button", { name: /expand skills/i });
+    expect(buttons).toHaveLength(sampleSkills.length);
+  });
+
+  it("accordion: opening one card closes the previously open one", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+
+    const expandButtons = screen.getAllByRole("button", { name: /expand skills/i });
+
+    // Open first card
+    await user.click(expandButtons[0]);
+    expect(screen.getByText("React Native")).toBeInTheDocument();
+
+    // Open second card — first should close
+    await user.click(screen.getAllByRole("button")[1]); // now collapseDetails for first, expandDetails for second
+    expect(screen.queryByText("React Native")).not.toBeInTheDocument();
+    expect(screen.getByText("Next.js")).toBeInTheDocument();
   });
 });

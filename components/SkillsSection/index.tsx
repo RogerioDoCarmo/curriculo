@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { SkillCategory, SkillLevel } from "@/types/index";
-import Card from "@/components/Card";
 import HighlightedText from "@/components/HighlightedText";
 
 interface SkillsSectionProps {
@@ -21,6 +20,7 @@ const levelColors: Record<SkillLevel, string> = {
 export default function SkillsSection({ skills, locale: _locale }: SkillsSectionProps) {
   const t = useTranslations();
   const [filter, setFilter] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const query = filter.trim().toLowerCase();
 
@@ -60,29 +60,74 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredSkills.map((cat) => (
-              <Card key={cat.category} title={cat.category}>
-                <ul className="space-y-2" aria-label={`${cat.category} ${t("skills.skillsLabel")}`}>
-                  {cat.skills.map((skill) => (
-                    <li key={skill.name} className="flex items-center justify-between gap-2">
-                      <HighlightedText
-                        text={skill.name}
-                        highlight={filter}
-                        className="text-sm text-gray-800 dark:text-gray-200"
-                      />
-                      {skill.level && (
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${levelColors[skill.level]}`}
-                          aria-label={`${t("skills.levelLabel")}: ${skill.level}`}
-                        >
-                          {skill.level}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            ))}
+            {filteredSkills.map((cat) => {
+              const isExpanded = expandedId === cat.category;
+              const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;
+              return (
+                <div
+                  key={cat.category}
+                  className="rounded-lg border border-transparent bg-white p-6 shadow-md transition-shadow duration-200 hover:border-primary-100 hover:shadow-lg dark:bg-gray-800 dark:shadow-gray-900/50 dark:hover:border-primary-900 dark:hover:shadow-gray-900/70"
+                >
+                  {/* Header row: category title + chevron */}
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                      {cat.category}
+                    </h3>
+                    <button
+                      type="button"
+                      aria-expanded={isExpanded}
+                      aria-controls={detailsId}
+                      onClick={() => setExpandedId(isExpanded ? null : cat.category)}
+                      className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      aria-label={
+                        isExpanded ? t("skills.collapseDetails") : t("skills.expandDetails")
+                      }
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Collapsible skills list — also visible when a filter is active */}
+                  {(isExpanded || query) && (
+                    <ul
+                      id={detailsId}
+                      className="mt-4 space-y-2"
+                      aria-label={`${cat.category} ${t("skills.skillsLabel")}`}
+                    >
+                      {cat.skills.map((skill) => (
+                        <li key={skill.name} className="flex items-center justify-between gap-2">
+                          <HighlightedText
+                            text={skill.name}
+                            highlight={filter}
+                            className="text-sm text-gray-800 dark:text-gray-200"
+                          />
+                          {skill.level && (
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${levelColors[skill.level]}`}
+                              aria-label={`${t("skills.levelLabel")}: ${skill.level}`}
+                            >
+                              {skill.level}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
