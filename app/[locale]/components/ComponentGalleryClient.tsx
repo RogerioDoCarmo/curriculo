@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { ExternalLink } from "lucide-react";
 import Button from "@/components/Button";
 import Card from "@/components/Card";
 import Modal from "@/components/Modal";
@@ -28,7 +29,16 @@ export default function ComponentGalleryClient({ locale }: ComponentGalleryClien
         {/* Page Header */}
         <header className="mb-12 text-center">
           <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">{t("heading")}</h1>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">{t("subheading")}</p>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-6">{t("subheading")}</p>
+          <a
+            href="https://www.chromatic.com/library?appId=6a1b4e8a78d533ad545f5bc0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-[#FC521F] hover:bg-[#e04519] shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-[#FC521F] focus:ring-offset-2 transition-all duration-200"
+          >
+            {t("storybookButton")}
+            <ExternalLink className="w-4 h-4" aria-hidden="true" />
+          </a>
         </header>
 
         {/* Component Showcases */}

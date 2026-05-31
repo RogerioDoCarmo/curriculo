@@ -99,7 +99,8 @@ const NAV_SECTIONS = [
   { labelKey: "nav.experience", href: "#experience" },
   { labelKey: "nav.skills", href: "#skills" },
   { labelKey: "nav.contact", href: "#contact" },
-  { labelKey: "nav.techStack", href: "#tech-stack" },
+  { labelKey: "nav.techStack", href: "/tech-stack", external: true },
+  { labelKey: "nav.componentGallery", href: "/components", external: true },
   { labelKey: "footer.privacyPolicy", href: "/privacy", external: true },
   { labelKey: "footer.cookiePolicy", href: "/cookies", external: true },
   { labelKey: "footer.termsOfUse", href: "/terms", external: true },
@@ -122,8 +123,7 @@ export default function Footer({ locale }: FooterProps) {
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
-  const handleCookieSettingsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleCookieSettingsClick = () => {
     openBanner();
   };
 
@@ -149,8 +149,8 @@ export default function Footer({ locale }: FooterProps) {
               {NAV_SECTIONS.map(({ labelKey, href, external, cookieSettings }) => (
                 <li key={href}>
                   {cookieSettings ? (
-                    <a
-                      href="#cookie-settings"
+                    <button
+                      type="button"
                       onClick={handleCookieSettingsClick}
                       aria-label={t(labelKey)}
                       className="
@@ -161,7 +161,7 @@ export default function Footer({ locale }: FooterProps) {
                       "
                     >
                       {t(labelKey)}
-                    </a>
+                    </button>
                   ) : (
                     <a
                       href={external ? `/${locale}${href}` : href}

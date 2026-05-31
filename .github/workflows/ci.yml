@@ -495,6 +495,35 @@ jobs:
           name: lighthouse-results
           path: lighthouse-report.json
 
+  chromatic:
+    name: Chromatic
+    runs-on: ubuntu-latest
+    needs: build
+    if:
+      github.event_name == 'pull_request' || github.ref == 'refs/heads/main' ||
+      github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Full history required for Chromatic to detect baseline builds
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build-storybook # Uses the npm script, avoids yarn resolution issues
+
   sonarqube:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
@@ -533,7 +562,7 @@ jobs:
   status-check:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test, coverage, build, e2e, lighthouse, sonarqube]
+    needs: [lint, type-check, test, coverage, build, e2e, lighthouse, sonarqube, chromatic]
     if: always()
 
     steps:
@@ -557,6 +586,15 @@ jobs:
             echo "⚠️  Lighthouse tests failed (non-blocking)"
           else
             echo "⚠️  Lighthouse tests skipped"
+          fi
+
+          # Check Chromatic (can be success, failure, or skipped - not blocking)
+          if [[ "${{ needs.chromatic.result }}" == "success" ]]; then
+            echo "✅ Chromatic published successfully"
+          elif [[ "${{ needs.chromatic.result }}" == "failure" ]]; then
+            echo "⚠️  Chromatic publish failed (non-blocking)"
+          else
+            echo "⚠️  Chromatic skipped"
           fi
 
           # Check SonarQube (can be success or skipped)

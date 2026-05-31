@@ -4,13 +4,16 @@ import Modal from "./index";
 import Button from "../Button";
 
 /**
- * Modal component with overlay, focus trap, and keyboard navigation.
+ * Modal component with overlay, focus management, scroll lock, and keyboard navigation.
  *
  * Features:
  * - ESC key closes modal
  * - Backdrop click closes modal
- * - Focus trap keeps focus inside modal
- * - Proper ARIA attributes for accessibility
+ * - Focus moves into modal on open (first focusable element)
+ * - Focus is restored to the previously focused element on close
+ * - Body scroll is locked while the modal is open
+ * - z-index of 200 ensures the modal sits above the sticky header (z-50)
+ * - Proper ARIA attributes for accessibility (role, aria-modal, aria-labelledby)
  */
 const meta: Meta<typeof Modal> = {
   title: "Components/Modal",
@@ -83,7 +86,10 @@ export const WithoutTitle: Story = {
 };
 
 /**
- * Interactive modal with open/close button
+ * Interactive modal with open/close button.
+ * Demonstrates focus restoration (focus returns to "Open Modal" button on close),
+ * body scroll lock (page scroll is disabled while open), and the ESC / backdrop-click
+ * dismiss behaviours.
  */
 export const Interactive: Story = {
   render: function InteractiveModal() {
@@ -96,7 +102,8 @@ export const Interactive: Story = {
         </Button>
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Interactive Modal">
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Click the X button, press ESC, or click outside to close this modal.
+            Click the X button, press ESC, or click outside to close. Focus will return to the
+            &quot;Open Modal&quot; button and the page scroll will be restored.
           </p>
           <div className="flex justify-end gap-2">
             <Button variant="secondary" size="md" onClick={() => setIsOpen(false)}>
