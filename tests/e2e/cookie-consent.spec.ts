@@ -97,9 +97,12 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/");
 
       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
-      await banner.getByRole("button", { name: /aceitar|accept/i }).click();
-
-      // Wait for reload
+      // Start listening for the reload BEFORE clicking so WebKit cannot destroy
+      // the execution context between waitForLoadState resolving and page.evaluate.
+      await Promise.all([
+        page.waitForLoadState("load"),
+        banner.getByRole("button", { name: /aceitar|accept/i }).click(),
+      ]);
       await page.waitForLoadState("networkidle");
 
       // Check localStorage
@@ -178,6 +181,9 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/");
 
       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
+      // Wait for banner to be fully rendered before clicking — without this, WebKit's
+      // 8s action timer expires while the banner entrance animation is still running.
+      await expect(banner).toBeVisible({ timeout: 10000 });
       await banner.getByRole("button", { name: /rejeitar|reject/i }).click();
 
       // Check that analytics consent is NOT granted
