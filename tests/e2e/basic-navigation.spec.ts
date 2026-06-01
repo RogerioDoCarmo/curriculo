@@ -51,10 +51,12 @@ test.describe("Basic Navigation", () => {
 
   test("should display content sections", async ({ page }) => {
     await page.goto("/");
+    // WebKit needs network idle before sections are queryable
+    await page.waitForLoadState("networkidle");
 
     // Verify hero section exists
     const heroSection = page.locator('section[id="home"]');
-    await expect(heroSection).toBeVisible();
+    await expect(heroSection).toBeVisible({ timeout: 10000 });
 
     // Verify main heading is visible
     const heading = page.getByRole("heading", { level: 1 });

@@ -112,9 +112,13 @@ test.describe("Print and PDF Output", () => {
   });
 
   test("should expand collapsed content for print", async ({ page }) => {
+    // Wait for page to fully load before switching media — WebKit re-layouts on
+    // emulateMedia and sections become unqueryable if the DOM isn't settled first.
+    await page.waitForLoadState("networkidle");
+
     // Emulate print media
     await page.emulateMedia({ media: "print" });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
     // Verify all sections are visible (not collapsed)
     const sections = page.locator("section");
