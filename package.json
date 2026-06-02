@@ -48,7 +48,7 @@
     "react-hook-form": "^7.x",
     "schema-dts": "^2.0.0",
     "tailwindcss": "^4.x",
-    "zod": "^3.x"
+    "zod": "^4.x"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.1.2",
