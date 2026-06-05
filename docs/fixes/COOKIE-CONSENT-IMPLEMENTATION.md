@@ -164,7 +164,6 @@ messages/en.json                      # English translations (updated)
 
 ## Related Documentation
 
-- [Firebase Analytics Implementation Summary](./FIREBASE-ANALYTICS-IMPLEMENTATION-SUMMARY.md)
 - [Task 33: Privacy Compliance](./.kiro/specs/personal-resume-website/tasks.md#task-33)
 
 ## Notes

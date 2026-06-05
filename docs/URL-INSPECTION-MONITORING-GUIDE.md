@@ -526,7 +526,6 @@ Track these metrics to measure SEO success:
 
 ### Related Documentation
 
-- [Search Visibility Test Results](./SEARCH-VISIBILITY-TEST.md)
 - [Google Search Console Setup](./GOOGLE-SEARCH-CONSOLE-SETUP.md)
 - [SEO Submission Guide](./SEO-SUBMISSION-GUIDE.md)
 
