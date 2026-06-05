@@ -8,7 +8,6 @@
 <!-- Code Quality -->
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=RogerioDoCarmo_curriculo)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
@@ -16,19 +15,19 @@
 
 <!-- Tech Stack -->
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.2.4-black?logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2.6-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://reactjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
 
 <!-- Project Info -->
 
 [![GitHub Release](https://img.shields.io/github/v/release/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo?cacheSeconds=3600)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
 [![Open Issues](https://img.shields.io/github/issues/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D24.0.0-green?logo=node.js)](https://nodejs.org/)
 [![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
 [![Last Commit](https://img.shields.io/github/last-commit/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/commits/main)
 
@@ -38,7 +37,7 @@
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97706?logo=anthropic&logoColor=white)](https://claude.ai/code)
 [![Chromatic](https://img.shields.io/badge/storybook-chromatic-FC521F?logo=storybook&logoColor=white)](https://www.chromatic.com/builds?appId=6a1b4e8a78d533ad545f5bc0)
 
-A modern, responsive personal resume website built with Next.js 16.2.4, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+A modern, responsive personal resume website built with Next.js 16.2.6, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
 
@@ -102,7 +101,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.2.4 (App Router) with TypeScript
+- **Framework**: Next.js 16.2.6 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + CSS Modules
 - **Content**: Markdown files with Gray-matter parsing
 - **Internationalization**: next-intl 4.9.2
@@ -117,7 +116,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 - **Deployment**: Vercel with custom domains
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
 
-> **Note**: Recently upgraded from Next.js 14 to 16.2.4 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
+> **Note**: Recently upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
 
 ## Project Structure
 
@@ -172,7 +171,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of patterns, lay
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24+
 - npm or yarn
 - Git
 
@@ -318,8 +317,6 @@ The website is fully optimized for search engines and submitted to major search 
 
 ### 📚 Documentation
 
-- [docs/SEO-MONITORING-COMPLETION-LOG.md](./docs/SEO-MONITORING-COMPLETION-LOG.md) - **✅ Monitoring setup completion log**
-- [docs/SEARCH-VISIBILITY-TEST.md](./docs/SEARCH-VISIBILITY-TEST.md) - **Latest search visibility test results**
 - [docs/URL-INSPECTION-MONITORING-GUIDE.md](./docs/URL-INSPECTION-MONITORING-GUIDE.md) - **Complete URL inspection and monitoring setup**
 - [docs/URL-INSPECTION-QUICK-CHECKLIST.md](./docs/URL-INSPECTION-QUICK-CHECKLIST.md) - **Quick checklist for monitoring setup**
 - [docs/GOOGLE-SEARCH-CONSOLE-SETUP.md](./docs/GOOGLE-SEARCH-CONSOLE-SETUP.md) - Complete GSC setup guide
@@ -374,6 +371,6 @@ MIT
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
 - [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
 - [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
-- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.4 upgrade details** 🆕
+- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.6 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
