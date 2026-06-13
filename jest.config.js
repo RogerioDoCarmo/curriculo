@@ -7,6 +7,8 @@ const config = {
       "ts-jest",
       {
         tsconfig: {
+          rootDir: ".",
+          ignoreDeprecations: "6.0",
           jsx: "react-jsx",
           module: "commonjs",
           moduleResolution: "node",
@@ -18,6 +20,8 @@ const config = {
       "ts-jest",
       {
         tsconfig: {
+          rootDir: ".",
+          ignoreDeprecations: "6.0",
           jsx: "react-jsx",
           module: "commonjs",
           moduleResolution: "node",
@@ -42,6 +46,9 @@ const config = {
     "tests/properties/tech-stack-links.test.tsx",
     "tests/integration/resume-download.test.tsx",
     "tests/integration/responsive-layout.test.tsx",
+    // Exclude tests requiring a running production server (use npm run test:lighthouse / test:properties)
+    "tests/lighthouse/performance.test.ts",
+    "tests/properties/lighthouse-ci-server-startup.test.ts",
   ],
   collectCoverageFrom: [
     "lib/**/*.{ts,tsx}",

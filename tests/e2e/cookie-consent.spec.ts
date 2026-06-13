@@ -130,9 +130,16 @@ test.describe("Cookie Consent Banner", () => {
       await page.goto("/");
 
       const banner = page.getByRole("dialog", { name: /cookies|privacidade/i });
-      await banner.getByRole("button", { name: /aceitar|accept/i }).click();
 
-      // Wait for reload
+      // Start listening for the reload BEFORE clicking so WebKit cannot destroy
+      // the execution context between waitForLoadState resolving and page.evaluate.
+      await Promise.all([
+        page.waitForLoadState("load"),
+        banner.getByRole("button", { name: /aceitar|accept/i }).click(),
+      ]);
+      // Second waitForLoadState catches any secondary navigation (e.g. locale redirect)
+      // that follows the reload — safe no-op when there is no second navigation.
+      await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
       // Check that analytics consent is granted

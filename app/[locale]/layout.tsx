@@ -18,6 +18,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  preload: false,
 });
 
 // ─── Locale-specific metadata config ─────────────────────────────────────────
@@ -197,9 +198,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
         {/* FOUC prevention: async + src makes React 19 treat this as a hoistable resource,
-            avoiding the "script tag while rendering" warning. preload ensures the browser
-            fetches the tiny file during early head parsing so it runs before first paint. */}
-        <link rel="preload" as="script" href="/theme-init.js" />
+            avoiding the "script tag while rendering" warning. Next.js hoists this early
+            in <head> automatically, so no separate preload hint is needed. */}
         <script src="/theme-init.js" async />
       </head>
       <body
