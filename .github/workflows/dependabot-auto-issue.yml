@@ -1,11 +1,15 @@
 name: Dependabot Auto Issue
 
-# This workflow automatically creates GitHub issues for Dependabot security alerts
-# It runs when a new Dependabot alert is created or reopened
+# This workflow automatically creates GitHub issues for open Dependabot security alerts.
+# GitHub has no workflow trigger that fires on alert creation (the old
+# repository_vulnerability_alert event was removed), so the job polls all open
+# alerts on a schedule and dedupes against existing issues. Can also be run manually.
 
 on:
-  repository_vulnerability_alert:
-    types: [create]
+  schedule:
+    # Daily at 08:00 UTC
+    - cron: "0 8 * * *"
+  workflow_dispatch:
 
 permissions:
   issues: write
