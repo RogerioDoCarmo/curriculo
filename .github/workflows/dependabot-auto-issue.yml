@@ -5,7 +5,7 @@ name: Dependabot Auto Issue
 
 on:
   repository_vulnerability_alert:
-    types: [ create ]
+    types: [create]
 
 permissions:
   issues: write
