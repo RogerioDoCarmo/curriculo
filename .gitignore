@@ -174,3 +174,6 @@ chromatic.config.*
 *.tar.gz
 *.zip
 *-checksums.txt
+
+# Local operational docs (non-code, never commit)
+docs/security-remediation/

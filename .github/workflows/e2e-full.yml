@@ -39,8 +39,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
-        run:
-          npx playwright install --with-deps ${{ matrix.browser == 'mobile-chrome' &&
+        run: npx playwright install --with-deps ${{ matrix.browser == 'mobile-chrome' &&
           'chromium' || matrix.browser == 'mobile-safari' && 'webkit' ||
           matrix.browser }}
 
