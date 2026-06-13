@@ -162,7 +162,8 @@ export default function ExperienceSection({
                     </button>
                   </div>
 
-                  <div className="mt-3">
+                  {/* Collapsed cards preview only the first three lines; expanding reveals the full text. */}
+                  <div className={`mt-3 ${isExpanded ? "" : "line-clamp-3"}`}>
                     <MarkdownText text={exp.description} />
                   </div>
 
