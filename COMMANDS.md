@@ -13,11 +13,11 @@ npm run dev:clean            # Start development server and clean the caches(htt
 npm run storybook            # Start Storybook component explorer (http://localhost:6006)
 npm run test:coverage        # Run tests with coverage report
 npm run test:e2e             # Run E2E tests with Playwright
+npm run test:properties      # Run propertie tests
 npm run test:lighthouse:full # Build and run Lighthouse performance audits (all-in-one)
 npm run lint                 # Run ESLint to check code quality
 npm run format:check         # Check code formatting without fixing
-
-npx prettier --write .       # Auto-fix all formatting issues
+npm run format               # Auto-fix all formatting issues (alias for: npx prettier --write .)
 
 # Publish Storybook to Chromatic (token passed as env variable, never stored in code)
 CHROMATIC_PROJECT_TOKEN=<your-token> npm run chromatic:publish
@@ -79,7 +79,6 @@ LIGHTHOUSE_URL=https://rogeriodocarmo.com npm run test:lighthouse
 npm run lint                # Run ESLint
 npm run format              # Auto-fix formatting with Prettier
 npm run format:check        # Check formatting without fixing
-npx prettier --write .      # Format all files in project
 ```
 
 ## Git Workflow
