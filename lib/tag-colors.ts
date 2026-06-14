@@ -153,30 +153,17 @@ export function getTechTheme(tech: string): TagTheme {
 }
 
 /**
- * Get color classes for a technology tag
+ * Get color classes for a technology tag.
+ * Delegates to {@link getThemeColorClasses} after resolving the theme so the
+ * class strings live in a single place (no duplicated switch).
  */
 export function getTechColorClasses(tech: string): string {
-  const theme = getTechTheme(tech);
-
-  // Return complete class strings so Tailwind JIT can detect them
-  switch (theme) {
-    case "mobile":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
-    case "web":
-      return "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300";
-    case "backend":
-      return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
-    case "devops":
-      return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
-    case "tools":
-      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
-    default:
-      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
-  }
+  return getThemeColorClasses(getTechTheme(tech));
 }
 
 /**
- * Get color classes for a specific theme
+ * Get color classes for a specific theme.
+ * Complete class strings are returned literally so Tailwind JIT can detect them.
  */
 export function getThemeColorClasses(theme: TagTheme): string {
   switch (theme) {
@@ -189,6 +176,8 @@ export function getThemeColorClasses(theme: TagTheme): string {
     case "devops":
       return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
     case "tools":
+      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
+    default:
       return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
   }
 }
