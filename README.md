@@ -97,7 +97,7 @@ This website can be installed as a Progressive Web App on mobile devices, provid
 - **iOS**: Safari → Share → "Add to Home Screen"
 - **Android**: Chrome → Menu → "Add to Home screen" or "Install app"
 
-See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
+See [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
 
 ## Tech Stack
 
@@ -258,7 +258,7 @@ npm run test:lighthouse         # Terminal 2
 
 **Note**: Lighthouse tests must run against the production build (`npm run serve`), not the dev server (`npm run dev`). Use `test:lighthouse:full` for convenience.
 
-See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.
+See [TESTING.md](./docs/testing/TESTING.md) for comprehensive testing guidelines and best practices.
 
 ## Deployment
 
@@ -353,7 +353,7 @@ See `.env.example` for required environment variables. Create `.env.local` for l
 - **Formatting**: Prettier with consistent formatting
 - **Type Safety**: TypeScript strict mode
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for code style guidelines and development workflow.
+See [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) for code style guidelines and development workflow.
 
 ## License
 
@@ -362,9 +362,9 @@ MIT
 ## Documentation
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
-- [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
-- [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
+- [TESTING.md](./docs/testing/TESTING.md) - Comprehensive testing guide and best practices
+- [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) - Code style guidelines and development workflow
+- [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
 - [docs/BADGES.md](./docs/BADGES.md) - **Explanation of all quality badges** (16 badges)
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
