@@ -8,107 +8,70 @@ interface MarkdownTextProps {
   readonly className?: string;
 }
 
+type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+
+// Tailwind classes per heading level (index 1-6); index 0 is unused.
+const HEADING_CLASSES: readonly string[] = [
+  "",
+  "mt-8 mb-4 text-xl font-bold text-gray-900 dark:text-gray-100",
+  "mt-6 mb-3 text-lg font-bold text-gray-900 dark:text-gray-100",
+  "mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100",
+  "mt-3 mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100",
+  "mt-2 mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100",
+  "mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100",
+];
+
+// Marker-only regexes (no unbounded content quantifier -> trivially linear, no ReDoS).
+const HEADING_MARKER = /^(#{1,6})\s/;
+const NUMBERED_MARKER = /^(\d+)\.\s/;
+const LIST_MARKER = /^-\s*/;
+
+/**
+ * Build a stable, unique React key per line based on content and the line's
+ * occurrence count, avoiding array-index keys (which are fragile when content
+ * shifts and are flagged by lint/Sonar).
+ */
+function keyForLines(lines: string[]): { line: string; key: string }[] {
+  const occurrences = new Map<string, number>();
+  return lines.map((line) => {
+    const seen = occurrences.get(line) ?? 0;
+    occurrences.set(line, seen + 1);
+    return { line, key: `${seen}:${line}` };
+  });
+}
+
 export default function MarkdownText({ text, className = "" }: MarkdownTextProps) {
-  // Split text into lines
-  const lines = text.split("\n");
+  const lines = keyForLines(text.split("\n"));
 
   return (
     <div className={className}>
-      {lines.map((line, index) => {
+      {lines.map(({ line, key }) => {
         const trimmedLine = line.trim();
 
         // Skip empty lines
         if (!trimmedLine) {
-          return <div key={index} className="h-2" />;
+          return <div key={key} className="h-2" />;
         }
 
-        // Handle headings - use regex to match exact number of # characters
-        // Check from most specific (######) to least specific (#)
-        // Using [^\n] instead of .+ to prevent ReDoS attacks
-
-        // ###### heading (h6)
-        const h6Match = trimmedLine.match(/^######\s+([^\n]+)$/);
-        if (h6Match) {
+        // Handle headings (#..######). The regex only detects the marker; the
+        // content is extracted with slice + trim.
+        const headingMatch = HEADING_MARKER.exec(trimmedLine);
+        if (headingMatch) {
+          const level = headingMatch[1].length;
+          const content = trimmedLine.slice(level).trim();
+          const HeadingTag = `h${level}` as HeadingTag;
           return (
-            <h6
-              key={index}
-              className="mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h6Match[1])}
-            </h6>
-          );
-        }
-
-        // ##### heading (h5)
-        const h5Match = trimmedLine.match(/^#####\s+([^\n]+)$/);
-        if (h5Match) {
-          return (
-            <h5
-              key={index}
-              className="mt-2 mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h5Match[1])}
-            </h5>
-          );
-        }
-
-        // #### heading (h4)
-        const h4Match = trimmedLine.match(/^####\s+([^\n]+)$/);
-        if (h4Match) {
-          return (
-            <h4
-              key={index}
-              className="mt-3 mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h4Match[1])}
-            </h4>
-          );
-        }
-
-        // ### heading (h3)
-        const h3Match = trimmedLine.match(/^###\s+([^\n]+)$/);
-        if (h3Match) {
-          return (
-            <h3
-              key={index}
-              className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h3Match[1])}
-            </h3>
-          );
-        }
-
-        // ## heading (h2)
-        const h2Match = trimmedLine.match(/^##\s+([^\n]+)$/);
-        if (h2Match) {
-          return (
-            <h2
-              key={index}
-              className="mt-6 mb-3 text-lg font-bold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h2Match[1])}
-            </h2>
-          );
-        }
-
-        // # heading (h1)
-        const h1Match = trimmedLine.match(/^#\s+([^\n]+)$/);
-        if (h1Match) {
-          return (
-            <h1
-              key={index}
-              className="mt-8 mb-4 text-xl font-bold text-gray-900 dark:text-gray-100"
-            >
-              {formatInlineMarkdown(h1Match[1])}
-            </h1>
+            <HeadingTag key={key} className={HEADING_CLASSES[level]}>
+              {formatInlineMarkdown(content)}
+            </HeadingTag>
           );
         }
 
         // Handle list items (-)
         if (trimmedLine.startsWith("-")) {
-          const listText = trimmedLine.replace(/^-\s*/, "");
+          const listText = trimmedLine.replace(LIST_MARKER, "");
           return (
-            <div key={index} className="flex gap-2 mb-1">
+            <div key={key} className="flex gap-2 mb-1">
               <span className="text-gray-500 dark:text-gray-400">•</span>
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 {formatInlineMarkdown(listText)}
@@ -117,12 +80,13 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           );
         }
 
-        // Handle numbered lists (1., 2., etc.) - using [^\n] to prevent ReDoS
-        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+([^\n]+)$/);
+        // Handle numbered lists (1., 2., etc.) — marker-only regex, content sliced.
+        const numberedMatch = NUMBERED_MARKER.exec(trimmedLine);
         if (numberedMatch) {
-          const [, number, listText] = numberedMatch;
+          const number = numberedMatch[1];
+          const listText = trimmedLine.slice(numberedMatch[0].length).trim();
           return (
-            <div key={index} className="flex gap-2 mb-1">
+            <div key={key} className="flex gap-2 mb-1">
               <span className="text-gray-500 dark:text-gray-400">{number}.</span>
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 {formatInlineMarkdown(listText)}
@@ -133,7 +97,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
 
         // Regular paragraph
         return (
-          <p key={index} className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+          <p key={key} className="text-sm text-gray-700 dark:text-gray-300 mb-2">
             {formatInlineMarkdown(trimmedLine)}
           </p>
         );
@@ -142,55 +106,84 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
   );
 }
 
+/** A parsed inline token plus the index to resume scanning from. */
+interface InlineToken {
+  readonly node: React.ReactNode;
+  readonly next: number;
+}
+
 /**
- * Format inline markdown (bold **text** and links [text](url))
- * Using non-greedy quantifiers and character classes to prevent ReDoS
+ * Try to parse **bold** starting at index `i`.
+ * Content must be non-empty and contain no "*" or newline.
+ */
+function parseBold(text: string, i: number): InlineToken | null {
+  if (text[i] !== "*" || text[i + 1] !== "*") return null;
+  const close = text.indexOf("**", i + 2);
+  if (close <= i + 2) return null;
+  const inner = text.substring(i + 2, close);
+  if (inner.includes("*") || inner.includes("\n")) return null;
+  return {
+    node: (
+      <strong key={i} className="font-semibold">
+        {inner}
+      </strong>
+    ),
+    next: close + 2,
+  };
+}
+
+/**
+ * Try to parse [text](url) starting at index `i`.
+ * Text and url are bounded by the first "]"/")", so only newlines are excluded.
+ */
+function parseLink(text: string, i: number): InlineToken | null {
+  if (text[i] !== "[") return null;
+  const closeBracket = text.indexOf("]", i + 1);
+  if (closeBracket <= i + 1 || text[closeBracket + 1] !== "(") return null;
+  const closeParen = text.indexOf(")", closeBracket + 2);
+  if (closeParen <= closeBracket + 2) return null;
+  const linkText = text.substring(i + 1, closeBracket);
+  const url = text.substring(closeBracket + 2, closeParen);
+  if (linkText.includes("\n") || url.includes("\n")) return null;
+  return {
+    node: (
+      <a
+        key={i}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        {linkText}
+      </a>
+    ),
+    next: closeParen + 1,
+  };
+}
+
+/**
+ * Format inline markdown (bold **text** and links [text](url)).
+ *
+ * A single linear left-to-right scan (indexOf via the parse helpers) — no regex
+ * and no backtracking surface, so it is immune to ReDoS.
  */
 function formatInlineMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
-  let currentIndex = 0;
+  let plainStart = 0;
+  let i = 0;
 
-  // Non-backtracking regex: match bold or links with limited character sets
-  // [^*\n] for bold content, [^\]\n] for link text, [^)\n] for URL
-  const markdownRegex = /(\*\*([^*\n]+?)\*\*|\[([^\]\n]+?)\]\(([^)\n]+?)\))/g;
-  let match;
-
-  while ((match = markdownRegex.exec(text)) !== null) {
-    // Add text before the markdown part
-    if (match.index > currentIndex) {
-      parts.push(text.substring(currentIndex, match.index));
+  while (i < text.length) {
+    const token = parseBold(text, i) ?? parseLink(text, i);
+    if (token) {
+      if (i > plainStart) parts.push(text.substring(plainStart, i));
+      parts.push(token.node);
+      i = token.next;
+      plainStart = i;
+    } else {
+      i++;
     }
-
-    // Check if it's a bold pattern (**text**)
-    if (match[2]) {
-      parts.push(
-        <strong key={match.index} className="font-semibold">
-          {match[2]}
-        </strong>
-      );
-    }
-    // Check if it's a link pattern [text](url)
-    else if (match[3] && match[4]) {
-      parts.push(
-        <a
-          key={match.index}
-          href={match[4]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 dark:text-blue-400 hover:underline"
-        >
-          {match[3]}
-        </a>
-      );
-    }
-
-    currentIndex = match.index + match[0].length;
   }
 
-  // Add remaining text
-  if (currentIndex < text.length) {
-    parts.push(text.substring(currentIndex));
-  }
-
+  if (text.length > plainStart) parts.push(text.substring(plainStart));
   return parts.length > 0 ? parts : text;
 }
