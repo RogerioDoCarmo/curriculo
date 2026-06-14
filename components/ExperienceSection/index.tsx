@@ -140,7 +140,7 @@ export default function ExperienceSection({
                     </div>
                     <button
                       type="button"
-                      aria-expanded={isExpanded}
+                      aria-expanded={isExpanded ? "true" : "false"}
                       aria-controls={`exp-details-${exp.id}`}
                       onClick={() => setExpandedId(isExpanded ? null : exp.id)}
                       className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
