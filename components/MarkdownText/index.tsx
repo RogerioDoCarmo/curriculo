@@ -93,55 +93,78 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
 }
 
 /**
- * Format inline markdown (bold **text** and links [text](url))
- * Using non-greedy quantifiers and character classes to prevent ReDoS
+ * Format inline markdown (bold **text** and links [text](url)).
+ *
+ * Implemented as a single linear left-to-right scan using indexOf rather than a
+ * regex, so there is no backtracking surface at all (no ReDoS). Matching rules
+ * mirror the previous regex: bold content excludes "*"/newlines, link text
+ * excludes "]"/newlines, and URLs exclude ")"/newlines; all must be non-empty.
  */
 function formatInlineMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
-  let currentIndex = 0;
+  let plainStart = 0;
+  let i = 0;
 
-  // Non-backtracking regex: each content class excludes its own closing
-  // delimiter (* for bold, ] for link text, ) for URL), so greedy quantifiers
-  // match each position exactly once — linear runtime, no ReDoS backtracking.
-  const markdownRegex = /(\*\*([^*\n]+)\*\*|\[([^\]\n]+)\]\(([^)\n]+)\))/g;
-  let match;
+  const flushPlain = (end: number): void => {
+    if (end > plainStart) parts.push(text.substring(plainStart, end));
+  };
 
-  while ((match = markdownRegex.exec(text)) !== null) {
-    // Add text before the markdown part
-    if (match.index > currentIndex) {
-      parts.push(text.substring(currentIndex, match.index));
+  while (i < text.length) {
+    const char = text[i];
+
+    // Bold: **text** — content must be non-empty and contain no "*" or newline.
+    if (char === "*" && text[i + 1] === "*") {
+      const close = text.indexOf("**", i + 2);
+      if (close > i + 2) {
+        const inner = text.substring(i + 2, close);
+        if (!inner.includes("*") && !inner.includes("\n")) {
+          flushPlain(i);
+          parts.push(
+            <strong key={i} className="font-semibold">
+              {inner}
+            </strong>
+          );
+          i = close + 2;
+          plainStart = i;
+          continue;
+        }
+      }
     }
 
-    // Check if it's a bold pattern (**text**)
-    if (match[2]) {
-      parts.push(
-        <strong key={match.index} className="font-semibold">
-          {match[2]}
-        </strong>
-      );
-    }
-    // Check if it's a link pattern [text](url)
-    else if (match[3] && match[4]) {
-      parts.push(
-        <a
-          key={match.index}
-          href={match[4]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 dark:text-blue-400 hover:underline"
-        >
-          {match[3]}
-        </a>
-      );
+    // Link: [text](url) — text and url non-empty, no closing delimiter or newline.
+    if (char === "[") {
+      const closeBracket = text.indexOf("]", i + 1);
+      if (closeBracket > i + 1 && text[closeBracket + 1] === "(") {
+        const closeParen = text.indexOf(")", closeBracket + 2);
+        if (closeParen > closeBracket + 2) {
+          // linkText/url already stop at the first "]"/")", so only newlines
+          // need to be excluded to mirror the original character classes.
+          const linkText = text.substring(i + 1, closeBracket);
+          const url = text.substring(closeBracket + 2, closeParen);
+          if (!linkText.includes("\n") && !url.includes("\n")) {
+            flushPlain(i);
+            parts.push(
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                {linkText}
+              </a>
+            );
+            i = closeParen + 1;
+            plainStart = i;
+            continue;
+          }
+        }
+      }
     }
 
-    currentIndex = match.index + match[0].length;
+    i++;
   }
 
-  // Add remaining text
-  if (currentIndex < text.length) {
-    parts.push(text.substring(currentIndex));
-  }
-
+  flushPlain(text.length);
   return parts.length > 0 ? parts : text;
 }

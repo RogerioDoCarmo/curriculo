@@ -83,6 +83,36 @@ describe("MarkdownText Component", () => {
     expect(screen.getByRole("link", { name: "link" })).toHaveAttribute("href", "https://a.co");
   });
 
+  it("does not treat empty bold markers (****) as bold", () => {
+    render(<MarkdownText text="a****b" />);
+    const node = screen.getByText("a****b");
+    expect(node.querySelector("strong")).toBeNull();
+  });
+
+  it("does not treat a single asterisk inside ** as bold", () => {
+    render(<MarkdownText text="x **a*b** y" />);
+    // Content contains a lone '*', so it is left as plain text.
+    expect(screen.getByText(/x \*\*a\*b\*\* y/)).toBeInTheDocument();
+  });
+
+  it("leaves an unclosed bold marker as plain text", () => {
+    render(<MarkdownText text="start **not closed" />);
+    const node = screen.getByText("start **not closed");
+    expect(node.querySelector("strong")).toBeNull();
+  });
+
+  it("does not render a bracket without a following link target as a link", () => {
+    render(<MarkdownText text="see [just brackets] here" />);
+    const node = screen.getByText("see [just brackets] here");
+    expect(node.querySelector("a")).toBeNull();
+  });
+
+  it("leaves a link with an unclosed url as plain text", () => {
+    render(<MarkdownText text="[text](http://x.dev" />);
+    const node = screen.getByText("[text](http://x.dev");
+    expect(node.querySelector("a")).toBeNull();
+  });
+
   it("handles long whitespace-heavy input without hanging (ReDoS guard)", () => {
     // A pathological line that previously risked super-linear backtracking.
     const input = "###" + " ".repeat(50000) + "x";
