@@ -106,7 +106,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md
 - **Content**: Markdown files with Gray-matter parsing
 - **Internationalization**: next-intl 4.9.2
 - **PWA**: Web App Manifest for mobile installation
-- **Testing**: Jest, React Testing Library, Playwright, fast-check
+- **Testing**: Jest, React Testing Library, Playwright, fast-check, Stryker (mutation testing)
 - **Component Documentation**: Storybook 8
 - **Analytics**: Firebase Analytics + Vercel Analytics
 - **Error Monitoring**: Firebase Crashlytics + Sentry
@@ -248,6 +248,9 @@ npm run test:e2e
 # Run property-based tests
 npm run test:properties
 
+# Run mutation tests (Stryker — measures test quality, scoped to lib/)
+npm run test:mutation
+
 # Run Lighthouse performance tests (all-in-one: builds, serves, tests)
 npm run test:lighthouse:full
 
@@ -348,6 +351,7 @@ See `.env.example` for required environment variables. Create `.env.local` for l
 ## Code Quality
 
 - **Test Coverage**: Minimum 80% enforced in CI/CD
+- **Mutation Testing**: Stryker on `lib/` (50% break threshold), non-blocking signal on pull requests and deploys
 - **Code Quality**: SonarQube with 90% quality rating (A) requirement
 - **Linting**: ESLint with Next.js recommended rules
 - **Formatting**: Prettier with consistent formatting
@@ -372,4 +376,5 @@ MIT
 - [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
 - [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
+- [.kiro/docs/mutation-testing.md](./.kiro/docs/mutation-testing.md) - **Mutation testing (Stryker): setup, scope, thresholds, CI** 🧬
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
