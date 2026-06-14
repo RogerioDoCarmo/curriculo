@@ -78,13 +78,26 @@ const config = {
   ],
   coverageThreshold: {
     global: {
-      branches: 65,
-      functions: 71,
-      lines: 71,
-      statements: 71,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
-  coverageReporters: ["text", "lcov", "json-summary"],
+  coverageReporters: [
+    // Console: full per-file table ("text") followed by the totals box
+    // ("text-summary"). "text-lcov" is intentionally omitted — it streams the
+    // raw LCOV to stdout and buries the table.
+    "text",
+    "text-summary",
+    // File outputs for browsers and CI/SonarCloud ingestion
+    "html",
+    "lcov",
+    "clover",
+    "cobertura",
+    "json",
+    "json-summary",
+  ],
 };
 
 module.exports = config;

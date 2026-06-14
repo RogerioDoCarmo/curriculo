@@ -2,9 +2,16 @@
  * Unit tests for Hero component
  */
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import Hero from "@/components/Hero";
+import { trackHeroCTAClick, trackExternalLinkClick, trackFooterLinkClick } from "@/lib/analytics";
+
+jest.mock("@/lib/analytics", () => ({
+  trackHeroCTAClick: jest.fn(),
+  trackExternalLinkClick: jest.fn(),
+  trackFooterLinkClick: jest.fn(),
+}));
 
 // Helper to render component with next-intl provider
 const renderWithIntl = (
@@ -333,5 +340,86 @@ describe("Hero Component", () => {
     const { container } = renderWithIntl(<Hero {...incompleteProps} />, "en");
     // Component should still render but with undefined text
     expect(container.firstChild).toBeInTheDocument();
+  });
+
+  describe("analytics tracking on click", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it("tracks the UNESP logo external link click", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(
+        screen.getByRole("link", { name: /UNESP - Universidade Estadual Paulista/i })
+      );
+      expect(trackExternalLinkClick).toHaveBeenCalledWith({
+        url: "https://www2.unesp.br/",
+        context: "hero_unesp_logo",
+      });
+    });
+
+    it("tracks the bachelor and master degree link clicks", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(screen.getByRole("link", { name: "Bachelor in Computer Science" }));
+      fireEvent.click(screen.getByRole("link", { name: "Master in Cartographic Sciences" }));
+      expect(trackExternalLinkClick).toHaveBeenCalledWith(
+        expect.objectContaining({ context: "hero_bachelor_degree" })
+      );
+      expect(trackExternalLinkClick).toHaveBeenCalledWith(
+        expect.objectContaining({ context: "hero_master_degree" })
+      );
+    });
+
+    it("tracks the dissertation link click", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(
+        screen.getByRole("link", {
+          name: /Evaluation of GNSS measurement quality and positioning in Android smartphones/i,
+        })
+      );
+      expect(trackExternalLinkClick).toHaveBeenCalledWith({
+        url: "http://hdl.handle.net/11449/243430",
+        context: "hero_dissertation_link",
+      });
+    });
+
+    it("tracks the dissertation PDF download as a footer link click", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(screen.getByRole("link", { name: /download.*dissertation/i }));
+      expect(trackFooterLinkClick).toHaveBeenCalledWith(
+        expect.objectContaining({
+          link_url: "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf",
+          link_type: "dissertation_download",
+        })
+      );
+    });
+
+    it("tracks the Topaz logo, title and date link clicks", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(screen.getByRole("link", { name: "Topaz Evolution" }));
+      fireEvent.click(screen.getByRole("link", { name: "Senior Mobile Developer" }));
+      fireEvent.click(screen.getByRole("link", { name: "2023 - 2026 (3 years)" }));
+      for (const context of ["hero_topaz_logo", "hero_topaz_text", "hero_topaz_date"]) {
+        expect(trackExternalLinkClick).toHaveBeenCalledWith(expect.objectContaining({ context }));
+      }
+    });
+
+    it("tracks the primary CTA click with view_projects action", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(screen.getByRole("link", { name: "View My Work" }));
+      expect(trackHeroCTAClick).toHaveBeenCalledWith({
+        cta_text: "View My Work",
+        cta_action: "view_projects",
+      });
+    });
+
+    it("tracks the contact button click with contact_email action", () => {
+      renderWithIntl(<Hero {...defaultProps} />, "en");
+      fireEvent.click(screen.getByRole("link", { name: "Get in Touch" }));
+      expect(trackHeroCTAClick).toHaveBeenCalledWith({
+        cta_text: "Get in Touch",
+        cta_action: "contact_email",
+      });
+    });
   });
 });
