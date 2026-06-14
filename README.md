@@ -16,7 +16,7 @@
 <!-- Tech Stack -->
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.6-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
@@ -116,7 +116,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 - **Deployment**: Vercel with custom domains
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
 
-> **Note**: Recently upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
+> **Note**: Upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements.
 
 ## Project Structure
 
@@ -371,6 +371,5 @@ MIT
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
 - [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
 - [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
-- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.6 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
