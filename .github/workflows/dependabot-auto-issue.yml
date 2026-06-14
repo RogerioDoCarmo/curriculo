@@ -1,9 +1,25 @@
 name: Dependabot Auto Issue
 
-# This workflow automatically creates GitHub issues for open Dependabot security alerts.
+# Automatically creates GitHub issues for open Dependabot security alerts.
+#
 # GitHub has no workflow trigger that fires on alert creation (the old
 # repository_vulnerability_alert event was removed), so the job polls all open
-# alerts on a schedule and dedupes against existing issues. Can also be run manually.
+# alerts on a schedule and dedupes against existing issues. Can also be run
+# manually via the Actions tab.
+#
+# IMPORTANT: the built-in GITHUB_TOKEN cannot read the Dependabot alerts REST API
+# (it returns "Resource not accessible by integration" — the security-events
+# permission only covers code/secret scanning, not Dependabot alerts). This
+# workflow therefore needs a token with access to Dependabot alerts, stored as
+# the repository secret DEPENDABOT_ALERTS_TOKEN:
+#
+#   - Fine-grained PAT with repository permissions:
+#       * "Dependabot alerts": Read-only
+#       * "Issues": Read and write
+#   - or a classic PAT with the `security_events` (and `repo`) scope.
+#
+# When the secret is not configured the job logs a warning and exits cleanly,
+# so scheduled runs do not fail until the token is set up.
 
 on:
   schedule:
@@ -12,8 +28,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  issues: write
-  security-events: read
   contents: read
 
 jobs:
@@ -22,70 +36,81 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - name: Check for Dependabot alerts token
+        id: check-token
+        env:
+          ALERTS_TOKEN: ${{ secrets.DEPENDABOT_ALERTS_TOKEN }}
+        run: |
+          if [ -z "$ALERTS_TOKEN" ]; then
+            echo "::warning::DEPENDABOT_ALERTS_TOKEN secret is not set; skipping. Create a PAT with 'Dependabot alerts: read' and 'Issues: write' and store it as DEPENDABOT_ALERTS_TOKEN."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Get Dependabot alerts
-        id: get-alerts
+      - name: Create issues for open Dependabot alerts
+        if: steps.check-token.outputs.configured == 'true'
         uses: actions/github-script@v9
         with:
+          github-token: ${{ secrets.DEPENDABOT_ALERTS_TOKEN }}
           script: |
-            // Get all open Dependabot alerts
-            const { data: alerts } = await github.rest.dependabot.listAlertsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
+            try {
+              // Get all open Dependabot alerts (requires a token with Dependabot alerts: read)
+              const { data: alerts } = await github.rest.dependabot.listAlertsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+              });
 
-            console.log(`Found ${alerts.length} open Dependabot alerts`);
+              console.log(`Found ${alerts.length} open Dependabot alerts`);
 
-            // Get existing issues to avoid duplicates
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: 'security,dependabot'
-            });
+              // Get existing issues to avoid duplicates
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'security,dependabot'
+              });
 
-            const existingAlertNumbers = issues
-              .map(issue => {
-                const match = issue.body?.match(/Alert #(\d+)/);
-                return match ? parseInt(match[1]) : null;
-              })
-              .filter(num => num !== null);
+              const existingAlertNumbers = issues
+                .map(issue => {
+                  const match = issue.body?.match(/Alert #(\d+)/);
+                  return match ? parseInt(match[1]) : null;
+                })
+                .filter(num => num !== null);
 
-            console.log(`Found ${existingAlertNumbers.length} existing issues for alerts`);
+              console.log(`Found ${existingAlertNumbers.length} existing issues for alerts`);
 
-            // Create issues for new alerts
-            for (const alert of alerts) {
-              if (existingAlertNumbers.includes(alert.number)) {
-                console.log(`Issue already exists for alert #${alert.number}, skipping`);
-                continue;
-              }
-              
-              const severity = alert.security_advisory.severity.toUpperCase();
-              const package_name = alert.security_vulnerability.package.name;
-              const vulnerable_version = alert.security_vulnerability.vulnerable_version_range;
-              const patched_version = alert.security_vulnerability.first_patched_version?.identifier || 'Not available';
-              const cve = alert.security_advisory.cve_id || 'N/A';
-              const cvss_score = alert.security_advisory.cvss?.score || 'N/A';
-              const summary = alert.security_advisory.summary;
-              const description = alert.security_advisory.description;
-              const references = alert.security_advisory.references.map(ref => `- ${ref.url}`).join('\n');
-              
-              // Determine priority label based on severity
-              let priorityLabel = 'priority: medium';
-              if (severity === 'CRITICAL' || severity === 'HIGH') {
-                priorityLabel = 'priority: high';
-              } else if (severity === 'LOW') {
-                priorityLabel = 'priority: low';
-              }
-              
-              // Create issue title
-              const title = `🔒 [${severity}] Security vulnerability in ${package_name}`;
-              
-              // Create issue body
-              const body = `## 🚨 Dependabot Security Alert #${alert.number}
+              // Create issues for new alerts
+              for (const alert of alerts) {
+                if (existingAlertNumbers.includes(alert.number)) {
+                  console.log(`Issue already exists for alert #${alert.number}, skipping`);
+                  continue;
+                }
+
+                const severity = alert.security_advisory.severity.toUpperCase();
+                const package_name = alert.security_vulnerability.package.name;
+                const vulnerable_version = alert.security_vulnerability.vulnerable_version_range;
+                const patched_version = alert.security_vulnerability.first_patched_version?.identifier || 'Not available';
+                const cve = alert.security_advisory.cve_id || 'N/A';
+                const cvss_score = alert.security_advisory.cvss?.score || 'N/A';
+                const summary = alert.security_advisory.summary;
+                const description = alert.security_advisory.description;
+                const references = alert.security_advisory.references.map(ref => `- ${ref.url}`).join('\n');
+
+                // Determine priority label based on severity
+                let priorityLabel = 'priority: medium';
+                if (severity === 'CRITICAL' || severity === 'HIGH') {
+                  priorityLabel = 'priority: high';
+                } else if (severity === 'LOW') {
+                  priorityLabel = 'priority: low';
+                }
+
+                // Create issue title
+                const title = `🔒 [${severity}] Security vulnerability in ${package_name}`;
+
+                // Create issue body
+                const body = `## 🚨 Dependabot Security Alert #${alert.number}
 
             **Severity**: ${severity} (CVSS: ${cvss_score})
             **Package**: \`${package_name}\`
@@ -103,7 +128,7 @@ jobs:
             ${references}
 
             ### Recommended Action
-            ${patched_version !== 'Not available' 
+            ${patched_version !== 'Not available'
               ? `Update \`${package_name}\` to version \`${patched_version}\` or later.`
               : `Review the security advisory and apply the recommended mitigation.`}
 
@@ -134,20 +159,27 @@ jobs:
             ---
 
             **Alert #${alert.number}** | Auto-generated by Dependabot | ${new Date().toISOString()}`;
-              
-              // Create the issue
-              const { data: issue } = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: title,
-                body: body,
-                labels: ['security', 'dependabot', priorityLabel, 'automated']
-              });
-              
-              console.log(`Created issue #${issue.number} for alert #${alert.number}`);
-            }
 
-      - name: Summary
-        run: |
-          echo "✅ Dependabot security alert issues created successfully"
-          echo "Check the Issues tab for new security alerts"
+                // Create the issue
+                const { data: issue } = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: body,
+                  labels: ['security', 'dependabot', priorityLabel, 'automated']
+                });
+
+                console.log(`Created issue #${issue.number} for alert #${alert.number}`);
+              }
+
+              core.info('✅ Dependabot security alert issues processed successfully');
+            } catch (error) {
+              if (error.status === 403) {
+                core.setFailed(
+                  'Access denied reading Dependabot alerts. Ensure DEPENDABOT_ALERTS_TOKEN has ' +
+                  '"Dependabot alerts: read" and "Issues: write" permissions (or the security_events scope).'
+                );
+              } else {
+                core.setFailed(`Failed to process Dependabot alerts: ${error.message}`);
+              }
+            }
