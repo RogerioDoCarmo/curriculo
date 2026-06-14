@@ -162,41 +162,42 @@ export default function ExperienceSection({
                     </button>
                   </div>
 
-                  <div className="mt-3">
+                  {/* Collapsed cards preview only the first three lines; expanding reveals the full text. */}
+                  <div className={`mt-3 ${isExpanded ? "" : "line-clamp-3"}`}>
                     <MarkdownText text={exp.description} />
                   </div>
 
-                  {isExpanded && (
+                  {isExpanded && exp.achievements.length > 0 && (
                     <div id={`exp-details-${exp.id}`} className="mt-4 space-y-3">
-                      {exp.achievements.length > 0 && (
-                        <div>
-                          <h3 className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
-                            {t("details")}
-                          </h3>
-                          <div className="space-y-1">
-                            {exp.achievements.map((achievement, i) => (
-                              <MarkdownText key={i} text={achievement} />
-                            ))}
-                          </div>
+                      <div>
+                        <h3 className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
+                          {t("details")}
+                        </h3>
+                        <div className="space-y-1">
+                          {exp.achievements.map((achievement, i) => (
+                            <MarkdownText key={i} text={achievement} />
+                          ))}
                         </div>
-                      )}
-                      {exp.technologies && exp.technologies.length > 0 && (
-                        <div>
-                          <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            {t("technologies")}
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {exp.technologies.map((tech) => (
-                              <span
-                                key={tech}
-                                className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Technologies stay visible regardless of the card's collapsed state */}
+                  {exp.technologies && exp.technologies.length > 0 && (
+                    <div className="mt-8">
+                      <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                        {t("technologies")}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {exp.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </article>

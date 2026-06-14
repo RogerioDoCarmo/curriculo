@@ -159,17 +159,34 @@ describe("ExperienceSection Component", () => {
     });
   });
 
-  it("shows technologies in expanded view", async () => {
+  it("shows technologies without expanding the card", () => {
+    renderWithIntl(
+      <ExperienceSection careerPath="professional" experiences={allExperiences} locale="en" />
+    );
+    // Technologies are always visible, independent of the collapse state.
+    // "TypeScript" is unique to exp-1; "React Native" appears in both professional cards.
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
+    expect(screen.getAllByText("React Native")).toHaveLength(2);
+  });
+
+  it("keeps technologies visible after collapsing the card", async () => {
     const user = userEvent.setup();
     renderWithIntl(
       <ExperienceSection careerPath="professional" experiences={allExperiences} locale="en" />
     );
     const expandButtons = screen.getAllByRole("button", { name: /expand details/i });
+    // Expand then collapse the first card.
     await user.click(expandButtons[0]);
     await waitFor(() => {
-      expect(screen.getByText("React Native")).toBeInTheDocument();
-      expect(screen.getByText("TypeScript")).toBeInTheDocument();
+      expect(screen.getByText("Reduced build time by 40%")).toBeInTheDocument();
     });
+    const collapseButton = screen.getByRole("button", { name: /collapse details/i });
+    await user.click(collapseButton);
+    await waitFor(() => {
+      expect(screen.queryByText("Reduced build time by 40%")).not.toBeInTheDocument();
+    });
+    // Achievements are gone, but technologies remain.
+    expect(screen.getByText("TypeScript")).toBeInTheDocument();
   });
 
   it("shows empty state when no experiences match career path", () => {
