@@ -35,17 +35,18 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           return <div key={index} className="h-2" />;
         }
 
-        // Handle headings (#..######). A single regex captures the leading
-        // hashes (1-6) and the content; the hash count maps to the level. The
-        // capture starts with \S so the whitespace run (\s+) and the content
-        // class stay disjoint — no overlapping-quantifier (ReDoS) backtracking.
-        const headingMatch = trimmedLine.match(/^(#{1,6})\s+(\S[^\n]*)$/);
+        // Handle headings (#..######). The regex only detects the marker
+        // (1-6 hashes followed by whitespace); the content is extracted with
+        // slice + trim. Keeping the regex free of unbounded content quantifiers
+        // makes it trivially linear — no ReDoS backtracking surface at all.
+        const headingMatch = trimmedLine.match(/^(#{1,6})\s/);
         if (headingMatch) {
           const level = headingMatch[1].length;
+          const content = trimmedLine.slice(level).trim();
           const HeadingTag = `h${level}` as HeadingTag;
           return (
             <HeadingTag key={index} className={HEADING_CLASSES[level]}>
-              {formatInlineMarkdown(headingMatch[2])}
+              {formatInlineMarkdown(content)}
             </HeadingTag>
           );
         }
@@ -63,11 +64,13 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           );
         }
 
-        // Handle numbered lists (1., 2., etc.) - \S anchor keeps \s+ and the
-        // content class disjoint to avoid super-linear (ReDoS) backtracking.
-        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+(\S[^\n]*)$/);
+        // Handle numbered lists (1., 2., etc.). As with headings, the regex only
+        // detects the marker and the content is sliced + trimmed, avoiding any
+        // unbounded content quantifier (no ReDoS backtracking surface).
+        const numberedMatch = trimmedLine.match(/^(\d+)\.\s/);
         if (numberedMatch) {
-          const [, number, listText] = numberedMatch;
+          const number = numberedMatch[1];
+          const listText = trimmedLine.slice(numberedMatch[0].length).trim();
           return (
             <div key={index} className="flex gap-2 mb-1">
               <span className="text-gray-500 dark:text-gray-400">{number}.</span>
