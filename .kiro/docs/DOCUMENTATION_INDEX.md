@@ -59,6 +59,15 @@ Next.js specific best practices and common pitfalls:
 - Performance optimization
 - SSR vs client-side rendering
 
+### [mutation-testing.md](./mutation-testing.md)
+
+Mutation testing with Stryker:
+
+- Running mutation tests (full scope and single file)
+- Configuration, scope, and thresholds
+- Killing survived mutants (self-referential and untested-data patterns)
+- Recognizing equivalent mutants
+
 ### [coding-standards.md](./coding-standards.md)
 
 Project coding standards and patterns:
@@ -154,6 +163,7 @@ npm run test:unit        # Run unit tests
 npm run test:integration # Run integration tests
 npm run test:properties  # Run property-based tests
 npm run test:e2e         # Run E2E tests
+npm run test:mutation    # Run mutation tests (Stryker)
 
 # Code Quality
 npm run lint             # Run ESLint
@@ -164,7 +174,7 @@ npx tsc --noEmit         # Check TypeScript types
 
 ## File Organization
 
-```
+```text
 project-root/
 ├── README.md                    # Project overview
 ├── TESTING.md                   # Testing guide
@@ -174,6 +184,7 @@ project-root/
 │   └── docs/
 │       ├── DOCUMENTATION_INDEX.md    # This file
 │       ├── test-patterns.md          # Quick reference
+│       ├── mutation-testing.md       # Stryker mutation testing
 │       └── code-quality-fixes.md     # Quality improvements log
 ├── tests/
 │   ├── unit/                   # Unit tests
@@ -201,4 +212,4 @@ This documentation should be updated when:
 - Common issues are discovered
 - Best practices evolve
 
-Last updated: 2026-04-14
+Last updated: 2026-06-14

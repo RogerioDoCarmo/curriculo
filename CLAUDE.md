@@ -19,6 +19,7 @@ npm run dev          # Start dev server
 npm run build        # Production build
 npm run test         # Run unit/integration tests
 npm run test:e2e     # Run Playwright E2E tests
+npm run test:mutation # Run Stryker mutation tests (scoped to lib/)
 npm run lint         # ESLint (max 300 warnings)
 npm run format       # Prettier
 ```
@@ -109,5 +110,6 @@ Detailed standards live in `.kiro/docs/`:
 
 - [`coding-standards.md`](.kiro/docs/coding-standards.md) — component templates, image handling, theme patterns
 - [`test-patterns.md`](.kiro/docs/test-patterns.md) — test patterns and examples
+- [`mutation-testing.md`](.kiro/docs/mutation-testing.md) — Stryker setup, scope, thresholds, killing mutants
 - [`nextjs-best-practices.md`](.kiro/docs/nextjs-best-practices.md) — Next.js-specific guidance
 - [`code-quality-fixes.md`](.kiro/docs/code-quality-fixes.md) — common ESLint/TS fixes

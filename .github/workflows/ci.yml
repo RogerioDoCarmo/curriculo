@@ -162,6 +162,39 @@ jobs:
               body: comment
             });
 
+  mutation:
+    name: Mutation Tests
+    runs-on: ubuntu-latest
+    # Mutation testing is slow (~7 min) — run only on PRs to develop/main,
+    # not on every branch push. Non-blocking: the break threshold (50) in
+    # stryker.config.json surfaces test-quality regressions as a warning
+    # without failing the pipeline.
+    if: github.event_name == 'pull_request'
+    continue-on-error: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run mutation tests
+        run: npm run test:mutation
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-report
+          path: reports/mutation/
+
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -559,7 +592,7 @@ jobs:
   status-check:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test, coverage, build, e2e, lighthouse, sonarqube, chromatic]
+    needs: [lint, type-check, test, coverage, build, e2e, mutation, lighthouse, sonarqube, chromatic]
     if: always()
 
     steps:
@@ -599,6 +632,15 @@ jobs:
              [[ "${{ needs.sonarqube.result }}" != "skipped" ]]; then
             echo "❌ SonarQube check failed"
             exit 1
+          fi
+
+          # Check Mutation tests (can be success, failure, or skipped - not blocking)
+          if [[ "${{ needs.mutation.result }}" == "success" ]]; then
+            echo "✅ Mutation tests passed"
+          elif [[ "${{ needs.mutation.result }}" == "failure" ]]; then
+            echo "⚠️  Mutation tests failed (non-blocking)"
+          else
+            echo "⚠️  Mutation tests skipped"
           fi
 
           echo "✅ All required checks passed"
