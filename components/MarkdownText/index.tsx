@@ -24,10 +24,12 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
 
         // Handle headings - use regex to match exact number of # characters
         // Check from most specific (######) to least specific (#)
-        // Using [^\n] instead of .+ to prevent ReDoS attacks
+        // The capture starts with \S so the whitespace run (\s+) and the content
+        // class are disjoint — this removes the overlapping-quantifier backtracking
+        // that makes \s+[^\n]+ vulnerable to super-linear (ReDoS) runtime.
 
         // ###### heading (h6)
-        const h6Match = trimmedLine.match(/^######\s+([^\n]+)$/);
+        const h6Match = trimmedLine.match(/^######\s+(\S[^\n]*)$/);
         if (h6Match) {
           return (
             <h6
@@ -40,7 +42,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ##### heading (h5)
-        const h5Match = trimmedLine.match(/^#####\s+([^\n]+)$/);
+        const h5Match = trimmedLine.match(/^#####\s+(\S[^\n]*)$/);
         if (h5Match) {
           return (
             <h5
@@ -53,7 +55,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // #### heading (h4)
-        const h4Match = trimmedLine.match(/^####\s+([^\n]+)$/);
+        const h4Match = trimmedLine.match(/^####\s+(\S[^\n]*)$/);
         if (h4Match) {
           return (
             <h4
@@ -66,7 +68,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ### heading (h3)
-        const h3Match = trimmedLine.match(/^###\s+([^\n]+)$/);
+        const h3Match = trimmedLine.match(/^###\s+(\S[^\n]*)$/);
         if (h3Match) {
           return (
             <h3
@@ -79,7 +81,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // ## heading (h2)
-        const h2Match = trimmedLine.match(/^##\s+([^\n]+)$/);
+        const h2Match = trimmedLine.match(/^##\s+(\S[^\n]*)$/);
         if (h2Match) {
           return (
             <h2
@@ -92,7 +94,7 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
         }
 
         // # heading (h1)
-        const h1Match = trimmedLine.match(/^#\s+([^\n]+)$/);
+        const h1Match = trimmedLine.match(/^#\s+(\S[^\n]*)$/);
         if (h1Match) {
           return (
             <h1
@@ -117,8 +119,9 @@ export default function MarkdownText({ text, className = "" }: MarkdownTextProps
           );
         }
 
-        // Handle numbered lists (1., 2., etc.) - using [^\n] to prevent ReDoS
-        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+([^\n]+)$/);
+        // Handle numbered lists (1., 2., etc.) - \S anchor keeps \s+ and the
+        // content class disjoint to avoid super-linear (ReDoS) backtracking.
+        const numberedMatch = trimmedLine.match(/^(\d+)\.\s+(\S[^\n]*)$/);
         if (numberedMatch) {
           const [, number, listText] = numberedMatch;
           return (
@@ -150,9 +153,10 @@ function formatInlineMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let currentIndex = 0;
 
-  // Non-backtracking regex: match bold or links with limited character sets
-  // [^*\n] for bold content, [^\]\n] for link text, [^)\n] for URL
-  const markdownRegex = /(\*\*([^*\n]+?)\*\*|\[([^\]\n]+?)\]\(([^)\n]+?)\))/g;
+  // Non-backtracking regex: each content class excludes its own closing
+  // delimiter (* for bold, ] for link text, ) for URL), so greedy quantifiers
+  // match each position exactly once — linear runtime, no ReDoS backtracking.
+  const markdownRegex = /(\*\*([^*\n]+)\*\*|\[([^\]\n]+)\]\(([^)\n]+)\))/g;
   let match;
 
   while ((match = markdownRegex.exec(text)) !== null) {
