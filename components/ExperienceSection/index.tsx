@@ -119,6 +119,44 @@ export default function ExperienceSection({
           <div className="space-y-6">
             {filtered.map((exp) => {
               const isExpanded = expandedId === exp.id;
+
+              // Render the toggle in two branches so aria-expanded is a literal
+              // "true"/"false" string. Static a11y linters cannot evaluate JSX
+              // expressions and would otherwise flag aria-expanded={expr} as an
+              // invalid value; shared props/icon keep the markup DRY.
+              const toggleProps = {
+                type: "button" as const,
+                "aria-controls": `exp-details-${exp.id}`,
+                onClick: () => setExpandedId(isExpanded ? null : exp.id),
+                className:
+                  "shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200",
+                "aria-label": isExpanded ? t("collapseDetails") : t("expandDetails"),
+              };
+              const toggleIcon = (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              );
+              const toggleButton = isExpanded ? (
+                <button {...toggleProps} aria-expanded="true">
+                  {toggleIcon}
+                </button>
+              ) : (
+                <button {...toggleProps} aria-expanded="false">
+                  {toggleIcon}
+                </button>
+              );
+
               return (
                 <article
                   key={exp.id}
@@ -138,28 +176,7 @@ export default function ExperienceSection({
                         {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t, now)}
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      aria-expanded={isExpanded}
-                      aria-controls={`exp-details-${exp.id}`}
-                      onClick={() => setExpandedId(isExpanded ? null : exp.id)}
-                      className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      aria-label={isExpanded ? t("collapseDetails") : t("expandDetails")}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                    {toggleButton}
                   </div>
 
                   {/* Collapsed cards preview only the first three lines; expanding reveals the full text. */}

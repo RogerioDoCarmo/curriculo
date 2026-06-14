@@ -1,36 +1,168 @@
 {
   "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
   "basics": {
-    "name": "Your Name",
-    "label": "Mobile React Native Developer",
-    "email": "email@example.com",
-    "phone": "+55 (11) 99999-9999",
-    "url": "https://example.com",
-    "summary": "Experienced Mobile React Native Developer with expertise in building cross-platform mobile applications for enterprise clients.",
+    "name": "Rogério do Carmo",
+    "label": "Senior Mobile React Native Developer",
+    "email": "contact@rogeriodocarmo.com",
+    "url": "https://rogeriodocarmo.com",
+    "summary": "Senior Mobile Front-End Developer with 5+ years building cross-platform mobile applications, specializing in React Native for the banking and fintech sector. Experienced delivering critical features such as complete Pix (DICT) modules, biometric authentication, and loan flows for financial institutions across Latin America. Holds a B.Sc. in Computer Science and an M.Sc. in Cartographic Sciences from UNESP.",
     "location": {
-      "city": "São Paulo",
+      "city": "Presidente Prudente",
       "countryCode": "BR",
       "region": "SP"
     },
     "profiles": [
       {
         "network": "LinkedIn",
-        "username": "username",
-        "url": "https://linkedin.com/in/username"
+        "username": "rogeriodocarmo",
+        "url": "https://www.linkedin.com/in/rogeriodocarmo/"
       },
       {
         "network": "GitHub",
-        "username": "username",
-        "url": "https://github.com/username"
+        "username": "RogerioDoCarmo",
+        "url": "https://github.com/RogerioDoCarmo"
       }
     ]
   },
-  "work": [],
-  "education": [],
-  "skills": [],
+  "work": [
+    {
+      "name": "Topaz",
+      "position": "Senior Mobile Front-End Developer",
+      "location": "Remote, Brazil",
+      "startDate": "2023-03-01",
+      "endDate": "2026-03-01",
+      "summary": "Development and maintenance of mobile applications for financial institutions, focusing on critical features and user experience for the company's internal banking product.",
+      "highlights": [
+        "Developed and implemented a complete Pix module for banking applications, including integration with DICT (Directory of Transactional Account Identifiers)",
+        "Implemented biometric login with Daon integration for secure authentication",
+        "Created a loan module with a complete request and approval flow",
+        "Delivered projects for clients including CrediSIS (Brazil), Bradescard (Mexico), Banco Macro (Argentina), and Banco do Nordeste - BNB (Brazil)",
+        "Implemented unit tests with Jest and used monitoring tools (Elastic, Kibana, Grafana) for performance analysis",
+        "Managed app distribution via Google Play Console, Apple Developer, and TestFlight, and mentored junior developers in React Native best practices"
+      ]
+    },
+    {
+      "name": "Rubcube",
+      "position": "Mobile Developer (React Native)",
+      "location": "Remote, Brazil",
+      "startDate": "2022-02-01",
+      "endDate": "2023-04-01",
+      "summary": "Developed the mobile application for client Banco Digi+, focusing on banking features and user experience.",
+      "highlights": [
+        "Created a complete Pix module from scratch for Banco Digi+, including all transfer and payment functionalities",
+        "Developed React Native components in both functional and class formats",
+        "Integrated REST APIs for banking services and worked with MongoDB for data persistence",
+        "Developed the company website using React JS"
+      ]
+    },
+    {
+      "name": "Rubcube",
+      "position": "Flutter Developer",
+      "location": "Remote, Brazil",
+      "startDate": "2021-11-01",
+      "endDate": "2022-02-01",
+      "summary": "Worked on the Virtus Pay mobile application, focusing on maintenance and code quality.",
+      "highlights": [
+        "Performed maintenance and bug fixes on the Virtus Pay application",
+        "Worked with Flutter for cross-platform development of digital payment applications"
+      ]
+    },
+    {
+      "name": "Engeselt",
+      "position": "Android/Flutter Developer",
+      "location": "Remote, Brazil",
+      "startDate": "2021-05-01",
+      "endDate": "2021-11-01",
+      "summary": "Built a GNSS (GPS) proof of concept for master's research, then worked on proprietary products for the electrical sector.",
+      "highlights": [
+        "Developed a proof of concept using GNSS (GPS) data from master's research",
+        "Implemented offline-first features with SQFlite and OpenStreetMaps",
+        "Worked with Flutter and MobX for state management, and developed in native Android using Java and XML"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "UNESP - São Paulo State University \"Júlio de Mesquita Filho\"",
+      "area": "Cartographic Sciences",
+      "studyType": "Master's Degree",
+      "startDate": "2019-03-01",
+      "endDate": "2023-03-01"
+    },
+    {
+      "institution": "UNESP - São Paulo State University \"Júlio de Mesquita Filho\"",
+      "area": "Computer Science",
+      "studyType": "Bachelor's Degree",
+      "startDate": "2014-03-01",
+      "endDate": "2018-08-01"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Mobile Development",
+      "keywords": ["React Native", "Flutter", "Native Android (Java)", "TypeScript", "JavaScript"]
+    },
+    {
+      "name": "State Management & Architecture",
+      "keywords": ["Redux/Saga", "Jotai", "TanStack", "MobX"]
+    },
+    {
+      "name": "UI & Styling",
+      "keywords": ["React Native StyleSheet", "Styled Components", "React JS"]
+    },
+    {
+      "name": "Forms & Validation",
+      "keywords": ["react-hook-form", "Form Validation"]
+    },
+    {
+      "name": "Testing",
+      "keywords": ["Jest", "Unit Testing"]
+    },
+    {
+      "name": "Firebase & Cloud Services",
+      "keywords": [
+        "Firebase Analytics",
+        "Firebase Crashlytics",
+        "Firebase Distribution",
+        "Firebase Storage"
+      ]
+    },
+    {
+      "name": "APIs & Integration",
+      "keywords": ["REST APIs", "AsyncStorage", "MongoDB"]
+    },
+    {
+      "name": "Native Modules & Integrations",
+      "keywords": ["Expo Modules", "Daon (Biometrics)", "Qualtrics"]
+    },
+    {
+      "name": "DevOps & CI/CD",
+      "keywords": [
+        "Google Play Console",
+        "Apple Developer",
+        "TestFlight",
+        "Jenkins",
+        "Fastlane",
+        "Git/GitHub/GitLab"
+      ]
+    },
+    {
+      "name": "Monitoring & Analytics",
+      "keywords": ["Elastic", "Kibana", "Grafana"]
+    },
+    {
+      "name": "Domain Knowledge",
+      "keywords": [
+        "Pix System (DICT)",
+        "Banking Applications",
+        "Biometrics & Authentication",
+        "Cartographic Sciences"
+      ]
+    }
+  ],
   "languages": [
     { "language": "Portuguese", "fluency": "Native speaker" },
-    { "language": "English", "fluency": "Professional working proficiency" },
+    { "language": "English", "fluency": "Professional working proficiency (B2)" },
     { "language": "Spanish", "fluency": "Elementary proficiency" }
   ]
 }

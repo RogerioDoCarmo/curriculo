@@ -16,7 +16,7 @@
 <!-- Tech Stack -->
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.6-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
@@ -97,7 +97,7 @@ This website can be installed as a Progressive Web App on mobile devices, provid
 - **iOS**: Safari → Share → "Add to Home Screen"
 - **Android**: Chrome → Menu → "Add to Home screen" or "Install app"
 
-See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
+See [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
 
 ## Tech Stack
 
@@ -116,7 +116,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 - **Deployment**: Vercel with custom domains
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
 
-> **Note**: Recently upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
+> **Note**: Upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements.
 
 ## Project Structure
 
@@ -258,7 +258,7 @@ npm run test:lighthouse         # Terminal 2
 
 **Note**: Lighthouse tests must run against the production build (`npm run serve`), not the dev server (`npm run dev`). Use `test:lighthouse:full` for convenience.
 
-See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.
+See [TESTING.md](./docs/testing/TESTING.md) for comprehensive testing guidelines and best practices.
 
 ## Deployment
 
@@ -353,7 +353,7 @@ See `.env.example` for required environment variables. Create `.env.local` for l
 - **Formatting**: Prettier with consistent formatting
 - **Type Safety**: TypeScript strict mode
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for code style guidelines and development workflow.
+See [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) for code style guidelines and development workflow.
 
 ## License
 
@@ -362,15 +362,14 @@ MIT
 ## Documentation
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
-- [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
-- [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
+- [TESTING.md](./docs/testing/TESTING.md) - Comprehensive testing guide and best practices
+- [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) - Code style guidelines and development workflow
+- [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
 - [docs/BADGES.md](./docs/BADGES.md) - **Explanation of all quality badges** (16 badges)
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
 - [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
 - [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
-- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.6 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log
