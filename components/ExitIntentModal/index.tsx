@@ -62,8 +62,10 @@ export default function ExitIntentModal({
 }: ExitIntentModalProps) {
   const t = useTranslations("exitIntent");
 
-  // Get feature flag for locale-specific PDFs
-  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
+  // Get feature flag for locale-specific PDFs. Defaults to true to match the
+  // in-app Remote Config defaultConfig, so the feature works even when Remote
+  // Config can't initialize; a remote value of false still acts as a kill-switch.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
