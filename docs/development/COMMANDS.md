@@ -11,6 +11,7 @@ npm run dev                  # Start development server (http://localhost:3000)
 npm run storybook            # Start Storybook component explorer (http://localhost:6006)
 npm run test:coverage        # Run tests with coverage report
 npm run test:e2e             # Run E2E tests with Playwright
+npm run test:mutation        # Run Stryker mutation tests (scoped to lib/)
 npm run test:lighthouse:full # Build and run Lighthouse performance audits (all-in-one)
 npm run lint                 # Run ESLint to check code quality
 npm run format:check         # Check code formatting without fixing
@@ -59,8 +60,20 @@ npm run test:coverage       # Run tests with coverage report
 npm run test:e2e            # Run E2E tests with Playwright
 npm run test:lighthouse:full # Build and run Lighthouse audits (all-in-one)
 npm run test:lighthouse     # Run Lighthouse audits (requires build + serve)
+npm run test:mutation       # Run Stryker mutation tests (scoped to lib/)
 npm test -- --watch         # Run tests in watch mode
 npm test -- path/to/test    # Run specific test file
+```
+
+### Mutation Tests
+
+Mutation testing (Stryker) measures test _quality_ by mutating source and checking
+the suite catches it. Scoped to `lib/` pure-logic modules; the HTML report lands in
+`reports/mutation/index.html`. See [mutation-testing.md](../../.kiro/docs/mutation-testing.md).
+
+```bash
+npm run test:mutation                    # Full scoped run (lib/)
+npx stryker run --mutate "lib/<file>.ts" # Single file (faster, for iterating)
 ```
 
 ### Lighthouse Performance Tests

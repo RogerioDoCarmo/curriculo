@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "_comment": "Mutation testing config (Stryker). Runs the existing Jest suite against mutated source. Scoped to lib/ pure-logic modules, which have strong unit coverage and the best signal-to-noise for mutation testing. Expand `mutate` to hooks/ and components/ as their tests mature.",
+  "packageManager": "npm",
+  "testRunner": "jest",
+  "jest": {
+    "projectType": "custom",
+    "configFile": "jest.stryker.config.js"
+  },
+  "coverageAnalysis": "perTest",
+  "mutate": [
+    "lib/**/*.ts",
+    "!lib/**/*.d.ts",
+    "!lib/error-logging.client.ts",
+    "!lib/error-logging.ts",
+    "!lib/lazy-components.tsx",
+    "!lib/seo.ts",
+    "!lib/structured-data.ts"
+  ],
+  "reporters": ["html", "clear-text", "progress"],
+  "htmlReporter": { "fileName": "reports/mutation/index.html" },
+  "clearTextReporter": { "maxTestsToLog": 1 },
+  "thresholds": { "high": 80, "low": 60, "break": 50 },
+  "concurrency": 4,
+  "timeoutMS": 60000,
+  "tempDirName": ".stryker-tmp",
+  "cleanTempDir": true
+}
