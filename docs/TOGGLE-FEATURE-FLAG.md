@@ -2,6 +2,11 @@
 
 ## Toggle `use_locale_specific_pdfs` Flag
 
+> **Current default:** locale-specific PDFs are **on** — the published parameter
+> and the in-app `defaultConfig` (`lib/firebase.ts`) are both `true`. A published
+> `false` overrides the app default and acts as a kill-switch. See the
+> [setup guide](./firebase-remote-config-setup.md) for details.
+
 ### 🚀 Enable Locale-Specific PDFs
 
 **Effect:** Users see separate PDF download buttons for each language (pt-BR, en, es)
@@ -141,4 +146,4 @@ For questions or issues:
 
 ---
 
-**Last Updated:** 2024-01-XX
+**Last Updated:** 2026-06-15
