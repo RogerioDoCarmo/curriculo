@@ -78,6 +78,11 @@ jest.mock("@/components/ProjectsSection", () => ({
   ),
 }));
 
+jest.mock("@/components/AiStackSection", () => ({
+  __esModule: true,
+  default: () => <div data-testid="ai-stack-section">AI Stack Section</div>,
+}));
+
 jest.mock("@/components/ContactForm", () => ({
   __esModule: true,
   default: () => <div data-testid="contact-form">Contact Form</div>,
@@ -405,6 +410,7 @@ describe("HomePageContent Component", () => {
         "experience-section",
         "projects-section",
         "skills-section",
+        "ai-stack-section",
         "contact-form",
         "back-to-top",
         "exit-intent-modal",

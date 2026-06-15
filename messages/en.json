@@ -901,5 +901,27 @@
       "title": "Acknowledgment",
       "description": "By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use."
     }
+  },
+  "aiStack": {
+    "title": "Built with AI",
+    "subtitle": "The AI tools I used to design, build, and ship this site.",
+    "tools": {
+      "kiro": {
+        "name": "Kiro IDE",
+        "role": "Spec-driven scaffolding"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "role": "Feature development & refactoring"
+      },
+      "githubCopilot": {
+        "name": "GitHub Copilot",
+        "role": "In-editor code completion"
+      },
+      "chatgpt": {
+        "name": "ChatGPT",
+        "role": "Research & problem-solving"
+      }
+    }
   }
 }

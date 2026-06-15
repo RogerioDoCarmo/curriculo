@@ -7,6 +7,7 @@ import Hero from "@/components/Hero";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
+import AiStackSection from "@/components/AiStackSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactForm from "@/components/ContactForm";
 import BackToTopButton from "@/components/BackToTopButton";
@@ -87,11 +88,16 @@ export default function HomePageContent({
         <SkillsSection skills={skills} locale={locale} />
       </div>
 
+      {/* AI Stack Section — tools used to build the site */}
+      <div className="bg-gray-50 dark:bg-gray-800/50">
+        <AiStackSection />
+      </div>
+
       {/* Contact Form Section */}
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900"
       >
         <div className="mx-auto max-w-3xl">
           <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">

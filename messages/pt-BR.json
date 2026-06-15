@@ -901,5 +901,27 @@
       "title": "Reconhecimento",
       "description": "Ao usar este site, você reconhece que leu, entendeu e concorda em estar vinculado a estes Termos de Uso."
     }
+  },
+  "aiStack": {
+    "title": "Construído com IA",
+    "subtitle": "As ferramentas de IA que usei para projetar, construir e publicar este site.",
+    "tools": {
+      "kiro": {
+        "name": "Kiro IDE",
+        "role": "Estruturação guiada por especificações"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "role": "Desenvolvimento e refatoração de funcionalidades"
+      },
+      "githubCopilot": {
+        "name": "GitHub Copilot",
+        "role": "Autocompletar código no editor"
+      },
+      "chatgpt": {
+        "name": "ChatGPT",
+        "role": "Pesquisa e resolução de problemas"
+      }
+    }
   }
 }
