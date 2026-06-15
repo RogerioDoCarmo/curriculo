@@ -60,7 +60,7 @@ export default function AiStackSection() {
             const role = t(`tools.${tool.key}.role`);
 
             return (
-              <li key={tool.key}>
+              <li key={tool.key} className="h-full">
                 <a
                   href={tool.url}
                   target="_blank"
@@ -70,7 +70,7 @@ export default function AiStackSection() {
                   }
                   aria-label={`${name} — ${role} (opens in new tab)`}
                   className="
-                    group flex flex-col items-center gap-4
+                    group flex h-full flex-col items-center gap-4
                     rounded-xl border border-border bg-card p-6 text-center
                     transition-shadow duration-200 hover:shadow-lg
                     focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
