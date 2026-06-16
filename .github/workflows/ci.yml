@@ -239,8 +239,9 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium ${{ github.event_name !=
-          'pull_request' && 'firefox webkit' || '' }}
+        # Full browser matrix on every event (push and PRs) so WebKit/Firefox
+        # regressions surface on the PR instead of only after merge to develop/main.
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Run E2E tests
         env:
