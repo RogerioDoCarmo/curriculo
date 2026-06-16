@@ -30,8 +30,16 @@ This guide documents how to configure the `use_locale_specific_pdfs` feature fla
 
 ### 2.2 Set Default Value
 
-1. In the "Default value" section, set the value to `false`
-2. This ensures the feature is disabled by default for all users
+1. In the "Default value" section, set the value to `true`
+2. This matches the in-app `defaultConfig` in `lib/firebase.ts`
+   (`use_locale_specific_pdfs: true`), so locale-specific PDFs are the default —
+   including when Remote Config can't initialize. Publish `false` later only as a
+   kill-switch to fall back to the single universal PDF.
+
+> **Important:** The published Remote Config value always wins over the in-app
+> `defaultConfig`. If this parameter is published as `false`, every locale falls
+> back to the universal `resume.pdf` even though the app default is `true`. Keep
+> the two in sync unless you are deliberately using `false` as a kill-switch.
 
 ### 2.3 Add Parameter Conditions (Optional)
 
@@ -64,7 +72,7 @@ You can create conditions to enable the feature for specific user segments:
 ### 3.1 Check Parameter in Console
 
 1. In Remote Config, verify the parameter appears in the list
-2. Confirm the default value is `false`
+2. Confirm the default value is `true`
 3. Check that any conditions are correctly configured
 
 ### 3.2 Test in Application
@@ -72,12 +80,16 @@ You can create conditions to enable the feature for specific user segments:
 Run the following code in your browser console to verify the flag is accessible:
 
 ```javascript
-// This should return false (the default value)
-const flag = await getFeatureFlag("use_locale_specific_pdfs", false);
+// With the parameter (or defaultConfig) set to true, this returns true
+const flag = await getFeatureFlag("use_locale_specific_pdfs", true);
 console.log("use_locale_specific_pdfs:", flag);
 ```
 
 ## Step 4: Toggle the Flag in Production
+
+Locale-specific PDFs are **on by default** (the parameter and the in-app
+`defaultConfig` are both `true`). Use the steps below to flip the flag as a
+kill-switch or to re-enable it.
 
 ### To Enable the Feature (Locale-Specific PDFs)
 
@@ -168,16 +180,28 @@ The application automatically tracks feature flag usage with Firebase Analytics:
    ```
 4. **Check fetch interval:** In development, flags update immediately. In production, they update every hour.
 
-### Flag Returns Default Value
+### Flag Returns the Caller's Default Instead of the Published Value
 
-**Symptom:** `getFeatureFlag()` always returns the default value (false)
+**Symptom:** `getFeatureFlag()` ignores the published Remote Config value and
+returns the caller's default (e.g. the footer serves the universal `resume.pdf`
+for every locale).
 
 **Possible Causes:**
 
 1. **Firebase not configured:** Check environment variables in `.env.local`
 2. **Remote Config not initialized:** Check browser console for Firebase errors
 3. **Network issues:** Check browser Network tab for failed Remote Config requests
-4. **SSR context:** Remote Config only works in browser, not during server-side rendering
+4. **SSR context:** Remote Config only works in the browser, not during
+   server-side rendering / static export (the rendered HTML uses the in-app
+   `defaultConfig`, then the client updates after fetch)
+5. **Published value is actually `false`:** A published `false` is authoritative
+   and overrides the in-app `true` default — by design. Set it to `true` and
+   publish to re-enable.
+
+> **Historical bug (fixed):** `getFeatureFlag` previously returned the caller's
+> default whenever `fetchAndActivate()` resolved `false`, which happens on most
+> repeat visits (nothing new to activate). It now always reads `getValue` and
+> only honours the caller default when the value source is `"static"`.
 
 **Debug Steps:**
 
@@ -212,7 +236,7 @@ The application automatically tracks feature flag usage with Firebase Analytics:
 | ----------------- | -------------------------------------------------------- |
 | **Key**           | `use_locale_specific_pdfs`                               |
 | **Type**          | Boolean                                                  |
-| **Default**       | `false`                                                  |
+| **Default**       | `true` (matches in-app `defaultConfig`)                  |
 | **Description**   | Controls whether to generate locale-specific PDF resumes |
 | **Code Location** | `lib/firebase.ts` (REMOTE_CONFIG_DEFAULTS)               |
 | **Usage**         | `lib/feature-flags.ts` (getFeatureFlag)                  |
@@ -282,14 +306,15 @@ Document all Remote Config changes in your repository:
 
 ## Change Log
 
-| Date       | Change                     | Author |
-| ---------- | -------------------------- | ------ |
-| 2024-01-XX | Initial parameter creation | -      |
-| 2024-01-XX | Enabled for 10% of users   | -      |
-| 2024-01-XX | Enabled for all users      | -      |
+| Date       | Change                                                      | Author |
+| ---------- | ----------------------------------------------------------- | ------ |
+| 2024-01-XX | Initial parameter creation                                  | -      |
+| 2024-01-XX | Enabled for 10% of users                                    | -      |
+| 2024-01-XX | Enabled for all users                                       | -      |
+| 2026-06-15 | Document default as `true`; align with in-app defaultConfig | -      |
 
 ---
 
-**Last Updated:** 2024-01-XX
+**Last Updated:** 2026-06-15
 **Maintained By:** Development Team
 **Requirements:** 10.1

@@ -103,7 +103,7 @@ export const AllLocales: Story = {
  */
 export const InNavbar: Story = {
   render: () => (
-    <nav className="flex items-center justify-between p-4 bg-background border-b border-border min-w-[600px]">
+    <nav className="flex items-center justify-between p-4 bg-background border-b border-border min-w-150">
       <div className="text-lg font-bold">My Website</div>
       <div className="flex items-center gap-4">
         <a href="#" className="text-sm hover:underline">

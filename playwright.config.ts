@@ -54,73 +54,53 @@ export default defineConfig({
   },
 
   // Test projects for different browsers and devices
-  // In CI: Run only Chromium for PRs, full matrix for main/develop
-  // Locally: Run all browsers
-  projects:
-    process.env.CI && process.env.GITHUB_EVENT_NAME === "pull_request"
-      ? [
-          // PR builds: Chromium only for speed
-          {
-            name: "chromium",
-            use: {
-              ...devices["Desktop Chrome"],
-              // Chromium-specific launch options for better performance
-              launchOptions: {
-                args: [
-                  "--disable-blink-features=AutomationControlled",
-                  "--disable-dev-shm-usage",
-                  "--disable-gpu",
-                  "--no-sandbox",
-                ],
-              },
-            },
-          },
-        ]
-      : [
-          // Main/develop builds and local: Full browser matrix
-          {
-            name: "chromium",
-            use: {
-              ...devices["Desktop Chrome"],
-              // Chromium-specific launch options for better performance
-              launchOptions: {
-                args: [
-                  "--disable-blink-features=AutomationControlled",
-                  "--disable-dev-shm-usage",
-                  "--disable-gpu",
-                  "--no-sandbox",
-                ],
-              },
-            },
-          },
-          {
-            name: "firefox",
-            use: { ...devices["Desktop Firefox"] },
-          },
-          {
-            name: "webkit",
-            use: { ...devices["Desktop Safari"] },
-          },
-          {
-            name: "mobile-chrome",
-            use: {
-              ...devices["Pixel 5"],
-              // Chromium-specific launch options for mobile Chrome
-              launchOptions: {
-                args: [
-                  "--disable-blink-features=AutomationControlled",
-                  "--disable-dev-shm-usage",
-                  "--disable-gpu",
-                  "--no-sandbox",
-                ],
-              },
-            },
-          },
-          {
-            name: "mobile-safari",
-            use: { ...devices["iPhone 12"] },
-          },
-        ],
+  // Run the full browser matrix everywhere (CI pushes, PRs to develop/main, and
+  // local) so cross-browser regressions (esp. WebKit) surface on the PR instead
+  // of only appearing after a merge to develop/main.
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Chromium-specific launch options for better performance
+        launchOptions: {
+          args: [
+            "--disable-blink-features=AutomationControlled",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
+            "--no-sandbox",
+          ],
+        },
+      },
+    },
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
+    },
+    {
+      name: "mobile-chrome",
+      use: {
+        ...devices["Pixel 5"],
+        // Chromium-specific launch options for mobile Chrome
+        launchOptions: {
+          args: [
+            "--disable-blink-features=AutomationControlled",
+            "--disable-dev-shm-usage",
+            "--disable-gpu",
+            "--no-sandbox",
+          ],
+        },
+      },
+    },
+    {
+      name: "mobile-safari",
+      use: { ...devices["iPhone 12"] },
+    },
+  ],
 
   // Web server configuration for local development
   webServer: {

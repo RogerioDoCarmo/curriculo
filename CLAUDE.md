@@ -44,6 +44,10 @@ npm run format       # Prettier
 - Tailwind classes only — no inline styles (except dynamic values)
 - Dark mode via `dark:` variants
 - Group classes: layout → sizing → spacing → colors → misc
+- Prefer canonical scale classes over arbitrary px values when an exact
+  equivalent exists: the v4 spacing unit is `0.25rem` (4px), so `Npx` → `N/4`
+  (e.g. `w-[125px]` → `w-31.25`, `w-[200px]` → `w-50`, `min-w-[600px]` → `min-w-150`).
+  Only keep `[…px]` when there is no canonical match (e.g. `text-[10px]`).
 
 ### Testing
 
@@ -66,6 +70,21 @@ When asked to run the "post-merge workflow" or "update repo after merge":
 4. Suggest semantic version bump based on changes (major/minor/patch), confirm with user
 5. Create annotated tag: `git tag -a <version> -m "<release-notes>"`
 6. `git push --tags` — this triggers the GitHub Actions release workflow automatically
+
+### Release Artifacts (standard, automated)
+
+Every `v*.*.*` tag triggers `.github/workflows/release.yml`, which **must** attach
+to the GitHub Release, for prefix `<repo>-<tag>` (e.g. `curriculo-v1.7.3`):
+
+- **Source** archives: `<prefix>-source.tar.gz`, `<prefix>-source.zip` (via `git archive` of the tag)
+- **Dist** archives: `<prefix>-dist.tar.gz`, `<prefix>-dist.zip` (the built `out/` static export)
+- **Checksums**: one file per archive named `<archive-filename>_checksums.txt`
+  (same prefix as the compressed file + `_checksums.txt`), each containing `sha256` + `sha512`.
+
+So a release has 4 archives + 4 checksum files. The dist build reads
+`NEXT_PUBLIC_*` from GitHub secrets to match production; if unset it still builds
+(Firebase/Sentry just stay unconfigured in that artifact). Never rename the
+checksum suffix or drop an archive variant — this is the project standard.
 
 Release notes format:
 

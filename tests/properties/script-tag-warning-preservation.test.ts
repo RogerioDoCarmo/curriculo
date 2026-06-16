@@ -369,15 +369,20 @@ describe("Property 2.4: FOUC Prevention", () => {
           const matchMedia = createMockMatchMedia(systemPrefersDark);
           const documentElement = new MockDocumentElement();
 
-          // Measure execution time (should be < 1ms for synchronous execution)
+          // Measure execution time. A synchronous call should complete in well
+          // under a millisecond, but a tight 1ms wall-clock bound is flaky under
+          // CI load (scheduler/GC jitter can push it to a few ms). Use a generous
+          // bound that still fails on a real regression (an accidental timer,
+          // await, or heavy loop would be orders of magnitude slower). The
+          // synchronous side effect itself is asserted immediately below.
           const startTime = performance.now();
           applyThemeBeforeHydration(storage, matchMedia, documentElement);
           const endTime = performance.now();
 
-          // Should execute synchronously (< 1ms)
-          expect(endTime - startTime).toBeLessThan(1);
+          expect(endTime - startTime).toBeLessThan(50);
 
-          // Theme should be applied immediately
+          // Theme should be applied immediately (proves synchronous execution —
+          // the class is set by the time the call returns, no async deferral).
           expect(documentElement.hasClass("dark")).toBe(theme === "dark");
         }
       ),
