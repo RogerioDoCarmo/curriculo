@@ -669,6 +669,10 @@
         "title": "Formspree",
         "description": "Envios de formulários de contato e assinaturas de e-mail são processados e armazenados pelo Formspree"
       },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Dados de diagnóstico de erros e desempenho são armazenados na infraestrutura do Sentry localizada na União Europeia"
+      },
       "localStorage": {
         "title": "localStorage do Navegador",
         "description": "Preferências e dados de sessão são armazenados localmente no seu navegador"
@@ -684,6 +688,10 @@
       "formspree": {
         "title": "Formspree",
         "description": "Dados de formulários de contato são processados pelo Formspree para entregar mensagens ao nosso e-mail"
+      },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Diagnósticos de erros e desempenho são processados pelo Sentry (Functional Software, Inc.) para detectar e corrigir problemas; os relatórios têm seu e-mail e endereço IP removidos antes do envio"
       },
       "noSale": "Não vendemos, alugamos ou negociamos suas informações pessoais com terceiros."
     },

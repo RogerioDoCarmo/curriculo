@@ -669,6 +669,10 @@
         "title": "Formspree",
         "description": "Contact form submissions and email subscriptions are processed and stored by Formspree"
       },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Diagnostic error and performance data is stored on Sentry's EU-based infrastructure"
+      },
       "localStorage": {
         "title": "Browser localStorage",
         "description": "Preferences and session data are stored locally in your browser"
@@ -684,6 +688,10 @@
       "formspree": {
         "title": "Formspree",
         "description": "Contact form data is processed by Formspree to deliver messages to our email"
+      },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Error and performance diagnostics are processed by Sentry (Functional Software, Inc.) to detect and fix issues; reports are stripped of your email and IP address before being sent"
       },
       "noSale": "We do not sell, rent, or trade your personal information to third parties."
     },
