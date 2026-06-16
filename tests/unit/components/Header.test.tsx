@@ -269,6 +269,8 @@ describe("Header — responsive navigation", () => {
     expect(resume).toHaveAttribute("rel", "noopener noreferrer");
     // Spaced apart from the adjacent GitHub icon
     expect(resume).toHaveClass("mr-2");
+    // Has a visible text label
+    expect(resume).toHaveTextContent(/download resume/i);
   });
 
   it("renders Linktree icon link in the header", () => {
