@@ -42,6 +42,7 @@ jest.mock("next-intl", () => ({
       "nav.skills": "Skills",
       "nav.contact": "Contact",
       "nav.techStack": "Tech Stack",
+      "nav.resume": "Resume",
       "footer.downloadResume": "Download Resume",
       "footer.downloadResumeLabel": "Download resume in PDF format",
     };
@@ -269,8 +270,9 @@ describe("Header — responsive navigation", () => {
     expect(resume).toHaveAttribute("rel", "noopener noreferrer");
     // Spaced apart from the adjacent GitHub icon
     expect(resume).toHaveClass("mr-2");
-    // Has a visible text label
-    expect(resume).toHaveTextContent(/download resume/i);
+    // Has a visible short label stacked below the icon
+    expect(resume).toHaveClass("flex-col");
+    expect(resume).toHaveTextContent(/resume/i);
   });
 
   it("renders Linktree icon link in the header", () => {
