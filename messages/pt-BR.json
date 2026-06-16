@@ -663,7 +663,7 @@
       "intro": "Seus dados são armazenados nos seguintes locais:",
       "firebase": {
         "title": "Firebase (Google Cloud)",
-        "description": "Dados de análise e tokens de notificação são armazenados na plataforma Firebase do Google"
+        "description": "Dados de análise, tokens de notificação e solicitações de configuração de recursos (Firebase Remote Config) são tratados pela plataforma Firebase do Google"
       },
       "formspree": {
         "title": "Formspree",
@@ -683,7 +683,7 @@
       "intro": "Compartilhamos dados com os seguintes serviços de terceiros:",
       "firebase": {
         "title": "Google Analytics/Firebase",
-        "description": "Dados de análise anônimos são processados pelo serviço Firebase Analytics do Google"
+        "description": "Dados de análise anônimos são processados pelo serviço Firebase Analytics do Google. Também usamos o Firebase Remote Config para entregar configurações do site (como qual arquivo de currículo servir); isso envia um identificador de instalação pseudônimo ao Google, não usa cookies e não coleta dados pessoais sobre você"
       },
       "formspree": {
         "title": "Formspree",

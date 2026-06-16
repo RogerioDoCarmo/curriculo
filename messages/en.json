@@ -663,7 +663,7 @@
       "intro": "Your data is stored in the following locations:",
       "firebase": {
         "title": "Firebase (Google Cloud)",
-        "description": "Analytics data and notification tokens are stored on Google's Firebase platform"
+        "description": "Analytics data, notification tokens, and feature-configuration requests (Firebase Remote Config) are handled by Google's Firebase platform"
       },
       "formspree": {
         "title": "Formspree",
@@ -683,7 +683,7 @@
       "intro": "We share data with the following third-party services:",
       "firebase": {
         "title": "Google Analytics/Firebase",
-        "description": "Anonymous analytics data is processed by Google's Firebase Analytics service"
+        "description": "Anonymous analytics data is processed by Google's Firebase Analytics service. We also use Firebase Remote Config to deliver site configuration (such as which resume file to serve); this sends a pseudonymous installation identifier to Google, sets no cookies, and collects no personal data about you"
       },
       "formspree": {
         "title": "Formspree",
