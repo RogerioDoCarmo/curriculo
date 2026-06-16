@@ -58,7 +58,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 alt="UNESP Logo"
                 width={1280}
                 height={427}
-                className="rounded w-[125px] h-auto"
+                className="rounded w-31.25 h-auto"
               />
             </a>
             <div className="text-left">
@@ -221,7 +221,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 alt="Company Logo"
                 width={678}
                 height={235}
-                className="rounded w-[200px] h-auto"
+                className="w-50 h-auto"
               />
             </a>
             <div className="text-left">
