@@ -2,6 +2,11 @@
 
 ## Toggle `use_locale_specific_pdfs` Flag
 
+> **Current default:** locale-specific PDFs are **on** — the published parameter
+> and the in-app `defaultConfig` (`lib/firebase.ts`) are both `true`. A published
+> `false` overrides the app default and acts as a kill-switch. See the
+> [setup guide](./firebase-remote-config-setup.md) for details.
+
 ### 🚀 Enable Locale-Specific PDFs
 
 **Effect:** Users see separate PDF download buttons for each language (pt-BR, en, es)
@@ -117,6 +122,62 @@ Search for: `pdf_download`
 3. Confirm parameter key is exactly: `use_locale_specific_pdfs`
 4. Verify you published changes (not just saved draft)
 
+### ⚠️ Edited the value but it still serves the old one? (Rollout vs. parameter value)
+
+This is the most common gotcha in the Remote Config UI. A parameter can serve a
+value from **two different places**, and a **Rollout always wins** over the plain
+value you edit in the pencil dialog:
+
+- **Parameter value** — what you set via the pencil (Edit) icon next to the
+  parameter. This is what most people change.
+- **Rollout** — a managed gradual-release that **pins the parameter to its own
+  variant value**. While a rollout is active on `use_locale_specific_pdfs`,
+  editing the parameter value has **no effect** on what clients receive — the
+  rollout's variant overrides it.
+
+**How to tell a rollout is active:** fetch the live config and look for a
+`rolloutMetadata` / `experimentDescriptions` block in the response (see the
+verify command below). If `affectedParameterKeys` lists
+`use_locale_specific_pdfs`, a rollout is in control.
+
+**How to fix it:**
+
+1. In the Firebase Console, open **Remote Config → Rollouts** tab.
+2. Find the rollout targeting `use_locale_specific_pdfs`.
+3. **Stop / end** the rollout (or set its rollout value to the one you want —
+   e.g. `true` — and let it reach 100%).
+4. Back on the **Parameters** tab, confirm `use_locale_specific_pdfs` = `true`.
+5. **Publish changes.** The template version number should increase.
+
+After this, the live fetch returns the plain value with **no** `rolloutMetadata`
+block.
+
+### Verify the live value from the terminal
+
+You don't need the UI to confirm what clients actually receive. Fetch the
+published config directly with the public web client credentials (project number,
+web `app_id`, and `NEXT_PUBLIC_FIREBASE_API_KEY` — all already in `.env.local`):
+
+```bash
+curl -s -X POST \
+  "https://firebaseremoteconfig.googleapis.com/v1/projects/<PROJECT_NUMBER>/namespaces/firebase:fetch?key=<API_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '{"app_id":"<WEB_APP_ID>","app_instance_id":"diagnostic-check"}'
+```
+
+A healthy result looks like this — the value you expect and **no** rollout block:
+
+```json
+{
+  "entries": { "use_locale_specific_pdfs": "true" },
+  "state": "UPDATE",
+  "templateVersion": "5"
+}
+```
+
+If you instead see a `rolloutMetadata` array, a rollout is still overriding the
+parameter — go back and end it (see above).
+
 ---
 
 ## Emergency Rollback
@@ -141,4 +202,4 @@ For questions or issues:
 
 ---
 
-**Last Updated:** 2024-01-XX
+**Last Updated:** 2026-06-15

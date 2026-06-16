@@ -16,6 +16,7 @@ import Link from "next/link";
 import LanguageSelector from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
+import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { trackNavLinkClick, trackExternalLinkClick } from "@/lib/analytics";
 import type { SupportedLocale } from "@/types/index";
 
@@ -25,6 +26,25 @@ interface HeaderProps {
 
 const NAV_SECTIONS = ["home", "projects", "experience", "skills", "contact"] as const;
 
+/**
+ * Get the resume URL based on locale and feature flag.
+ * Mirrors the logic in Footer/ExitIntentModal so the navbar download serves
+ * the same locale-specific PDF.
+ */
+function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
+  if (!useLocaleSpecificPdfs) {
+    return "/resumes/resume.pdf";
+  }
+
+  const localeMap: Record<string, string> = {
+    "pt-BR": "/resumes/resume-pt-BR.pdf",
+    en: "/resumes/resume-en.pdf",
+    es: "/resumes/resume-es.pdf",
+  };
+
+  return localeMap[locale] || "/resumes/resume.pdf";
+}
+
 export default function Header({ locale }: HeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
@@ -33,6 +53,11 @@ export default function Header({ locale }: HeaderProps) {
   const [mounted, setMounted] = useState(false);
 
   const { isActive, navigateTo } = useAnchorNavigation([...NAV_SECTIONS]);
+
+  // Locale-specific resume PDF. Defaults to true to match the Remote Config
+  // defaultConfig so the correct PDF is served even before the flag resolves.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
+  const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
   // Check if we're on the home page (where anchor sections exist)
   // Home page paths: /{locale} or /{locale}/ or /{locale}#section
@@ -158,8 +183,51 @@ export default function Header({ locale }: HeaderProps) {
             )}
           </nav>
 
-          {/* Controls: GitHub + Linktree + LanguageSelector + ThemeToggle */}
+          {/* Controls: Resume + GitHub + Linktree + LanguageSelector + ThemeToggle */}
           <div className="flex items-center gap-2 ml-auto">
+            {/* Resume Download Link — spaced apart from the GitHub icon */}
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("footer.downloadResumeLabel")}
+              title={t("footer.downloadResume")}
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: resumeUrl,
+                  context: "header_resume_download",
+                })
+              }
+              className="
+                mr-3 inline-flex flex-col items-center justify-center gap-1 rounded-md px-2 py-1
+                text-gray-700 dark:text-gray-200
+                hover:text-primary-600 dark:hover:text-primary-400
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                transition-colors duration-200
+                focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {/* Icon + label form one centered block, vertically aligned as a
+                  unit against the GitHub/Linktree controls. */}
+              <span className="text-[10px] font-medium leading-none hidden sm:block">
+                {t("nav.resume")}
+              </span>
+            </a>
+
             {/* GitHub Repository Link */}
             <a
               href="https://github.com/rogeriodocarmo/curriculo"
