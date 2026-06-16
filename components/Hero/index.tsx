@@ -59,7 +59,6 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 width={1280}
                 height={427}
                 className="rounded w-[125px] h-auto"
-                priority
               />
             </a>
             <div className="text-left">
@@ -223,7 +222,6 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 width={678}
                 height={235}
                 className="rounded w-[200px] h-auto"
-                priority
               />
             </a>
             <div className="text-left">
