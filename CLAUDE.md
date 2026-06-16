@@ -44,6 +44,10 @@ npm run format       # Prettier
 - Tailwind classes only — no inline styles (except dynamic values)
 - Dark mode via `dark:` variants
 - Group classes: layout → sizing → spacing → colors → misc
+- Prefer canonical scale classes over arbitrary px values when an exact
+  equivalent exists: the v4 spacing unit is `0.25rem` (4px), so `Npx` → `N/4`
+  (e.g. `w-[125px]` → `w-31.25`, `w-[200px]` → `w-50`, `min-w-[600px]` → `min-w-150`).
+  Only keep `[…px]` when there is no canonical match (e.g. `text-[10px]`).
 
 ### Testing
 
