@@ -220,8 +220,8 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               <Image
                 src="/images/logos/logo_topaz.svg"
                 alt="Company Logo"
-                width={1280}
-                height={291}
+                width={678}
+                height={235}
                 className="rounded w-[200px] h-auto"
                 priority
               />
@@ -329,7 +329,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               alt="Rogério do Carmo — Mobile React Native Developer"
               fill
               sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
-              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-200 dark:ring-primary-800"
+              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-500 dark:ring-primary-800"
               priority
             />
           </div>
