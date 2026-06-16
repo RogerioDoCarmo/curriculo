@@ -5,6 +5,7 @@
     "experience": "Experiencia",
     "skills": "Habilidades",
     "contact": "Contacto",
+    "resume": "Currículum",
     "techStack": "Usado en este sitio",
     "componentGallery": "Galería de Componentes"
   },
@@ -567,7 +568,7 @@
     "metaDescription": "Aprende cómo recopilamos, usamos y protegemos tus datos. Política de privacidad conforme con GDPR y LGPD.",
     "title": "Política de Privacidad",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Junio de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web.",
@@ -663,11 +664,15 @@
       "intro": "Tus datos se almacenan en las siguientes ubicaciones:",
       "firebase": {
         "title": "Firebase (Google Cloud)",
-        "description": "Los datos de análisis y tokens de notificación se almacenan en la plataforma Firebase de Google"
+        "description": "Los datos de análisis, tokens de notificación y solicitudes de configuración de funciones (Firebase Remote Config) son gestionados por la plataforma Firebase de Google"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Los envíos de formularios de contacto y suscripciones de correo electrónico son procesados y almacenados por Formspree"
+      },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Los datos de diagnóstico de errores y rendimiento se almacenan en la infraestructura de Sentry ubicada en la Unión Europea"
       },
       "localStorage": {
         "title": "localStorage del Navegador",
@@ -679,11 +684,15 @@
       "intro": "Compartimos datos con los siguientes servicios de terceros:",
       "firebase": {
         "title": "Google Analytics/Firebase",
-        "description": "Los datos de análisis anónimos son procesados por el servicio Firebase Analytics de Google"
+        "description": "Los datos de análisis anónimos son procesados por el servicio Firebase Analytics de Google. También usamos Firebase Remote Config para entregar la configuración del sitio (como qué archivo de currículum servir); esto envía un identificador de instalación seudónimo a Google, no usa cookies y no recopila datos personales sobre ti"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Los datos de formularios de contacto son procesados por Formspree para entregar mensajes a nuestro correo electrónico"
+      },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Los diagnósticos de errores y rendimiento son procesados por Sentry (Functional Software, Inc.) para detectar y corregir problemas; los informes se despojan de tu correo electrónico y dirección IP antes de enviarse"
       },
       "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros."
     },
@@ -900,6 +909,28 @@
     "acknowledgment": {
       "title": "Reconocimiento",
       "description": "Al usar este sitio web, usted reconoce que ha leído, comprendido y acepta estar sujeto a estos Términos de Uso."
+    }
+  },
+  "aiStack": {
+    "title": "Construido con IA",
+    "subtitle": "Las herramientas de IA que usé para diseñar, construir y publicar este sitio.",
+    "tools": {
+      "kiro": {
+        "name": "Kiro IDE",
+        "role": "Estructuración guiada por especificaciones"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "role": "Desarrollo y refactorización de funciones"
+      },
+      "githubCopilot": {
+        "name": "GitHub Copilot",
+        "role": "Autocompletado de código en el editor"
+      },
+      "chatgpt": {
+        "name": "ChatGPT",
+        "role": "Investigación y resolución de problemas"
+      }
     }
   }
 }

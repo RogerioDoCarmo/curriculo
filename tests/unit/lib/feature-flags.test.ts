@@ -54,6 +54,7 @@ describe("Feature Flag Management", () => {
         asBoolean: () => true,
         asString: () => "true",
         asNumber: () => 1,
+        getSource: () => "remote",
       });
 
       const result = await getFeatureFlag("use_locale_specific_pdfs", false);
@@ -72,6 +73,7 @@ describe("Feature Flag Management", () => {
         asBoolean: () => false,
         asString: () => "test-value",
         asNumber: () => 0,
+        getSource: () => "remote",
       });
 
       const result = await getFeatureFlag("test_string_flag", "default");
@@ -90,6 +92,7 @@ describe("Feature Flag Management", () => {
         asBoolean: () => false,
         asString: () => "42",
         asNumber: () => 42,
+        getSource: () => "remote",
       });
 
       const result = await getFeatureFlag("test_number_flag", 0);
@@ -108,6 +111,7 @@ describe("Feature Flag Management", () => {
         asBoolean: () => true,
         asString: () => "true",
         asNumber: () => 1,
+        getSource: () => "remote",
       });
 
       // First call - should fetch
@@ -121,16 +125,25 @@ describe("Feature Flag Management", () => {
       expect(mockFetchAndActivate).toHaveBeenCalledTimes(1); // Still 1, not called again
     });
 
-    it("should handle network failures gracefully and return default value", async () => {
+    it("should still read the active value (defaultConfig) when the fetch fails", async () => {
+      // A failed fetch must not discard the in-app defaultConfig — getValue still
+      // returns it, so the flag should resolve to that value, not the caller default.
       const mockRemoteConfig = {} as any;
 
       mockGetRemoteConfig.mockResolvedValue(mockRemoteConfig);
       mockFetchAndActivate.mockRejectedValue(new Error("Network error"));
+      mockGetValue.mockReturnValue({
+        asBoolean: () => true,
+        asString: () => "true",
+        asNumber: () => 1,
+        getSource: () => "default",
+      });
 
       const result = await getFeatureFlag("use_locale_specific_pdfs", false);
 
-      expect(result).toBe(false);
+      expect(result).toBe(true);
       expect(mockFetchAndActivate).toHaveBeenCalledWith(mockRemoteConfig);
+      expect(mockGetValue).toHaveBeenCalledWith(mockRemoteConfig, "use_locale_specific_pdfs");
     });
 
     it("should handle getValue errors gracefully and return default value", async () => {
@@ -147,16 +160,44 @@ describe("Feature Flag Management", () => {
       expect(result).toBe(false);
     });
 
-    it("should return default value when fetchAndActivate returns false", async () => {
+    it("reads the active value even when fetchAndActivate returns false (locale-PDF regression)", async () => {
+      // fetchAndActivate returns false on repeat visits (nothing new to activate),
+      // but the already-active remote value must still be honoured. Previously the
+      // code bailed to the caller default here, collapsing locale PDFs to generic.
       const mockRemoteConfig = {} as any;
 
       mockGetRemoteConfig.mockResolvedValue(mockRemoteConfig);
-      mockFetchAndActivate.mockResolvedValue(false); // No new values fetched
+      mockFetchAndActivate.mockResolvedValue(false); // No new values activated
+      mockGetValue.mockReturnValue({
+        asBoolean: () => true,
+        asString: () => "true",
+        asNumber: () => 1,
+        getSource: () => "remote",
+      });
 
       const result = await getFeatureFlag("use_locale_specific_pdfs", false);
 
-      expect(result).toBe(false);
-      expect(mockFetchAndActivate).toHaveBeenCalledWith(mockRemoteConfig);
+      expect(result).toBe(true);
+      expect(mockGetValue).toHaveBeenCalledWith(mockRemoteConfig, "use_locale_specific_pdfs");
+    });
+
+    it("returns the caller default when the value source is 'static' (key unconfigured)", async () => {
+      // No Remote Config param and no defaultConfig entry → static source. The
+      // caller's default must win rather than the static zero-value (false/0/"").
+      const mockRemoteConfig = {} as any;
+
+      mockGetRemoteConfig.mockResolvedValue(mockRemoteConfig);
+      mockFetchAndActivate.mockResolvedValue(true);
+      mockGetValue.mockReturnValue({
+        asBoolean: () => false,
+        asString: () => "",
+        asNumber: () => 0,
+        getSource: () => "static",
+      });
+
+      const result = await getFeatureFlag("unconfigured_flag", true);
+
+      expect(result).toBe(true);
     });
 
     it("should handle offline scenarios by returning cached or default values", async () => {
@@ -178,6 +219,7 @@ describe("Feature Flag Management", () => {
         asBoolean: () => true,
         asString: () => "true",
         asNumber: () => 1,
+        getSource: () => "remote",
       });
 
       // First call - should fetch

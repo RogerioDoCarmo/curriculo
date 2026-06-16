@@ -1,6 +1,14 @@
 /**
- * Sentry server-side configuration.
- * This file is automatically loaded by @sentry/nextjs for server error tracking.
+ * Sentry client-side initialization.
+ *
+ * Next.js (15.3+) loads this file natively in the browser before hydration, so
+ * `Sentry.init` runs without needing the Sentry webpack/Turbopack plugin. This
+ * replaces the legacy root `sentry.client.config.ts`, which modern
+ * `@sentry/nextjs` (v8+) no longer auto-loads.
+ *
+ * This site is a static export (`output: "export"`), so there is no server
+ * runtime in production — only this client init can capture errors. There is
+ * intentionally no server/edge Sentry config.
  *
  * Requirements: 10.5
  */

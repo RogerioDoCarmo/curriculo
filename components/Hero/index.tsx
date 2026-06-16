@@ -58,8 +58,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 alt="UNESP Logo"
                 width={1280}
                 height={427}
-                className="rounded w-[125px] h-auto"
-                priority
+                className="rounded w-31.25 h-auto"
               />
             </a>
             <div className="text-left">
@@ -220,10 +219,9 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               <Image
                 src="/images/logos/logo_topaz.svg"
                 alt="Company Logo"
-                width={1280}
-                height={291}
-                className="rounded w-[200px] h-auto"
-                priority
+                width={678}
+                height={235}
+                className="w-50 h-auto"
               />
             </a>
             <div className="text-left">
@@ -320,16 +318,13 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
 
         {/* Profile photo */}
         <div className="shrink-0">
-          <div
-            className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48"
-            style={{ minHeight: "160px", minWidth: "160px" }}
-          >
+          <div className="relative h-40 w-40 min-h-40 min-w-40 sm:h-44 sm:w-44 md:h-48 md:w-48">
             <Image
               src="/images/profile/rogeriodocarmo.png"
               alt="Rogério do Carmo — Mobile React Native Developer"
               fill
               sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
-              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-200 dark:ring-primary-800"
+              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-500 dark:ring-primary-800"
               priority
             />
           </div>

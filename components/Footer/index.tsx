@@ -118,8 +118,11 @@ export default function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
   const { openBanner } = useCookieConsent();
 
-  // Get feature flag for locale-specific PDFs
-  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
+  // Get feature flag for locale-specific PDFs. Defaults to true to match the
+  // in-app Remote Config defaultConfig — so the feature works (and the SSG HTML
+  // emits locale-specific URLs) even when Remote Config can't initialize. A
+  // remote value of false still acts as a kill-switch.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 

@@ -121,13 +121,32 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
       return defaultValue;
     }
 
-    // Fetch and activate Remote Config
+    // Fetch and activate Remote Config (best-effort).
+    //
+    // `fetchAndActivate` resolves to `false` when no *new* config was activated —
+    // e.g. within the `minimumFetchInterval`, or when the freshly fetched values
+    // match the already-active config (which persists across sessions in
+    // IndexedDB). That does NOT mean there is no value to read: previously
+    // activated remote values and the in-app `defaultConfig` remain available via
+    // `getValue`. So we never branch on the returned boolean — we always read the
+    // active value below. Gating on `!activated` was the bug that collapsed
+    // locale-specific resume PDFs to the generic default on repeat visits.
     const { fetchAndActivate, getValue } = await import("firebase/remote-config");
-    const activated = await fetchAndActivate(remoteConfig);
 
-    // If no new values were fetched, return default
-    if (!activated) {
-      // Track default value usage
+    try {
+      await fetchAndActivate(remoteConfig);
+    } catch (fetchError) {
+      // A failed fetch still leaves `defaultConfig` (and any persisted activated
+      // values) readable via `getValue`, so fall through rather than abort.
+      console.warn(`[FeatureFlags] fetchAndActivate failed for "${key}":`, fetchError);
+    }
+
+    // Read the active value: remote → previously activated → in-app defaultConfig.
+    const value = getValue(remoteConfig, key);
+
+    // A "static" source means the key is configured in neither Remote Config nor
+    // `defaultConfig`; honour the caller's default in that case.
+    if (value.getSource() === "static") {
       if (trackUsage) {
         trackFeatureFlagChecked({
           flag_name: key,
@@ -136,9 +155,6 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
       }
       return defaultValue;
     }
-
-    // Get the flag value
-    const value = getValue(remoteConfig, key);
 
     // Convert to appropriate type based on default value type
     let flagValue: T;
