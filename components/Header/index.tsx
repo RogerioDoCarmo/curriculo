@@ -199,7 +199,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                relative mr-3 inline-flex items-center justify-center p-1.5 rounded-md
+                mr-3 inline-flex flex-col items-center justify-center gap-1 rounded-md px-2 py-1
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -221,9 +221,9 @@ export default function Header({ locale }: HeaderProps) {
               >
                 <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              {/* Label sits below the icon without affecting row height, so the
-                  icon stays aligned with the GitHub/Linktree icons. */}
-              <span className="absolute top-full left-1/2 -translate-x-1/2 text-[10px] font-medium leading-none whitespace-nowrap hidden sm:block">
+              {/* Icon + label form one centered block, vertically aligned as a
+                  unit against the GitHub/Linktree controls. */}
+              <span className="text-[10px] font-medium leading-none hidden sm:block">
                 {t("nav.resume")}
               </span>
             </a>
