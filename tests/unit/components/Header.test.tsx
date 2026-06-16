@@ -42,9 +42,16 @@ jest.mock("next-intl", () => ({
       "nav.skills": "Skills",
       "nav.contact": "Contact",
       "nav.techStack": "Tech Stack",
+      "footer.downloadResume": "Download Resume",
+      "footer.downloadResumeLabel": "Download resume in PDF format",
     };
     return translations[key] ?? key;
   },
+}));
+
+// Mock useFeatureFlag so the resume URL is deterministic and Firebase is not hit
+jest.mock("@/hooks/useFeatureFlag", () => ({
+  useFeatureFlag: () => ({ value: true, loading: false, error: false }),
 }));
 
 // Mock useAnchorNavigation hook
@@ -250,6 +257,18 @@ describe("Header — responsive navigation", () => {
       name: /switch to dark mode|switch to light mode/i,
     });
     expect(themeToggle).toBeInTheDocument();
+  });
+
+  it("renders the resume download link with the locale-specific PDF href", () => {
+    renderHeader();
+
+    const resume = screen.getByRole("link", { name: /download resume in pdf format/i });
+    expect(resume).toBeInTheDocument();
+    expect(resume).toHaveAttribute("href", "/resumes/resume-en.pdf");
+    expect(resume).toHaveAttribute("target", "_blank");
+    expect(resume).toHaveAttribute("rel", "noopener noreferrer");
+    // Spaced apart from the adjacent GitHub icon
+    expect(resume).toHaveClass("mr-2");
   });
 
   it("renders Linktree icon link in the header", () => {
