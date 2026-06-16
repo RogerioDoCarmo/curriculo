@@ -269,9 +269,9 @@ describe("Header — responsive navigation", () => {
     expect(resume).toHaveAttribute("target", "_blank");
     expect(resume).toHaveAttribute("rel", "noopener noreferrer");
     // Spaced apart from the adjacent GitHub icon
-    expect(resume).toHaveClass("mr-2");
-    // Has a visible short label stacked below the icon
-    expect(resume).toHaveClass("flex-col");
+    expect(resume).toHaveClass("mr-3");
+    // Icon stays aligned with siblings; the short label is positioned below it
+    expect(resume).toHaveClass("relative");
     expect(resume).toHaveTextContent(/resume/i);
   });
 
