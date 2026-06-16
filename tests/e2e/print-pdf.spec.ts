@@ -22,6 +22,10 @@ test.describe("Print and PDF Output", () => {
   test.beforeEach(async ({ page, context }) => {
     await setCookieConsentBeforeLoad(context);
     await page.goto("/");
+    // WebKit re-layouts when emulateMedia switches to print and sections become
+    // unqueryable if the DOM has not settled first. Wait for network idle here so
+    // every test starts from a stable DOM before emulating print media.
+    await page.waitForLoadState("networkidle");
   });
 
   test.skip("should hide non-essential elements in print media", async ({ page }) => {

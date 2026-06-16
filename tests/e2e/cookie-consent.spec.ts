@@ -108,6 +108,12 @@ test.describe("Cookie Consent Banner", () => {
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
 
+      // Wait for the reloaded page to render (banner gone) before reading
+      // localStorage. This auto-retrying assertion guarantees the execution
+      // context is stable and prevents the "Execution context was destroyed"
+      // race when WebKit is still completing the post-accept reload/redirect.
+      await expect(banner).not.toBeVisible();
+
       // Single evaluate reads both values in one call, eliminating the timing
       // window between two separate page.evaluate calls in which WebKit can
       // tear down the execution context mid-sequence.
@@ -141,6 +147,12 @@ test.describe("Cookie Consent Banner", () => {
       // that follows the reload — safe no-op when there is no second navigation.
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
+
+      // Wait for the reloaded page to render (banner gone) before reading
+      // localStorage. This auto-retrying assertion guarantees the execution
+      // context is stable and prevents the "Execution context was destroyed"
+      // race when WebKit is still completing the post-accept reload/redirect.
+      await expect(banner).not.toBeVisible();
 
       // Check that analytics consent is granted
       const hasConsent = await page.evaluate(() => {
