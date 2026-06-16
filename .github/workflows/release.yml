@@ -33,6 +33,53 @@ jobs:
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 $TAG_NAME^ 2>/dev/null || echo "")
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build static site (dist)
+        run: npm run build
+        env:
+          # Sourced from GitHub secrets so the dist artifact matches production.
+          # If a secret is unset the build still succeeds (Firebase/Sentry stay
+          # unconfigured in that artifact). Set these to mirror the Vercel env.
+          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+          NEXT_PUBLIC_FIREBASE_VAPID_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_VAPID_KEY }}
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+
+      - name: Package release artifacts (source + dist) with checksums
+        id: artifacts
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag_info.outputs.tag_name }}"
+          PREFIX="${{ github.event.repository.name }}-${TAG}"
+
+          # Source archives: reproducible snapshot of the tagged commit.
+          git archive --format=tar.gz --prefix="${PREFIX}/" -o "${PREFIX}-source.tar.gz" "${TAG}"
+          git archive --format=zip   --prefix="${PREFIX}/" -o "${PREFIX}-source.zip"   "${TAG}"
+
+          # Dist archives: the built static export (contents of out/).
+          tar -czf "${PREFIX}-dist.tar.gz" -C out .
+          ( cd out && zip -qr "../${PREFIX}-dist.zip" . )
+
+          # One checksum file per archive: <archive-filename>_checksums.txt (sha256 + sha512).
+          for f in "${PREFIX}-source.tar.gz" "${PREFIX}-source.zip" "${PREFIX}-dist.tar.gz" "${PREFIX}-dist.zip"; do
+            { sha256sum "$f"; sha512sum "$f"; } > "${f}_checksums.txt"
+          done
+
+          echo "prefix=${PREFIX}" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
@@ -40,6 +87,15 @@ jobs:
           body: ${{ steps.tag_info.outputs.tag_message }}
           draft: false
           prerelease: false
+          files: |
+            ${{ steps.artifacts.outputs.prefix }}-source.tar.gz
+            ${{ steps.artifacts.outputs.prefix }}-source.tar.gz_checksums.txt
+            ${{ steps.artifacts.outputs.prefix }}-source.zip
+            ${{ steps.artifacts.outputs.prefix }}-source.zip_checksums.txt
+            ${{ steps.artifacts.outputs.prefix }}-dist.tar.gz
+            ${{ steps.artifacts.outputs.prefix }}-dist.tar.gz_checksums.txt
+            ${{ steps.artifacts.outputs.prefix }}-dist.zip
+            ${{ steps.artifacts.outputs.prefix }}-dist.zip_checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -47,4 +103,5 @@ jobs:
         run: |
           echo "✅ GitHub Release created successfully!"
           echo "📦 Release: ${{ steps.tag_info.outputs.tag_name }}"
+          echo "🗜️  Assets: source + dist (.tar.gz/.zip) each with a *_checksums.txt"
           echo "🔗 URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag_info.outputs.tag_name }}"
