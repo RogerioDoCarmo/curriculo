@@ -19,7 +19,47 @@
  * 7. Banner is keyboard accessible
  */
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * Reads the persisted cookie-consent state from localStorage, retrying while an
+ * in-flight navigation tears down the execution context.
+ *
+ * Accepting or saving consent triggers a reload (sometimes followed by a locale
+ * redirect). On WebKit and mobile Safari a bare `page.evaluate` issued just after
+ * can fail with "Execution context was destroyed, most likely because of a
+ * navigation". Polling retries the read until the context is stable; the consent
+ * value is written synchronously before the reload, so once it reads back the
+ * value is authoritative.
+ */
+async function readConsentState(page: Page): Promise<{
+  consent: string | null;
+  preferences: { analytics?: boolean; functional?: boolean };
+}> {
+  let state: {
+    consent: string | null;
+    preferences: { analytics?: boolean; functional?: boolean };
+  } = { consent: null, preferences: {} };
+
+  await expect
+    .poll(
+      async () => {
+        try {
+          state = await page.evaluate(() => ({
+            consent: localStorage.getItem("cookie-consent"),
+            preferences: JSON.parse(localStorage.getItem("cookie-preferences") || "{}"),
+          }));
+          return state.consent;
+        } catch {
+          return null; // navigation in flight destroyed the context — retry
+        }
+      },
+      { timeout: 10000 }
+    )
+    .not.toBeNull();
+
+  return state;
+}
 
 test.describe("Cookie Consent Banner", () => {
   test.beforeEach(async ({ page, context }) => {
@@ -114,14 +154,10 @@ test.describe("Cookie Consent Banner", () => {
       // race when WebKit is still completing the post-accept reload/redirect.
       await expect(banner).not.toBeVisible();
 
-      // Single evaluate reads both values in one call, eliminating the timing
-      // window between two separate page.evaluate calls in which WebKit can
-      // tear down the execution context mid-sequence.
-      const { consentStatus, preferences } = await page.evaluate(() => ({
-        consentStatus: localStorage.getItem("cookie-consent"),
-        preferences: JSON.parse(localStorage.getItem("cookie-preferences") || "{}"),
-      }));
-      expect(consentStatus).toBe("accepted");
+      // Poll the read so it retries if a trailing locale redirect tears down the
+      // execution context mid-evaluate (WebKit / mobile Safari).
+      const { consent, preferences } = await readConsentState(page);
+      expect(consent).toBe("accepted");
       expect(preferences.analytics).toBe(true);
       expect(preferences.functional).toBe(true);
 
@@ -154,12 +190,10 @@ test.describe("Cookie Consent Banner", () => {
       // race when WebKit is still completing the post-accept reload/redirect.
       await expect(banner).not.toBeVisible();
 
-      // Check that analytics consent is granted
-      const hasConsent = await page.evaluate(() => {
-        const status = localStorage.getItem("cookie-consent");
-        return status === "accepted";
-      });
-      expect(hasConsent).toBe(true);
+      // Poll the read so it retries if a trailing locale redirect tears down the
+      // execution context mid-evaluate (WebKit / mobile Safari).
+      const { consent } = await readConsentState(page);
+      expect(consent).toBe("accepted");
     });
   });
 
@@ -320,13 +354,10 @@ test.describe("Cookie Consent Banner", () => {
       // Wait for reload
       await page.waitForLoadState("networkidle");
 
-      // Check localStorage
-      const consentStatus = await page.evaluate(() => localStorage.getItem("cookie-consent"));
-      expect(consentStatus).toBe("customized");
-
-      const preferences = await page.evaluate(() =>
-        JSON.parse(localStorage.getItem("cookie-preferences") || "{}")
-      );
+      // Poll the read so it retries if the post-save reload/redirect tears down
+      // the execution context mid-evaluate (WebKit / mobile Safari).
+      const { consent, preferences } = await readConsentState(page);
+      expect(consent).toBe("customized");
       expect(preferences.analytics).toBe(true);
       expect(preferences.functional).toBe(false);
     });
@@ -350,10 +381,9 @@ test.describe("Cookie Consent Banner", () => {
       // Banner should not be visible
       await expect(banner).not.toBeVisible();
 
-      // Verify preferences persisted
-      const preferences = await page.evaluate(() =>
-        JSON.parse(localStorage.getItem("cookie-preferences") || "{}")
-      );
+      // Poll the read so it retries if the reload tears down the execution
+      // context mid-evaluate (WebKit / mobile Safari).
+      const { preferences } = await readConsentState(page);
       expect(preferences.analytics).toBe(false);
       expect(preferences.functional).toBe(true);
     });
@@ -370,14 +400,12 @@ test.describe("Cookie Consent Banner", () => {
       // Wait for reload and page to stabilize
       await page.waitForLoadState("load");
       await page.waitForLoadState("networkidle");
-      await page.waitForTimeout(500); // Extra wait for webkit
 
-      // Verify analytics is disabled
-      const hasAnalyticsConsent = await page.evaluate(() => {
-        const status = localStorage.getItem("cookie-consent");
-        const prefs = JSON.parse(localStorage.getItem("cookie-preferences") || "{}");
-        return status === "accepted" || (status === "customized" && prefs.analytics === true);
-      });
+      // Poll the read so it retries if the post-save reload/redirect tears down
+      // the execution context mid-evaluate (WebKit / mobile Safari).
+      const { consent, preferences } = await readConsentState(page);
+      const hasAnalyticsConsent =
+        consent === "accepted" || (consent === "customized" && preferences.analytics === true);
       expect(hasAnalyticsConsent).toBe(false);
     });
 
