@@ -7,11 +7,54 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import matter from "gray-matter";
+import yaml from "js-yaml";
 import type { Project, Experience, SkillCategory } from "@/types/index";
 
 /** Default content root directory (relative to project root). */
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content");
+
+/** Result of splitting a markdown file into YAML frontmatter and body. */
+interface ParsedFrontmatter {
+  readonly data: Record<string, unknown>;
+  readonly content: string;
+}
+
+/**
+ * Parses YAML frontmatter delimited by `---` at the start of a markdown file,
+ * returning the parsed `data` object and the remaining `content` body.
+ *
+ * Replaces the (unmaintained) `gray-matter` dependency with a direct js-yaml v4
+ * call. Files without a leading `---` delimiter (or with an unterminated block)
+ * yield `data: {}` and the original string as `content`, matching gray-matter's
+ * behaviour. YAML is parsed with js-yaml's safe-by-default `load`.
+ *
+ * @param raw - Raw file contents.
+ * @returns The parsed frontmatter `data` and the `content` after the closing delimiter.
+ */
+function parseFrontmatter(raw: string): ParsedFrontmatter {
+  // Strip a leading UTF-8 BOM if present.
+  const input = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
+
+  // Frontmatter must open with a `---` delimiter on its own line.
+  if (!input.startsWith("---") || !/^[\r\n]/.test(input.slice(3))) {
+    return { data: {}, content: input };
+  }
+
+  const afterOpen = input.slice(3);
+  // Closing `---` on its own line (optionally trailing spaces/tabs).
+  const close = /\n---[ \t]*(\r?\n|$)/.exec(afterOpen);
+  if (!close) {
+    return { data: {}, content: input };
+  }
+
+  const yamlBlock = afterOpen.slice(0, close.index);
+  const content = afterOpen.slice(close.index + close[0].length);
+  const parsed = yaml.load(yamlBlock);
+  const data =
+    typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
+
+  return { data, content };
+}
 
 // ─── Validation helpers ───────────────────────────────────────────────────────
 
@@ -59,7 +102,7 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
     const filePath = path.join(projectsDir, file);
     try {
       const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(raw);
+      const { data, content } = parseFrontmatter(raw);
 
       // Validate required fields
       requireField(data.id, "id", filePath);
@@ -135,7 +178,7 @@ export async function getExperiences(
     const filePath = path.join(experienceDir, file);
     try {
       const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(raw);
+      const { data, content } = parseFrontmatter(raw);
 
       // Validate required fields
       requireField(data.id, "id", filePath);
@@ -217,7 +260,7 @@ export async function getSkills(
   }
 
   const raw = fs.readFileSync(skillsFile, "utf-8");
-  const { data } = matter(raw);
+  const { data } = parseFrontmatter(raw);
 
   if (!Array.isArray(data.categories)) {
     throw new Error(`Content validation error in "${skillsFile}": "categories" must be an array.`);
