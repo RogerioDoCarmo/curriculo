@@ -360,5 +360,21 @@ describe("Content Management System", () => {
       expect(skills).toHaveLength(1);
       expect(skills[0].category).toBe("Frontend");
     });
+
+    it("treats a file with no frontmatter delimiter as empty data (validation error)", async () => {
+      const dir = makeContentDir();
+      // No leading `---`, so parseFrontmatter returns data: {} and the whole
+      // file as content; the missing `id` then trips required-field validation.
+      write(dir, "projects/plain.md", `Just a plain body with no frontmatter.\n`);
+      await expect(getProjects(dir)).rejects.toThrow(/Content validation error/);
+    });
+
+    it("treats an unterminated frontmatter block as empty data (validation error)", async () => {
+      const dir = makeContentDir();
+      // Opening `---` but no closing delimiter → parseFrontmatter returns
+      // data: {} and the original string as content.
+      write(dir, "projects/unterminated.md", `---\nid: x\ntitle: T\nno closing delimiter here`);
+      await expect(getProjects(dir)).rejects.toThrow(/Content validation error/);
+    });
   });
 });
