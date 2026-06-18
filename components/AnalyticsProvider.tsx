@@ -3,10 +3,12 @@
 /**
  * Analytics Provider - Client component that wraps children and provides
  * analytics tracking hooks (scroll depth, time on page) plus Vercel Speed
- * Insights for real-user Core Web Vitals.
+ * Insights for real-user Core Web Vitals and Vercel Web Analytics for
+ * privacy-friendly page-view metrics.
  * Only initializes analytics if user has given consent.
  */
 
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { useScrollDepth } from "@/hooks/useScrollDepth";
@@ -30,10 +32,16 @@ export default function AnalyticsProvider({ children }: AnalyticsProviderProps) 
 
   return (
     <>
-      {/* Vercel Speed Insights: real-user Core Web Vitals. Cookieless, but still
-          gated on analytics consent to match the site's opt-in privacy posture.
-          Auto-active on Vercel deployments; no-ops locally without a project. */}
-      {shouldTrack && <SpeedInsights />}
+      {/* Vercel Speed Insights (real-user Core Web Vitals) and Web Analytics
+          (page-view metrics). Cookieless, but still gated on analytics consent
+          to match the site's opt-in privacy posture. Auto-active on Vercel
+          deployments; no-op locally without a project. */}
+      {shouldTrack && (
+        <>
+          <SpeedInsights />
+          <Analytics />
+        </>
+      )}
       {children}
     </>
   );

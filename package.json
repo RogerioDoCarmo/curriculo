@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@sentry/nextjs": "^10.50.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "autoprefixer": "^10.x",
     "firebase": "^12.12.1",
