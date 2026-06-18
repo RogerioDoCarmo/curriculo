@@ -20,6 +20,8 @@
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
+[![Vercel Speed Insights](https://img.shields.io/badge/Vercel-Speed_Insights-000000?logo=vercel&logoColor=white)](https://vercel.com/docs/speed-insights)
+[![Vercel Analytics](https://img.shields.io/badge/Vercel-Web_Analytics-000000?logo=vercel&logoColor=white)](https://vercel.com/docs/analytics)
 
 <!-- Project Info -->
 

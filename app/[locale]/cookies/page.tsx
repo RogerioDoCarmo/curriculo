@@ -314,6 +314,31 @@ function CookiePolicyContent() {
             </a>
           </p>
         </div>
+
+        {/* Vercel Speed Insights & Web Analytics (cookieless) */}
+        <div className="mb-4">
+          <h3 className="text-xl font-semibold mb-3">{t("thirdPartyCookies.vercel.title")}</h3>
+          <p className="mb-3">{t("thirdPartyCookies.vercel.description")}</p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.providerLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.vercel.provider")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.purposeLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.vercel.purpose")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.privacyPolicyLabel")}:</strong>{" "}
+            <a
+              href="https://vercel.com/legal/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {t("thirdPartyCookies.vercel.privacyPolicyLink")}
+            </a>
+          </p>
+        </div>
       </section>
 
       {/* Cookie Consent */}

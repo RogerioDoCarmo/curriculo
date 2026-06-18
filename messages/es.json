@@ -371,7 +371,7 @@
     "metaDescription": "Aprende sobre las cookies que usamos, cómo gestionarlas y tus opciones. Información detallada sobre cookies de Firebase Analytics.",
     "title": "Política de Cookies",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Junio de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Esta Política de Cookies explica qué son las cookies, cómo las usamos en nuestro sitio web y tus opciones con respecto a las cookies.",
@@ -519,6 +519,16 @@
         "purpose": "Análisis anónimo y seguimiento de uso",
         "privacyPolicyLabel": "Política de Privacidad",
         "privacyPolicyLink": "Política de Privacidad de Google"
+      },
+      "vercel": {
+        "title": "Vercel Speed Insights y Web Analytics",
+        "description": "Usamos Vercel Speed Insights y Web Analytics para medir el rendimiento real de los usuarios (Core Web Vitals) y el tráfico agregado de visitas a páginas. Estos servicios no utilizan cookies — NO establecen ninguna cookie y recopilan solo datos anónimos y agregados.",
+        "providerLabel": "Proveedor",
+        "provider": "Vercel Inc.",
+        "purposeLabel": "Finalidad",
+        "purpose": "Monitoreo anónimo del rendimiento y análisis de tráfico agregado (sin cookies)",
+        "privacyPolicyLabel": "Política de Privacidad",
+        "privacyPolicyLink": "Política de Privacidad de Vercel"
       }
     },
     "cookieConsent": {
@@ -677,6 +687,10 @@
       "localStorage": {
         "title": "localStorage del Navegador",
         "description": "Las preferencias y datos de sesión se almacenan localmente en tu navegador"
+      },
+      "vercel": {
+        "title": "Vercel",
+        "description": "Las métricas de rendimiento real de los usuarios (Core Web Vitals mediante Speed Insights) y los análisis agregados de visitas a páginas (Web Analytics) son recopilados y almacenados por Vercel, nuestro proveedor de alojamiento. Estos datos son anónimos y no utilizan cookies."
       }
     },
     "dataSharing": {
@@ -694,7 +708,11 @@
         "title": "Sentry",
         "description": "Los diagnósticos de errores y rendimiento son procesados por Sentry (Functional Software, Inc.) para detectar y corregir problemas; los informes se despojan de tu correo electrónico y dirección IP antes de enviarse"
       },
-      "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros."
+      "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros.",
+      "vercel": {
+        "title": "Vercel",
+        "description": "Los datos anónimos de rendimiento y tráfico agregado son procesados por Vercel (Vercel Inc.) a través de Speed Insights y Web Analytics; estos servicios no establecen cookies ni recopilan datos personales sobre usted"
+      }
     },
     "userRights": {
       "title": "Tus Derechos (Cumplimiento GDPR/LGPD)",
@@ -764,7 +782,7 @@
     "metaDescription": "Lea los términos y condiciones de uso de nuestro sitio web. Comprenda sus derechos y responsabilidades al usar nuestro sitio de portafolio.",
     "title": "Términos de Uso",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Junio de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Bienvenido a mi sitio web de portafolio personal. Estos Términos de Uso rigen su acceso y uso de este sitio web.",
@@ -883,7 +901,8 @@
       "seeMore": "Para obtener información detallada sobre las prácticas de datos, consulte nuestra",
       "privacyPolicyLink": "Política de Privacidad",
       "and": "y",
-      "cookiePolicyLink": "Política de Cookies"
+      "cookiePolicyLink": "Política de Cookies",
+      "hosting": "Este sitio web está alojado en Vercel y utiliza Vercel Speed Insights y Web Analytics para monitorear el rendimiento real de los usuarios y el tráfico agregado. Estos servicios no utilizan cookies y recopilan solo datos anónimos, como se describe en nuestra Política de Privacidad."
     },
     "changes": {
       "title": "Cambios en los Términos",
