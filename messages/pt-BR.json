@@ -371,7 +371,7 @@
     "metaDescription": "Saiba sobre os cookies que usamos, como gerenciá-los e suas escolhas. Informações detalhadas sobre cookies do Firebase Analytics.",
     "title": "Política de Cookies",
     "lastUpdated": "Última Atualização",
-    "lastUpdatedDate": "Maio de 2026",
+    "lastUpdatedDate": "Junho de 2026",
     "introduction": {
       "title": "Introdução",
       "paragraph1": "Esta Política de Cookies explica o que são cookies, como os usamos em nosso site e suas escolhas em relação aos cookies.",
@@ -519,6 +519,16 @@
         "purpose": "Análise anônima e rastreamento de uso",
         "privacyPolicyLabel": "Política de Privacidade",
         "privacyPolicyLink": "Política de Privacidade do Google"
+      },
+      "vercel": {
+        "title": "Vercel Speed Insights e Web Analytics",
+        "description": "Usamos o Vercel Speed Insights e o Web Analytics para medir o desempenho real dos usuários (Core Web Vitals) e o tráfego agregado de visualizações de página. Esses serviços não utilizam cookies — eles NÃO definem nenhum cookie e coletam apenas dados anônimos e agregados.",
+        "providerLabel": "Provedor",
+        "provider": "Vercel Inc.",
+        "purposeLabel": "Finalidade",
+        "purpose": "Monitoramento anônimo de desempenho e análise de tráfego agregado (sem cookies)",
+        "privacyPolicyLabel": "Política de Privacidade",
+        "privacyPolicyLink": "Política de Privacidade da Vercel"
       }
     },
     "cookieConsent": {
@@ -677,6 +687,10 @@
       "localStorage": {
         "title": "localStorage do Navegador",
         "description": "Preferências e dados de sessão são armazenados localmente no seu navegador"
+      },
+      "vercel": {
+        "title": "Vercel",
+        "description": "Métricas de desempenho real dos usuários (Core Web Vitals via Speed Insights) e análises agregadas de visualizações de página (Web Analytics) são coletadas e armazenadas pela Vercel, nosso provedor de hospedagem. Esses dados são anônimos e não utilizam cookies."
       }
     },
     "dataSharing": {
@@ -694,7 +708,11 @@
         "title": "Sentry",
         "description": "Diagnósticos de erros e desempenho são processados pelo Sentry (Functional Software, Inc.) para detectar e corrigir problemas; os relatórios têm seu e-mail e endereço IP removidos antes do envio"
       },
-      "noSale": "Não vendemos, alugamos ou negociamos suas informações pessoais com terceiros."
+      "noSale": "Não vendemos, alugamos ou negociamos suas informações pessoais com terceiros.",
+      "vercel": {
+        "title": "Vercel",
+        "description": "Dados anônimos de desempenho e tráfego agregado são processados pela Vercel (Vercel Inc.) por meio do Speed Insights e do Web Analytics; esses serviços não definem cookies e não coletam dados pessoais sobre você"
+      }
     },
     "userRights": {
       "title": "Seus Direitos (Conformidade GDPR/LGPD)",
@@ -764,7 +782,7 @@
     "metaDescription": "Leia os termos e condições de uso do nosso site. Entenda seus direitos e responsabilidades ao usar nosso site de portfólio.",
     "title": "Termos de Uso",
     "lastUpdated": "Última Atualização",
-    "lastUpdatedDate": "Maio de 2026",
+    "lastUpdatedDate": "Junho de 2026",
     "introduction": {
       "title": "Introdução",
       "paragraph1": "Bem-vindo ao meu site de portfólio pessoal. Estes Termos de Uso regem seu acesso e uso deste site.",
@@ -883,7 +901,8 @@
       "seeMore": "Para informações detalhadas sobre práticas de dados, consulte nossa",
       "privacyPolicyLink": "Política de Privacidade",
       "and": "e",
-      "cookiePolicyLink": "Política de Cookies"
+      "cookiePolicyLink": "Política de Cookies",
+      "hosting": "Este site é hospedado na Vercel e utiliza o Vercel Speed Insights e o Web Analytics para monitorar o desempenho real dos usuários e o tráfego agregado. Esses serviços não utilizam cookies e coletam apenas dados anônimos, conforme descrito em nossa Política de Privacidade."
     },
     "changes": {
       "title": "Alterações nos Termos",

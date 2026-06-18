@@ -371,7 +371,7 @@
     "metaDescription": "Learn about the cookies we use, how to manage them, and your choices. Detailed information about Firebase Analytics cookies.",
     "title": "Cookie Policy",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "May 2026",
+    "lastUpdatedDate": "June 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "This Cookie Policy explains what cookies are, how we use them on our website, and your choices regarding cookies.",
@@ -519,6 +519,16 @@
         "purpose": "Anonymous analytics and usage tracking",
         "privacyPolicyLabel": "Privacy Policy",
         "privacyPolicyLink": "Google Privacy Policy"
+      },
+      "vercel": {
+        "title": "Vercel Speed Insights & Web Analytics",
+        "description": "We use Vercel Speed Insights and Web Analytics to measure real-user performance (Core Web Vitals) and aggregate page-view traffic. These services are cookieless — they set NO cookies and collect only anonymized, aggregated data.",
+        "providerLabel": "Provider",
+        "provider": "Vercel Inc.",
+        "purposeLabel": "Purpose",
+        "purpose": "Anonymous performance monitoring and aggregate traffic analytics (no cookies)",
+        "privacyPolicyLabel": "Privacy Policy",
+        "privacyPolicyLink": "Vercel Privacy Policy"
       }
     },
     "cookieConsent": {
@@ -677,6 +687,10 @@
       "localStorage": {
         "title": "Browser localStorage",
         "description": "Preferences and session data are stored locally in your browser"
+      },
+      "vercel": {
+        "title": "Vercel",
+        "description": "Real-user performance metrics (Core Web Vitals via Speed Insights) and aggregate page-view analytics (Web Analytics) are collected and stored by Vercel, our hosting provider. This data is anonymized and cookieless."
       }
     },
     "dataSharing": {
@@ -694,7 +708,11 @@
         "title": "Sentry",
         "description": "Error and performance diagnostics are processed by Sentry (Functional Software, Inc.) to detect and fix issues; reports are stripped of your email and IP address before being sent"
       },
-      "noSale": "We do not sell, rent, or trade your personal information to third parties."
+      "noSale": "We do not sell, rent, or trade your personal information to third parties.",
+      "vercel": {
+        "title": "Vercel",
+        "description": "Anonymous performance and aggregate traffic data is processed by Vercel (Vercel Inc.) through Speed Insights and Web Analytics; these services set no cookies and collect no personal data about you"
+      }
     },
     "userRights": {
       "title": "Your Rights (GDPR/LGPD Compliance)",
@@ -764,7 +782,7 @@
     "metaDescription": "Read the terms and conditions for using our website. Understand your rights and responsibilities when using our portfolio site.",
     "title": "Terms of Use",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "May 2026",
+    "lastUpdatedDate": "June 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "Welcome to my personal portfolio website. These Terms of Use govern your access to and use of this website.",
@@ -883,7 +901,8 @@
       "seeMore": "For detailed information about data practices, please see our",
       "privacyPolicyLink": "Privacy Policy",
       "and": "and",
-      "cookiePolicyLink": "Cookie Policy"
+      "cookiePolicyLink": "Cookie Policy",
+      "hosting": "This website is hosted on Vercel and uses Vercel Speed Insights and Web Analytics to monitor real-user performance and aggregate traffic. These services are cookieless and collect only anonymized data, as described in our Privacy Policy."
     },
     "changes": {
       "title": "Changes to Terms",
