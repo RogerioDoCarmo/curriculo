@@ -9,6 +9,7 @@
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { useScrollDepth } from "@/hooks/useScrollDepth";
 import { useTimeOnPage } from "@/hooks/useTimeOnPage";
+import { useDatadogRum } from "@/hooks/useDatadogRum";
 
 interface AnalyticsProviderProps {
   readonly children: React.ReactNode;
@@ -25,6 +26,8 @@ export default function AnalyticsProvider({ children }: AnalyticsProviderProps) 
   // but the hooks themselves will check consent before tracking
   useScrollDepth();
   useTimeOnPage();
+  // Datadog RUM self-gates on consent + env config internally.
+  useDatadogRum();
 
   return <>{children}</>;
 }

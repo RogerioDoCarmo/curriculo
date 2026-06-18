@@ -37,6 +37,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@datadog/browser-rum": "^7.3.0",
     "@sentry/nextjs": "^10.50.0",
     "autoprefixer": "^10.x",
     "firebase": "^12.12.1",

@@ -12,12 +12,14 @@ import AnalyticsProvider from "@/components/AnalyticsProvider";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { useScrollDepth } from "@/hooks/useScrollDepth";
 import { useTimeOnPage } from "@/hooks/useTimeOnPage";
+import { useDatadogRum } from "@/hooks/useDatadogRum";
 import * as analytics from "@/lib/analytics";
 
 // Mock the hooks
 jest.mock("@/hooks/useCookieConsent");
 jest.mock("@/hooks/useScrollDepth");
 jest.mock("@/hooks/useTimeOnPage");
+jest.mock("@/hooks/useDatadogRum");
 jest.mock("@/lib/analytics");
 
 // Mock next/navigation
@@ -29,6 +31,7 @@ describe("AnalyticsProvider with Cookie Consent", () => {
   const mockUseCookieConsent = useCookieConsent as jest.MockedFunction<typeof useCookieConsent>;
   const mockUseScrollDepth = useScrollDepth as jest.MockedFunction<typeof useScrollDepth>;
   const mockUseTimeOnPage = useTimeOnPage as jest.MockedFunction<typeof useTimeOnPage>;
+  const mockUseDatadogRum = useDatadogRum as jest.MockedFunction<typeof useDatadogRum>;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -69,6 +72,16 @@ describe("AnalyticsProvider with Cookie Consent", () => {
       );
 
       expect(mockUseTimeOnPage).toHaveBeenCalled();
+    });
+
+    it("should initialize Datadog RUM", () => {
+      render(
+        <AnalyticsProvider>
+          <div>Test Content</div>
+        </AnalyticsProvider>
+      );
+
+      expect(mockUseDatadogRum).toHaveBeenCalled();
     });
 
     it("should render children correctly", () => {
