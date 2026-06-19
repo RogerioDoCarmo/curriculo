@@ -190,6 +190,9 @@ function PrivacyPolicyContent() {
             <strong>{t("dataStorage.sentry.title")}:</strong> {t("dataStorage.sentry.description")}
           </li>
           <li>
+            <strong>{t("dataStorage.vercel.title")}:</strong> {t("dataStorage.vercel.description")}
+          </li>
+          <li>
             <strong>{t("dataStorage.localStorage.title")}:</strong>{" "}
             {t("dataStorage.localStorage.description")}
           </li>
@@ -211,6 +214,9 @@ function PrivacyPolicyContent() {
           </li>
           <li>
             <strong>{t("dataSharing.sentry.title")}:</strong> {t("dataSharing.sentry.description")}
+          </li>
+          <li>
+            <strong>{t("dataSharing.vercel.title")}:</strong> {t("dataSharing.vercel.description")}
           </li>
         </ul>
         <p className="mt-4">{t("dataSharing.noSale")}</p>

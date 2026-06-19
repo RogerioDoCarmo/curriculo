@@ -18,8 +18,16 @@ const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 test.describe("Component Gallery Page", () => {
   // Set cookie consent before any page loads to prevent banner from appearing
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, page }) => {
     await setCookieConsentBeforeLoad(context);
+
+    // Vercel Speed Insights / Web Analytics scripts are served by Vercel's edge
+    // in production; off-Vercel (local prod build / CI) they 404, which would
+    // otherwise surface as console errors. Stub them with an empty 200 so tests
+    // exercise the real pages without false-positive resource errors.
+    await page.route(/\/_vercel\/(insights|speed-insights)\//, (route) =>
+      route.fulfill({ status: 200, contentType: "application/javascript", body: "" })
+    );
   });
 
   test.describe("Page Loading", () => {
