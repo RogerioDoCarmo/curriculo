@@ -20,6 +20,15 @@ jest.mock("@/hooks/useScrollDepth");
 jest.mock("@/hooks/useTimeOnPage");
 jest.mock("@/lib/analytics");
 
+// Mock Vercel Speed Insights and Web Analytics with detectable markers
+jest.mock("@vercel/speed-insights/next", () => ({
+  SpeedInsights: () => <div data-testid="speed-insights" />,
+}));
+
+jest.mock("@vercel/analytics/next", () => ({
+  Analytics: () => <div data-testid="web-analytics" />,
+}));
+
 // Mock next/navigation
 jest.mock("next/navigation", () => ({
   usePathname: jest.fn(() => "/en"),
@@ -80,6 +89,26 @@ describe("AnalyticsProvider with Cookie Consent", () => {
 
       expect(getByText("Test Content")).toBeInTheDocument();
     });
+
+    it("should render Vercel Speed Insights when consent is granted", () => {
+      const { getByTestId } = render(
+        <AnalyticsProvider>
+          <div>Test Content</div>
+        </AnalyticsProvider>
+      );
+
+      expect(getByTestId("speed-insights")).toBeInTheDocument();
+    });
+
+    it("should render Vercel Web Analytics when consent is granted", () => {
+      const { getByTestId } = render(
+        <AnalyticsProvider>
+          <div>Test Content</div>
+        </AnalyticsProvider>
+      );
+
+      expect(getByTestId("web-analytics")).toBeInTheDocument();
+    });
   });
 
   describe("Without analytics consent", () => {
@@ -119,6 +148,26 @@ describe("AnalyticsProvider with Cookie Consent", () => {
       );
 
       expect(getByText("Test Content")).toBeInTheDocument();
+    });
+
+    it("should NOT render Vercel Speed Insights when consent is denied", () => {
+      const { queryByTestId } = render(
+        <AnalyticsProvider>
+          <div>Test Content</div>
+        </AnalyticsProvider>
+      );
+
+      expect(queryByTestId("speed-insights")).not.toBeInTheDocument();
+    });
+
+    it("should NOT render Vercel Web Analytics when consent is denied", () => {
+      const { queryByTestId } = render(
+        <AnalyticsProvider>
+          <div>Test Content</div>
+        </AnalyticsProvider>
+      );
+
+      expect(queryByTestId("web-analytics")).not.toBeInTheDocument();
     });
   });
 
