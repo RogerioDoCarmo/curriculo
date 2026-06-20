@@ -113,7 +113,7 @@ function BankLogo({
 }) {
   const flag = COUNTRY_FLAGS[bank.country];
   const tile = (
-    <span className="relative flex h-28 w-48 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
+    <span className="relative flex h-40 w-64 items-center justify-center rounded-lg bg-white p-5 shadow-sm">
       <Image
         src={bank.logo}
         alt={duplicate ? "" : `${bank.name} logo`}
@@ -130,7 +130,7 @@ function BankLogo({
           aria-hidden="true"
           width={24}
           height={16}
-          className="absolute bottom-1.5 right-1.5 h-auto w-5 rounded-sm ring-1 ring-black/10"
+          className="absolute bottom-2 right-2 h-auto w-9 rounded-sm ring-1 ring-black/10"
         />
       )}
     </span>
