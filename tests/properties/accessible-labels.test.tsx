@@ -210,7 +210,8 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
 
     const ariaLabel = button?.getAttribute("aria-label");
     expect(ariaLabel).toBeTruthy();
-    expect(ariaLabel).toMatch(/switch to (light|dark) mode/i);
+    // Default label is "Toggle theme"; the Header passes a localized one.
+    expect(ariaLabel).toMatch(/toggle theme/i);
   });
 
   it("should ensure LanguageSelector has accessible label", () => {

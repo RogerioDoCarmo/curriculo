@@ -114,8 +114,8 @@ export default function Header({ locale }: HeaderProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-md print:hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-md print:hidden px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="flex h-16 items-center justify-between">
           {/* Mobile: Hamburger button - Always render, hide with CSS on desktop */}
           <button
@@ -295,8 +295,12 @@ export default function Header({ locale }: HeaderProps) {
               </svg>
               <span className="text-sm font-medium hidden sm:inline">Linktree</span>
             </a>
-            <LanguageSelector currentLocale={locale as SupportedLocale} className="mr-2" />
-            <ThemeToggle />
+            <LanguageSelector
+              currentLocale={locale as SupportedLocale}
+              className="mr-2"
+              label={t("language.selector")}
+            />
+            <ThemeToggle label={t("theme.toggle")} />
           </div>
         </div>
       </div>
@@ -391,8 +395,12 @@ export default function Header({ locale }: HeaderProps) {
 
             {/* Sidebar controls */}
             <div className="flex items-center gap-2 p-4 border-t border-border">
-              <LanguageSelector currentLocale={locale as SupportedLocale} className="mr-2" />
-              <ThemeToggle />
+              <LanguageSelector
+                currentLocale={locale as SupportedLocale}
+                className="mr-2"
+                label={t("language.selector")}
+              />
+              <ThemeToggle label={t("theme.toggle")} />
             </div>
           </div>
         </>

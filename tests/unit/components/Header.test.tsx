@@ -247,7 +247,9 @@ describe("Header — responsive navigation", () => {
   it("renders LanguageSelector in the header", () => {
     renderHeader();
 
-    const languageSelector = screen.getByRole("combobox", { name: /select language/i });
+    const languageSelector = screen.getByRole("combobox", {
+      name: /language|select language|idioma/i,
+    });
     expect(languageSelector).toBeInTheDocument();
   });
 
@@ -255,7 +257,7 @@ describe("Header — responsive navigation", () => {
     renderHeader();
 
     const themeToggle = screen.getByRole("button", {
-      name: /switch to dark mode|switch to light mode/i,
+      name: /toggle theme|theme\.toggle|tema/i,
     });
     expect(themeToggle).toBeInTheDocument();
   });
