@@ -88,6 +88,31 @@ describe("BanksSection", () => {
     expect(screen.getAllByRole("link")).toHaveLength(6);
   });
 
+  it("renders a country flag on each card (Mexico, Argentina, Brazil)", () => {
+    const { container } = renderWithIntl(<BanksSection />);
+    // Bradescard → Mexico, Banco Macro → Argentina, the rest → Brazil.
+    expect(container.querySelector('img[src*="/flags/mx.svg"]')).not.toBeNull();
+    expect(container.querySelector('img[src*="/flags/ar.svg"]')).not.toBeNull();
+    expect(container.querySelector('img[src*="/flags/br.svg"]')).not.toBeNull();
+    // One flag per card, across both the real and the duplicated loop copies.
+    expect(container.querySelectorAll('img[src*="/images/flags/"]')).toHaveLength(12);
+  });
+
+  it("renders the banks left-to-right in the configured order", () => {
+    renderWithIntl(<BanksSection />);
+    const names = screen
+      .getAllByRole("link")
+      .map((a) => a.getAttribute("aria-label")?.split(" (")[0]);
+    expect(names).toEqual([
+      "Virtus Pay",
+      "Banco Digimais",
+      "CrediSIS",
+      "Bradescard",
+      "Banco Macro",
+      "Banco do Nordeste",
+    ]);
+  });
+
   it("renders the auto-scrolling track", () => {
     renderWithIntl(<BanksSection />);
     expect(screen.getByTestId("banks-carousel").querySelector(".animate-marquee")).not.toBeNull();
