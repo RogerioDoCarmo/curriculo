@@ -2,7 +2,7 @@
 id: inct-gnss-navaer
 type: academic
 organization: INCT GNSS-NavAer
-role: Miembro Investigador — Máster (UNESP)
+role: Miembro Investigador — Maestría (UNESP)
 location: Presidente Prudente, Brasil
 startDate: 2019-03-01
 endDate: 2023-03-01
