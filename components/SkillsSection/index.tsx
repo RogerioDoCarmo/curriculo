@@ -75,6 +75,34 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
             {filteredSkills.map((cat) => {
               const isExpanded = expandedIds.has(cat.category);
               const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;
+
+              // Render the toggle in two branches so aria-expanded is a literal
+              // "true"/"false" string. Static a11y linters cannot evaluate JSX
+              // expressions and flag aria-expanded={expr} as an invalid value;
+              // shared props/icon keep the markup DRY (matches ExperienceSection).
+              const toggleProps = {
+                type: "button" as const,
+                "aria-controls": detailsId,
+                onClick: () => toggleExpanded(cat.category),
+                className:
+                  "shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200",
+                "aria-label": isExpanded ? t("skills.collapseDetails") : t("skills.expandDetails"),
+              };
+              const toggleIcon = (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              );
               return (
                 <div
                   key={cat.category}
@@ -85,30 +113,15 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                       {cat.category}
                     </h3>
-                    <button
-                      type="button"
-                      aria-expanded={isExpanded}
-                      aria-controls={detailsId}
-                      onClick={() => toggleExpanded(cat.category)}
-                      className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      aria-label={
-                        isExpanded ? t("skills.collapseDetails") : t("skills.expandDetails")
-                      }
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                    {isExpanded ? (
+                      <button {...toggleProps} aria-expanded="true">
+                        {toggleIcon}
+                      </button>
+                    ) : (
+                      <button {...toggleProps} aria-expanded="false">
+                        {toggleIcon}
+                      </button>
+                    )}
                   </div>
 
                   {/* Collapsible skills list — also visible when a filter is active */}
