@@ -12,7 +12,7 @@ const meta: Meta<typeof BanksSection> = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
+  // Docs page is authored in BanksSection.mdx (so no autodocs tag here).
 };
 
 export default meta;
