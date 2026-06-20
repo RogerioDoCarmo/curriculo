@@ -932,6 +932,10 @@
       "description": "By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use."
     }
   },
+  "banks": {
+    "title": "Banking Sector Impact",
+    "subtitle": "Financial institutions whose mobile apps I helped build and maintain."
+  },
   "aiStack": {
     "title": "Built with AI",
     "subtitle": "The AI tools I used to design, build, and ship this site.",
