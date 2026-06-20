@@ -11,6 +11,7 @@ const messages: AbstractIntlMessages = {
   banks: {
     title: "Banking Sector Impact",
     subtitle: "Financial institutions whose mobile apps I helped build and maintain.",
+    opensInNewTab: "Opens the official site in a new tab",
   },
 };
 
@@ -21,7 +22,14 @@ const renderWithIntl = (component: React.ReactElement) =>
     </NextIntlClientProvider>
   );
 
-const BANK_NAMES = ["Banco do Nordeste", "CrediSIS", "Bradescard", "Banco Macro"];
+const BANK_NAMES = [
+  "Banco do Nordeste",
+  "CrediSIS",
+  "Bradescard",
+  "Banco Macro",
+  "Banco Digimais",
+  "Virtus Pay",
+];
 
 describe("BanksSection", () => {
   it("renders the section heading and subtitle", () => {
@@ -43,20 +51,41 @@ describe("BanksSection", () => {
     }
   });
 
-  it("links each bank to its official site, opening in a new tab", () => {
+  it("links each bank to its official site, opening in a new tab securely", () => {
     renderWithIntl(<BanksSection />);
     const bnb = screen.getByRole("link", { name: /Banco do Nordeste \(Brasil\)/i });
     expect(bnb).toHaveAttribute("href", "https://www.bnb.gov.br/");
     expect(bnb).toHaveAttribute("target", "_blank");
-    expect(bnb).toHaveAttribute("rel", expect.stringContaining("noopener"));
+    // Security best practice: every external link drops the opener and referrer.
+    const rel = bnb.getAttribute("rel") ?? "";
+    expect(rel).toContain("noopener");
+    expect(rel).toContain("noreferrer");
+  });
+
+  it("every external link opens in a new tab with noopener noreferrer", () => {
+    renderWithIntl(<BanksSection />);
+    for (const link of screen.getAllByRole("link")) {
+      expect(link).toHaveAttribute("target", "_blank");
+      const rel = link.getAttribute("rel") ?? "";
+      expect(rel).toContain("noopener");
+      expect(rel).toContain("noreferrer");
+    }
+  });
+
+  it("shows a new-tab tooltip and announces it to assistive tech", () => {
+    renderWithIntl(<BanksSection />);
+    const bnb = screen.getByRole("link", { name: /Banco do Nordeste \(Brasil\)/i });
+    // Visual tooltip via title, plus the note in the accessible name.
+    expect(bnb).toHaveAttribute("title", "Opens the official site in a new tab");
+    expect(bnb).toHaveAccessibleName(/opens the official site in a new tab/i);
   });
 
   it("hides the duplicated loop copies from assistive tech", () => {
     const { container } = renderWithIntl(<BanksSection />);
-    // The DOM holds two copies (8 anchors) for a seamless marquee, but only the
-    // four real ones are exposed as links to assistive technology.
-    expect(container.querySelectorAll("a")).toHaveLength(8);
-    expect(screen.getAllByRole("link")).toHaveLength(4);
+    // The DOM holds two copies (12 anchors) for a seamless marquee, but only the
+    // six real ones are exposed as links to assistive technology.
+    expect(container.querySelectorAll("a")).toHaveLength(12);
+    expect(screen.getAllByRole("link")).toHaveLength(6);
   });
 
   it("renders the auto-scrolling track", () => {
