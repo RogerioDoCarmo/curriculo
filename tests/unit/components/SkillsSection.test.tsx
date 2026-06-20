@@ -173,19 +173,23 @@ describe("SkillsSection Component", () => {
     expect(buttons).toHaveLength(sampleSkills.length);
   });
 
-  it("accordion: opening one card closes the previously open one", async () => {
+  it("keeps previously opened cards open when expanding another (independent toggles)", async () => {
     const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
 
-    const expandButtons = screen.getAllByRole("button", { name: /expand skills/i });
-
-    // Open first card
-    await user.click(expandButtons[0]);
+    // Open the first card (Mobile Development)
+    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
     expect(screen.getByText("React Native")).toBeInTheDocument();
 
-    // Open second card — first should close
-    await user.click(screen.getAllByRole("button")[1]); // now collapseDetails for first, expandDetails for second
-    expect(screen.queryByText("React Native")).not.toBeInTheDocument();
+    // Open the second card (Frontend Web) — the first stays open
+    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    expect(screen.getByText("React Native")).toBeInTheDocument();
     expect(screen.getByText("Next.js")).toBeInTheDocument();
+
+    // Collapsing the second card leaves the first one open
+    const collapseButtons = screen.getAllByRole("button", { name: /collapse skills/i });
+    await user.click(collapseButtons[collapseButtons.length - 1]);
+    expect(screen.getByText("React Native")).toBeInTheDocument();
+    expect(screen.queryByText("Next.js")).not.toBeInTheDocument();
   });
 });
