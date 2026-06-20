@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
+import FeaturedExperience from "@/components/FeaturedExperience";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
@@ -56,6 +57,11 @@ export default function HomePageContent({
           ctaText={heroCtaText}
           contactText={heroContactText}
         />
+      </div>
+
+      {/* Featured experience (pinned above the career-path selector) */}
+      <div className="bg-white dark:bg-gray-900">
+        <FeaturedExperience experiences={experiences} locale={locale} now={now} />
       </div>
 
       {/* Career Path Selector (Professional/Academic) */}

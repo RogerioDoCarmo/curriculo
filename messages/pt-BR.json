@@ -91,6 +91,8 @@
     "achievements": "Conquistas",
     "details": "Detalhes",
     "technologies": "Tecnologias",
+    "visitWebsite": "Visitar site (abre em uma nova aba)",
+    "featured": "Destaque",
     "timeline": "Linha do Tempo",
     "duration": {
       "lessThanMonth": "< 1 mês",
