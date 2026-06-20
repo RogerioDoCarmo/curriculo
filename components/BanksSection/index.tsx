@@ -39,12 +39,21 @@ interface Bank {
 
 const BANKS: readonly Bank[] = [
   {
-    name: "Banco do Nordeste",
-    logo: "/images/logos/banks/bnb.svg",
-    width: 500,
-    height: 180,
+    name: "Virtus Pay",
+    logo: "/images/logos/banks/virtus.jpg",
+    width: 510,
+    height: 602,
     country: "Brasil",
-    url: "https://www.bnb.gov.br/",
+    // Website is offline; the Instagram profile is the live presence.
+    url: "https://www.instagram.com/virtuspay/",
+  },
+  {
+    name: "Banco Digimais",
+    logo: "/images/logos/banks/banco-digimais.svg",
+    width: 500,
+    height: 277,
+    country: "Brasil",
+    url: "https://www.bancodigimais.com.br/",
   },
   {
     name: "CrediSIS",
@@ -71,23 +80,22 @@ const BANKS: readonly Bank[] = [
     url: "https://www.macro.com.ar/",
   },
   {
-    name: "Banco Digimais",
-    logo: "/images/logos/banks/banco-digimais.svg",
+    name: "Banco do Nordeste",
+    logo: "/images/logos/banks/bnb.svg",
     width: 500,
-    height: 277,
+    height: 180,
     country: "Brasil",
-    url: "https://bancodigimais.com.br/",
-  },
-  {
-    name: "Virtus Pay",
-    logo: "/images/logos/banks/virtus.jpg",
-    width: 510,
-    height: 602,
-    country: "Brasil",
-    // Website is offline; the Instagram profile is the live presence.
-    url: "https://www.instagram.com/virtuspay/",
+    url: "https://www.bnb.gov.br/",
   },
 ];
+
+/** Country → flag asset. Flags are public-domain SVGs and decorative (the
+ *  country is already in each card's accessible name). */
+const COUNTRY_FLAGS: Record<string, string> = {
+  Brasil: "/images/flags/br.svg",
+  México: "/images/flags/mx.svg",
+  Argentina: "/images/flags/ar.svg",
+};
 
 /**
  * One logo tile. `duplicate` items are visual-only padding for the seamless
@@ -103,8 +111,9 @@ function BankLogo({
   readonly duplicate: boolean;
   readonly newTabLabel: string;
 }) {
+  const flag = COUNTRY_FLAGS[bank.country];
   const tile = (
-    <span className="flex h-28 w-48 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
+    <span className="relative flex h-28 w-48 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
       <Image
         src={bank.logo}
         alt={duplicate ? "" : `${bank.name} logo`}
@@ -113,6 +122,17 @@ function BankLogo({
         // Bounding box keeps wide wordmarks and square/portrait logos uniform.
         className="h-auto max-h-full w-auto max-w-full object-contain"
       />
+      {flag && (
+        <Image
+          src={flag}
+          // Decorative: the country is already in the link's accessible name.
+          alt=""
+          aria-hidden="true"
+          width={24}
+          height={16}
+          className="absolute bottom-1.5 right-1.5 h-auto w-5 rounded-sm ring-1 ring-black/10"
+        />
+      )}
     </span>
   );
 
