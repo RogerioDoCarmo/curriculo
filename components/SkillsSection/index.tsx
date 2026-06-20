@@ -20,7 +20,19 @@ const levelColors: Record<SkillLevel, string> = {
 export default function SkillsSection({ skills, locale: _locale }: SkillsSectionProps) {
   const t = useTranslations();
   const [filter, setFilter] = useState("");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  // Track each expanded card independently so opening one never collapses another.
+  const [expandedIds, setExpandedIds] = useState<ReadonlySet<string>>(() => new Set());
+
+  const toggleExpanded = (category: string) =>
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
 
   const query = filter.trim().toLowerCase();
 
@@ -61,7 +73,7 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredSkills.map((cat) => {
-              const isExpanded = expandedId === cat.category;
+              const isExpanded = expandedIds.has(cat.category);
               const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;
               return (
                 <div
@@ -77,7 +89,7 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                       type="button"
                       aria-expanded={isExpanded}
                       aria-controls={detailsId}
-                      onClick={() => setExpandedId(isExpanded ? null : cat.category)}
+                      onClick={() => toggleExpanded(cat.category)}
                       className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                       aria-label={
                         isExpanded ? t("skills.collapseDetails") : t("skills.expandDetails")
