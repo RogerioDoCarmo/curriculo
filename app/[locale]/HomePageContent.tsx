@@ -65,8 +65,13 @@ export default function HomePageContent({
         <FeaturedExperience experiences={experiences} locale={locale} now={now} />
       </div>
 
+      {/* Banking Sector Impact — auto-scrolling carousel of client bank logos */}
+      <div className="bg-gray-50 dark:bg-gray-800/50">
+        <BanksSection />
+      </div>
+
       {/* Career Path Selector (Professional/Academic) */}
-      <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
             {tCareerPath("sectionTitle")}
@@ -76,18 +81,13 @@ export default function HomePageContent({
       </div>
 
       {/* Experience Section with Timeline */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <ExperienceSection
           careerPath={careerPath}
           experiences={experiences}
           locale={locale}
           now={now}
         />
-      </div>
-
-      {/* Banking Sector Impact — auto-scrolling carousel of client bank logos */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
-        <BanksSection />
       </div>
 
       {/* Projects Portfolio Section */}

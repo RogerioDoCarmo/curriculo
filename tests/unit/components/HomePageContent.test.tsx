@@ -411,9 +411,9 @@ describe("HomePageContent Component", () => {
       // Tech Stack section moved to separate page
       expect(sectionOrder).toEqual([
         "hero",
+        "banks-section",
         "career-path-selector",
         "experience-section",
-        "banks-section",
         "projects-section",
         "skills-section",
         "ai-stack-section",

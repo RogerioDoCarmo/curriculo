@@ -27,6 +27,10 @@ interface Bank {
   readonly name: string;
   /** Public path to the brand logo. */
   readonly logo: string;
+  /** Intrinsic pixel width of the logo file (for next/image aspect ratio). */
+  readonly width: number;
+  /** Intrinsic pixel height of the logo file. */
+  readonly height: number;
   /** Country the institution operates in (shown as a caption). */
   readonly country: string;
   /** Official site, opened in a new tab when present. */
@@ -37,26 +41,51 @@ const BANKS: readonly Bank[] = [
   {
     name: "Banco do Nordeste",
     logo: "/images/logos/banks/bnb.svg",
+    width: 500,
+    height: 180,
     country: "Brasil",
     url: "https://www.bnb.gov.br/",
   },
   {
     name: "CrediSIS",
-    logo: "/images/logos/banks/credisis.svg",
+    logo: "/images/logos/banks/credisis.png",
+    width: 613,
+    height: 501,
     country: "Brasil",
     url: "https://credisis.com.br/",
   },
   {
     name: "Bradescard",
-    logo: "/images/logos/banks/bradescard.svg",
+    logo: "/images/logos/banks/bradescard.jpg",
+    width: 554,
+    height: 554,
     country: "México",
     url: "https://www.bradescard.com.mx/",
   },
   {
     name: "Banco Macro",
     logo: "/images/logos/banks/banco-macro.svg",
+    width: 400,
+    height: 95,
     country: "Argentina",
     url: "https://www.macro.com.ar/",
+  },
+  {
+    name: "Banco Digimais",
+    logo: "/images/logos/banks/banco-digimais.svg",
+    width: 500,
+    height: 277,
+    country: "Brasil",
+    url: "https://bancodigimais.com.br/",
+  },
+  {
+    name: "Virtus Pay",
+    logo: "/images/logos/banks/virtus.jpg",
+    width: 510,
+    height: 602,
+    country: "Brasil",
+    // Website is offline; the Instagram profile is the live presence.
+    url: "https://www.instagram.com/virtuspay/",
   },
 ];
 
@@ -65,15 +94,24 @@ const BANKS: readonly Bank[] = [
  * loop: they carry empty alt text, are hidden from assistive tech, and are not
  * focusable.
  */
-function BankLogo({ bank, duplicate }: { readonly bank: Bank; readonly duplicate: boolean }) {
+function BankLogo({
+  bank,
+  duplicate,
+  newTabLabel,
+}: {
+  readonly bank: Bank;
+  readonly duplicate: boolean;
+  readonly newTabLabel: string;
+}) {
   const tile = (
-    <span className="flex h-16 w-44 items-center justify-center rounded-lg bg-white px-4 shadow-sm">
+    <span className="flex h-28 w-48 items-center justify-center rounded-lg bg-white p-4 shadow-sm">
       <Image
         src={bank.logo}
         alt={duplicate ? "" : `${bank.name} logo`}
-        width={260}
-        height={64}
-        className="h-10 w-auto object-contain"
+        width={bank.width}
+        height={bank.height}
+        // Bounding box keeps wide wordmarks and square/portrait logos uniform.
+        className="h-auto max-h-full w-auto max-w-full object-contain"
       />
     </span>
   );
@@ -88,7 +126,9 @@ function BankLogo({ bank, duplicate }: { readonly bank: Bank; readonly duplicate
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackExternalLinkClick({ url: bank.url ?? "", context: `bank_${bank.name}` })}
-      aria-label={duplicate ? undefined : `${bank.name} (${bank.country})`}
+      // Native tooltip on hover; the new-tab note is also in the accessible name.
+      title={newTabLabel}
+      aria-label={duplicate ? undefined : `${bank.name} (${bank.country}) — ${newTabLabel}`}
       // Duplicates live inside an aria-hidden <li>; tabIndex={-1} also drops them
       // from the tab order so the focusable link isn't reachable inside hidden content.
       tabIndex={duplicate ? -1 : undefined}
@@ -101,6 +141,7 @@ function BankLogo({ bank, duplicate }: { readonly bank: Bank; readonly duplicate
 
 export default function BanksSection() {
   const t = useTranslations("banks");
+  const newTabLabel = t("opensInNewTab");
 
   return (
     <section id="banks" aria-labelledby="banks-title" className="py-16 px-4 sm:px-6 lg:px-8">
@@ -116,13 +157,13 @@ export default function BanksSection() {
           <ul className="flex w-max items-center gap-8 animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 motion-reduce:animate-none sm:gap-12">
             {BANKS.map((bank) => (
               <li key={bank.name}>
-                <BankLogo bank={bank} duplicate={false} />
+                <BankLogo bank={bank} duplicate={false} newTabLabel={newTabLabel} />
               </li>
             ))}
             {/* Duplicate copy: drives the seamless loop, hidden from a11y and reduced-motion. */}
             {BANKS.map((bank) => (
               <li key={`dup-${bank.name}`} aria-hidden="true" className="motion-reduce:hidden">
-                <BankLogo bank={bank} duplicate />
+                <BankLogo bank={bank} duplicate newTabLabel={newTabLabel} />
               </li>
             ))}
           </ul>
