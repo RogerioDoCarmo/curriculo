@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
 import FeaturedExperience from "@/components/FeaturedExperience";
+import BanksSection from "@/components/BanksSection";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
@@ -84,18 +85,23 @@ export default function HomePageContent({
         />
       </div>
 
-      {/* Projects Portfolio Section */}
+      {/* Banking Sector Impact — auto-scrolling carousel of client bank logos */}
       <div className="bg-gray-50 dark:bg-gray-800/50">
+        <BanksSection />
+      </div>
+
+      {/* Projects Portfolio Section */}
+      <div className="bg-white dark:bg-gray-900">
         <ProjectsSection projects={projects} locale={locale} />
       </div>
 
       {/* Skills Section */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <SkillsSection skills={skills} locale={locale} />
       </div>
 
       {/* AI Stack Section — tools used to build the site */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
+      <div className="bg-white dark:bg-gray-900">
         <AiStackSection />
       </div>
 

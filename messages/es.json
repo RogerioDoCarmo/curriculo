@@ -932,6 +932,10 @@
       "description": "Al usar este sitio web, usted reconoce que ha leído, comprendido y acepta estar sujeto a estos Términos de Uso."
     }
   },
+  "banks": {
+    "title": "Impacto en el Sector Bancario",
+    "subtitle": "Instituciones financieras cuyas aplicaciones móviles ayudé a construir y mantener."
+  },
   "aiStack": {
     "title": "Construido con IA",
     "subtitle": "Las herramientas de IA que usé para diseñar, construir y publicar este sitio.",
