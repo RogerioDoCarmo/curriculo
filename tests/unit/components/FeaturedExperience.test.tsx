@@ -126,4 +126,12 @@ describe("FeaturedExperience", () => {
     expect(link).toHaveAttribute("href", "https://example.org/inct");
     expect(link).toHaveAttribute("target", "_blank");
   });
+
+  it("links the role title to the organization site, opening securely in a new tab", () => {
+    renderWithIntl(<FeaturedExperience experiences={[featured]} locale="en" />);
+    const roleLink = screen.getByRole("link", { name: "Research Member" });
+    expect(roleLink).toHaveAttribute("href", "https://example.org/inct");
+    expect(roleLink).toHaveAttribute("target", "_blank");
+    expect(roleLink).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
 });

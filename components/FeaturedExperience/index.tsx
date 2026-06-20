@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 import type { Experience } from "@/types/index";
 import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
+import { trackExternalLinkClick } from "@/lib/analytics";
 import { ExperienceLogo, calcDuration, formatDate } from "@/components/ExperienceSection/shared";
 
 interface FeaturedExperienceProps {
@@ -113,7 +114,27 @@ function FeaturedCard({
             />
           )}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{exp.role}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              {exp.organizationUrl ? (
+                <a
+                  href={exp.organizationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackExternalLinkClick({
+                      url: exp.organizationUrl ?? "",
+                      context: `experience_role_${exp.organization}`,
+                    })
+                  }
+                  title={t("visitWebsite")}
+                  className="rounded-sm hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+                >
+                  {exp.role}
+                </a>
+              ) : (
+                exp.role
+              )}
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {exp.organization} · {exp.location}
             </p>
