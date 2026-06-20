@@ -32,6 +32,15 @@ export interface Experience {
   description: string;
   achievements: string[];
   technologies?: string[];
+  /** Public path to the organization's logo (e.g. "/images/logos/logo_inct.png"). */
+  logo?: string;
+  /** Official organization URL; when set, the logo links out to it in a new tab. */
+  organizationUrl?: string;
+  /**
+   * When true, the experience renders as a dedicated, always-expanded card pinned
+   * to the top of the section in both the professional and academic views.
+   */
+  featured?: boolean;
 }
 
 // ─── Skills ─────────────────────────────────────────────────────────────────

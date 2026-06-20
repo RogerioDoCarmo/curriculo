@@ -20,7 +20,10 @@ const messages: AbstractIntlMessages = {
     expandDetails: "Expand details",
     collapseDetails: "Collapse details",
     achievements: "Achievements",
+    details: "Details",
     technologies: "Technologies",
+    visitWebsite: "Visit website (opens in new tab)",
+    featured: "Featured",
     timeline: "Timeline",
   },
 };
@@ -63,9 +66,37 @@ const academicExperiences: Experience[] = [
     description: "Research in distributed systems.",
     achievements: ["Published 2 papers"],
   },
+  {
+    id: "exp-4",
+    type: "academic",
+    organization: "Research Network",
+    role: "Research Member",
+    location: "Brazil",
+    startDate: "2019-03-01",
+    description: "Member of a national research network.",
+    achievements: ["Collaborated with multiple institutions"],
+    logo: "/images/logos/logo_network.png",
+    organizationUrl: "https://example.org/network",
+  },
 ];
 
+const featuredExperience: Experience = {
+  id: "exp-5",
+  type: "academic",
+  organization: "Featured Org",
+  role: "Featured Role",
+  location: "Brazil",
+  startDate: "2019-03-01",
+  endDate: "2023-03-01",
+  // A short body: one paragraph followed by two bullet points.
+  description: "Featured paragraph text.\n- Featured bullet one\n- Featured bullet two",
+  achievements: ["Featured bullet one", "Featured bullet two"],
+  technologies: ["GNSS"],
+  featured: true,
+};
+
 const allExperiences = [...professionalExperiences, ...academicExperiences];
+const withFeatured = [...allExperiences, featuredExperience];
 
 // Helper to render with next-intl provider
 const renderWithIntl = (component: React.ReactElement) => {
@@ -210,5 +241,47 @@ describe("ExperienceSection Component", () => {
     // Timeline renders an ordered list
     const list = screen.getByRole("list", { name: /timeline/i });
     expect(list).toBeInTheDocument();
+  });
+
+  describe("featured experiences", () => {
+    it("excludes featured experiences (they render in the FeaturedExperience section instead)", () => {
+      renderWithIntl(
+        <ExperienceSection careerPath="academic" experiences={withFeatured} locale="en" />
+      );
+      // The featured card is not part of this section in either view.
+      expect(screen.queryByText("Featured Role")).not.toBeInTheDocument();
+      // Non-featured academic experiences still render here.
+      expect(screen.getAllByText("MSc Student").length).toBeGreaterThan(0);
+    });
+  });
+
+  describe("organization logo", () => {
+    it("renders the logo with descriptive alt text when an experience has a logo", () => {
+      renderWithIntl(
+        <ExperienceSection careerPath="academic" experiences={allExperiences} locale="en" />
+      );
+      const logo = screen.getByAltText("Research Network logo");
+      expect(logo).toBeInTheDocument();
+    });
+
+    it("links the logo to the organization website, opening in a new tab", () => {
+      renderWithIntl(
+        <ExperienceSection careerPath="academic" experiences={allExperiences} locale="en" />
+      );
+      // The accessible name combines the organization and the localized visit label.
+      const link = screen.getByRole("link", { name: /Research Network — Visit website/i });
+      expect(link).toHaveAttribute("href", "https://example.org/network");
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
+    });
+
+    it("does not render a logo for experiences without one", () => {
+      renderWithIntl(
+        <ExperienceSection careerPath="academic" experiences={academicExperiences} locale="en" />
+      );
+      // exp-3 has no logo; exp-4 does — exactly one logo image total.
+      expect(screen.getByAltText("Research Network logo")).toBeInTheDocument();
+      expect(screen.queryByAltText("State University logo")).not.toBeInTheDocument();
+    });
   });
 });

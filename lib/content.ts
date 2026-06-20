@@ -212,6 +212,9 @@ export async function getExperiences(
         description: content.trim(),
         achievements,
         technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : undefined,
+        logo: data.logo ? String(data.logo) : undefined,
+        organizationUrl: data.organizationUrl ? String(data.organizationUrl) : undefined,
+        featured: Boolean(data.featured),
       };
 
       experiences.push(experience);
