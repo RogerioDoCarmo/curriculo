@@ -33,9 +33,11 @@ import { useState, useEffect } from "react";
 interface ThemeToggleProps {
   /** Additional CSS classes to apply to the button */
   readonly className?: string;
+  /** Localized accessible label / hover tooltip. Defaults to English. */
+  readonly label?: string;
 }
 
-export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
+export default function ThemeToggle({ className = "", label = "Toggle theme" }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -45,7 +47,6 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
   }, []);
 
   const isDark = theme === "dark";
-  const ariaLabel = isDark ? "Switch to light mode" : "Switch to dark mode";
   const icon = isDark ? "☀️" : "🌙";
   const iconLabel = isDark ? "Sun" : "Moon";
 
@@ -54,8 +55,8 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
     return (
       <button
         type="button"
-        aria-label="Toggle theme"
-        title="Toggle theme"
+        aria-label={label}
+        title={label}
         className={`
           inline-flex items-center justify-center
           w-9 h-9 rounded-md
@@ -81,8 +82,8 @@ export default function ThemeToggle({ className = "" }: ThemeToggleProps) {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={ariaLabel}
-      title={ariaLabel}
+      aria-label={label}
+      title={label}
       className={`
         inline-flex items-center justify-center
         w-9 h-9 rounded-md

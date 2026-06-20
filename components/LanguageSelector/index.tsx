@@ -42,9 +42,15 @@ interface LanguageSelectorProps {
   readonly currentLocale: SupportedLocale;
   /** Additional CSS classes to apply */
   readonly className?: string;
+  /** Localized accessible label / hover tooltip. Defaults to English. */
+  readonly label?: string;
 }
 
-export default function LanguageSelector({ currentLocale, className = "" }: LanguageSelectorProps) {
+export default function LanguageSelector({
+  currentLocale,
+  className = "",
+  label = "Select language",
+}: LanguageSelectorProps) {
   const { locale, setLocale, availableLocales } = useLanguage(currentLocale);
   const current = LOCALE_META[locale];
 
@@ -56,7 +62,7 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
     <div className={`relative inline-flex items-center print:hidden ${className}`}>
       <label htmlFor="language-selector" className="sr-only">
         {/* Accessible label — visible only to screen readers */}
-        Select language
+        {label}
       </label>
       <span aria-hidden="true" className="mr-2 text-base">
         {current.flag}
@@ -65,7 +71,8 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
         id="language-selector"
         value={locale}
         onChange={handleChange}
-        aria-label="Select language"
+        aria-label={label}
+        title={label}
         className="
           appearance-none bg-transparent
           text-sm font-medium

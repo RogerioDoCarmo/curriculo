@@ -74,19 +74,26 @@ describe("ThemeToggle Component", () => {
     expect(icon).toHaveTextContent("☀️");
   });
 
-  it("should have correct aria-label in light mode", () => {
+  it("uses the default accessible label when no label prop is given", () => {
     render(<ThemeToggle />, { wrapper });
     const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label", "Switch to dark mode");
+    expect(button).toHaveAttribute("aria-label", "Toggle theme");
   });
 
-  it("should have correct aria-label in dark mode", async () => {
+  it("keeps its accessible label in dark mode", async () => {
     localStorage.setItem("theme", "dark");
     render(<ThemeToggle />, { wrapper });
 
     await screen.findByRole("img", { name: /sun/i });
     const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label", "Switch to light mode");
+    expect(button).toHaveAttribute("aria-label", "Toggle theme");
+  });
+
+  it("applies a custom localized label to both aria-label and title", () => {
+    render(<ThemeToggle label="Alternar tema" />, { wrapper });
+    const button = screen.getByRole("button");
+    expect(button).toHaveAttribute("aria-label", "Alternar tema");
+    expect(button).toHaveAttribute("title", "Alternar tema");
   });
 
   it("should toggle theme when clicked", async () => {

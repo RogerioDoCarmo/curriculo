@@ -109,7 +109,7 @@ export default function HomePageContent({
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
       >
         <div className="mx-auto max-w-3xl">
           <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">
