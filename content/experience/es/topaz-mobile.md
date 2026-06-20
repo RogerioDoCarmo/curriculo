@@ -41,6 +41,6 @@ Trabajo en el producto interno de la empresa, orientado al sector bancario. Desa
 - Trabajó en proyectos para clientes específicos: **CrediSIS** (Brasil), **Bradescard** (México), **Banco Macro** (Argentina) y **Banco do Nordeste - BNB** (Brasil)
 - Trabajó con **Google Play Console**, **Apple Developer** y **TestFlight** para distribución de apps
 - Implementó pruebas unitarias con **Jest** para garantizar calidad del código
-- Utilizó herramientas de monitoreo (Elastic, Kibana, Grafana) para análisis de rendimiento
+- Utilizó herramientas de monitoreo (**Elastic**, **Kibana**, **Grafana**) para análisis de rendimiento
 - Experiencia con metodologías ágiles y comunicación efectiva con stakeholders (POs, BAs, QAs, SMs)
 - Orientación de desarrolladores junior en buenas prácticas de desarrollo React Native
