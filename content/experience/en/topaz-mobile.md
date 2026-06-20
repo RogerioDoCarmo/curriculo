@@ -5,7 +5,6 @@ organization: Topaz
 role: Senior Mobile Front-End Developer
 location: Remote, Brazil
 startDate: 2023-03-01
-endDate: 2026-03-01
 technologies:
   - React Native
   - TypeScript
