@@ -295,7 +295,7 @@ export default function Header({ locale }: HeaderProps) {
               </svg>
               <span className="text-sm font-medium hidden sm:inline">Linktree</span>
             </a>
-            <LanguageSelector currentLocale={locale as SupportedLocale} />
+            <LanguageSelector currentLocale={locale as SupportedLocale} className="mr-2" />
             <ThemeToggle />
           </div>
         </div>
@@ -391,7 +391,7 @@ export default function Header({ locale }: HeaderProps) {
 
             {/* Sidebar controls */}
             <div className="flex items-center gap-2 p-4 border-t border-border">
-              <LanguageSelector currentLocale={locale as SupportedLocale} />
+              <LanguageSelector currentLocale={locale as SupportedLocale} className="mr-2" />
               <ThemeToggle />
             </div>
           </div>

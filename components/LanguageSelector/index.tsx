@@ -58,7 +58,7 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
         {/* Accessible label — visible only to screen readers */}
         Select language
       </label>
-      <span aria-hidden="true" className="mr-1 text-base">
+      <span aria-hidden="true" className="mr-2 text-base">
         {current.flag}
       </span>
       <select
