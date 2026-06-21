@@ -34,6 +34,8 @@ export interface Experience {
   technologies?: string[];
   /** Public path to the organization's logo (e.g. "/images/logos/logo_inct.png"). */
   logo?: string;
+  /** Public paths to gallery images shown as thumbnails / in a fullscreen lightbox. */
+  images?: string[];
   /** Official organization URL; when set, the logo links out to it in a new tab. */
   organizationUrl?: string;
   /**

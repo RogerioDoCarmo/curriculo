@@ -8,6 +8,10 @@ startDate: 2019-03-01
 endDate: 2023-03-01
 featured: true
 logo: /images/logos/logo_inct_gnss_navaer.png
+images:
+  - /images/experience/inct/placeholder-1.svg
+  - /images/experience/inct/placeholder-2.svg
+  - /images/experience/inct/placeholder-3.svg
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS
