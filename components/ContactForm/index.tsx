@@ -218,7 +218,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mt-0.5 flex-shrink-0 text-primary-600 dark:text-primary-400"
+            className="mt-0.5 shrink-0 text-primary-600 dark:text-primary-400"
             aria-hidden="true"
           >
             <rect x="2" y="4" width="20" height="16" rx="2" />

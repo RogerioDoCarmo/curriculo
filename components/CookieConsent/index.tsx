@@ -114,7 +114,7 @@ export default function CookieConsent() {
             {/* Cookie categories summary */}
             <div className="mb-6 space-y-3 rounded-md bg-gray-50 p-4 dark:bg-gray-700">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg
                     className="h-5 w-5 text-green-600 dark:text-green-400"
                     fill="currentColor"
@@ -139,7 +139,7 @@ export default function CookieConsent() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg
                     className="h-5 w-5 text-blue-600 dark:text-blue-400"
                     fill="currentColor"
@@ -256,7 +256,7 @@ export default function CookieConsent() {
                     {t("essentialDescription")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={true}
@@ -280,7 +280,7 @@ export default function CookieConsent() {
                     {t("analyticsCookies")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={customPrefs.analytics}
@@ -303,7 +303,7 @@ export default function CookieConsent() {
                     {t("functionalDescription")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={customPrefs.functional}
