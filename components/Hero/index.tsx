@@ -325,6 +325,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
               fill
               sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
               className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-500 dark:ring-primary-800"
+              priority
             />
           </div>
         </div>
