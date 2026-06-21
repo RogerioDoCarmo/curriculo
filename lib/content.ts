@@ -214,6 +214,9 @@ export async function getExperiences(
         technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : undefined,
         logo: data.logo ? String(data.logo) : undefined,
         images: Array.isArray(data.images) ? data.images.map(String) : undefined,
+        imageCaptions: Array.isArray(data.imageCaptions)
+          ? data.imageCaptions.map(String)
+          : undefined,
         organizationUrl: data.organizationUrl ? String(data.organizationUrl) : undefined,
         featured: Boolean(data.featured),
       };

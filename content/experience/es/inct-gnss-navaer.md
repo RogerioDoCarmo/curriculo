@@ -12,6 +12,10 @@ images:
   - /images/experience/inct/placeholder-1.svg
   - /images/experience/inct/placeholder-2.svg
   - /images/experience/inct/placeholder-3.svg
+imageCaptions:
+  - Recopilación de datos GNSS sin procesar en tiempo real
+  - Generación de archivo RINEX de observación
+  - Posicionamiento por Punto Simple (PPS) en tiempo real
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS

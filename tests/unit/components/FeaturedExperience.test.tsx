@@ -48,6 +48,7 @@ const featured: Experience = {
     "/images/experience/inct/placeholder-1.svg",
     "/images/experience/inct/placeholder-2.svg",
   ],
+  imageCaptions: ["Raw GNSS data collection", "RINEX file generation"],
   organizationUrl: "https://example.org/inct",
   featured: true,
 };
@@ -154,8 +155,10 @@ describe("FeaturedExperience", () => {
 
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toBeInTheDocument();
-    // The large image for the clicked thumbnail is shown.
-    expect(screen.getByAltText("Research Member — 1")).toBeInTheDocument();
+    // The large image for the clicked thumbnail is shown, captioned with its
+    // description (also used as the image alt text).
+    expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
+    expect(screen.getByText("Raw GNSS data collection")).toBeInTheDocument();
   });
 
   it("renders no thumbnails when the experience has no images", () => {
