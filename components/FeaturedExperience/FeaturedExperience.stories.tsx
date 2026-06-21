@@ -38,13 +38,8 @@ const inct: Experience = {
   images: [
     "/images/experience/inct/placeholder-1.svg",
     "/images/experience/inct/placeholder-2.svg",
-    "/images/experience/inct/placeholder-3.svg",
   ],
-  imageCaptions: [
-    "Real-time raw GNSS data collection",
-    "RINEX observation file generation",
-    "Real-time Single Point Positioning (SPP)",
-  ],
+  imageCaptions: ["Real-time raw GNSS data collection", "RINEX observation file generation"],
   organizationUrl: "https://inct-gnss-navaer.fct.unesp.br/",
   featured: true,
 };

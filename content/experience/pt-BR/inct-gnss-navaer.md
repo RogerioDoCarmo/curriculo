@@ -11,11 +11,9 @@ logo: /images/logos/logo_inct_gnss_navaer.png
 images:
   - /images/experience/inct/placeholder-1.svg
   - /images/experience/inct/placeholder-2.svg
-  - /images/experience/inct/placeholder-3.svg
 imageCaptions:
   - Coleta de dados GNSS brutos em tempo real
   - Geração de arquivo RINEX de observação
-  - Posicionamento por Ponto Simples (PPS) em tempo real
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS

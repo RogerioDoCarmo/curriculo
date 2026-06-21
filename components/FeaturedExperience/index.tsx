@@ -208,9 +208,9 @@ function FeaturedCard({
                     type="button"
                     onClick={() => setLightboxIndex(i)}
                     aria-label={`${t("viewImage")} ${i + 1}`}
-                    className="relative h-12 w-16 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
+                    className="relative h-20 w-28 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
                   >
-                    <Image src={src} alt="" fill sizes="64px" className="object-cover" />
+                    <Image src={src} alt="" fill sizes="112px" className="object-cover" />
                   </button>
                 ))}
               </div>
