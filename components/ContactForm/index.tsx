@@ -388,7 +388,9 @@ export default function ContactForm({ locale }: ContactFormProps) {
         <button
           type="submit"
           disabled={status === "submitting"}
-          aria-busy={status === "submitting"}
+          {...(status === "submitting"
+            ? ({ "aria-busy": "true" } as const)
+            : ({ "aria-busy": "false" } as const))}
           className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           {status === "submitting" ? (
