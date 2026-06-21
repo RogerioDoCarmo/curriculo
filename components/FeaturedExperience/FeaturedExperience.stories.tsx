@@ -35,6 +35,11 @@ const inct: Experience = {
   ],
   technologies: ["GNSS/GPS", "RINEX", "Java", "Android SDK"],
   logo: "/images/logos/logo_inct_gnss_navaer.png",
+  images: [
+    "/images/experience/inct/placeholder-1.svg",
+    "/images/experience/inct/placeholder-2.svg",
+    "/images/experience/inct/placeholder-3.svg",
+  ],
   organizationUrl: "https://inct-gnss-navaer.fct.unesp.br/",
   featured: true,
 };

@@ -18,6 +18,8 @@ const messages: AbstractIntlMessages = {
     technologies: "Technologies",
     visitWebsite: "Visit website (opens in new tab)",
     featured: "Featured",
+    images: "Images",
+    viewImage: "View image in full screen",
     duration: {
       lessThanMonth: "< 1 month",
       year: "yr",
@@ -42,6 +44,10 @@ const featured: Experience = {
   achievements: ["Bullet one", "Bullet two"],
   technologies: ["GNSS"],
   logo: "/images/logos/logo_inct.png",
+  images: [
+    "/images/experience/inct/placeholder-1.svg",
+    "/images/experience/inct/placeholder-2.svg",
+  ],
   organizationUrl: "https://example.org/inct",
   featured: true,
 };
@@ -133,5 +139,29 @@ describe("FeaturedExperience", () => {
     expect(roleLink).toHaveAttribute("href", "https://example.org/inct");
     expect(roleLink).toHaveAttribute("target", "_blank");
     expect(roleLink).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
+
+  it("shows a thumbnail per image and opens a fullscreen lightbox on click", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<FeaturedExperience experiences={[featured]} locale="en" />);
+
+    const thumbs = screen.getAllByRole("button", { name: /view image in full screen/i });
+    expect(thumbs).toHaveLength(2);
+    // The lightbox is closed until a thumbnail is clicked.
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(thumbs[0]);
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+    // The large image for the clicked thumbnail is shown.
+    expect(screen.getByAltText("Research Member — 1")).toBeInTheDocument();
+  });
+
+  it("renders no thumbnails when the experience has no images", () => {
+    renderWithIntl(<FeaturedExperience experiences={[{ ...featured, images: [] }]} locale="en" />);
+    expect(
+      screen.queryByRole("button", { name: /view image in full screen/i })
+    ).not.toBeInTheDocument();
   });
 });
