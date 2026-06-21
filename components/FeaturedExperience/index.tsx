@@ -52,6 +52,8 @@ function FeaturedCard({
   // Index of the image shown in the fullscreen lightbox, or null when closed.
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const images = exp.images ?? [];
+  const captions = exp.imageCaptions ?? [];
+  const hasTech = (exp.technologies?.length ?? 0) > 0;
   const intro = introParagraph(exp.description);
   const detailsId = `featured-details-${exp.id}`;
 
@@ -174,38 +176,45 @@ function FeaturedCard({
           </div>
         )}
 
-        {exp.technologies && exp.technologies.length > 0 && (
-          <div className="mt-6">
-            <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
-              {t("technologies")}
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {exp.technologies.map((tech) => (
-                <span
-                  key={tech}
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Technologies (left) and image thumbnails (bottom-right corner, aligned
+            with the last tags line). Click a thumbnail to open the lightbox. */}
+        {(hasTech || images.length > 0) && (
+          <div className="mt-6 flex items-end justify-between gap-4">
+            {hasTech ? (
+              <div className="min-w-0 flex-1">
+                <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  {t("technologies")}
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {exp.technologies?.map((tech) => (
+                    <span
+                      key={tech}
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1" />
+            )}
 
-        {/* Image thumbnails — bottom-right; click opens the fullscreen lightbox. */}
-        {images.length > 0 && (
-          <div className="mt-6 flex justify-end gap-2">
-            {images.map((src, i) => (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setLightboxIndex(i)}
-                aria-label={`${t("viewImage")} ${i + 1}`}
-                className="relative h-12 w-16 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
-              >
-                <Image src={src} alt="" fill sizes="64px" className="object-cover" />
-              </button>
-            ))}
+            {images.length > 0 && (
+              <div className="flex shrink-0 gap-2">
+                {images.map((src, i) => (
+                  <button
+                    key={src}
+                    type="button"
+                    onClick={() => setLightboxIndex(i)}
+                    aria-label={`${t("viewImage")} ${i + 1}`}
+                    className="relative h-12 w-16 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
+                  >
+                    <Image src={src} alt="" fill sizes="64px" className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </article>
@@ -221,12 +230,17 @@ function FeaturedCard({
               <div className="relative mx-auto h-[70vh] w-full">
                 <Image
                   src={images[lightboxIndex]}
-                  alt={`${exp.role} — ${lightboxIndex + 1}`}
+                  alt={captions[lightboxIndex] || `${exp.role} — ${lightboxIndex + 1}`}
                   fill
                   sizes="100vw"
                   className="object-contain"
                 />
               </div>
+              {captions[lightboxIndex] && (
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                  {captions[lightboxIndex]}
+                </p>
+              )}
               {images.length > 1 && (
                 <div className="flex flex-wrap justify-center gap-2">
                   {images.map((src, i) => (

@@ -36,6 +36,8 @@ export interface Experience {
   logo?: string;
   /** Public paths to gallery images shown as thumbnails / in a fullscreen lightbox. */
   images?: string[];
+  /** Short per-image captions (parallel to `images`), shown in the lightbox. */
+  imageCaptions?: string[];
   /** Official organization URL; when set, the logo links out to it in a new tab. */
   organizationUrl?: string;
   /**
