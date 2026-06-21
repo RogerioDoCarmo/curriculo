@@ -37,11 +37,6 @@ export default defineConfig({
     // Base URL for tests
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
 
-    // Freeze CSS animations (e.g. the banks logo marquee) so they don't keep the
-    // page in a non-settled state that races Playwright's hit-testing — a known
-    // source of "intercepts pointer events" click flakiness on mobile-chrome.
-    reducedMotion: "reduce",
-
     // Collect trace on first retry only (reduces overhead)
     trace: "on-first-retry",
 
