@@ -257,7 +257,7 @@ describe("Header — responsive navigation", () => {
     renderHeader();
 
     const themeToggle = screen.getByRole("button", {
-      name: /toggle theme|theme\.toggle|tema/i,
+      name: /switch between|theme\.switch|tema/i,
     });
     expect(themeToggle).toBeInTheDocument();
   });

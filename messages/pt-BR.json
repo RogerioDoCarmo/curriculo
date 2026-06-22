@@ -128,10 +128,15 @@
   "theme": {
     "toggle": "Alternar tema",
     "light": "Modo claro",
-    "dark": "Modo escuro"
+    "dark": "Modo escuro",
+    "switchLabel": "Alternar entre os modos claro e escuro",
+    "switchTooltip": "Alternar entre os modos claro e escuro (atualmente {mode})",
+    "modeDark": "modo escuro",
+    "modeLight": "modo claro"
   },
   "language": {
-    "selector": "Selecionar idioma"
+    "selector": "Selecionar idioma",
+    "selectTooltip": "Selecionar idioma (atualmente {language})"
   },
   "footer": {
     "copyright": "Todos os direitos reservados.",

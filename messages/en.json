@@ -128,10 +128,15 @@
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light mode",
-    "dark": "Dark mode"
+    "dark": "Dark mode",
+    "switchLabel": "Switch between dark and light mode",
+    "switchTooltip": "Switch between dark and light mode (currently {mode})",
+    "modeDark": "dark mode",
+    "modeLight": "light mode"
   },
   "language": {
-    "selector": "Select language"
+    "selector": "Select language",
+    "selectTooltip": "Select language (currently {language})"
   },
   "footer": {
     "copyright": "All rights reserved.",
