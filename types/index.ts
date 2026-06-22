@@ -21,6 +21,13 @@ export interface Project {
 
 // ─── Experience ─────────────────────────────────────────────────────────────
 
+/** A gallery image for an experience, with an optional lightbox title/description. */
+export interface ExperienceImage {
+  src: string;
+  title?: string;
+  description?: string;
+}
+
 export interface Experience {
   id: string;
   type: "professional" | "academic";
@@ -34,10 +41,8 @@ export interface Experience {
   technologies?: string[];
   /** Public path to the organization's logo (e.g. "/images/logos/logo_inct.png"). */
   logo?: string;
-  /** Public paths to gallery images shown as thumbnails / in a fullscreen lightbox. */
-  images?: string[];
-  /** Short per-image captions (parallel to `images`), shown in the lightbox. */
-  imageCaptions?: string[];
+  /** Gallery images shown as thumbnails and, full-size, in the lightbox. */
+  images?: ExperienceImage[];
   /** Official organization URL; when set, the logo links out to it in a new tab. */
   organizationUrl?: string;
   /**

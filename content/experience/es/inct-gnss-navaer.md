@@ -9,11 +9,21 @@ endDate: 2023-03-01
 featured: true
 logo: /images/logos/logo_inct_gnss_navaer.png
 images:
-  - /images/experience/inct/placeholder-1.svg
-  - /images/experience/inct/placeholder-2.svg
-imageCaptions:
-  - Recopilación de datos GNSS sin procesar en tiempo real
-  - Generación de archivo RINEX de observación
+  - src: /images/inct-project/inct-app-collect.png
+    title: Captura de datos GPS
+    description: >-
+      Aplicación Android creada para capturar y procesar datos GNSS (GPS) en
+      tiempo real, utilizando datos extraídos directamente de la señal GPS
+      captada por la antena GPS del dispositivo.
+  - src: /images/inct-project/inct-app-post-processing.png
+    title: Aplicación de posprocesamiento
+    description: >-
+      Se creó una aplicación de escritorio (Java Swing) para el posprocesamiento
+      de los datos. Permite reprocesar los datos y generar análisis gráficos y
+      estadísticos a partir de los datos capturados por la aplicación Android. La
+      información sobre los satélites rastreados durante la ejecución de la
+      aplicación también puede analizarse en los scripts de Python (pandas)
+      creados durante el proyecto.
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS

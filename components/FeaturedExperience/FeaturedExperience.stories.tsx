@@ -36,10 +36,18 @@ const inct: Experience = {
   technologies: ["GNSS/GPS", "RINEX", "Java", "Android SDK"],
   logo: "/images/logos/logo_inct_gnss_navaer.png",
   images: [
-    "/images/experience/inct/placeholder-1.svg",
-    "/images/experience/inct/placeholder-2.svg",
+    {
+      src: "/images/inct-project/inct-app-collect.png",
+      title: "GPS data capture",
+      description: "Android app capturing and processing GNSS (GPS) data in real time.",
+    },
+    {
+      src: "/images/inct-project/inct-app-post-processing.png",
+      title: "Post-processing application",
+      description:
+        "Java Swing desktop app to reprocess data and build graphical/statistical analyses.",
+    },
   ],
-  imageCaptions: ["Real-time raw GNSS data collection", "RINEX observation file generation"],
   organizationUrl: "https://inct-gnss-navaer.fct.unesp.br/",
   featured: true,
 };

@@ -213,9 +213,16 @@ export async function getExperiences(
         achievements,
         technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : undefined,
         logo: data.logo ? String(data.logo) : undefined,
-        images: Array.isArray(data.images) ? data.images.map(String) : undefined,
-        imageCaptions: Array.isArray(data.imageCaptions)
-          ? data.imageCaptions.map(String)
+        images: Array.isArray(data.images)
+          ? data.images.map((img) => {
+              if (typeof img === "string") return { src: img };
+              const o = img as Record<string, unknown>;
+              return {
+                src: String(o.src ?? ""),
+                title: o.title ? String(o.title) : undefined,
+                description: o.description ? String(o.description) : undefined,
+              };
+            })
           : undefined,
         organizationUrl: data.organizationUrl ? String(data.organizationUrl) : undefined,
         featured: Boolean(data.featured),
