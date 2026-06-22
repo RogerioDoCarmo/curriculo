@@ -109,7 +109,7 @@ function FilterButton({
   const className = [
     "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
     active
-      ? "bg-primary-600 text-white dark:bg-primary-500"
+      ? "bg-primary-600 text-white dark:bg-primary-600"
       : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
   ].join(" ");
   const props = { type: "button" as const, onClick, className };
@@ -315,7 +315,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600"
+              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
               aria-label={`${t("projects.liveDemo")} ${project.title}`}
             >
               {t("projects.liveDemo")}
