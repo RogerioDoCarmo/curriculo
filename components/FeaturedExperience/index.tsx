@@ -228,7 +228,7 @@ function FeaturedCard({
         >
           {lightboxIndex !== null && (
             <div className="space-y-3">
-              <div className="relative mx-auto h-[70vh] w-full">
+              <div className="relative mx-auto h-[60vh] w-full">
                 <Image
                   src={images[lightboxIndex].src}
                   alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
