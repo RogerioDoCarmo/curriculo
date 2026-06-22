@@ -211,7 +211,7 @@ function FeaturedCard({
                     }
                     className="relative h-20 w-28 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
                   >
-                    <Image src={img.src} alt="" fill sizes="112px" className="object-cover" />
+                    <Image src={img.src} alt="" fill sizes="112px" className="object-contain" />
                   </button>
                 ))}
               </div>
@@ -267,7 +267,7 @@ function FeaturedCard({
                           : "ring-transparent hover:ring-primary-300"
                       }`}
                     >
-                      <Image src={img.src} alt="" fill sizes="64px" className="object-cover" />
+                      <Image src={img.src} alt="" fill sizes="64px" className="object-contain" />
                     </button>
                   ))}
                 </div>
