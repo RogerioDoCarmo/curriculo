@@ -74,26 +74,37 @@ describe("ThemeToggle Component", () => {
     expect(icon).toHaveTextContent("☀️");
   });
 
-  it("uses the default accessible label when no label prop is given", () => {
+  it("uses the default light-mode tooltip when no labels are given", () => {
+    localStorage.setItem("theme", "light");
     render(<ThemeToggle />, { wrapper });
     const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label", "Toggle theme");
+    expect(button).toHaveAttribute(
+      "aria-label",
+      "Switch between dark and light mode (currently light mode)"
+    );
   });
 
-  it("keeps its accessible label in dark mode", async () => {
+  it("shows the dark-mode tooltip in dark mode", async () => {
     localStorage.setItem("theme", "dark");
     render(<ThemeToggle />, { wrapper });
 
     await screen.findByRole("img", { name: /sun/i });
     const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label", "Toggle theme");
+    expect(button).toHaveAttribute(
+      "aria-label",
+      "Switch between dark and light mode (currently dark mode)"
+    );
   });
 
-  it("applies a custom localized label to both aria-label and title", () => {
-    render(<ThemeToggle label="Alternar tema" />, { wrapper });
+  it("applies custom localized dark/light tooltips to aria-label and title", () => {
+    localStorage.setItem("theme", "light");
+    render(<ThemeToggle lightModeLabel="Modo claro atual" darkModeLabel="Modo escuro atual" />, {
+      wrapper,
+    });
     const button = screen.getByRole("button");
-    expect(button).toHaveAttribute("aria-label", "Alternar tema");
-    expect(button).toHaveAttribute("title", "Alternar tema");
+    // jsdom defaults to light mode.
+    expect(button).toHaveAttribute("aria-label", "Modo claro atual");
+    expect(button).toHaveAttribute("title", "Modo claro atual");
   });
 
   it("should toggle theme when clicked", async () => {

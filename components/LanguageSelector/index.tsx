@@ -34,6 +34,11 @@ const LOCALE_META: Record<SupportedLocale, { flag: string; label: string }> = {
   es: { flag: "🇪🇸", label: "Español" },
 };
 
+/** Native display name for a locale (e.g. "English", "Português (BR)"). */
+export function getLanguageName(locale: SupportedLocale): string {
+  return LOCALE_META[locale]?.label ?? locale;
+}
+
 /**
  * LanguageSelector component props
  */

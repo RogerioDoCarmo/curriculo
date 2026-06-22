@@ -33,11 +33,23 @@ import { useState, useEffect } from "react";
 interface ThemeToggleProps {
   /** Additional CSS classes to apply to the button */
   readonly className?: string;
-  /** Localized accessible label / hover tooltip. Defaults to English. */
+  /**
+   * Theme-independent label used during SSR / before mount (avoids a hydration
+   * mismatch, since the server can't know the persisted theme). Defaults to English.
+   */
   readonly label?: string;
+  /** Tooltip shown while dark mode is active, e.g. "...(currently dark mode)". */
+  readonly darkModeLabel?: string;
+  /** Tooltip shown while light mode is active, e.g. "...(currently light mode)". */
+  readonly lightModeLabel?: string;
 }
 
-export default function ThemeToggle({ className = "", label = "Toggle theme" }: ThemeToggleProps) {
+export default function ThemeToggle({
+  className = "",
+  label = "Switch between dark and light mode",
+  darkModeLabel = "Switch between dark and light mode (currently dark mode)",
+  lightModeLabel = "Switch between dark and light mode (currently light mode)",
+}: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -49,6 +61,8 @@ export default function ThemeToggle({ className = "", label = "Toggle theme" }: 
   const isDark = theme === "dark";
   const icon = isDark ? "☀️" : "🌙";
   const iconLabel = isDark ? "Sun" : "Moon";
+  // Theme-dependent tooltip only after mount; before that, the static label.
+  const activeLabel = isDark ? darkModeLabel : lightModeLabel;
 
   // Render a placeholder during SSR to prevent hydration mismatch
   if (!mounted) {
@@ -82,8 +96,8 @@ export default function ThemeToggle({ className = "", label = "Toggle theme" }: 
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={label}
-      title={label}
+      aria-label={activeLabel}
+      title={activeLabel}
       className={`
         inline-flex items-center justify-center
         w-9 h-9 rounded-md

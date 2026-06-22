@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector, { getLanguageName } from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
@@ -48,6 +48,18 @@ function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
 export default function Header({ locale }: HeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
+
+  // Localized tooltips: "Switch between dark and light mode (currently …)" and
+  // "Select language (currently …)". ThemeToggle picks the dark/light variant
+  // after mount; `label` is the theme-independent SSR fallback.
+  const themeToggleLabels = {
+    label: t("theme.switchLabel"),
+    darkModeLabel: t("theme.switchTooltip", { mode: t("theme.modeDark") }),
+    lightModeLabel: t("theme.switchTooltip", { mode: t("theme.modeLight") }),
+  };
+  const languageLabel = t("language.selectTooltip", {
+    language: getLanguageName(locale as SupportedLocale),
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [_isMobile, _setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -298,9 +310,9 @@ export default function Header({ locale }: HeaderProps) {
             <LanguageSelector
               currentLocale={locale as SupportedLocale}
               className="mr-2"
-              label={t("language.selector")}
+              label={languageLabel}
             />
-            <ThemeToggle label={t("theme.toggle")} />
+            <ThemeToggle {...themeToggleLabels} />
           </div>
         </div>
       </div>
@@ -398,9 +410,9 @@ export default function Header({ locale }: HeaderProps) {
               <LanguageSelector
                 currentLocale={locale as SupportedLocale}
                 className="mr-2"
-                label={t("language.selector")}
+                label={languageLabel}
               />
-              <ThemeToggle label={t("theme.toggle")} />
+              <ThemeToggle {...themeToggleLabels} />
             </div>
           </div>
         </>
