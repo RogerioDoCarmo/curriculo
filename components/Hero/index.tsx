@@ -222,6 +222,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 width={678}
                 height={235}
                 className="w-50 h-auto"
+                priority
               />
             </a>
             <div className="text-left">
