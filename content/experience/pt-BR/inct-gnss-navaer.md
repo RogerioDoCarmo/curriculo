@@ -24,6 +24,9 @@ images:
       Informações sobre os satélites rastreados durante a execução do aplicativo
       também podem ser analisadas nos scripts Python (pandas) criados durante o
       projeto.
+  - src: /images/inct-project/placeholder.svg
+    title: Imagem (placeholder)
+    description: Substituir por uma imagem real do projeto.
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS

@@ -47,6 +47,11 @@ const inct: Experience = {
       description:
         "Java Swing desktop app to reprocess data and build graphical/statistical analyses.",
     },
+    {
+      src: "/images/inct-project/placeholder.svg",
+      title: "Image (placeholder)",
+      description: "Replace with a real project image.",
+    },
   ],
   organizationUrl: "https://inct-gnss-navaer.fct.unesp.br/",
   featured: true,
