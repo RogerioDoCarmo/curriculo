@@ -45,10 +45,13 @@ const featured: Experience = {
   technologies: ["GNSS"],
   logo: "/images/logos/logo_inct.png",
   images: [
-    "/images/experience/inct/placeholder-1.svg",
-    "/images/experience/inct/placeholder-2.svg",
+    {
+      src: "/images/inct-project/a.png",
+      title: "Raw GNSS data collection",
+      description: "Captures raw GNSS data in real time.",
+    },
+    { src: "/images/inct-project/b.png", title: "RINEX file generation" },
   ],
-  imageCaptions: ["Raw GNSS data collection", "RINEX file generation"],
   organizationUrl: "https://example.org/inct",
   featured: true,
 };
@@ -155,10 +158,10 @@ describe("FeaturedExperience", () => {
 
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toBeInTheDocument();
-    // The large image for the clicked thumbnail is shown, captioned with its
-    // description (also used as the image alt text).
+    // The large image is shown with its title (also the alt text) and description.
     expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
-    expect(screen.getByText("Raw GNSS data collection")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Raw GNSS data collection" })).toBeInTheDocument();
+    expect(screen.getByText("Captures raw GNSS data in real time.")).toBeInTheDocument();
   });
 
   it("renders no thumbnails when the experience has no images", () => {

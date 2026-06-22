@@ -52,7 +52,6 @@ function FeaturedCard({
   // Index of the image shown in the fullscreen lightbox, or null when closed.
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const images = exp.images ?? [];
-  const captions = exp.imageCaptions ?? [];
   const hasTech = (exp.technologies?.length ?? 0) > 0;
   const intro = introParagraph(exp.description);
   const detailsId = `featured-details-${exp.id}`;
@@ -164,7 +163,7 @@ function FeaturedCard({
 
         {/* Collapsible achievements (Conquistas) section. */}
         {hasAchievements && showAchievements && (
-          <div id={detailsId} className="mt-4">
+          <div id={detailsId} className="mt-8">
             <h4 className="mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100">
               {t("achievements")}
             </h4>
@@ -202,15 +201,17 @@ function FeaturedCard({
 
             {images.length > 0 && (
               <div className="flex shrink-0 gap-2">
-                {images.map((src, i) => (
+                {images.map((img, i) => (
                   <button
-                    key={src}
+                    key={img.src}
                     type="button"
                     onClick={() => setLightboxIndex(i)}
-                    aria-label={`${t("viewImage")} ${i + 1}`}
+                    aria-label={
+                      img.title ? `${t("viewImage")}: ${img.title}` : `${t("viewImage")} ${i + 1}`
+                    }
                     className="relative h-20 w-28 overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-primary-300 transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:ring-primary-700"
                   >
-                    <Image src={src} alt="" fill sizes="112px" className="object-cover" />
+                    <Image src={img.src} alt="" fill sizes="112px" className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -229,33 +230,44 @@ function FeaturedCard({
             <div className="space-y-3">
               <div className="relative mx-auto h-[70vh] w-full">
                 <Image
-                  src={images[lightboxIndex]}
-                  alt={captions[lightboxIndex] || `${exp.role} — ${lightboxIndex + 1}`}
+                  src={images[lightboxIndex].src}
+                  alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
                   fill
                   sizes="100vw"
                   className="object-contain"
                 />
               </div>
-              {captions[lightboxIndex] && (
-                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-                  {captions[lightboxIndex]}
-                </p>
+              {(images[lightboxIndex].title || images[lightboxIndex].description) && (
+                <div className="mx-auto max-w-2xl text-center">
+                  {images[lightboxIndex].title && (
+                    <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                      {images[lightboxIndex].title}
+                    </h3>
+                  )}
+                  {images[lightboxIndex].description && (
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      {images[lightboxIndex].description}
+                    </p>
+                  )}
+                </div>
               )}
               {images.length > 1 && (
                 <div className="flex flex-wrap justify-center gap-2">
-                  {images.map((src, i) => (
+                  {images.map((img, i) => (
                     <button
-                      key={src}
+                      key={img.src}
                       type="button"
                       onClick={() => setLightboxIndex(i)}
-                      aria-label={`${t("viewImage")} ${i + 1}`}
+                      aria-label={
+                        img.title ? `${t("viewImage")}: ${img.title}` : `${t("viewImage")} ${i + 1}`
+                      }
                       className={`relative h-12 w-16 overflow-hidden rounded-md ring-2 transition ${
                         i === lightboxIndex
                           ? "ring-primary-600"
                           : "ring-transparent hover:ring-primary-300"
                       }`}
                     >
-                      <Image src={src} alt="" fill sizes="64px" className="object-cover" />
+                      <Image src={img.src} alt="" fill sizes="64px" className="object-cover" />
                     </button>
                   ))}
                 </div>
