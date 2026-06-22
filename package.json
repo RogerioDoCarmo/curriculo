@@ -42,7 +42,7 @@
     "@vercel/speed-insights": "^2.0.0",
     "autoprefixer": "^10.x",
     "firebase": "^12.12.1",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^5.0.0",
     "lucide-react": "^1.8.0",
     "next": "^16.2.9",
     "next-intl": "^4.9.2",
@@ -119,7 +119,7 @@
     "qs": ">=6.15.2",
     "esbuild": "~0.28.1",
     "@vitest/browser": ">=4.1.8",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^5.0.0",
     "@firebase/firestore": {
       "@grpc/grpc-js": "~1.9.16"
     },
