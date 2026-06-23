@@ -51,7 +51,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 })
               }
               aria-label="UNESP - Universidade Estadual Paulista"
-              className="transition-opacity hover:opacity-80"
+              className="transition-opacity hover:opacity-80 dark:rounded-lg dark:bg-white dark:p-2 dark:shadow-sm"
             >
               <Image
                 src="/images/logos/logo_unesp.png"
@@ -214,7 +214,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 })
               }
               aria-label="Topaz Evolution"
-              className="transition-opacity hover:opacity-80"
+              className="transition-opacity hover:opacity-80 dark:rounded-lg dark:bg-white dark:p-2 dark:shadow-sm"
             >
               <Image
                 src="/images/logos/logo_topaz.svg"
