@@ -145,7 +145,7 @@ function FeaturedCard({
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {exp.organization} · {exp.location}
               </p>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                 {formatDate(exp.startDate, locale)} –{" "}
                 {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
                 {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t, now)}
