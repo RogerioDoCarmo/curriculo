@@ -85,12 +85,16 @@
     "professionalExperience": "Professional Experience",
     "academicBackground": "Academic Background",
     "noExperiences": "No experiences to display.",
-    "present": "Present",
+    "present": "Current",
     "expandDetails": "Expand details",
     "collapseDetails": "Collapse details",
     "achievements": "Achievements",
     "details": "Details",
     "technologies": "Technologies",
+    "visitWebsite": "Visit website (opens in new tab)",
+    "images": "INCT Project",
+    "viewImage": "View image in full screen",
+    "featured": "Featured",
     "timeline": "Timeline",
     "duration": {
       "lessThanMonth": "< 1 month",
@@ -124,10 +128,15 @@
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light mode",
-    "dark": "Dark mode"
+    "dark": "Dark mode",
+    "switchLabel": "Switch between dark and light mode",
+    "switchTooltip": "Switch between dark and light mode (currently {mode})",
+    "modeDark": "dark mode",
+    "modeLight": "light mode"
   },
   "language": {
-    "selector": "Select language"
+    "selector": "Select language",
+    "selectTooltip": "Select language (currently {language})"
   },
   "footer": {
     "copyright": "All rights reserved.",
@@ -929,6 +938,11 @@
       "title": "Acknowledgment",
       "description": "By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use."
     }
+  },
+  "banks": {
+    "title": "Banking Sector Impact",
+    "subtitle": "Financial institutions whose mobile apps I helped build and maintain.",
+    "opensInNewTab": "Opens the official site in a new tab"
   },
   "aiStack": {
     "title": "Built with AI",

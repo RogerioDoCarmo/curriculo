@@ -6,6 +6,7 @@ import type { CareerPath, Experience, TimelineItem } from "@/types/index";
 import Timeline from "@/components/Timeline";
 import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
+import { ExperienceLogo, calcDuration, formatDate } from "./shared";
 
 interface ExperienceSectionProps {
   readonly careerPath: CareerPath;
@@ -13,56 +14,6 @@ interface ExperienceSectionProps {
   readonly locale: string;
   /** Unix timestamp (ms) from the server — keeps duration strings stable across SSR/hydration. */
   readonly now?: number;
-}
-
-/**
- * Format a date string (YYYY-MM-DD or YYYY-MM) to a human-readable month/year.
- * Uses the provided locale for proper date formatting.
- */
-function formatDate(dateStr: string, locale: string): string {
-  try {
-    const date = new Date(dateStr + (dateStr.length === 7 ? "-01" : ""));
-    return date.toLocaleDateString(locale, { month: "short", year: "numeric" });
-  } catch {
-    return dateStr;
-  }
-}
-
-/**
- * Calculate duration between two dates in years/months.
- * Uses translations for proper localization of duration text.
- *
- * @param now - Unix timestamp (ms) to use as "today" for open-ended positions.
- *   Pass a server-captured value so SSR and client hydration produce the same string.
- */
-function calcDuration(
-  startDate: string,
-  endDate: string | undefined,
-  t: (key: string) => string,
-  now?: number
-): string {
-  const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date(now ?? Date.now());
-  const months =
-    (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-
-  if (months < 1) return t("duration.lessThanMonth");
-
-  const years = Math.floor(months / 12);
-  const remainingMonths = months % 12;
-  const parts: string[] = [];
-
-  if (years > 0) {
-    const yearLabel = years === 1 ? t("duration.year") : t("duration.years");
-    parts.push(`${years} ${yearLabel}`);
-  }
-
-  if (remainingMonths > 0) {
-    const monthLabel = remainingMonths === 1 ? t("duration.month") : t("duration.months");
-    parts.push(`${remainingMonths} ${monthLabel}`);
-  }
-
-  return parts.join(" ");
 }
 
 /** Convert an Experience to a TimelineItem. */
@@ -98,7 +49,9 @@ export default function ExperienceSection({
   const t = useTranslations("experience");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const filtered = experiences.filter((e) => e.type === careerPath);
+  // Featured experiences render in the standalone FeaturedExperience section
+  // above the career-path selector, so they are excluded here to avoid duplication.
+  const filtered = experiences.filter((e) => e.type === careerPath && !e.featured);
 
   const timelineItems = filtered.map((exp) => experienceToTimelineItem(exp, locale, t, now));
 
@@ -163,18 +116,29 @@ export default function ExperienceSection({
                   className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        {exp.role}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {exp.organization} · {exp.location}
-                      </p>
-                      <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                        {formatDate(exp.startDate, locale)} –{" "}
-                        {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
-                        {t("duration.separator")} {calcDuration(exp.startDate, exp.endDate, t, now)}
-                      </p>
+                    <div className="flex flex-1 items-start gap-4">
+                      {exp.logo && (
+                        <ExperienceLogo
+                          logo={exp.logo}
+                          organization={exp.organization}
+                          organizationUrl={exp.organizationUrl}
+                          visitLabel={t("visitWebsite")}
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                          {exp.role}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {exp.organization} · {exp.location}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                          {formatDate(exp.startDate, locale)} –{" "}
+                          {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
+                          {t("duration.separator")}{" "}
+                          {calcDuration(exp.startDate, exp.endDate, t, now)}
+                        </p>
+                      </div>
                     </div>
                     {toggleButton}
                   </div>

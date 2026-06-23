@@ -94,12 +94,12 @@ export default function CookieConsent() {
   return (
     <div
       ref={dialogRef}
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="cookie-consent-title"
     >
-      <div className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 sm:p-8">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800 sm:p-8">
         {!showCustomize ? (
           // Main banner view
           <>
@@ -114,7 +114,7 @@ export default function CookieConsent() {
             {/* Cookie categories summary */}
             <div className="mb-6 space-y-3 rounded-md bg-gray-50 p-4 dark:bg-gray-700">
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg
                     className="h-5 w-5 text-green-600 dark:text-green-400"
                     fill="currentColor"
@@ -139,7 +139,7 @@ export default function CookieConsent() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <svg
                     className="h-5 w-5 text-blue-600 dark:text-blue-400"
                     fill="currentColor"
@@ -163,19 +163,22 @@ export default function CookieConsent() {
             {/* Action buttons */}
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
+                type="button"
                 ref={firstButtonRef}
                 onClick={acceptAll}
-                className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+                className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-600 dark:hover:bg-primary-700"
               >
                 {t("acceptAll")}
               </button>
               <button
+                type="button"
                 onClick={rejectAll}
                 className="flex-1 rounded-md border-2 border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 {t("rejectAll")}
               </button>
               <button
+                type="button"
                 ref={lastButtonRef}
                 onClick={handleCustomize}
                 className="flex-1 rounded-md border-2 border-primary-600 bg-white px-4 py-2.5 text-sm font-medium text-primary-600 transition-colors hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-primary-400 dark:bg-gray-800 dark:text-primary-400 dark:hover:bg-primary-900/20"
@@ -207,6 +210,7 @@ export default function CookieConsent() {
           <>
             <div className="mb-4 flex items-center gap-2">
               <button
+                type="button"
                 ref={firstButtonRef}
                 onClick={handleBack}
                 className="rounded-md p-1 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -256,7 +260,7 @@ export default function CookieConsent() {
                     {t("essentialDescription")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={true}
@@ -280,7 +284,7 @@ export default function CookieConsent() {
                     {t("analyticsCookies")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={customPrefs.analytics}
@@ -303,7 +307,7 @@ export default function CookieConsent() {
                     {t("functionalDescription")}
                   </p>
                 </div>
-                <div className="ml-4 flex-shrink-0">
+                <div className="ml-4 shrink-0">
                   <input
                     type="checkbox"
                     checked={customPrefs.functional}
@@ -320,9 +324,10 @@ export default function CookieConsent() {
             {/* Save button */}
             <div className="flex gap-3">
               <button
+                type="button"
                 ref={lastButtonRef}
                 onClick={handleSaveCustom}
-                className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+                className="flex-1 rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-600 dark:hover:bg-primary-700"
               >
                 {t("savePreferences")}
               </button>

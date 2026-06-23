@@ -21,6 +21,13 @@ export interface Project {
 
 // ─── Experience ─────────────────────────────────────────────────────────────
 
+/** A gallery image for an experience, with an optional lightbox title/description. */
+export interface ExperienceImage {
+  src: string;
+  title?: string;
+  description?: string;
+}
+
 export interface Experience {
   id: string;
   type: "professional" | "academic";
@@ -32,6 +39,17 @@ export interface Experience {
   description: string;
   achievements: string[];
   technologies?: string[];
+  /** Public path to the organization's logo (e.g. "/images/logos/logo_inct.png"). */
+  logo?: string;
+  /** Gallery images shown as thumbnails and, full-size, in the lightbox. */
+  images?: ExperienceImage[];
+  /** Official organization URL; when set, the logo links out to it in a new tab. */
+  organizationUrl?: string;
+  /**
+   * When true, the experience renders as a dedicated, always-expanded card pinned
+   * to the top of the section in both the professional and academic views.
+   */
+  featured?: boolean;
 }
 
 // ─── Skills ─────────────────────────────────────────────────────────────────

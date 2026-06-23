@@ -1,0 +1,32 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Docs/Introduction" />
+
+# Component Library
+
+This Storybook documents the UI building blocks of the personal resume site of
+**Rogério do Carmo** — built with Next.js 16, TypeScript, Tailwind CSS v4 and
+next-intl.
+
+## Organization
+
+- **Components/** — reusable primitives (`Button`, `Card`, `Modal`, `ThemeToggle`, …).
+- **Sections/** — composed page sections (`BanksSection`, `FeaturedExperience`, `SkillsSection`).
+- **Docs/** — written guides like this one (authored in `.mdx`).
+
+## Conventions
+
+- Server components by default; `"use client"` is added only when a component
+  needs interactivity, browser APIs, or hooks.
+- Every story renders inside the **next-intl** provider (English catalog) and the
+  **theme** provider, configured globally in `.storybook/preview.tsx`.
+- Theme-dependent components guard against SSR hydration mismatches with a
+  `mounted` state.
+- External links open in a new tab with `rel="noopener noreferrer"`.
+
+## Authoring docs with MDX
+
+`.mdx` files are Markdown + JSX. A standalone page (like this one) uses
+`<Meta title="Docs/..." />`; a component page attaches to its stories with
+`<Meta of={...} />` and can embed live examples via `<Canvas>` / `<Story>`.
+The `components/**/*.mdx` glob is already wired in `.storybook/main.ts`.
