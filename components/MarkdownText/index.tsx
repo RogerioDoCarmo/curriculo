@@ -18,7 +18,7 @@ const HEADING_CLASSES: readonly string[] = [
   "mt-4 mb-2 text-base font-semibold text-gray-900 dark:text-gray-100",
   "mt-3 mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100",
   "mt-2 mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100",
-  "mt-2 mb-1 text-xs font-semibold text-gray-900 dark:text-gray-100",
+  "mt-2 mb-1 text-sm font-semibold text-gray-900 dark:text-gray-100",
 ];
 
 // Marker-only regexes (no unbounded content quantifier -> trivially linear, no ReDoS).

@@ -4,6 +4,7 @@
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import BanksSection from "@/components/BanksSection";
 
@@ -12,6 +13,8 @@ const messages: AbstractIntlMessages = {
     title: "Banking Sector Impact",
     subtitle: "Financial institutions whose mobile apps I helped build and maintain.",
     opensInNewTab: "Opens the official site in a new tab",
+    previous: "Previous banks",
+    next: "Next banks",
   },
 };
 
@@ -113,8 +116,25 @@ describe("BanksSection", () => {
     ]);
   });
 
-  it("renders the auto-scrolling track", () => {
+  it("renders the scrollable carousel track", () => {
     renderWithIntl(<BanksSection />);
-    expect(screen.getByTestId("banks-carousel").querySelector(".animate-marquee")).not.toBeNull();
+    expect(screen.getByTestId("banks-carousel")).toBeInTheDocument();
+  });
+
+  it("offers manual previous/next controls to step through the banks", () => {
+    renderWithIntl(<BanksSection />);
+    expect(screen.getByRole("button", { name: "Previous banks" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Next banks" })).toBeInTheDocument();
+  });
+
+  it("steps the track when a control is pressed", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<BanksSection />);
+    const track = screen.getByTestId("banks-carousel");
+    const scrollBy = jest.fn();
+    // jsdom doesn't implement scrollBy; stub it to assert the control wiring.
+    Object.defineProperty(track, "scrollBy", { value: scrollBy, configurable: true });
+    await user.click(screen.getByRole("button", { name: "Next banks" }));
+    expect(scrollBy).toHaveBeenCalled();
   });
 });

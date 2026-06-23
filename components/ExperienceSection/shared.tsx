@@ -62,6 +62,24 @@ export function calcDuration(
 }
 
 /**
+ * The intro is the prose before the achievements heading ("### Conquistas /
+ * Logros / Achievements"). The bullet list after that heading is rendered
+ * separately from `exp.achievements`, so keep only the intro here — otherwise a
+ * collapsed/line-clamped preview cuts off at the heading and shows a stray,
+ * truncated "Conquistas…".
+ */
+export function experienceIntro(description: string): string {
+  // Cut everything from the achievements heading onward, then drop any stray
+  // bullet lines (defensive — content authored without an explicit heading).
+  return description
+    .split(/^#{1,6}\s/m)[0]
+    .split("\n")
+    .filter((line) => !line.trim().startsWith("- "))
+    .join("\n")
+    .trim();
+}
+
+/**
  * Renders an organization logo on a white tile. When `organizationUrl` is set,
  * the logo links out to the official site in a new tab and the click is tracked.
  * White tile keeps logos legible in both light and dark mode (matches AiStackSection).
