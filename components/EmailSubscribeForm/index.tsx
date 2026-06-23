@@ -182,7 +182,7 @@ export default function EmailSubscribeForm({
         <p
           id="subscribe-email-error"
           role="alert"
-          className="text-xs text-red-600 dark:text-red-400"
+          className="text-sm text-red-600 dark:text-red-400"
         >
           {emailError}
         </p>
@@ -214,7 +214,7 @@ export default function EmailSubscribeForm({
       )}
 
       {status === "error" && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-400">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           Something went wrong. Please try again.
         </p>
       )}
