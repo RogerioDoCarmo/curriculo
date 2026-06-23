@@ -1,0 +1,28 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as BanksStories from "./BanksSection.stories";
+
+<Meta of={BanksStories} />
+
+# Banking Sector Impact
+
+An auto-scrolling marquee of the client banks whose mobile apps benefited from
+the work described in the current professional role.
+
+<Canvas of={BanksStories.Default} />
+
+## Behavior
+
+- **Seamless loop** — the track holds two identical copies and animates a `-50%`
+  shift (the `marquee` keyframe defined in `app/globals.css` under `@theme`).
+- **Pause on hover** via `group-hover:[animation-play-state:paused]`.
+- **Reduced motion** — under `prefers-reduced-motion` the animation is disabled
+  and the logos fall back to a static, wrapped, centered grid.
+- Each logo **links out** to the institution (new tab, `rel="noopener noreferrer"`)
+  with a localized "opens in a new tab" tooltip and the country flag in the corner.
+
+## Accessibility
+
+- The duplicate loop copies are `aria-hidden` and removed from the tab order, so
+  assistive tech and keyboard users encounter each bank only once.
+- The country flag is decorative (empty `alt`); the country is already part of
+  each link's accessible name.

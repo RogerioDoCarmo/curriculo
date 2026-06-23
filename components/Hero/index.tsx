@@ -222,6 +222,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 width={678}
                 height={235}
                 className="w-50 h-auto"
+                priority
               />
             </a>
             <div className="text-left">
@@ -273,7 +274,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                   cta_action: "view_projects",
                 })
               }
-              className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+              className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-600 dark:hover:bg-primary-700"
             >
               {ctaText}
             </a>
