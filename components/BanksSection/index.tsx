@@ -226,9 +226,19 @@ export default function BanksSection() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let raf = 0;
+    // scrollLeft snaps to an integer on assignment, so a sub-pixel step like 0.5
+    // would round back to 0 every frame on a 1x display and never move. Carry the
+    // fractional remainder and only apply whole-pixel increments.
+    let carry = 0;
+    const SPEED = 0.5; // px per frame (~30px/s at 60fps)
     const tick = () => {
       if (!hoverPaused.current && !manualPaused.current && el.scrollWidth > el.clientWidth) {
-        el.scrollLeft += 0.5;
+        carry += SPEED;
+        const whole = Math.floor(carry);
+        if (whole >= 1) {
+          el.scrollLeft += whole;
+          carry -= whole;
+        }
         const half = el.scrollWidth / 2;
         if (el.scrollLeft >= half) el.scrollLeft -= half;
       }
