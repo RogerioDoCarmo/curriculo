@@ -23,9 +23,12 @@ images:
       the data captured by the Android app. Information about the satellites
       tracked during the app's run can also be analyzed in the Python (pandas)
       scripts created during the project.
-  - src: /images/inct-project/placeholder.svg
-    title: Image (placeholder)
-    description: Replace with a real project image.
+  - src: /images/inct-project/inct-app-post-analyzer.png
+    title: Interactive graphical analysis
+    description: >-
+      An application was built to create interactive charts from the processed
+      data. The Pandas framework and the Python programming language were used
+      to implement it.
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS
