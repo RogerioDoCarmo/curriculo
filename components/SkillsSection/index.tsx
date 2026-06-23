@@ -71,7 +71,9 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
             {t("skills.noMatch")}
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          // items-start keeps each card at its natural height, so expanding one
+          // card never stretches its row-siblings (which made collapsed cards look "open").
+          <div className="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredSkills.map((cat) => {
               const isExpanded = expandedIds.has(cat.category);
               const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;

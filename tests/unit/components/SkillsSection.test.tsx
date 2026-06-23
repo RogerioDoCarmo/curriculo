@@ -151,6 +151,12 @@ describe("SkillsSection Component", () => {
     expect(grid).toBeInTheDocument();
   });
 
+  it("aligns grid items to the start so expanding one card doesn't stretch its row-siblings", () => {
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+    const grid = document.querySelector(".grid");
+    expect(grid).toHaveClass("items-start");
+  });
+
   it("renders category headings as h3", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
     const headings = screen.getAllByRole("heading", { level: 3 });
