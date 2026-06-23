@@ -163,7 +163,8 @@ function BankLogo({
   );
 }
 
-/** A circular chevron control for stepping the carousel one tile at a time. */
+/** A circular chevron control for stepping the carousel one tile at a time.
+ * Sits beside the track (not over the logos) as a flex item. */
 function NavButton({
   direction,
   label,
@@ -179,9 +180,7 @@ function NavButton({
       onClick={onClick}
       aria-label={label}
       title={label}
-      className={`absolute top-1/2 z-10 -translate-y-1/2 ${
-        direction === "prev" ? "left-1 sm:left-2" : "right-1 sm:right-2"
-      } flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-md backdrop-blur transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-200 dark:hover:bg-gray-800 motion-reduce:hidden`}
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 motion-reduce:hidden"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -212,8 +211,11 @@ export default function BanksSection() {
   const t = useTranslations("banks");
   const newTabLabel = t("opensInNewTab");
   const trackRef = useRef<HTMLDivElement>(null);
-  // A ref (not state) so the rAF loop reads the latest value without resubscribing.
-  const paused = useRef(false);
+  // Refs (not state) so the rAF loop reads the latest values without resubscribing.
+  const hoverPaused = useRef(false);
+  // Set for 10s after a manual step, so a button press lets the visitor look.
+  const manualPaused = useRef(false);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Auto-advance the track unless the visitor prefers reduced motion. The two
   // identical copies make the wrap-around at the halfway point seamless: once a
@@ -225,7 +227,7 @@ export default function BanksSection() {
 
     let raf = 0;
     const tick = () => {
-      if (!paused.current && el.scrollWidth > el.clientWidth) {
+      if (!hoverPaused.current && !manualPaused.current && el.scrollWidth > el.clientWidth) {
         el.scrollLeft += 0.5;
         const half = el.scrollWidth / 2;
         if (el.scrollLeft >= half) el.scrollLeft -= half;
@@ -236,7 +238,16 @@ export default function BanksSection() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Step one logo tile (including the inter-tile gap) in the given direction.
+  // Clear any pending resume timer when the component unmounts.
+  useEffect(
+    () => () => {
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    },
+    []
+  );
+
+  // Step one logo tile (including the inter-tile gap) in the given direction, and
+  // pause the auto-scroll for 10s so the manual move isn't immediately undone.
   const step = useCallback((direction: 1 | -1) => {
     const el = trackRef.current;
     if (!el) return;
@@ -245,13 +256,19 @@ export default function BanksSection() {
     const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
     const tile = item ? item.getBoundingClientRect().width + gap : 256;
     el.scrollBy({ left: tile * direction, behavior: "smooth" });
+
+    manualPaused.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      manualPaused.current = false;
+    }, 10000);
   }, []);
 
   const pause = () => {
-    paused.current = true;
+    hoverPaused.current = true;
   };
   const resume = () => {
-    paused.current = false;
+    hoverPaused.current = false;
   };
 
   return (
@@ -264,10 +281,11 @@ export default function BanksSection() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("subtitle")}</p>
         </div>
 
-        {/* Pause the auto-scroll while the visitor hovers or keyboard-focuses the
-            carousel, so manual stepping and reading aren't fighting the motion. */}
+        {/* Controls sit beside the track (outside the scrolling area). Hovering or
+            keyboard-focusing anywhere here pauses the auto-scroll so reading and
+            manual stepping aren't fighting the motion. */}
         <div
-          className="group relative"
+          className="group flex items-center gap-3 sm:gap-4"
           onMouseEnter={pause}
           onMouseLeave={resume}
           onFocusCapture={pause}
@@ -275,7 +293,7 @@ export default function BanksSection() {
         >
           <NavButton direction="prev" label={t("previous")} onClick={() => step(-1)} />
 
-          <div ref={trackRef} className="overflow-hidden" data-testid="banks-carousel">
+          <div ref={trackRef} className="flex-1 overflow-hidden" data-testid="banks-carousel">
             <ul className="flex w-max items-center gap-8 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 sm:gap-12">
               {BANKS.map((bank) => (
                 <li key={bank.name}>
