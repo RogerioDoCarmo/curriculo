@@ -173,7 +173,7 @@ export default function ExperienceSection({
                         {exp.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${getTechColorClasses(tech)}`}
                           >
                             {tech}
                           </span>
