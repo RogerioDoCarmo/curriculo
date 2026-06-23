@@ -132,7 +132,7 @@ export default function CookieConsent() {
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {t("essential")}
                   </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {t("essentialDescription")}
                   </p>
                 </div>
@@ -153,7 +153,7 @@ export default function CookieConsent() {
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {t("analytics")}
                   </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {t("analyticsDescription")}
                   </p>
                 </div>
@@ -188,7 +188,7 @@ export default function CookieConsent() {
             </div>
 
             {/* Privacy policy link */}
-            <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
               {t("learnMore")}{" "}
               <a
                 href="/privacy"
@@ -252,11 +252,11 @@ export default function CookieConsent() {
                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {t("essential")}
                     </h3>
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
                       {t("required")}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     {t("essentialDescription")}
                   </p>
                 </div>
@@ -277,10 +277,10 @@ export default function CookieConsent() {
                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {t("analytics")}
                   </h3>
-                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     {t("analyticsDescription")}
                   </p>
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-500">
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                     {t("analyticsCookies")}
                   </p>
                 </div>
@@ -303,7 +303,7 @@ export default function CookieConsent() {
                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {t("functional")}
                   </h3>
-                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     {t("functionalDescription")}
                   </p>
                 </div>

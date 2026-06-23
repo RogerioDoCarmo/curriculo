@@ -102,7 +102,7 @@ export default function LanguageSelector({
       {/* Dropdown chevron */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground text-xs"
+        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
       >
         ▾
       </span>

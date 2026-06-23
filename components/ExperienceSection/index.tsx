@@ -6,7 +6,7 @@ import type { CareerPath, Experience, TimelineItem } from "@/types/index";
 import Timeline from "@/components/Timeline";
 import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
-import { ExperienceLogo, calcDuration, formatDate } from "./shared";
+import { ExperienceLogo, calcDuration, formatDate, experienceIntro } from "./shared";
 
 interface ExperienceSectionProps {
   readonly careerPath: CareerPath;
@@ -132,7 +132,7 @@ export default function ExperienceSection({
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {exp.organization} · {exp.location}
                         </p>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                           {formatDate(exp.startDate, locale)} –{" "}
                           {exp.endDate ? formatDate(exp.endDate, locale) : t("present")}{" "}
                           {t("duration.separator")}{" "}
@@ -143,9 +143,10 @@ export default function ExperienceSection({
                     {toggleButton}
                   </div>
 
-                  {/* Collapsed cards preview only the first three lines; expanding reveals the full text. */}
+                  {/* Intro only (the achievements list renders separately below);
+                      collapsed cards preview the first three lines. */}
                   <div className={`mt-3 ${isExpanded ? "" : "line-clamp-3"}`}>
-                    <MarkdownText text={exp.description} />
+                    <MarkdownText text={experienceIntro(exp.description)} />
                   </div>
 
                   {isExpanded && exp.achievements.length > 0 && (
@@ -173,7 +174,7 @@ export default function ExperienceSection({
                         {exp.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${getTechColorClasses(tech)}`}
                           >
                             {tech}
                           </span>

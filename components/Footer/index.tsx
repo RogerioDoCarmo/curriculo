@@ -396,7 +396,7 @@ export default function Footer({ locale }: FooterProps) {
 
         {/* Divider */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <p className="text-sm text-center text-gray-500 dark:text-gray-500">
+          <p className="text-sm text-center text-gray-500 dark:text-gray-400">
             © {year} Rogério do Carmo. {t("footer.copyright")}
           </p>
         </div>
