@@ -24,9 +24,12 @@ images:
       información sobre los satélites rastreados durante la ejecución de la
       aplicación también puede analizarse en los scripts de Python (pandas)
       creados durante el proyecto.
-  - src: /images/inct-project/placeholder.svg
-    title: Imagen (placeholder)
-    description: Reemplazar por una imagen real del proyecto.
+  - src: /images/inct-project/inct-app-post-analyzer.png
+    title: Análisis gráfico interactivo
+    description: >-
+      Se creó una aplicación que genera gráficos interactivos sobre los datos
+      procesados. En esta aplicación se utilizaron el framework Pandas y el
+      lenguaje de programación Python para la implementación.
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS
