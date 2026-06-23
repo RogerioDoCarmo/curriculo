@@ -41,6 +41,9 @@
   --animate-fade-in: fadeIn 0.5s ease-in-out;
   --animate-slide-up: slideUp 0.3s ease-out;
   --animate-slide-in-left: slideInLeft 0.3s ease-out;
+  /* Seamless logo marquee: the track holds two identical copies, so a -50%
+     shift lands exactly on the start of the second copy and loops. */
+  --animate-marquee: marquee 30s linear infinite;
 }
 
 /* Safelist - ensure these classes are always generated */
@@ -101,6 +104,15 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 

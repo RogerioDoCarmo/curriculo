@@ -44,6 +44,15 @@ function validateEmail(value: string): string {
   return "";
 }
 
+/**
+ * Literal-valued ARIA props for an invalid field. Spreading these keeps
+ * `aria-invalid` a literal "true" (omitted when valid) so static a11y linters
+ * don't flag a dynamic `aria-invalid={expr}` expression (mirrors ContactForm).
+ */
+function fieldErrorAria(errorId: string, hasError: boolean) {
+  return hasError ? ({ "aria-invalid": "true", "aria-describedby": errorId } as const) : {};
+}
+
 interface EmailSubscribeFormProps {
   /** Placeholder text for the email input */
   readonly placeholder?: string;
@@ -153,8 +162,7 @@ export default function EmailSubscribeForm({
           onFocus={() => trackEmailSubscribeFocus()}
           placeholder={placeholder}
           aria-required="true"
-          aria-invalid={!!emailError}
-          aria-describedby={emailError ? "subscribe-email-error" : undefined}
+          {...fieldErrorAria("subscribe-email-error", !!emailError)}
           disabled={status === "submitting"}
           className="flex-1 min-w-0 rounded-md border border-border bg-transparent px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
         />
@@ -163,7 +171,7 @@ export default function EmailSubscribeForm({
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="shrink-0 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+            className="shrink-0 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-600 dark:hover:bg-primary-700"
           >
             {status === "submitting" ? "..." : buttonLabel}
           </button>
@@ -198,7 +206,7 @@ export default function EmailSubscribeForm({
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="self-end rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+            className="self-end rounded-md bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-600 dark:hover:bg-primary-700"
           >
             {status === "submitting" ? "Sending..." : buttonLabel}
           </button>

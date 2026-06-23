@@ -44,34 +44,18 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
             role="group"
             aria-label={t("projects.filterByTech")}
           >
-            <button
-              type="button"
+            <FilterButton
+              label={t("projects.all")}
+              active={!techFilter}
               onClick={() => setTechFilter("")}
-              className={[
-                "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
-                !techFilter
-                  ? "bg-primary-600 text-white dark:bg-primary-500"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
-              ].join(" ")}
-              aria-pressed={!techFilter}
-            >
-              {t("projects.all")}
-            </button>
+            />
             {allTechs.map((tech) => (
-              <button
+              <FilterButton
                 key={tech}
-                type="button"
+                label={tech}
+                active={techFilter === tech}
                 onClick={() => setTechFilter(tech === techFilter ? "" : tech)}
-                className={[
-                  "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
-                  techFilter === tech
-                    ? "bg-primary-600 text-white dark:bg-primary-500"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
-                ].join(" ")}
-                aria-pressed={techFilter === tech}
-              >
-                {tech}
-              </button>
+              />
             ))}
           </div>
         )}
@@ -106,6 +90,41 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   );
 }
 
+// ─── FilterButton ────────────────────────────────────────────────────────────
+
+/**
+ * A technology filter chip. Rendered in two branches so `aria-pressed` is a
+ * literal "true"/"false" string — static a11y linters can't evaluate JSX
+ * expressions and would flag `aria-pressed={expr}` as an invalid value.
+ */
+function FilterButton({
+  label,
+  active,
+  onClick,
+}: {
+  readonly label: string;
+  readonly active: boolean;
+  readonly onClick: () => void;
+}) {
+  const className = [
+    "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
+    active
+      ? "bg-primary-600 text-white dark:bg-primary-600"
+      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
+  ].join(" ");
+  const props = { type: "button" as const, onClick, className };
+
+  return active ? (
+    <button {...props} aria-pressed="true">
+      {label}
+    </button>
+  ) : (
+    <button {...props} aria-pressed="false">
+      {label}
+    </button>
+  );
+}
+
 // ─── ProjectCard ─────────────────────────────────────────────────────────────
 
 interface ProjectCardProps {
@@ -127,7 +146,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         project.featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : "",
       ].join(" ")}
     >
-      <article
+      <div
         onClick={onClick}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -151,7 +170,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-16 w-16 text-gray-400 dark:text-gray-600"
@@ -206,7 +225,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
             </span>
           )}
         </div>
-      </article>
+      </div>
     </Card>
   );
 }
@@ -242,7 +261,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           ))}
         </div>
       ) : (
-        <div className="flex h-40 w-full items-center justify-center rounded-md bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
+        <div className="flex h-40 w-full items-center justify-center rounded-md bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
           <div className="text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -296,7 +315,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600"
+              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
               aria-label={`${t("projects.liveDemo")} ${project.title}`}
             >
               {t("projects.liveDemo")}

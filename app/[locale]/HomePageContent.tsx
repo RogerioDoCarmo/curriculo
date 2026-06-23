@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
 import Hero from "@/components/Hero";
+import FeaturedExperience from "@/components/FeaturedExperience";
+import BanksSection from "@/components/BanksSection";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
@@ -58,8 +60,18 @@ export default function HomePageContent({
         />
       </div>
 
+      {/* Featured experience (pinned above the career-path selector) */}
+      <div className="bg-white dark:bg-gray-900">
+        <FeaturedExperience experiences={experiences} locale={locale} now={now} />
+      </div>
+
+      {/* Banking Sector Impact — auto-scrolling carousel of client bank logos */}
+      <div className="bg-gray-50 dark:bg-gray-800/50">
+        <BanksSection />
+      </div>
+
       {/* Career Path Selector (Professional/Academic) */}
-      <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
             {tCareerPath("sectionTitle")}
@@ -69,7 +81,7 @@ export default function HomePageContent({
       </div>
 
       {/* Experience Section with Timeline */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <ExperienceSection
           careerPath={careerPath}
           experiences={experiences}
@@ -79,17 +91,17 @@ export default function HomePageContent({
       </div>
 
       {/* Projects Portfolio Section */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
+      <div className="bg-white dark:bg-gray-900">
         <ProjectsSection projects={projects} locale={locale} />
       </div>
 
       {/* Skills Section */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <SkillsSection skills={skills} locale={locale} />
       </div>
 
       {/* AI Stack Section — tools used to build the site */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
+      <div className="bg-white dark:bg-gray-900">
         <AiStackSection />
       </div>
 
@@ -97,7 +109,7 @@ export default function HomePageContent({
       <section
         id="contact"
         aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
       >
         <div className="mx-auto max-w-3xl">
           <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">

@@ -85,12 +85,16 @@
     "professionalExperience": "Experiência Profissional",
     "academicBackground": "Formação Acadêmica",
     "noExperiences": "Nenhuma experiência para exibir.",
-    "present": "Presente",
+    "present": "Atual",
     "expandDetails": "Expandir detalhes",
     "collapseDetails": "Recolher detalhes",
     "achievements": "Conquistas",
     "details": "Detalhes",
     "technologies": "Tecnologias",
+    "visitWebsite": "Visitar site (abre em uma nova aba)",
+    "images": "Projeto INCT",
+    "viewImage": "Ver imagem em tela cheia",
+    "featured": "Destaque",
     "timeline": "Linha do Tempo",
     "duration": {
       "lessThanMonth": "< 1 mês",
@@ -124,10 +128,15 @@
   "theme": {
     "toggle": "Alternar tema",
     "light": "Modo claro",
-    "dark": "Modo escuro"
+    "dark": "Modo escuro",
+    "switchLabel": "Alternar entre os modos claro e escuro",
+    "switchTooltip": "Alternar entre os modos claro e escuro (atualmente {mode})",
+    "modeDark": "modo escuro",
+    "modeLight": "modo claro"
   },
   "language": {
-    "selector": "Selecionar idioma"
+    "selector": "Selecionar idioma",
+    "selectTooltip": "Selecionar idioma (atualmente {language})"
   },
   "footer": {
     "copyright": "Todos os direitos reservados.",
@@ -929,6 +938,11 @@
       "title": "Reconhecimento",
       "description": "Ao usar este site, você reconhece que leu, entendeu e concorda em estar vinculado a estes Termos de Uso."
     }
+  },
+  "banks": {
+    "title": "Impacto no Setor Bancário",
+    "subtitle": "Instituições financeiras cujos aplicativos móveis ajudei a construir e manter.",
+    "opensInNewTab": "Abre o site oficial em uma nova aba"
   },
   "aiStack": {
     "title": "Construído com IA",
