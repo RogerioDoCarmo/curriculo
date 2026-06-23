@@ -5,13 +5,16 @@
  *
  * Highlights the financial institutions whose mobile apps benefited from the
  * work described in the current professional experience. Brand logos scroll in
- * a seamless, auto-advancing marquee that pauses on hover. The track holds two
- * identical copies of the logo list so the CSS `marquee` animation (a -50%
- * shift) loops without a visible seam.
+ * a seamless, auto-advancing carousel that pauses on hover/focus. Motion is
+ * driven by JavaScript (`scrollLeft`) rather than a CSS transform so the Prev/
+ * Next buttons can step the same track at the visitor's own pace. The track
+ * holds two identical copies of the logo list; once a full copy has scrolled
+ * past, its width is subtracted to wrap around without a visible seam.
  *
  * Accessibility: the second (duplicate) copy is `aria-hidden` and non-focusable
- * so screen readers and keyboard users only encounter each bank once. Users who
- * prefer reduced motion get a static, wrapped grid instead of the animation.
+ * so screen readers and keyboard users only encounter each bank once. The
+ * Prev/Next buttons carry localized labels. Users who prefer reduced motion get
+ * a static, wrapped grid (no auto-scroll, controls hidden).
  *
  * Logos live in public/images/logos/banks/ and are served unoptimized per the
  * static-export config. They currently ship as simple text placeholders — swap
@@ -20,6 +23,7 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useRef } from "react";
 import { trackExternalLinkClick } from "@/lib/analytics";
 
 interface Bank {
@@ -159,9 +163,96 @@ function BankLogo({
   );
 }
 
+/** A circular chevron control for stepping the carousel one tile at a time. */
+function NavButton({
+  direction,
+  label,
+  onClick,
+}: {
+  readonly direction: "prev" | "next";
+  readonly label: string;
+  readonly onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      title={label}
+      className={`absolute top-1/2 z-10 -translate-y-1/2 ${
+        direction === "prev" ? "left-1 sm:left-2" : "right-1 sm:right-2"
+      } flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-md backdrop-blur transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-700 dark:bg-gray-800/90 dark:text-gray-200 dark:hover:bg-gray-800 motion-reduce:hidden`}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        {direction === "prev" ? (
+          <path
+            fillRule="evenodd"
+            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+            clipRule="evenodd"
+          />
+        ) : (
+          <path
+            fillRule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clipRule="evenodd"
+          />
+        )}
+      </svg>
+    </button>
+  );
+}
+
 export default function BanksSection() {
   const t = useTranslations("banks");
   const newTabLabel = t("opensInNewTab");
+  const trackRef = useRef<HTMLDivElement>(null);
+  // A ref (not state) so the rAF loop reads the latest value without resubscribing.
+  const paused = useRef(false);
+
+  // Auto-advance the track unless the visitor prefers reduced motion. The two
+  // identical copies make the wrap-around at the halfway point seamless: once a
+  // full copy has scrolled past, subtract its width to loop invisibly.
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let raf = 0;
+    const tick = () => {
+      if (!paused.current && el.scrollWidth > el.clientWidth) {
+        el.scrollLeft += 0.5;
+        const half = el.scrollWidth / 2;
+        if (el.scrollLeft >= half) el.scrollLeft -= half;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // Step one logo tile (including the inter-tile gap) in the given direction.
+  const step = useCallback((direction: 1 | -1) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const item = el.querySelector("li");
+    const list = item?.parentElement;
+    const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
+    const tile = item ? item.getBoundingClientRect().width + gap : 256;
+    el.scrollBy({ left: tile * direction, behavior: "smooth" });
+  }, []);
+
+  const pause = () => {
+    paused.current = true;
+  };
+  const resume = () => {
+    paused.current = false;
+  };
 
   return (
     <section id="banks" aria-labelledby="banks-title" className="py-16 px-4 sm:px-6 lg:px-8">
@@ -173,20 +264,34 @@ export default function BanksSection() {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("subtitle")}</p>
         </div>
 
-        <div className="group relative overflow-hidden" data-testid="banks-carousel">
-          <ul className="flex w-max items-center gap-8 animate-marquee group-hover:[animation-play-state:paused] motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 motion-reduce:animate-none sm:gap-12">
-            {BANKS.map((bank) => (
-              <li key={bank.name}>
-                <BankLogo bank={bank} duplicate={false} newTabLabel={newTabLabel} />
-              </li>
-            ))}
-            {/* Duplicate copy: drives the seamless loop, hidden from a11y and reduced-motion. */}
-            {BANKS.map((bank) => (
-              <li key={`dup-${bank.name}`} aria-hidden="true" className="motion-reduce:hidden">
-                <BankLogo bank={bank} duplicate newTabLabel={newTabLabel} />
-              </li>
-            ))}
-          </ul>
+        {/* Pause the auto-scroll while the visitor hovers or keyboard-focuses the
+            carousel, so manual stepping and reading aren't fighting the motion. */}
+        <div
+          className="group relative"
+          onMouseEnter={pause}
+          onMouseLeave={resume}
+          onFocusCapture={pause}
+          onBlurCapture={resume}
+        >
+          <NavButton direction="prev" label={t("previous")} onClick={() => step(-1)} />
+
+          <div ref={trackRef} className="overflow-hidden" data-testid="banks-carousel">
+            <ul className="flex w-max items-center gap-8 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 sm:gap-12">
+              {BANKS.map((bank) => (
+                <li key={bank.name}>
+                  <BankLogo bank={bank} duplicate={false} newTabLabel={newTabLabel} />
+                </li>
+              ))}
+              {/* Duplicate copy: drives the seamless loop, hidden from a11y and reduced-motion. */}
+              {BANKS.map((bank) => (
+                <li key={`dup-${bank.name}`} aria-hidden="true" className="motion-reduce:hidden">
+                  <BankLogo bank={bank} duplicate newTabLabel={newTabLabel} />
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <NavButton direction="next" label={t("next")} onClick={() => step(1)} />
         </div>
       </div>
     </section>
