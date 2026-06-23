@@ -6,7 +6,7 @@ import type { CareerPath, Experience, TimelineItem } from "@/types/index";
 import Timeline from "@/components/Timeline";
 import MarkdownText from "@/components/MarkdownText";
 import { getTechColorClasses } from "@/lib/tag-colors";
-import { ExperienceLogo, calcDuration, formatDate } from "./shared";
+import { ExperienceLogo, calcDuration, formatDate, experienceIntro } from "./shared";
 
 interface ExperienceSectionProps {
   readonly careerPath: CareerPath;
@@ -143,9 +143,10 @@ export default function ExperienceSection({
                     {toggleButton}
                   </div>
 
-                  {/* Collapsed cards preview only the first three lines; expanding reveals the full text. */}
+                  {/* Intro only (the achievements list renders separately below);
+                      collapsed cards preview the first three lines. */}
                   <div className={`mt-3 ${isExpanded ? "" : "line-clamp-3"}`}>
-                    <MarkdownText text={exp.description} />
+                    <MarkdownText text={experienceIntro(exp.description)} />
                   </div>
 
                   {isExpanded && exp.achievements.length > 0 && (
