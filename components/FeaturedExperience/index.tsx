@@ -18,22 +18,18 @@ import MarkdownText from "@/components/MarkdownText";
 import Modal from "@/components/Modal";
 import { getTechColorClasses } from "@/lib/tag-colors";
 import { trackExternalLinkClick } from "@/lib/analytics";
-import { ExperienceLogo, calcDuration, formatDate } from "@/components/ExperienceSection/shared";
+import {
+  ExperienceLogo,
+  calcDuration,
+  formatDate,
+  experienceIntro,
+} from "@/components/ExperienceSection/shared";
 
 interface FeaturedExperienceProps {
   readonly experiences: Experience[];
   readonly locale: string;
   /** Unix timestamp (ms) from the server — keeps duration strings stable across SSR/hydration. */
   readonly now?: number;
-}
-
-/** The intro is every description line that is not a bullet — the bullets live in the collapsible section. */
-function introParagraph(description: string): string {
-  return description
-    .split("\n")
-    .filter((line) => !line.trim().startsWith("-"))
-    .join("\n")
-    .trim();
 }
 
 function FeaturedCard({
@@ -53,7 +49,7 @@ function FeaturedCard({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const images = exp.images ?? [];
   const hasTech = (exp.technologies?.length ?? 0) > 0;
-  const intro = introParagraph(exp.description);
+  const intro = experienceIntro(exp.description);
   const detailsId = `featured-details-${exp.id}`;
 
   // Render the toggle in two branches so aria-expanded is a literal "true"/"false"
