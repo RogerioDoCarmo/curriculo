@@ -235,7 +235,7 @@ export default function Header({ locale }: HeaderProps) {
               </svg>
               {/* Icon + label form one centered block, vertically aligned as a
                   unit against the GitHub/Linktree controls. */}
-              <span className="text-[10px] font-medium leading-none hidden sm:block">
+              <span className="text-sm font-medium leading-none hidden sm:block">
                 {t("nav.resume")}
               </span>
             </a>

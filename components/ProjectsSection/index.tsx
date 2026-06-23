@@ -196,12 +196,12 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           </h3>
           <div className="flex shrink-0 gap-1">
             {project.featured && (
-              <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+              <span className="rounded-full bg-primary-100 px-2 py-0.5 text-sm font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300">
                 {t("projects.featured")}
               </span>
             )}
             {isMockData && (
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300">
                 {t("projects.mockData")}
               </span>
             )}
@@ -214,13 +214,13 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.technologies.slice(0, 4).map((tech, index) => (
             <span
               key={`${project.id}-tech-${index}`}
-              className={`rounded px-2 py-0.5 text-xs font-medium ${getTechColorClasses(tech)}`}
+              className={`rounded px-2 py-0.5 text-sm font-medium ${getTechColorClasses(tech)}`}
             >
               {tech}
             </span>
           ))}
           {project.technologies.length > 4 && (
-            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500 dark:bg-gray-700 dark:text-gray-500">
+            <span className="rounded bg-gray-100 px-2 py-0.5 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-500">
               +{project.technologies.length - 4} {t("projects.more")}
             </span>
           )}
@@ -299,7 +299,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           {project.technologies.map((tech, index) => (
             <span
               key={`${project.id}-tech-${index}`}
-              className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+              className={`rounded-full px-3 py-1 text-sm font-medium ${getTechColorClasses(tech)}`}
             >
               {tech}
             </span>

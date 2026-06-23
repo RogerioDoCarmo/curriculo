@@ -80,7 +80,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     ? "Licenciado en Ciencias de la Computación"
                     : "Bachelor in Computer Science"}
               </a>
-              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2018</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">UNESP - 2018</p>
               <a
                 href="https://www.fct.unesp.br/#!/pos-graduacao/--ciencias-cartograficas/"
                 target="_blank"
@@ -99,7 +99,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     ? "Máster en Ciencias Cartográficas"
                     : "Master in Cartographic Sciences"}
               </a>
-              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2023</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">UNESP - 2023</p>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     context: "hero_dissertation_link",
                   })
                 }
-                className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 hover:underline flex items-center gap-1"
+                className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 hover:underline flex items-center gap-1"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +174,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                       ? "Descargar disertación de maestría en PDF"
                       : "Download master's dissertation in PDF"
                 }
-                className="inline-flex items-center gap-2 text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+                className="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +254,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     context: "hero_topaz_date",
                   })
                 }
-                className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
+                className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
               >
                 {currentLocale === "pt-BR"
                   ? "2023 - 2026 (3 anos)"
