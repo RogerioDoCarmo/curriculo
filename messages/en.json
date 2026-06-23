@@ -942,7 +942,9 @@
   "banks": {
     "title": "Banking Sector Impact",
     "subtitle": "Financial institutions whose mobile apps I helped build and maintain.",
-    "opensInNewTab": "Opens the official site in a new tab"
+    "opensInNewTab": "Opens the official site in a new tab",
+    "previous": "Previous banks",
+    "next": "Next banks"
   },
   "aiStack": {
     "title": "Built with AI",

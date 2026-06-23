@@ -942,7 +942,9 @@
   "banks": {
     "title": "Impacto en el Sector Bancario",
     "subtitle": "Instituciones financieras cuyas aplicaciones móviles ayudé a construir y mantener.",
-    "opensInNewTab": "Abre el sitio oficial en una pestaña nueva"
+    "opensInNewTab": "Abre el sitio oficial en una pestaña nueva",
+    "previous": "Bancos anteriores",
+    "next": "Bancos siguientes"
   },
   "aiStack": {
     "title": "Construido con IA",
