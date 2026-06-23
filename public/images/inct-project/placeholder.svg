@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-label="Placeholder">
+  <rect width="1200" height="800" fill="#dbeafe"/>
+  <g fill="none" stroke="#1d4ed8" stroke-width="6">
+    <rect x="370" y="270" width="460" height="320" rx="16"/>
+    <circle cx="470" cy="370" r="40"/>
+    <path d="M390 560 L520 430 L610 520 L720 410 L810 560" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="600" y="680" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="44" font-weight="700" fill="#1d4ed8">Imagem (placeholder)</text>
+</svg>

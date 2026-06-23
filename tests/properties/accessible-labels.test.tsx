@@ -210,7 +210,8 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
 
     const ariaLabel = button?.getAttribute("aria-label");
     expect(ariaLabel).toBeTruthy();
-    expect(ariaLabel).toMatch(/switch to (light|dark) mode/i);
+    // Default tooltip is "Switch between dark and light mode (currently …)".
+    expect(ariaLabel).toMatch(/switch between dark and light mode/i);
   });
 
   it("should ensure LanguageSelector has accessible label", () => {

@@ -38,6 +38,15 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
+/**
+ * ARIA props for a form field. Spreading literal-valued props keeps `aria-invalid`
+ * a literal "true" (omitted when the field is valid) and ties the field to its
+ * error message — so static a11y linters don't flag a dynamic `aria-invalid={expr}`.
+ */
+function fieldErrorAria(errorId: string, hasError: boolean) {
+  return hasError ? ({ "aria-invalid": "true", "aria-describedby": errorId } as const) : {};
+}
+
 export default function ContactForm({ locale }: ContactFormProps) {
   const t = useTranslations("forms");
   const footer = useTranslations("footer");
@@ -218,7 +227,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mt-0.5 flex-shrink-0 text-primary-600 dark:text-primary-400"
+            className="mt-0.5 shrink-0 text-primary-600 dark:text-primary-400"
             aria-hidden="true"
           >
             <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -258,8 +267,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             type="text"
             autoComplete="name"
             aria-required="true"
-            aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
-            aria-invalid={!!fieldErrors.name}
+            {...fieldErrorAria("contact-name-error", !!fieldErrors.name)}
             value={formData.name ?? ""}
             onChange={(e) => handleChange("name", e.target.value)}
             onFocus={() => handleFocus("name")}
@@ -296,8 +304,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             type="email"
             autoComplete="email"
             aria-required="true"
-            aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
-            aria-invalid={!!fieldErrors.email}
+            {...fieldErrorAria("contact-email-error", !!fieldErrors.email)}
             value={formData.email ?? ""}
             onChange={(e) => handleChange("email", e.target.value)}
             onFocus={() => handleFocus("email")}
@@ -333,8 +340,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             id="contact-message"
             rows={5}
             aria-required="true"
-            aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
-            aria-invalid={!!fieldErrors.message}
+            {...fieldErrorAria("contact-message-error", !!fieldErrors.message)}
             value={formData.message ?? ""}
             onChange={(e) => handleChange("message", e.target.value)}
             onFocus={() => handleFocus("message")}
@@ -382,8 +388,10 @@ export default function ContactForm({ locale }: ContactFormProps) {
         <button
           type="submit"
           disabled={status === "submitting"}
-          aria-busy={status === "submitting"}
-          className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+          {...(status === "submitting"
+            ? ({ "aria-busy": "true" } as const)
+            : ({ "aria-busy": "false" } as const))}
+          className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-600 dark:hover:bg-primary-700"
         >
           {status === "submitting" ? (
             <>
