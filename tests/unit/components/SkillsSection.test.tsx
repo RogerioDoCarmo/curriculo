@@ -68,9 +68,8 @@ describe("SkillsSection Component", () => {
     const user = userEvent.setup();
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
 
-    // Skills are collapsed by default — expand the first card (Mobile Development)
-    const expandButtons = screen.getAllByRole("button", { name: /expand skills/i });
-    await user.click(expandButtons[0]);
+    // Skills are collapsed by default — clicking the title toggles the card.
+    await user.click(screen.getByRole("button", { name: "Mobile Development" }));
     expect(screen.getByText("React Native")).toBeInTheDocument();
     expect(screen.getByText("TypeScript")).toBeInTheDocument();
 
@@ -84,13 +83,11 @@ describe("SkillsSection Component", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
 
     // Expand the first card (Mobile Development)
-    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    await user.click(screen.getByRole("button", { name: "Mobile Development" }));
     expect(screen.getAllByText("expert").length).toBeGreaterThan(0);
 
-    // Expand Backend card to see "intermediate"
-    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]); // this collapses Mobile
-    const buttons = screen.getAllByRole("button", { name: /expand skills/i });
-    await user.click(buttons[buttons.length - 1]); // expand Backend (last card)
+    // Cards toggle independently — open Backend to reveal "intermediate".
+    await user.click(screen.getByRole("button", { name: "Backend" }));
     expect(screen.getByText("intermediate")).toBeInTheDocument();
   });
 
@@ -166,7 +163,7 @@ describe("SkillsSection Component", () => {
     expect(firstCard).not.toHaveClass("self-stretch");
 
     // Expanding the card opts it back into stretch so it matches its row.
-    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    await user.click(screen.getByRole("button", { name: "Mobile Development" }));
     expect(firstCard).toHaveClass("self-stretch");
   });
 
@@ -186,10 +183,28 @@ describe("SkillsSection Component", () => {
     expect(screen.getByRole("heading", { level: 2 })).toBeInTheDocument();
   });
 
-  it("shows a toggle button per category card", () => {
+  it("shows a toggle button per category card, labelled by its category", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
-    const buttons = screen.getAllByRole("button", { name: /expand skills/i });
+    const buttons = screen.getAllByRole("button");
     expect(buttons).toHaveLength(sampleSkills.length);
+    expect(screen.getByRole("button", { name: "Mobile Development" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Frontend Web" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Backend" })).toBeInTheDocument();
+  });
+
+  it("toggles the card by clicking the title, reflecting state in aria-expanded", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+    const title = screen.getByRole("button", { name: "Mobile Development" });
+    expect(title).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(title);
+    expect(title).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("React Native")).toBeInTheDocument();
+
+    await user.click(title);
+    expect(title).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText("React Native")).not.toBeInTheDocument();
   });
 
   it("keeps previously opened cards open when expanding another (independent toggles)", async () => {
@@ -197,17 +212,16 @@ describe("SkillsSection Component", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
 
     // Open the first card (Mobile Development)
-    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    await user.click(screen.getByRole("button", { name: "Mobile Development" }));
     expect(screen.getByText("React Native")).toBeInTheDocument();
 
     // Open the second card (Frontend Web) — the first stays open
-    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    await user.click(screen.getByRole("button", { name: "Frontend Web" }));
     expect(screen.getByText("React Native")).toBeInTheDocument();
     expect(screen.getByText("Next.js")).toBeInTheDocument();
 
     // Collapsing the second card leaves the first one open
-    const collapseButtons = screen.getAllByRole("button", { name: /collapse skills/i });
-    await user.click(collapseButtons[collapseButtons.length - 1]);
+    await user.click(screen.getByRole("button", { name: "Frontend Web" }));
     expect(screen.getByText("React Native")).toBeInTheDocument();
     expect(screen.queryByText("Next.js")).not.toBeInTheDocument();
   });
