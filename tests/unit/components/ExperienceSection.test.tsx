@@ -140,6 +140,25 @@ describe("ExperienceSection Component", () => {
     expect(screen.getAllByText("Led mobile development.").length).toBeGreaterThan(0);
   });
 
+  it("renders only the intro in the card body, never the achievements heading/bullets", () => {
+    const withHeading = [
+      {
+        ...professionalExperiences[0],
+        description: "Intro line only.\n\n### Conquistas\n- Hidden bullet from description",
+        achievements: ["Hidden bullet from description"],
+      },
+    ];
+    renderWithIntl(
+      <ExperienceSection careerPath="professional" experiences={withHeading} locale="en" />
+    );
+    // The stray "Conquistas…" heading must not leak into the (clamped) preview.
+    // (Intro shows in both the card body and the timeline summary.)
+    expect(screen.getAllByText("Intro line only.").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Conquistas")).not.toBeInTheDocument();
+    // The bullet only ever comes from the separate achievements list, not the description.
+    expect(screen.queryByText("Hidden bullet from description")).not.toBeInTheDocument();
+  });
+
   it("shows duration for each experience", () => {
     renderWithIntl(
       <ExperienceSection careerPath="professional" experiences={allExperiences} locale="en" />

@@ -19,14 +19,15 @@ images:
     title: Aplicação para pós-processamento
     description: >-
       Foi criada uma aplicação desktop (Java Swing) para o pós-processamento dos
-      dados. É possível reprocessar os dados e criar análises gráficas e
-      estatísticas a partir dos dados capturados pelo aplicativo Android.
-      Informações sobre os satélites rastreados durante a execução do aplicativo
-      também podem ser analisadas nos scripts Python (pandas) criados durante o
-      projeto.
-  - src: /images/inct-project/placeholder.svg
-    title: Imagem (placeholder)
-    description: Substituir por uma imagem real do projeto.
+      dados. É possível reprocessar os dados e escolher outras configurações
+      como, por exemplo, mudar os satélites incluídos no processamento ou trocar
+      os modelos matemáticos para Ionosfera e Troposfera.
+  - src: /images/inct-project/inct-app-post-analyzer.png
+    title: Análise gráfica interativa
+    description: >-
+      Foi criada uma aplicação que cria gráficos interativos sobre os dados
+      processados. Nessa aplicação o framework Pandas e a linguagem de
+      programação Python, foram utilizadas para a implementação.
 organizationUrl: https://inct-gnss-navaer.fct.unesp.br/
 technologies:
   - GNSS/GPS

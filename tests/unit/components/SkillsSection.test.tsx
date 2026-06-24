@@ -151,6 +151,25 @@ describe("SkillsSection Component", () => {
     expect(grid).toBeInTheDocument();
   });
 
+  it("aligns grid items to the start so expanding one card doesn't stretch its row-siblings", () => {
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+    const grid = document.querySelector(".grid");
+    expect(grid).toHaveClass("items-start");
+  });
+
+  it("stretches an expanded card (self-stretch) so open cards share a row's height", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+
+    // Collapsed cards keep their natural height (no self-stretch).
+    const firstCard = screen.getByText("Mobile Development").closest("div.rounded-lg");
+    expect(firstCard).not.toHaveClass("self-stretch");
+
+    // Expanding the card opts it back into stretch so it matches its row.
+    await user.click(screen.getAllByRole("button", { name: /expand skills/i })[0]);
+    expect(firstCard).toHaveClass("self-stretch");
+  });
+
   it("renders category headings as h3", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
     const headings = screen.getAllByRole("heading", { level: 3 });
