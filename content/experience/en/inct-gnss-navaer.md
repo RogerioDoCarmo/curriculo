@@ -19,10 +19,9 @@ images:
     title: Post-processing application
     description: >-
       A desktop application (Java Swing) was built to post-process the data. It
-      can reprocess the data and produce graphical and statistical analyses from
-      the data captured by the Android app. Information about the satellites
-      tracked during the app's run can also be analyzed in the Python (pandas)
-      scripts created during the project.
+      can reprocess the data and choose other settings — for example, changing
+      which satellites are included in the processing, or switching the
+      mathematical models for the Ionosphere and Troposphere.
   - src: /images/inct-project/inct-app-post-analyzer.png
     title: Interactive graphical analysis
     description: >-
