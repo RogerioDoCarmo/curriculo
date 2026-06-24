@@ -28,6 +28,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -48,6 +55,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -68,6 +82,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -99,6 +120,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -181,6 +209,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -208,6 +243,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -234,6 +276,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -278,6 +327,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -546,6 +602,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -575,6 +638,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -607,6 +677,13 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
