@@ -71,9 +71,16 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
             {t("skills.noMatch")}
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          // items-start keeps a *collapsed* card at its natural height, so expanding
+          // one card never stretches its collapsed row-siblings. Expanded cards opt
+          // back into stretch (self-stretch) so that two or more open cards in the
+          // same row share a uniform height (the tallest in that row).
+          <div className="grid items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredSkills.map((cat) => {
               const isExpanded = expandedIds.has(cat.category);
+              // A card shows its skill list when expanded or while a filter is active;
+              // those (taller) cards stretch to match their row, collapsed ones don't.
+              const showList = isExpanded || query.length > 0;
               const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;
 
               // Render the toggle in two branches so aria-expanded is a literal
@@ -106,7 +113,9 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
               return (
                 <div
                   key={cat.category}
-                  className="rounded-lg border border-transparent bg-white p-6 shadow-md transition-shadow duration-200 hover:border-primary-100 hover:shadow-lg dark:bg-gray-800 dark:shadow-gray-900/50 dark:hover:border-primary-900 dark:hover:shadow-gray-900/70"
+                  className={`rounded-lg border border-transparent bg-white p-6 shadow-md transition-shadow duration-200 hover:border-primary-100 hover:shadow-lg dark:bg-gray-800 dark:shadow-gray-900/50 dark:hover:border-primary-900 dark:hover:shadow-gray-900/70 ${
+                    showList ? "self-stretch" : ""
+                  }`}
                 >
                   {/* Header row: category title + chevron */}
                   <div className="flex items-center justify-between gap-4">
@@ -140,7 +149,7 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                           />
                           {skill.level && (
                             <span
-                              className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${levelColors[skill.level]}`}
+                              className={`rounded-full px-2 py-0.5 text-sm font-medium capitalize ${levelColors[skill.level]}`}
                               aria-label={`${t("skills.levelLabel")}: ${skill.level}`}
                             >
                               {skill.level}

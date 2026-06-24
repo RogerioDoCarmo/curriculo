@@ -1,183 +1,23 @@
 /**
- * Tag color utilities for technology badges
- * Groups technologies by theme and assigns colors
+ * Tag color utilities for technology badges.
+ *
+ * Every technology badge shares one uniform palette so the tech tags read as a
+ * single, consistent group rather than a multi-color cloud. The palette matches
+ * the former "mobile"/React Native blue: a light-blue surface with deep-blue
+ * text in light mode, inverting to a deep-blue surface with light-blue text in
+ * dark mode.
  */
 
-export type TagTheme = "mobile" | "web" | "backend" | "devops" | "tools";
-
-export interface TagColorConfig {
-  bg: string;
-  text: string;
-  darkBg: string;
-  darkText: string;
-}
+/** Uniform color classes shared by every technology badge. */
+export const TECH_TAG_CLASSES = "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
 
 /**
- * Color configurations for each theme
+ * Get the color classes for a technology tag.
+ *
+ * Returns the same uniform blue palette for every technology. The `tech`
+ * argument is accepted for call-site compatibility (and to leave room for
+ * per-technology styling in the future) but does not affect the result.
  */
-export const TAG_COLORS: Record<TagTheme, TagColorConfig> = {
-  mobile: {
-    bg: "bg-blue-100",
-    text: "text-blue-700",
-    darkBg: "dark:bg-blue-900",
-    darkText: "dark:text-blue-300",
-  },
-  web: {
-    bg: "bg-purple-100",
-    text: "text-purple-700",
-    darkBg: "dark:bg-purple-900",
-    darkText: "dark:text-purple-300",
-  },
-  backend: {
-    bg: "bg-green-100",
-    text: "text-green-700",
-    darkBg: "dark:bg-green-900",
-    darkText: "dark:text-green-300",
-  },
-  devops: {
-    bg: "bg-orange-100",
-    text: "text-orange-700",
-    darkBg: "dark:bg-orange-900",
-    darkText: "dark:text-orange-300",
-  },
-  tools: {
-    bg: "bg-pink-100",
-    text: "text-pink-700",
-    darkBg: "dark:bg-pink-900",
-    darkText: "dark:text-pink-300",
-  },
-};
-
-/**
- * Technology to theme mapping
- * Add technologies here to assign them specific colors
- */
-const TECH_THEME_MAP: Record<string, TagTheme> = {
-  // Mobile
-  "React Native": "mobile",
-  Flutter: "mobile",
-  Swift: "mobile",
-  Kotlin: "mobile",
-  iOS: "mobile",
-  Android: "mobile",
-  "Android SDK": "mobile",
-  "Android Architecture Components": "mobile",
-  Expo: "mobile",
-  "React Navigation": "mobile",
-  Dart: "mobile",
-  MobX: "mobile",
-  "Material Design": "mobile",
-  SQLite: "mobile",
-
-  // Web
-  React: "web",
-  "Next.js": "web",
-  "Next.js 16": "web",
-  "Next.js 15": "web",
-  "Next.js 14": "web",
-  Vue: "web",
-  Angular: "web",
-  TypeScript: "web",
-  JavaScript: "web",
-  HTML: "web",
-  CSS: "web",
-  "Tailwind CSS": "web",
-  SCSS: "web",
-  Redux: "web",
-  Zustand: "web",
-  Webpack: "web",
-  Vite: "web",
-  "next-intl": "web",
-
-  // Backend
-  Java: "backend",
-  "Spring Boot": "backend",
-  Express: "backend",
-  NestJS: "backend",
-  Python: "backend",
-  Django: "backend",
-  FastAPI: "backend",
-  PostgreSQL: "backend",
-  MongoDB: "backend",
-  MySQL: "backend",
-  Redis: "backend",
-  GraphQL: "backend",
-  "REST API": "backend",
-  Prisma: "backend",
-  Firebase: "backend",
-  "Firebase Analytics": "backend",
-  "Firebase Crashlytics": "backend",
-  "Data Processing": "backend",
-  "Scientific Computing": "backend",
-
-  // DevOps
-  Docker: "devops",
-  Kubernetes: "devops",
-  AWS: "devops",
-  Azure: "devops",
-  GCP: "devops",
-  "CI/CD": "devops",
-  "GitHub Actions": "devops",
-  Jenkins: "devops",
-  Terraform: "devops",
-  Nginx: "devops",
-  Linux: "devops",
-  Vercel: "devops",
-  "GNSS/GPS": "devops",
-  "NMEA Protocol": "devops",
-
-  // Tools
-  Git: "tools",
-  GitHub: "tools",
-  GitLab: "tools",
-  Jira: "tools",
-  Figma: "tools",
-  Storybook: "tools",
-  Jest: "tools",
-  Playwright: "tools",
-  Cypress: "tools",
-  ESLint: "tools",
-  Prettier: "tools",
-  "VS Code": "tools",
-  Postman: "tools",
-  SonarQube: "tools",
-  Sentry: "tools",
-};
-
-/**
- * Get the theme for a technology
- * Falls back to 'tools' if not found
- */
-export function getTechTheme(tech: string): TagTheme {
-  return TECH_THEME_MAP[tech] || "tools";
-}
-
-/**
- * Get color classes for a technology tag.
- * Delegates to {@link getThemeColorClasses} after resolving the theme so the
- * class strings live in a single place (no duplicated switch).
- */
-export function getTechColorClasses(tech: string): string {
-  return getThemeColorClasses(getTechTheme(tech));
-}
-
-/**
- * Get color classes for a specific theme.
- * Complete class strings are returned literally so Tailwind JIT can detect them.
- */
-export function getThemeColorClasses(theme: TagTheme): string {
-  switch (theme) {
-    case "mobile":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300";
-    case "web":
-      return "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300";
-    case "backend":
-      return "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
-    case "devops":
-      return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
-    case "tools":
-      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
-    default:
-      return "bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300";
-  }
+export function getTechColorClasses(_tech: string): string {
+  return TECH_TAG_CLASSES;
 }

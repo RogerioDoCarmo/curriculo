@@ -243,7 +243,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             >
               {email}
             </a>
-            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">{t("orUseForm")}</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t("orUseForm")}</p>
           </div>
         </div>
       </div>
@@ -284,7 +284,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-name-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.name}
             </p>
@@ -321,7 +321,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-email-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.email}
             </p>
@@ -357,7 +357,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-message-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.message}
             </p>
