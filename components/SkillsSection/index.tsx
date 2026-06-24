@@ -83,22 +83,17 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
               const showList = isExpanded || query.length > 0;
               const detailsId = `skills-details-${cat.category.toLowerCase().replace(/\s+/g, "-")}`;
 
-              // Render the toggle in two branches so aria-expanded is a literal
-              // "true"/"false" string. Static a11y linters cannot evaluate JSX
-              // expressions and flag aria-expanded={expr} as an invalid value;
-              // shared props/icon keep the markup DRY (matches ExperienceSection).
-              const toggleProps = {
-                type: "button" as const,
-                "aria-controls": detailsId,
-                onClick: () => toggleExpanded(cat.category),
-                className:
-                  "shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200",
-                "aria-label": isExpanded ? t("skills.collapseDetails") : t("skills.expandDetails"),
-              };
-              const toggleIcon = (
+              // Spread keeps aria-expanded a literal "true"/"false" (static a11y
+              // linters reject aria-expanded={expr}).
+              const expandedProps = isExpanded
+                ? ({ "aria-expanded": "true" } as const)
+                : ({ "aria-expanded": "false" } as const);
+              const chevron = (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                  className={`h-5 w-5 shrink-0 text-gray-500 transition-transform duration-200 dark:text-gray-400 ${
+                    isExpanded ? "rotate-180" : ""
+                  }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   aria-hidden="true"
@@ -117,21 +112,20 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                     showList ? "self-stretch" : ""
                   }`}
                 >
-                  {/* Header row: category title + chevron */}
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                      {cat.category}
-                    </h3>
-                    {isExpanded ? (
-                      <button {...toggleProps} aria-expanded="true">
-                        {toggleIcon}
-                      </button>
-                    ) : (
-                      <button {...toggleProps} aria-expanded="false">
-                        {toggleIcon}
-                      </button>
-                    )}
-                  </div>
+                  {/* The whole header is the toggle: clicking the title text or the
+                      chevron expands/collapses the card (WAI-ARIA accordion). */}
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    <button
+                      type="button"
+                      {...expandedProps}
+                      aria-controls={detailsId}
+                      onClick={() => toggleExpanded(cat.category)}
+                      className="flex w-full items-center justify-between gap-4 rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300"
+                    >
+                      <span>{cat.category}</span>
+                      {chevron}
+                    </button>
+                  </h3>
 
                   {/* Collapsible skills list — also visible when a filter is active */}
                   {(isExpanded || query) && (
