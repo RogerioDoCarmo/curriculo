@@ -265,6 +265,16 @@ export default function BanksSection() {
     const list = item?.parentElement;
     const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
     const tile = item ? item.getBoundingClientRect().width + gap : 256;
+
+    // Wrap-around so the buttons loop infinitely like the auto-scroll instead of
+    // clamping at the track ends. The track holds two identical copies, so a ±half
+    // jump is invisible. Normalise into the first copy, then ensure a full tile of
+    // room exists in the press direction by hopping into the other copy first.
+    const half = el.scrollWidth / 2;
+    if (half > 0) {
+      if (el.scrollLeft >= half) el.scrollLeft -= half;
+      if (direction === -1 && el.scrollLeft < tile) el.scrollLeft += half;
+    }
     el.scrollBy({ left: tile * direction, behavior: "smooth" });
 
     manualPaused.current = true;
