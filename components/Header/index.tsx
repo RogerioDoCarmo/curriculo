@@ -197,7 +197,8 @@ export default function Header({ locale }: HeaderProps) {
 
           {/* Controls: Resume + GitHub + Linktree + LanguageSelector + ThemeToggle */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* Resume Download Link — spaced apart from the GitHub icon */}
+            {/* Resume Download Link — grouped tightly with the other controls so
+                it sits clear of the mobile menu button (avoids accidental taps). */}
             <a
               href={resumeUrl}
               target="_blank"
@@ -211,7 +212,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                mr-3 inline-flex flex-col items-center justify-center gap-1 rounded-md px-2 py-1
+                inline-flex shrink-0 flex-col items-center justify-center gap-1 rounded-md px-2 py-1
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
