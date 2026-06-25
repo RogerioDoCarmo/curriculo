@@ -188,9 +188,11 @@ describe("BanksSection", () => {
   });
 
   it("auto-advances and wraps the track at the half-way point", () => {
-    let tick: FrameRequestCallback | null = null;
+    // Hold the captured frame callback on an object so TS keeps the union type
+    // (a plain `let` would be narrowed to its initial `null` at the call site).
+    const frame: { cb: FrameRequestCallback | null } = { cb: null };
     const raf = jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
-      tick = cb;
+      frame.cb = cb;
       return 1;
     });
     const caf = jest.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
@@ -209,7 +211,7 @@ describe("BanksSection", () => {
       });
 
       // Drive several animation frames; the track advances and wraps past 450.
-      for (let i = 0; i < 6; i++) tick?.(0);
+      for (let i = 0; i < 6; i++) frame.cb?.(0);
       expect(left).toBeLessThan(449);
     } finally {
       raf.mockRestore();
