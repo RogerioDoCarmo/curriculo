@@ -3,7 +3,7 @@
  * Tests the client-side wrapper that renders all homepage sections
  */
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import HomePageContent from "@/app/[locale]/HomePageContent";
 import type { Experience, Project, SkillCategory } from "@/types/index";
@@ -43,7 +43,17 @@ jest.mock("@/components/Hero", () => ({
 
 jest.mock("@/components/CareerPathSelector", () => ({
   __esModule: true,
-  default: () => <div data-testid="career-path-selector">Career Path Selector</div>,
+  default: ({ selected, onSelect }: any) => (
+    <div data-testid="career-path-selector" data-selected={selected}>
+      Career Path Selector
+      <button type="button" onClick={() => onSelect("academic")}>
+        Select Academic
+      </button>
+      <button type="button" onClick={() => onSelect("professional")}>
+        Select Professional
+      </button>
+    </div>
+  ),
 }));
 
 jest.mock("@/components/ExperienceSection", () => ({
@@ -237,6 +247,22 @@ describe("HomePageContent Component", () => {
       expect(experienceSection).toHaveAttribute("data-career-path", "professional");
       expect(experienceSection).toHaveAttribute("data-locale", "en");
       expect(experienceSection).toHaveAttribute("data-experiences-count", "1");
+    });
+
+    it("links the career panel to the active tab and updates on selection", () => {
+      renderWithIntl(<HomePageContent {...defaultProps} />);
+
+      // The panel referenced by the tabs' aria-controls must exist and point back
+      // at the active tab (the accessibility fix); it flips when the path changes.
+      const panel = screen.getByRole("tabpanel");
+      expect(panel).toHaveAttribute("id", "career-panel");
+      expect(panel).toHaveAttribute("aria-labelledby", "tab-professional");
+
+      fireEvent.click(screen.getByText("Select Academic"));
+      expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "tab-academic");
+
+      fireEvent.click(screen.getByText("Select Professional"));
+      expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "tab-professional");
     });
 
     it("passes correct props to SkillsSection", () => {
