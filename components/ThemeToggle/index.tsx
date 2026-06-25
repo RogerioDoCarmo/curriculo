@@ -72,7 +72,7 @@ export default function ThemeToggle({
         aria-label={label}
         title={label}
         className={`
-          inline-flex items-center justify-center
+          inline-flex shrink-0 items-center justify-center
           w-9 h-9 rounded-md
           border border-border
           bg-transparent
@@ -99,7 +99,7 @@ export default function ThemeToggle({
       aria-label={activeLabel}
       title={activeLabel}
       className={`
-        inline-flex items-center justify-center
+        inline-flex shrink-0 items-center justify-center
         w-9 h-9 rounded-md
         border border-border
         bg-transparent
