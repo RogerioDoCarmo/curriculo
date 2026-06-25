@@ -253,4 +253,27 @@ describe("ProjectsSection Component", () => {
       expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
     });
   });
+
+  it("renders the swipe carousel instead of the grid on mobile", async () => {
+    const original = window.matchMedia;
+    window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    try {
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      // The infinite carousel renders each card in three copies; the grid renders one.
+      await waitFor(() => {
+        expect(screen.getAllByText("E-Commerce App").length).toBeGreaterThan(1);
+      });
+    } finally {
+      window.matchMedia = original;
+    }
+  });
 });

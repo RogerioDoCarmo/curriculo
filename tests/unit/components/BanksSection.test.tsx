@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import BanksSection from "@/components/BanksSection";
@@ -136,5 +136,84 @@ describe("BanksSection", () => {
     Object.defineProperty(track, "scrollBy", { value: scrollBy, configurable: true });
     await user.click(screen.getByRole("button", { name: "Next banks" }));
     expect(scrollBy).toHaveBeenCalled();
+  });
+
+  it("normalizes the scroll position when a control steps past the half-way point", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<BanksSection />);
+    const track = screen.getByTestId("banks-carousel");
+    let left = 500; // into the duplicate copy
+    Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+    Object.defineProperty(track, "scrollLeft", {
+      configurable: true,
+      get: () => left,
+      set: (v) => {
+        left = v;
+      },
+    });
+    Object.defineProperty(track, "scrollBy", {
+      configurable: true,
+      value: ({ left: dx }: { left: number }) => {
+        left += dx;
+      },
+    });
+    await user.click(screen.getByRole("button", { name: "Next banks" }));
+    expect(left).toBeLessThan(450); // mapped back into the first copy before stepping
+  });
+
+  it("wraps a manual swipe back into the first copy once it settles", () => {
+    jest.useFakeTimers();
+    try {
+      renderWithIntl(<BanksSection />);
+      const track = screen.getByTestId("banks-carousel");
+      let left = 500; // past the half-width (450) — i.e. into the duplicate copy
+      Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+      Object.defineProperty(track, "scrollLeft", {
+        configurable: true,
+        get: () => left,
+        set: (v) => {
+          left = v;
+        },
+      });
+
+      // A touch marks the interaction manual (pauses auto-scroll so the wrap runs).
+      fireEvent.touchStart(track.parentElement as HTMLElement);
+      fireEvent.scroll(track);
+      jest.advanceTimersByTime(150);
+
+      expect(left).toBe(50); // 500 - half(450)
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it("auto-advances and wraps the track at the half-way point", () => {
+    let tick: FrameRequestCallback | null = null;
+    const raf = jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      tick = cb;
+      return 1;
+    });
+    const caf = jest.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
+    try {
+      renderWithIntl(<BanksSection />);
+      const track = screen.getByTestId("banks-carousel");
+      let left = 449; // one frame short of the half-width (450)
+      Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+      Object.defineProperty(track, "clientWidth", { configurable: true, get: () => 100 });
+      Object.defineProperty(track, "scrollLeft", {
+        configurable: true,
+        get: () => left,
+        set: (v) => {
+          left = v;
+        },
+      });
+
+      // Drive several animation frames; the track advances and wraps past 450.
+      for (let i = 0; i < 6; i++) tick?.(0);
+      expect(left).toBeLessThan(449);
+    } finally {
+      raf.mockRestore();
+      caf.mockRestore();
+    }
   });
 });

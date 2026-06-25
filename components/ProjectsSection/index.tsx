@@ -7,6 +7,8 @@ import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import MarkdownText from "@/components/MarkdownText";
+import SwipeCarousel from "@/components/SwipeCarousel";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ProjectsSectionProps {
@@ -18,6 +20,8 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   const t = useTranslations();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [techFilter, setTechFilter] = useState<string>("");
+  // Below the `sm` breakpoint, swap the grid for a one-card-per-swipe carousel.
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Collect all unique technologies
   const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort();
@@ -65,7 +69,18 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
           <p className="text-gray-500 dark:text-gray-400" role="status">
             {t("projects.noMatch")}
           </p>
+        ) : isMobile ? (
+          /* Mobile: one card per swipe, looping infinitely. */
+          <SwipeCarousel
+            ariaLabel={t("sections.projects")}
+            itemClassName="w-[85%]"
+            items={filtered.map((project, index) => ({
+              key: `${project.id}-${index}`,
+              node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
+            }))}
+          />
         ) : (
+          /* Desktop: grid. */
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((project, index) => (
               <ProjectCard

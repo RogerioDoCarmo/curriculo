@@ -10,7 +10,7 @@
  * section that can be shown or hidden.
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Experience } from "@/types/index";
@@ -47,7 +47,13 @@ function FeaturedCard({
   const [showAchievements, setShowAchievements] = useState(true);
   // Index of the image shown in the fullscreen lightbox, or null when closed.
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Horizontal-swipe start position for navigating the lightbox on touch.
+  const swipeStartX = useRef<number | null>(null);
   const images = exp.images ?? [];
+
+  // Move the lightbox by one image, wrapping around both ends (infinite).
+  const moveLightbox = (delta: 1 | -1) =>
+    setLightboxIndex((i) => (i === null ? i : (i + delta + images.length) % images.length));
   const hasTech = (exp.technologies?.length ?? 0) > 0;
   const intro = experienceIntro(exp.description);
   const detailsId = `featured-details-${exp.id}`;
@@ -224,7 +230,20 @@ function FeaturedCard({
         >
           {lightboxIndex !== null && (
             <div className="space-y-3">
-              <div className="relative mx-auto h-[60vh] w-full">
+              {/* Swipe left/right to move through the gallery (wraps infinitely). */}
+              <div
+                className="relative mx-auto h-[60vh] w-full touch-pan-y select-none"
+                onTouchStart={(e) => {
+                  swipeStartX.current = e.touches[0].clientX;
+                }}
+                onTouchEnd={(e) => {
+                  if (swipeStartX.current === null || images.length < 2) return;
+                  const dx = e.changedTouches[0].clientX - swipeStartX.current;
+                  swipeStartX.current = null;
+                  if (dx <= -40) moveLightbox(1);
+                  else if (dx >= 40) moveLightbox(-1);
+                }}
+              >
                 <Image
                   src={images[lightboxIndex].src}
                   alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
