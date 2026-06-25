@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import FeaturedExperience from "@/components/FeaturedExperience";
@@ -162,6 +162,32 @@ describe("FeaturedExperience", () => {
     expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Raw GNSS data collection" })).toBeInTheDocument();
     expect(screen.getByText("Captures raw GNSS data in real time.")).toBeInTheDocument();
+  });
+
+  it("navigates the lightbox by horizontal swipe, wrapping at the ends", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<FeaturedExperience experiences={[featured]} locale="en" />);
+
+    await user.click(screen.getAllByRole("button", { name: /view image in full screen/i })[0]);
+    await screen.findByRole("dialog");
+    const surface = screen.getByAltText("Raw GNSS data collection").parentElement as HTMLElement;
+
+    // Swipe left → next image.
+    fireEvent.touchStart(surface, { touches: [{ clientX: 200 }] });
+    fireEvent.touchEnd(surface, { changedTouches: [{ clientX: 100 }] });
+    expect(screen.getByAltText("RINEX file generation")).toBeInTheDocument();
+
+    // Swipe right past the start → wraps back to the last image.
+    const surface2 = screen.getByAltText("RINEX file generation").parentElement as HTMLElement;
+    fireEvent.touchStart(surface2, { touches: [{ clientX: 100 }] });
+    fireEvent.touchEnd(surface2, { changedTouches: [{ clientX: 220 }] });
+    expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
+
+    // A short drag under the threshold does not change the image.
+    const surface3 = screen.getByAltText("Raw GNSS data collection").parentElement as HTMLElement;
+    fireEvent.touchStart(surface3, { touches: [{ clientX: 100 }] });
+    fireEvent.touchEnd(surface3, { changedTouches: [{ clientX: 110 }] });
+    expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
   });
 
   it("renders no thumbnails when the experience has no images", () => {

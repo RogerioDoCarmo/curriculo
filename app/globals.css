@@ -78,6 +78,14 @@
   color: #be123c;
 }
 
+/* Hide the scrollbar on swipe carousels while keeping the element scrollable. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;

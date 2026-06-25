@@ -256,33 +256,63 @@ export default function BanksSection() {
     []
   );
 
-  // Step one logo tile (including the inter-tile gap) in the given direction, and
-  // pause the auto-scroll for 10s so the manual move isn't immediately undone.
-  const step = useCallback((direction: 1 | -1) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const item = el.querySelector("li");
-    const list = item?.parentElement;
-    const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
-    const tile = item ? item.getBoundingClientRect().width + gap : 256;
-
-    // Wrap-around so the buttons loop infinitely like the auto-scroll instead of
-    // clamping at the track ends. The track holds two identical copies, so a ±half
-    // jump is invisible. Normalise into the first copy, then ensure a full tile of
-    // room exists in the press direction by hopping into the other copy first.
-    const half = el.scrollWidth / 2;
-    if (half > 0) {
-      if (el.scrollLeft >= half) el.scrollLeft -= half;
-      if (direction === -1 && el.scrollLeft < tile) el.scrollLeft += half;
-    }
-    el.scrollBy({ left: tile * direction, behavior: "smooth" });
-
+  // Pause the auto-scroll for 10s after a deliberate interaction (button or
+  // swipe) so the visitor's manual position isn't immediately scrolled away.
+  const pauseAuto = useCallback(() => {
     manualPaused.current = true;
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
       manualPaused.current = false;
     }, 10000);
   }, []);
+
+  // Wrap a user-driven scroll position back into the first copy once it settles,
+  // so swiping loops seamlessly like the auto-scroll (which is paused during a
+  // manual interaction and so can't do the wrap itself).
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    let idle: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (idle) clearTimeout(idle);
+      idle = setTimeout(() => {
+        if (!manualPaused.current) return; // only correct user scrolls, not the rAF loop
+        const half = el.scrollWidth / 2;
+        if (half > 0 && el.scrollLeft >= half) el.scrollLeft -= half;
+      }, 120);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      if (idle) clearTimeout(idle);
+    };
+  }, []);
+
+  // Step one logo tile (including the inter-tile gap) in the given direction, and
+  // pause the auto-scroll for 10s so the manual move isn't immediately undone.
+  const step = useCallback(
+    (direction: 1 | -1) => {
+      const el = trackRef.current;
+      if (!el) return;
+      const item = el.querySelector("li");
+      const list = item?.parentElement;
+      const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
+      const tile = item ? item.getBoundingClientRect().width + gap : 256;
+
+      // Wrap-around so the buttons loop infinitely like the auto-scroll instead of
+      // clamping at the track ends. The track holds two identical copies, so a ±half
+      // jump is invisible. Normalise into the first copy, then ensure a full tile of
+      // room exists in the press direction by hopping into the other copy first.
+      const half = el.scrollWidth / 2;
+      if (half > 0) {
+        if (el.scrollLeft >= half) el.scrollLeft -= half;
+        if (direction === -1 && el.scrollLeft < tile) el.scrollLeft += half;
+      }
+      el.scrollBy({ left: tile * direction, behavior: "smooth" });
+      pauseAuto();
+    },
+    [pauseAuto]
+  );
 
   const pause = () => {
     hoverPaused.current = true;
@@ -310,10 +340,15 @@ export default function BanksSection() {
           onMouseLeave={resume}
           onFocusCapture={pause}
           onBlurCapture={resume}
+          onTouchStart={pauseAuto}
         >
           <NavButton direction="prev" label={t("previous")} onClick={() => step(-1)} />
 
-          <div ref={trackRef} className="flex-1 overflow-hidden" data-testid="banks-carousel">
+          <div
+            ref={trackRef}
+            className="no-scrollbar flex-1 overflow-x-auto overscroll-x-contain"
+            data-testid="banks-carousel"
+          >
             <ul className="flex w-max items-center gap-8 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 sm:gap-12">
               {BANKS.map((bank) => (
                 <li key={bank.name}>
