@@ -174,7 +174,7 @@ function FeaturedCard({
         {/* Technologies (left) and image thumbnails (bottom-right corner, aligned
             with the last tags line). Click a thumbnail to open the lightbox. */}
         {(hasTech || images.length > 0) && (
-          <div className="mt-6 flex items-end justify-between gap-4">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             {hasTech ? (
               <div className="min-w-0 flex-1">
                 <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -196,7 +196,7 @@ function FeaturedCard({
             )}
 
             {images.length > 0 && (
-              <div className="flex shrink-0 gap-2">
+              <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:shrink-0">
                 {images.map((img, i) => (
                   <button
                     key={img.src}

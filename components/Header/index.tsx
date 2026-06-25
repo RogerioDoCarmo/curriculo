@@ -135,7 +135,7 @@ export default function Header({ locale }: HeaderProps) {
             aria-label={sidebarOpen ? "Close menu" : "Open menu"}
             onClick={sidebarOpen ? closeSidebar : openSidebar}
             className="
-              inline-flex items-center justify-center
+              inline-flex shrink-0 items-center justify-center
               w-9 h-9 rounded-md
               border border-border
               bg-transparent text-foreground
@@ -253,7 +253,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -287,7 +287,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
