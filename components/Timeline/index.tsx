@@ -72,6 +72,17 @@ export default function Timeline({
         const hasDetails = details.length > 0;
         const isExpanded = expandedId === item.id;
 
+        // When there are details, the title doubles as a toggle so clicking the
+        // text expands/collapses the entry. Two branches keep aria-expanded a
+        // literal "true"/"false" for static a11y linters.
+        const titleToggleProps = {
+          type: "button" as const,
+          "aria-controls": `timeline-details-${item.id}`,
+          onClick: () => setExpandedId(isExpanded ? null : item.id),
+          className:
+            "rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300",
+        };
+
         return (
           <li key={item.id} className="relative pl-12">
             {/* Circular marker */}
@@ -109,7 +120,19 @@ export default function Timeline({
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                    {item.title}
+                    {hasDetails ? (
+                      isExpanded ? (
+                        <button {...titleToggleProps} aria-expanded="true">
+                          {item.title}
+                        </button>
+                      ) : (
+                        <button {...titleToggleProps} aria-expanded="false">
+                          {item.title}
+                        </button>
+                      )
+                    ) : (
+                      item.title
+                    )}
                   </h3>
                   {item.subtitle && (
                     <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">
