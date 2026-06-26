@@ -19,6 +19,8 @@ const messages: AbstractIntlMessages = {
     all: "All",
     noMatch: "No projects match your filter",
     viewDetails: "View details for",
+    previousProject: "Previous project",
+    nextProject: "Next project",
     screenshot: "screenshot",
     featured: "Featured",
     mockData: "Mock Data",
@@ -252,5 +254,28 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
     });
+  });
+
+  it("renders the swipe carousel instead of the grid on mobile", async () => {
+    const original = window.matchMedia;
+    window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    try {
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      // The infinite carousel renders each card in three copies; the grid renders one.
+      await waitFor(() => {
+        expect(screen.getAllByText("E-Commerce App").length).toBeGreaterThan(1);
+      });
+    } finally {
+      window.matchMedia = original;
+    }
   });
 });

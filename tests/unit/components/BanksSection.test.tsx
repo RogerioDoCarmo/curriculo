@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import BanksSection from "@/components/BanksSection";
@@ -131,10 +131,91 @@ describe("BanksSection", () => {
     const user = userEvent.setup();
     renderWithIntl(<BanksSection />);
     const track = screen.getByTestId("banks-carousel");
-    const scrollBy = jest.fn();
-    // jsdom doesn't implement scrollBy; stub it to assert the control wiring.
-    Object.defineProperty(track, "scrollBy", { value: scrollBy, configurable: true });
+    const scrollTo = jest.fn();
+    // jsdom doesn't implement scrollTo; stub it to assert the control wiring.
+    Object.defineProperty(track, "scrollTo", { value: scrollTo, configurable: true });
     await user.click(screen.getByRole("button", { name: "Next banks" }));
-    expect(scrollBy).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenCalled();
+  });
+
+  it("normalizes the scroll position when a control steps past the half-way point", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<BanksSection />);
+    const track = screen.getByTestId("banks-carousel");
+    let left = 500; // into the duplicate copy
+    Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+    Object.defineProperty(track, "scrollLeft", {
+      configurable: true,
+      get: () => left,
+      set: (v) => {
+        left = v;
+      },
+    });
+    Object.defineProperty(track, "scrollTo", {
+      configurable: true,
+      value: ({ left: x }: { left: number }) => {
+        left = x;
+      },
+    });
+    await user.click(screen.getByRole("button", { name: "Next banks" }));
+    expect(left).toBeLessThan(450); // mapped back into the first copy before stepping
+  });
+
+  it("wraps a manual swipe back into the first copy once it settles", () => {
+    jest.useFakeTimers();
+    try {
+      renderWithIntl(<BanksSection />);
+      const track = screen.getByTestId("banks-carousel");
+      let left = 500; // past the half-width (450) — i.e. into the duplicate copy
+      Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+      Object.defineProperty(track, "scrollLeft", {
+        configurable: true,
+        get: () => left,
+        set: (v) => {
+          left = v;
+        },
+      });
+
+      // A touch marks the interaction manual (pauses auto-scroll so the wrap runs).
+      fireEvent.touchStart(track.parentElement as HTMLElement);
+      fireEvent.scroll(track);
+      jest.advanceTimersByTime(150);
+
+      expect(left).toBe(50); // 500 - half(450)
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it("auto-advances and wraps the track at the half-way point", () => {
+    // Hold the captured frame callback on an object so TS keeps the union type
+    // (a plain `let` would be narrowed to its initial `null` at the call site).
+    const frame: { cb: FrameRequestCallback | null } = { cb: null };
+    const raf = jest.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      frame.cb = cb;
+      return 1;
+    });
+    const caf = jest.spyOn(window, "cancelAnimationFrame").mockImplementation(() => undefined);
+    try {
+      renderWithIntl(<BanksSection />);
+      const track = screen.getByTestId("banks-carousel");
+      let left = 449; // one frame short of the half-width (450)
+      Object.defineProperty(track, "scrollWidth", { configurable: true, get: () => 900 });
+      Object.defineProperty(track, "clientWidth", { configurable: true, get: () => 100 });
+      Object.defineProperty(track, "scrollLeft", {
+        configurable: true,
+        get: () => left,
+        set: (v) => {
+          left = v;
+        },
+      });
+
+      // Drive several animation frames; the track advances and wraps past 450.
+      for (let i = 0; i < 6; i++) frame.cb?.(0);
+      expect(left).toBeLessThan(449);
+    } finally {
+      raf.mockRestore();
+      caf.mockRestore();
+    }
   });
 });

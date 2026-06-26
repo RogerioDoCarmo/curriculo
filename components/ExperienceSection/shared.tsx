@@ -18,7 +18,11 @@ import { trackExternalLinkClick } from "@/lib/analytics";
 export function formatDate(dateStr: string, locale: string): string {
   try {
     const date = new Date(dateStr + (dateStr.length === 7 ? "-01" : ""));
-    return date.toLocaleDateString(locale, { month: "short", year: "numeric" });
+    // timeZone: "UTC" keeps the rendered month/year identical on the server (UTC)
+    // and in the browser. Dates are stored as YYYY-MM-01 (UTC midnight); without a
+    // fixed zone, a negative-offset client (e.g. UTC-3) shifts to the previous month,
+    // causing a React hydration text mismatch (#418).
+    return date.toLocaleDateString(locale, { month: "short", year: "numeric", timeZone: "UTC" });
   } catch {
     return dateStr;
   }
@@ -39,8 +43,12 @@ export function calcDuration(
 ): string {
   const start = new Date(startDate);
   const end = endDate ? new Date(endDate) : new Date(now ?? Date.now());
+  // Use UTC getters: dates are UTC-midnight (YYYY-MM-01), so local getMonth() on a
+  // negative-offset client would report the previous month, drifting the duration
+  // and mismatching the UTC-rendered server output (React hydration #418).
   const months =
-    (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    (end.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    (end.getUTCMonth() - start.getUTCMonth());
 
   if (months < 1) return t("duration.lessThanMonth");
 

@@ -7,6 +7,8 @@ import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import MarkdownText from "@/components/MarkdownText";
+import SwipeCarousel from "@/components/SwipeCarousel";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ProjectsSectionProps {
@@ -18,6 +20,8 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   const t = useTranslations();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [techFilter, setTechFilter] = useState<string>("");
+  // Below the `sm` breakpoint, swap the grid for a one-card-per-swipe carousel.
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Collect all unique technologies
   const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort();
@@ -65,7 +69,21 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
           <p className="text-gray-500 dark:text-gray-400" role="status">
             {t("projects.noMatch")}
           </p>
+        ) : isMobile ? (
+          /* Mobile: one card per swipe, looping infinitely. */
+          <SwipeCarousel
+            ariaLabel={t("sections.projects")}
+            itemClassName="w-[85%]"
+            showControls
+            prevLabel={t("projects.previousProject")}
+            nextLabel={t("projects.nextProject")}
+            items={filtered.map((project, index) => ({
+              key: `${project.id}-${index}`,
+              node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
+            }))}
+          />
         ) : (
+          /* Desktop: grid. */
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((project, index) => (
               <ProjectCard
@@ -142,7 +160,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
     <Card
       className={[
-        "group cursor-pointer transition-all duration-200",
+        "group h-full cursor-pointer transition-all duration-200",
         project.featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : "",
       ].join(" ")}
     >
@@ -158,8 +176,9 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         tabIndex={0}
         aria-label={`${t("projects.viewDetails")} ${project.title}`}
       >
-        {/* Project image */}
-        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 -mx-6 -mt-6 mb-4">
+        {/* Project image — contained (aligned with the card content, not full
+            bleed) and centered, with breathing room around it. */}
+        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 mb-4">
           {firstImage ? (
             <Image
               src={firstImage}
@@ -167,7 +186,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               loading="lazy"
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
