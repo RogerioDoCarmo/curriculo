@@ -14,6 +14,11 @@ interface ModalProps {
   readonly children: ReactNode;
   /** Optional title displayed at the top of the modal */
   readonly title?: string;
+  /** Optional prev/next handlers — when both are set, edge nav buttons appear. */
+  readonly onPrev?: () => void;
+  readonly onNext?: () => void;
+  readonly prevLabel?: string;
+  readonly nextLabel?: string;
 }
 
 /**
@@ -36,7 +41,16 @@ interface ModalProps {
  * </Modal>
  * ```
  */
-export default function Modal({ isOpen, onClose, children, title }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  children,
+  title,
+  onPrev,
+  onNext,
+  prevLabel = "Previous",
+  nextLabel = "Next",
+}: ModalProps) {
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -140,6 +154,52 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto px-6 pb-6">{children}</div>
+
+        {/* Optional edge navigation (wraps infinitely via the handlers). */}
+        {onPrev && onNext && (
+          <>
+            <button
+              type="button"
+              onClick={onPrev}
+              aria-label={prevLabel}
+              className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={onNext}
+              aria-label={nextLabel}
+              className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
