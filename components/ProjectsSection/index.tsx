@@ -173,8 +173,9 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         tabIndex={0}
         aria-label={`${t("projects.viewDetails")} ${project.title}`}
       >
-        {/* Project image */}
-        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 -mx-6 -mt-6 mb-4">
+        {/* Project image — contained (aligned with the card content, not full
+            bleed) and centered, with breathing room around it. */}
+        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 mb-4">
           {firstImage ? (
             <Image
               src={firstImage}
@@ -182,7 +183,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               loading="lazy"
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
