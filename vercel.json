@@ -3,6 +3,15 @@
   "buildCommand": "npm run build",
   "headers": [
     {
+      "source": "/((?!.*\\.).*)",
+      "headers": [
+        {
+          "key": "Accept-Ranges",
+          "value": "none"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
