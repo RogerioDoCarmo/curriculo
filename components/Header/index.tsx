@@ -95,6 +95,14 @@ export default function Header({ locale }: HeaderProps) {
     setSidebarOpen(false);
   }
 
+  // Close the side menu when another control asks for it (e.g. the back-to-top
+  // floating button), so it doesn't stay open over the scrolled-to-top page.
+  useEffect(() => {
+    const close = () => setSidebarOpen(false);
+    window.addEventListener("app:close-sidebar", close);
+    return () => window.removeEventListener("app:close-sidebar", close);
+  }, []);
+
   function handleNavClick(section: string, label: string) {
     // Track navigation
     trackNavLinkClick({ link_text: label, link_url: `#${section}` });

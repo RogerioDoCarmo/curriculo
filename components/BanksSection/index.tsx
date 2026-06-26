@@ -308,7 +308,10 @@ export default function BanksSection() {
         if (el.scrollLeft >= half) el.scrollLeft -= half;
         if (direction === -1 && el.scrollLeft < tile) el.scrollLeft += half;
       }
-      el.scrollBy({ left: tile * direction, behavior: "smooth" });
+      // Align to the tile grid first so a prior off-grid manual scroll doesn't
+      // leave the next logo partly clipped; then move exactly one tile.
+      const aligned = tile > 0 ? Math.round(el.scrollLeft / tile) * tile : el.scrollLeft;
+      el.scrollTo({ left: aligned + tile * direction, behavior: "smooth" });
       pauseAuto();
     },
     [pauseAuto]

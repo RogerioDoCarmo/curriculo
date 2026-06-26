@@ -157,7 +157,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
     <Card
       className={[
-        "group cursor-pointer transition-all duration-200",
+        "group h-full cursor-pointer transition-all duration-200",
         project.featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : "",
       ].join(" ")}
     >

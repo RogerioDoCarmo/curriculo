@@ -131,11 +131,11 @@ describe("BanksSection", () => {
     const user = userEvent.setup();
     renderWithIntl(<BanksSection />);
     const track = screen.getByTestId("banks-carousel");
-    const scrollBy = jest.fn();
-    // jsdom doesn't implement scrollBy; stub it to assert the control wiring.
-    Object.defineProperty(track, "scrollBy", { value: scrollBy, configurable: true });
+    const scrollTo = jest.fn();
+    // jsdom doesn't implement scrollTo; stub it to assert the control wiring.
+    Object.defineProperty(track, "scrollTo", { value: scrollTo, configurable: true });
     await user.click(screen.getByRole("button", { name: "Next banks" }));
-    expect(scrollBy).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenCalled();
   });
 
   it("normalizes the scroll position when a control steps past the half-way point", async () => {
@@ -151,10 +151,10 @@ describe("BanksSection", () => {
         left = v;
       },
     });
-    Object.defineProperty(track, "scrollBy", {
+    Object.defineProperty(track, "scrollTo", {
       configurable: true,
-      value: ({ left: dx }: { left: number }) => {
-        left += dx;
+      value: ({ left: x }: { left: number }) => {
+        left = x;
       },
     });
     await user.click(screen.getByRole("button", { name: "Next banks" }));
