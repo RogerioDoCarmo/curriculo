@@ -253,6 +253,52 @@ function FeaturedCard({
                   sizes="100vw"
                   className="object-contain"
                 />
+
+                {/* Prev/Next controls (wrap infinitely via moveLightbox). */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => moveLightbox(-1)}
+                      aria-label={t("previousImage")}
+                      className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLightbox(1)}
+                      aria-label={t("nextImage")}
+                      className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </>
+                )}
               </div>
               {(images[lightboxIndex].title || images[lightboxIndex].description) && (
                 <div className="mx-auto max-w-2xl text-center">

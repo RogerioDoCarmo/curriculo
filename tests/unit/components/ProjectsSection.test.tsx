@@ -19,6 +19,8 @@ const messages: AbstractIntlMessages = {
     all: "All",
     noMatch: "No projects match your filter",
     viewDetails: "View details for",
+    previousProject: "Previous project",
+    nextProject: "Next project",
     screenshot: "screenshot",
     featured: "Featured",
     mockData: "Mock Data",
