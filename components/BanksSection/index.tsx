@@ -349,7 +349,10 @@ export default function BanksSection() {
 
           <div
             ref={trackRef}
-            className="no-scrollbar flex-1 overflow-x-auto overscroll-x-contain"
+            // Mobile: swipeable (overflow-x-auto). Desktop: no user drag/scroll
+            // (overflow-hidden still allows the auto-scroll + buttons to move it
+            // programmatically); navigation is via the Prev/Next controls.
+            className="no-scrollbar flex-1 overflow-x-auto overscroll-x-contain sm:overflow-hidden"
             data-testid="banks-carousel"
           >
             <ul className="flex w-max items-center gap-8 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-6 sm:gap-12">
