@@ -80,8 +80,14 @@ export default function HomePageContent({
         </div>
       </div>
 
-      {/* Experience Section with Timeline */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
+      {/* Experience Section with Timeline — this is the panel the career-path
+          tabs control, so it carries the id/role referenced by their aria-controls. */}
+      <div
+        id="career-panel"
+        role="tabpanel"
+        aria-labelledby={careerPath === "professional" ? "tab-professional" : "tab-academic"}
+        className="bg-gray-50 dark:bg-gray-800/50"
+      >
         <ExperienceSection
           careerPath={careerPath}
           experiences={experiences}

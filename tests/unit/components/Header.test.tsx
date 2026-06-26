@@ -270,8 +270,10 @@ describe("Header — responsive navigation", () => {
     expect(resume).toHaveAttribute("href", "/resumes/resume-en.pdf");
     expect(resume).toHaveAttribute("target", "_blank");
     expect(resume).toHaveAttribute("rel", "noopener noreferrer");
-    // Spaced apart from the adjacent GitHub icon
-    expect(resume).toHaveClass("mr-3");
+    // Grouped tightly with the other controls (no extra right margin) so it
+    // stays clear of the mobile menu button; shrink-0 keeps its size in the row.
+    expect(resume).not.toHaveClass("mr-3");
+    expect(resume).toHaveClass("shrink-0");
     // Icon + label form one centered block (stacked vertically)
     expect(resume).toHaveClass("flex-col");
     expect(resume).toHaveTextContent(/resume/i);

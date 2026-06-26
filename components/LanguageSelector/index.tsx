@@ -69,7 +69,7 @@ export default function LanguageSelector({
         {/* Accessible label — visible only to screen readers */}
         {label}
       </label>
-      <span aria-hidden="true" className="mr-2 text-base">
+      <span aria-hidden="true" className="hidden text-base sm:mr-2 sm:inline">
         {current.flag}
       </span>
       <select

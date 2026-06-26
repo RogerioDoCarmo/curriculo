@@ -95,6 +95,14 @@ export default function Header({ locale }: HeaderProps) {
     setSidebarOpen(false);
   }
 
+  // Close the side menu when another control asks for it (e.g. the back-to-top
+  // floating button), so it doesn't stay open over the scrolled-to-top page.
+  useEffect(() => {
+    const close = () => setSidebarOpen(false);
+    window.addEventListener("app:close-sidebar", close);
+    return () => window.removeEventListener("app:close-sidebar", close);
+  }, []);
+
   function handleNavClick(section: string, label: string) {
     // Track navigation
     trackNavLinkClick({ link_text: label, link_url: `#${section}` });
@@ -135,7 +143,7 @@ export default function Header({ locale }: HeaderProps) {
             aria-label={sidebarOpen ? "Close menu" : "Open menu"}
             onClick={sidebarOpen ? closeSidebar : openSidebar}
             className="
-              inline-flex items-center justify-center
+              inline-flex shrink-0 items-center justify-center
               w-9 h-9 rounded-md
               border border-border
               bg-transparent text-foreground
@@ -197,7 +205,8 @@ export default function Header({ locale }: HeaderProps) {
 
           {/* Controls: Resume + GitHub + Linktree + LanguageSelector + ThemeToggle */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* Resume Download Link — spaced apart from the GitHub icon */}
+            {/* Resume Download Link — grouped tightly with the other controls so
+                it sits clear of the mobile menu button (avoids accidental taps). */}
             <a
               href={resumeUrl}
               target="_blank"
@@ -211,7 +220,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                mr-3 inline-flex flex-col items-center justify-center gap-1 rounded-md px-2 py-1
+                inline-flex shrink-0 flex-col items-center justify-center gap-1 rounded-md px-2 py-1
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -253,7 +262,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -287,7 +296,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800

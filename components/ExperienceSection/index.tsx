@@ -110,6 +110,25 @@ export default function ExperienceSection({
                 </button>
               );
 
+              // The role title is also a toggle, so clicking the text expands or
+              // collapses the card (same two-branch literal aria-expanded pattern).
+              const titleToggleProps = {
+                type: "button" as const,
+                "aria-controls": `exp-details-${exp.id}`,
+                onClick: () => setExpandedId(isExpanded ? null : exp.id),
+                className:
+                  "rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300",
+              };
+              const titleButton = isExpanded ? (
+                <button {...titleToggleProps} aria-expanded="true">
+                  {exp.role}
+                </button>
+              ) : (
+                <button {...titleToggleProps} aria-expanded="false">
+                  {exp.role}
+                </button>
+              );
+
               return (
                 <article
                   key={exp.id}
@@ -127,7 +146,7 @@ export default function ExperienceSection({
                       )}
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          {exp.role}
+                          {titleButton}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {exp.organization} · {exp.location}

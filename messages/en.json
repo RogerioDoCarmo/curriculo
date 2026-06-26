@@ -94,6 +94,8 @@
     "visitWebsite": "Visit website (opens in new tab)",
     "images": "INCT Project",
     "viewImage": "View image in full screen",
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
     "featured": "Featured",
     "timeline": "Timeline",
     "duration": {
@@ -202,6 +204,8 @@
     "all": "All",
     "noMatch": "No projects match the selected filter.",
     "viewDetails": "View details for",
+    "previousProject": "Previous project",
+    "nextProject": "Next project",
     "screenshot": "screenshot",
     "featured": "Featured",
     "mockData": "Mock Data",
