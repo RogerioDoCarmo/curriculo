@@ -20,6 +20,8 @@ const messages: AbstractIntlMessages = {
     featured: "Featured",
     images: "Images",
     viewImage: "View image in full screen",
+    previousImage: "Previous image",
+    nextImage: "Next image",
     duration: {
       lessThanMonth: "< 1 month",
       year: "yr",

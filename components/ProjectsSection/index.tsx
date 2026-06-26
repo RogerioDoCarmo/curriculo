@@ -74,6 +74,9 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
           <SwipeCarousel
             ariaLabel={t("sections.projects")}
             itemClassName="w-[85%]"
+            showControls
+            prevLabel={t("projects.previousProject")}
+            nextLabel={t("projects.nextProject")}
             items={filtered.map((project, index) => ({
               key: `${project.id}-${index}`,
               node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
