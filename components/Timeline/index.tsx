@@ -112,22 +112,32 @@ export default function Timeline({
         const isExpanded = expandedId === item.id;
         const detailsId = `timeline-details-${item.id}`;
         const toggle = () => setExpandedId(isExpanded ? null : item.id);
+        const markerClass = [
+          "absolute left-0 flex h-8 w-8 items-center justify-center rounded-full ring-4 ring-white dark:ring-gray-900",
+          typeColors[item.type],
+          item.highlighted ? "ring-primary-300 dark:ring-primary-700" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
 
         return (
           <li key={item.id} className="relative pl-12">
-            {/* Circular marker */}
-            <span
-              aria-label={typeLabels[item.type]}
-              className={[
-                "absolute left-0 flex h-8 w-8 items-center justify-center rounded-full ring-4 ring-white dark:ring-gray-900",
-                typeColors[item.type],
-                item.highlighted ? "ring-primary-300 dark:ring-primary-700" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <span className="sr-only">{typeLabels[item.type]}</span>
-            </span>
+            {/* Circular marker — also toggles the card when it has details */}
+            {hasDetails ? (
+              <ToggleButton
+                expanded={isExpanded}
+                controlsId={detailsId}
+                onClick={toggle}
+                ariaLabel={isExpanded ? collapseLabel : expandLabel}
+                className={`${markerClass} cursor-pointer focus:outline-none focus-visible:ring-primary-600`}
+              >
+                <span className="sr-only">{typeLabels[item.type]}</span>
+              </ToggleButton>
+            ) : (
+              <span aria-label={typeLabels[item.type]} className={markerClass}>
+                <span className="sr-only">{typeLabels[item.type]}</span>
+              </span>
+            )}
 
             {/* Date label */}
             <time
