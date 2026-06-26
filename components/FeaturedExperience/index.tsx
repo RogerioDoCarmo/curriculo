@@ -102,7 +102,7 @@ function FeaturedCard({
         <div className="mb-3 flex items-center gap-1.5 text-primary-700 dark:text-primary-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-3.5 w-3.5 shrink-0"
+            className="h-3.5 w-3.5 shrink-0 -translate-y-0.5"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
