@@ -117,12 +117,13 @@ function BankLogo({
 }) {
   const flag = COUNTRY_FLAGS[bank.country];
   const tile = (
-    <span className="relative flex h-40 w-64 items-center justify-center rounded-lg bg-white p-5 shadow-sm">
+    <span className="relative flex h-40 w-64 select-none items-center justify-center rounded-lg bg-white p-5 shadow-sm">
       <Image
         src={bank.logo}
         alt={duplicate ? "" : `${bank.name} logo`}
         width={bank.width}
         height={bank.height}
+        draggable={false}
         // Bounding box keeps wide wordmarks and square/portrait logos uniform.
         className="h-auto max-h-full w-auto max-w-full object-contain"
       />
@@ -134,6 +135,7 @@ function BankLogo({
           aria-hidden="true"
           width={24}
           height={16}
+          draggable={false}
           className="absolute bottom-2 right-2 h-auto w-9 rounded-sm ring-1 ring-black/10"
         />
       )}
@@ -156,6 +158,7 @@ function BankLogo({
       // Duplicates live inside an aria-hidden <li>; tabIndex={-1} also drops them
       // from the tab order so the focusable link isn't reachable inside hidden content.
       tabIndex={duplicate ? -1 : undefined}
+      draggable={false}
       className="rounded-lg transition-opacity hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
     >
       {tile}

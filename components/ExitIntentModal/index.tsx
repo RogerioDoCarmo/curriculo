@@ -181,7 +181,9 @@ export default function ExitIntentModal({
         </div>
 
         {/* Footer note */}
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400">{t("footerNote")}</p>
+        <p className="text-sm text-center font-bold text-gray-500 dark:text-gray-400">
+          {t("footerNote")}
+        </p>
 
         {/* Email capture */}
         <div className="border-t border-border pt-4">
