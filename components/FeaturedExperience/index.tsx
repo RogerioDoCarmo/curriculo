@@ -10,7 +10,7 @@
  * section that can be shown or hidden.
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Experience } from "@/types/index";
@@ -47,7 +47,13 @@ function FeaturedCard({
   const [showAchievements, setShowAchievements] = useState(true);
   // Index of the image shown in the fullscreen lightbox, or null when closed.
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Horizontal-swipe start position for navigating the lightbox on touch.
+  const swipeStartX = useRef<number | null>(null);
   const images = exp.images ?? [];
+
+  // Move the lightbox by one image, wrapping around both ends (infinite).
+  const moveLightbox = (delta: 1 | -1) =>
+    setLightboxIndex((i) => (i === null ? i : (i + delta + images.length) % images.length));
   const hasTech = (exp.technologies?.length ?? 0) > 0;
   const intro = experienceIntro(exp.description);
   const detailsId = `featured-details-${exp.id}`;
@@ -96,14 +102,16 @@ function FeaturedCard({
         <div className="mb-3 flex items-center gap-1.5 text-primary-700 dark:text-primary-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
+            className="h-3.5 w-3.5 shrink-0 -translate-y-0.5"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden="true"
           >
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.05 10.8c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
-          <span className="text-sm font-semibold uppercase tracking-wide">{t("featured")}</span>
+          <span className="text-sm font-semibold uppercase leading-none tracking-wide">
+            {t("featured")}
+          </span>
         </div>
 
         <div className="flex items-start justify-between gap-4">
@@ -174,7 +182,7 @@ function FeaturedCard({
         {/* Technologies (left) and image thumbnails (bottom-right corner, aligned
             with the last tags line). Click a thumbnail to open the lightbox. */}
         {(hasTech || images.length > 0) && (
-          <div className="mt-6 flex items-end justify-between gap-4">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             {hasTech ? (
               <div className="min-w-0 flex-1">
                 <h4 className="mb-2 text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -196,7 +204,7 @@ function FeaturedCard({
             )}
 
             {images.length > 0 && (
-              <div className="flex shrink-0 gap-2">
+              <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:shrink-0">
                 {images.map((img, i) => (
                   <button
                     key={img.src}
@@ -224,7 +232,20 @@ function FeaturedCard({
         >
           {lightboxIndex !== null && (
             <div className="space-y-3">
-              <div className="relative mx-auto h-[60vh] w-full">
+              {/* Swipe left/right to move through the gallery (wraps infinitely). */}
+              <div
+                className="relative mx-auto h-[60vh] w-full touch-pan-y select-none"
+                onTouchStart={(e) => {
+                  swipeStartX.current = e.touches[0].clientX;
+                }}
+                onTouchEnd={(e) => {
+                  if (swipeStartX.current === null || images.length < 2) return;
+                  const dx = e.changedTouches[0].clientX - swipeStartX.current;
+                  swipeStartX.current = null;
+                  if (dx <= -40) moveLightbox(1);
+                  else if (dx >= 40) moveLightbox(-1);
+                }}
+              >
                 <Image
                   src={images[lightboxIndex].src}
                   alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
@@ -232,6 +253,52 @@ function FeaturedCard({
                   sizes="100vw"
                   className="object-contain"
                 />
+
+                {/* Prev/Next controls (wrap infinitely via moveLightbox). */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => moveLightbox(-1)}
+                      aria-label={t("previousImage")}
+                      className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLightbox(1)}
+                      aria-label={t("nextImage")}
+                      className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </>
+                )}
               </div>
               {(images[lightboxIndex].title || images[lightboxIndex].description) && (
                 <div className="mx-auto max-w-2xl text-center">

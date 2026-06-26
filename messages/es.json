@@ -94,6 +94,8 @@
     "visitWebsite": "Visitar sitio web (se abre en una pestaña nueva)",
     "images": "Proyecto INCT",
     "viewImage": "Ver imagen en pantalla completa",
+    "previousImage": "Imagen anterior",
+    "nextImage": "Imagen siguiente",
     "featured": "Destacado",
     "timeline": "Línea de Tiempo",
     "duration": {
@@ -202,6 +204,8 @@
     "all": "Todos",
     "noMatch": "Ningún proyecto coincide con el filtro seleccionado.",
     "viewDetails": "Ver detalles de",
+    "previousProject": "Proyecto anterior",
+    "nextProject": "Proyecto siguiente",
     "screenshot": "captura de pantalla",
     "featured": "Destacado",
     "mockData": "Datos Ficticios",

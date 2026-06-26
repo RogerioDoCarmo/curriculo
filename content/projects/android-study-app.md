@@ -12,7 +12,7 @@ technologies:
   - Android Architecture Components
 repoUrl: https://github.com/RogerioDoCarmo/Android-SimpleCRUD
 images:
-  - /images/projects/android-study-1.jpg
+  - /images/projects/android-study-1.svg
 ---
 
 ## Visão Geral
