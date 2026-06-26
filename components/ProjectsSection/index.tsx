@@ -30,6 +30,17 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
     ? projects.filter((p) => p.technologies.includes(techFilter))
     : projects;
 
+  // Step to the next/previous project within the open detail modal, wrapping.
+  const navProject = (delta: 1 | -1) => {
+    setSelectedProject((current) => {
+      if (!current || filtered.length < 2) return current;
+      const i = filtered.findIndex((p) => p.id === current.id);
+      if (i < 0) return current;
+      return filtered[(i + delta + filtered.length) % filtered.length];
+    });
+  };
+  const canNavProjects = !!selectedProject && filtered.length > 1;
+
   return (
     <section
       id="projects"
@@ -95,11 +106,15 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
           </div>
         )}
 
-        {/* Project detail modal */}
+        {/* Project detail modal — Prev/Next step through the (filtered) projects */}
         <Modal
           isOpen={!!selectedProject}
           onClose={() => setSelectedProject(null)}
           title={selectedProject?.title}
+          onPrev={canNavProjects ? () => navProject(-1) : undefined}
+          onNext={canNavProjects ? () => navProject(1) : undefined}
+          prevLabel={t("projects.previousProject")}
+          nextLabel={t("projects.nextProject")}
         >
           {selectedProject && <ProjectDetail project={selectedProject} />}
         </Modal>

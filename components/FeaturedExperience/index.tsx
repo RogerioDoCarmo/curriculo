@@ -251,7 +251,7 @@ function FeaturedCard({
                   alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
                   fill
                   sizes="100vw"
-                  className="object-contain"
+                  className="object-contain px-14"
                 />
 
                 {/* Prev/Next controls (wrap infinitely via moveLightbox). */}
@@ -261,7 +261,7 @@ function FeaturedCard({
                       type="button"
                       onClick={() => moveLightbox(-1)}
                       aria-label={t("previousImage")}
-                      className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                      className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +281,7 @@ function FeaturedCard({
                       type="button"
                       onClick={() => moveLightbox(1)}
                       aria-label={t("nextImage")}
-                      className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-gray-800 shadow transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:bg-gray-800"
+                      className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
