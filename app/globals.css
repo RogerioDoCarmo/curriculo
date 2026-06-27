@@ -78,12 +78,14 @@
   color: #be123c;
 }
 
-/* Hide the scrollbar on swipe carousels while keeping the element scrollable. */
+/* Hide the scrollbar on swipe carousels while keeping the element scrollable.
+   The WebKit pseudo-element is a separate, explicitly-scoped rule (not a bare
+   `&` nesting) so it has a scoping root (SonarQube css:S8776). */
 @utility no-scrollbar {
   scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes fadeIn {

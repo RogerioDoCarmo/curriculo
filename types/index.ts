@@ -16,6 +16,9 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
   featured: boolean;
+  /** Explicitly mark (or unmark) the project as using placeholder/fictional
+   * data. When unset, a heuristic (no repo or no images) decides. */
+  mockData?: boolean;
   date: string; // ISO 8601 date string (e.g., "2024-01-15")
 }
 
@@ -26,6 +29,9 @@ export interface ExperienceImage {
   src: string;
   title?: string;
   description?: string;
+  /** Intrinsic pixel dimensions, so the lightbox can size to the real aspect. */
+  width?: number;
+  height?: number;
 }
 
 export interface Experience {

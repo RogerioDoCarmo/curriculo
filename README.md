@@ -41,6 +41,8 @@
 
 A modern, responsive personal resume website built with Next.js 16.2.6, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
+[![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
+
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
 
 ## Development Progress
