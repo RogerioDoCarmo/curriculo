@@ -51,6 +51,8 @@ const featured: Experience = {
       src: "/images/inct-project/a.png",
       title: "Raw GNSS data collection",
       description: "Captures raw GNSS data in real time.",
+      width: 566,
+      height: 1200,
     },
     { src: "/images/inct-project/b.png", title: "RINEX file generation" },
   ],
@@ -164,6 +166,26 @@ describe("FeaturedExperience", () => {
     expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Raw GNSS data collection" })).toBeInTheDocument();
     expect(screen.getByText("Captures raw GNSS data in real time.")).toBeInTheDocument();
+  });
+
+  it("navigates the lightbox with the Prev/Next buttons, wrapping", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<FeaturedExperience experiences={[featured]} locale="en" />);
+
+    await user.click(screen.getAllByRole("button", { name: /view image in full screen/i })[0]);
+    await screen.findByRole("dialog");
+    expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Next image" }));
+    expect(screen.getByAltText("RINEX file generation")).toBeInTheDocument();
+
+    // Next again wraps back to the first image.
+    await user.click(screen.getByRole("button", { name: "Next image" }));
+    expect(screen.getByAltText("Raw GNSS data collection")).toBeInTheDocument();
+
+    // Previous wraps to the last image.
+    await user.click(screen.getByRole("button", { name: "Previous image" }));
+    expect(screen.getByAltText("RINEX file generation")).toBeInTheDocument();
   });
 
   it("navigates the lightbox by horizontal swipe, wrapping at the ends", async () => {
