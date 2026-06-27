@@ -232,72 +232,77 @@ function FeaturedCard({
         >
           {lightboxIndex !== null && (
             <div className="space-y-3">
-              {/* Swipe left/right to move through the gallery (wraps infinitely). */}
-              <div
-                className="relative mx-auto h-[60vh] w-full touch-pan-y select-none"
-                onTouchStart={(e) => {
-                  swipeStartX.current = e.touches[0].clientX;
-                }}
-                onTouchEnd={(e) => {
-                  if (swipeStartX.current === null || images.length < 2) return;
-                  const dx = e.changedTouches[0].clientX - swipeStartX.current;
-                  swipeStartX.current = null;
-                  if (dx <= -40) moveLightbox(1);
-                  else if (dx >= 40) moveLightbox(-1);
-                }}
-              >
-                <Image
-                  src={images[lightboxIndex].src}
-                  alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain px-14"
-                />
-
-                {/* Prev/Next controls (wrap infinitely via moveLightbox). */}
+              {/* Prev/Next sit in side gutters; the image takes the middle and is
+                  sized to its real aspect (capped) so landscape shots don't leave
+                  a big gap. Swipe also moves through the gallery (wraps). */}
+              <div className="flex items-center gap-1 sm:gap-2">
                 {images.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => moveLightbox(-1)}
-                      aria-label={t("previousImage")}
-                      className="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+                  <button
+                    type="button"
+                    onClick={() => moveLightbox(-1)}
+                    aria-label={t("previousImage")}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveLightbox(1)}
-                      aria-label={t("nextImage")}
-                      className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+                      <path
+                        fillRule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                )}
+
+                <div
+                  className="min-w-0 flex-1 touch-pan-y select-none"
+                  onTouchStart={(e) => {
+                    swipeStartX.current = e.touches[0].clientX;
+                  }}
+                  onTouchEnd={(e) => {
+                    if (swipeStartX.current === null || images.length < 2) return;
+                    const dx = e.changedTouches[0].clientX - swipeStartX.current;
+                    swipeStartX.current = null;
+                    if (dx <= -40) moveLightbox(1);
+                    else if (dx >= 40) moveLightbox(-1);
+                  }}
+                >
+                  <Image
+                    src={images[lightboxIndex].src}
+                    alt={images[lightboxIndex].title || `${exp.role} — ${lightboxIndex + 1}`}
+                    width={images[lightboxIndex].width ?? 1200}
+                    height={images[lightboxIndex].height ?? 800}
+                    sizes="100vw"
+                    className="mx-auto block h-auto max-h-[70vh] w-auto max-w-full object-contain"
+                  />
+                </div>
+
+                {images.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => moveLightbox(1)}
+                    aria-label={t("nextImage")}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </>
+                      <path
+                        fillRule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
                 )}
               </div>
               {(images[lightboxIndex].title || images[lightboxIndex].description) && (

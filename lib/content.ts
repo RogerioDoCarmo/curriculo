@@ -13,6 +13,17 @@ import type { Project, Experience, SkillCategory } from "@/types/index";
 /** Default content root directory (relative to project root). */
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content");
 
+/**
+ * Intrinsic pixel dimensions for experience gallery images, keyed by src. Kept
+ * here (not duplicated in each locale's frontmatter) so the lightbox can size
+ * to the real aspect ratio instead of letterboxing inside a fixed height.
+ */
+const EXPERIENCE_IMAGE_DIMENSIONS: Record<string, { width: number; height: number }> = {
+  "/images/inct-project/inct-app-collect.png": { width: 566, height: 1200 },
+  "/images/inct-project/inct-app-post-processing.png": { width: 1000, height: 685 },
+  "/images/inct-project/inct-app-post-analyzer.png": { width: 1416, height: 848 },
+};
+
 /** Result of splitting a markdown file into YAML frontmatter and body. */
 interface ParsedFrontmatter {
   readonly data: Record<string, unknown>;
@@ -120,6 +131,7 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
         liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
         repoUrl: data.repoUrl ? String(data.repoUrl) : undefined,
         featured: Boolean(data.featured),
+        mockData: data.mockData !== undefined ? Boolean(data.mockData) : undefined,
         date: String(data.date),
       };
 
@@ -217,10 +229,14 @@ export async function getExperiences(
           ? data.images.map((img) => {
               if (typeof img === "string") return { src: img };
               const o = img as Record<string, unknown>;
+              const src = String(o.src ?? "");
+              const dims = EXPERIENCE_IMAGE_DIMENSIONS[src];
               return {
-                src: String(o.src ?? ""),
+                src,
                 title: o.title ? String(o.title) : undefined,
                 description: o.description ? String(o.description) : undefined,
+                width: o.width ? Number(o.width) : dims?.width,
+                height: o.height ? Number(o.height) : dims?.height,
               };
             })
           : undefined,
