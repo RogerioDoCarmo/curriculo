@@ -170,7 +170,9 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
   const firstImage = project.images[0];
 
   // Determine if this is mock data (projects without real images or repos)
-  const isMockData = !project.repoUrl || project.images.length === 0;
+  // Explicit `mockData` wins; otherwise fall back to the heuristic (no repo or
+  // no images). Lets real projects without a public repo (e.g. INCT) opt out.
+  const isMockData = project.mockData ?? (!project.repoUrl || project.images.length === 0);
 
   return (
     <Card
@@ -224,11 +226,11 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           )}
         </div>
 
-        <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
             {project.title}
           </h3>
-          <div className="flex shrink-0 gap-1">
+          <div className="flex flex-wrap gap-1">
             {project.featured && (
               <span className="rounded-full bg-primary-100 px-2 py-0.5 text-sm font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300">
                 {t("projects.featured")}
