@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Timeline from "@/components/Timeline";
 import type { TimelineItem } from "@/types/index";
 
@@ -60,6 +60,33 @@ describe("Timeline Component", () => {
     render(<Timeline items={sampleItems} />);
     expect(screen.getByText("Led mobile development team.")).toBeInTheDocument();
     expect(screen.getByText("Research in distributed systems.")).toBeInTheDocument();
+  });
+
+  it("expands an entry by clicking its circular marker", () => {
+    const itemsWithDetails: TimelineItem[] = [
+      {
+        id: "d1",
+        date: "2022-01",
+        title: "Role",
+        description: "Intro paragraph.\n### Conquistas\nHidden detail line.",
+        type: "work",
+      },
+    ];
+    const { container } = render(
+      <Timeline
+        items={itemsWithDetails}
+        expandLabel="Expand details"
+        collapseLabel="Collapse details"
+      />
+    );
+    // Details are collapsed until the marker is clicked.
+    expect(screen.queryByText("Hidden detail line.")).not.toBeInTheDocument();
+
+    // The circular marker (rounded-full button) toggles the entry.
+    const marker = container.querySelector("button.rounded-full");
+    expect(marker).not.toBeNull();
+    fireEvent.click(marker as HTMLElement);
+    expect(screen.getByText("Hidden detail line.")).toBeInTheDocument();
   });
 
   it("renders date labels for each item", () => {
