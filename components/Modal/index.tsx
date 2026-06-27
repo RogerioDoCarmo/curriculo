@@ -156,7 +156,7 @@ export default function Modal({
             gutters (flex), so they stay clear of the content text AND its
             scrollbar instead of overlapping them. */}
         {onPrev && onNext ? (
-          <div className="flex min-h-0 flex-1 items-stretch gap-2 px-4">
+          <div className="flex min-h-0 flex-1 items-stretch gap-4 px-4">
             <button
               type="button"
               onClick={onPrev}
