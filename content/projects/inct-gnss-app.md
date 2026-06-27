@@ -3,6 +3,7 @@ id: inct-gnss-app
 title: INCT GNSS App
 description: Aplicação Android para coleta e processamento de dados GNSS brutos em tempo real, com geração de arquivos RINEX e Posicionamento por Ponto Simples (PPS)
 featured: true
+mockData: false
 date: 2021-06-01
 technologies:
   - Java
