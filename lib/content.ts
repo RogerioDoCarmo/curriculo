@@ -131,7 +131,7 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
         liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
         repoUrl: data.repoUrl ? String(data.repoUrl) : undefined,
         featured: Boolean(data.featured),
-        mockData: data.mockData !== undefined ? Boolean(data.mockData) : undefined,
+        mockData: data.mockData === undefined ? undefined : Boolean(data.mockData),
         date: String(data.date),
       };
 
@@ -229,7 +229,7 @@ export async function getExperiences(
           ? data.images.map((img) => {
               if (typeof img === "string") return { src: img };
               const o = img as Record<string, unknown>;
-              const src = String(o.src ?? "");
+              const src = typeof o.src === "string" ? o.src : "";
               const dims = EXPERIENCE_IMAGE_DIMENSIONS[src];
               return {
                 src,
