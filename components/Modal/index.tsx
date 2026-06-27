@@ -152,17 +152,16 @@ export default function Modal({
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="overflow-y-auto px-6 pb-6">{children}</div>
-
-        {/* Optional edge navigation (wraps infinitely via the handlers). */}
-        {onPrev && onNext && (
-          <>
+        {/* Scrollable content. With nav, the Prev/Next buttons live in side
+            gutters (flex), so they stay clear of the content text AND its
+            scrollbar instead of overlapping them. */}
+        {onPrev && onNext ? (
+          <div className="flex min-h-0 flex-1 items-stretch gap-1 px-2">
             <button
               type="button"
               onClick={onPrev}
               aria-label={prevLabel}
-              className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+              className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -178,11 +177,14 @@ export default function Modal({
                 />
               </svg>
             </button>
+
+            <div className="min-w-0 flex-1 overflow-y-auto px-4 pb-6">{children}</div>
+
             <button
               type="button"
               onClick={onNext}
               aria-label={nextLabel}
-              className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
+              className="flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-white text-gray-900 shadow-md ring-1 ring-black/10 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-gray-600 dark:text-white dark:ring-white/25 dark:hover:bg-gray-500"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -198,7 +200,9 @@ export default function Modal({
                 />
               </svg>
             </button>
-          </>
+          </div>
+        ) : (
+          <div className="overflow-y-auto px-6 pb-6">{children}</div>
         )}
       </div>
     </div>
