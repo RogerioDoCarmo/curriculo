@@ -235,7 +235,7 @@ function FeaturedCard({
               {/* Prev/Next sit in side gutters; the image takes the middle and is
                   sized to its real aspect (capped) so landscape shots don't leave
                   a big gap. Swipe also moves through the gallery (wraps). */}
-              <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-3 sm:gap-4">
                 {images.length > 1 && (
                   <button
                     type="button"
