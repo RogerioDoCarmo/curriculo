@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
@@ -254,6 +254,22 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
     });
+  });
+
+  it("steps through projects via the detail modal Prev/Next buttons (wrapping)", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("heading", { name: "E-Commerce App" })).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole("button", { name: "Next project" }));
+    expect(within(dialog).getByRole("heading", { name: "Portfolio Website" })).toBeInTheDocument();
+
+    // Prev from the second wraps as expected back toward the first.
+    await user.click(within(dialog).getByRole("button", { name: "Previous project" }));
+    expect(within(dialog).getByRole("heading", { name: "E-Commerce App" })).toBeInTheDocument();
   });
 
   it("renders the swipe carousel instead of the grid on mobile", async () => {
