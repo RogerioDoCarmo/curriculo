@@ -19,6 +19,9 @@ const TITLE = "Rogério do Carmo | Desenvolvedor React Native Mobile";
 const DESCRIPTION =
   "Portifólio e currículo de Rogério do Carmo, especialista em desenvolvimento de aplicações mobile multiplataforma com React Native.";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
+const AUTHOR = "Rogério do Carmo";
+// When the site was first published (project inception). ISO 8601 for crawlers.
+const PUBLISHED_TIME = "2026-03-31T00:00:00Z";
 
 export default function RootPage() {
   const router = useRouter();
@@ -32,7 +35,10 @@ export default function RootPage() {
       <head>
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />
+        <meta name="author" content={AUTHOR} />
         <link rel="canonical" href={`${SITE_URL}/`} />
+        <meta property="article:author" content={AUTHOR} />
+        <meta property="article:published_time" content={PUBLISHED_TIME} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Rogério do Carmo" />
         <meta property="og:url" content={`${SITE_URL}/`} />
