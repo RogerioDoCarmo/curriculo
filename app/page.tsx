@@ -19,7 +19,7 @@ const TITLE = "Rogério do Carmo | Desenvolvedor React Native Mobile";
 const DESCRIPTION =
   "Portifólio e currículo de Rogério do Carmo, especialista em desenvolvimento de aplicações mobile multiplataforma com React Native.";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
-const AUTHOR = "Rogério do Carmo";
+const AUTHOR = "Rogério Ramos Rodrigues do Carmo";
 // When the site was first published (project inception). ISO 8601 for crawlers.
 const PUBLISHED_TIME = "2026-03-31T00:00:00Z";
 
