@@ -48,6 +48,8 @@ A modern, responsive personal resume website built with Next.js 16.2.6, TypeScri
 
 ## 🎬 Demo
 
+[![Walkthrough demo — rogeriodocarmo.com](showcase-media/walkthrough-video-image-thumbnail.png)](https://rogeriodocarmo.com)
+
 A guided walkthrough of the live site, captured at two viewport sizes. It covers dark mode, the three languages (PT / EN / ES), the project and INCT (master's research) image galleries, the interactive experience timeline, the **Used in this site** tech‑stack page, the **Storybook published on Chromatic**, and the downloadable résumé (PDF).
 
 **Responsive — mobile & desktop, side by side:**
