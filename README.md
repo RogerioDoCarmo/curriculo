@@ -44,6 +44,7 @@ A modern, responsive personal resume website built with Next.js 16.2.6, TypeScri
 [![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
 
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
+> e
 
 ## 🎬 Demo
 
@@ -63,7 +64,7 @@ A guided walkthrough of the live site, captured at two viewport sizes. It covers
   </tr>
   <tr>
     <td width="50%">
-      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough.mp4" controls muted width="100%"></video>
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-mobile.mp4" controls muted width="100%"></video>
     </td>
     <td width="50%">
       <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-desktop.mp4" controls muted width="100%"></video>
@@ -73,7 +74,7 @@ A guided walkthrough of the live site, captured at two viewport sizes. It covers
 
 </details>
 
-> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
+> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
 
 ## Development Progress
 
