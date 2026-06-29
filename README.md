@@ -44,6 +44,37 @@ A modern, responsive personal resume website built with Next.js 16.2.6, TypeScri
 [![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
 
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
+> e
+
+## 🎬 Demo
+
+A guided walkthrough of the live site, captured at two viewport sizes. It covers dark mode, the three languages (PT / EN / ES), the project and INCT (master's research) image galleries, the interactive experience timeline, the **Used in this site** tech‑stack page, the **Storybook published on Chromatic**, and the downloadable résumé (PDF).
+
+**Responsive — mobile & desktop, side by side:**
+
+<video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-combined.mp4" controls muted width="100%"></video>
+
+<details>
+<summary>Individual recordings (mobile · desktop)</summary>
+
+<table>
+  <tr>
+    <td align="center"><b>📱 Mobile</b></td>
+    <td align="center"><b>🖥️ Desktop</b></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-mobile.mp4" controls muted width="100%"></video>
+    </td>
+    <td width="50%">
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-desktop.mp4" controls muted width="100%"></video>
+    </td>
+  </tr>
+</table>
+
+</details>
+
+> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
 
 ## Development Progress
 
