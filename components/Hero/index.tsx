@@ -58,6 +58,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 alt="UNESP Logo"
                 width={1280}
                 height={427}
+                priority
                 className="rounded w-31.25 h-auto"
               />
             </a>
