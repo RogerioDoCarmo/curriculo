@@ -5,9 +5,6 @@ categories:
       - name: React Native
         level: expert
         yearsOfExperience: 3
-      - name: Flutter
-        level: intermediate
-        yearsOfExperience: 1
       - name: Native Android (Java)
         level: advanced
         yearsOfExperience: 4
@@ -27,9 +24,6 @@ categories:
         level: intermediate
         yearsOfExperience: 1
       - name: TankStack
-        level: intermediate
-        yearsOfExperience: 1
-      - name: MobX
         level: intermediate
         yearsOfExperience: 1
 
@@ -62,6 +56,12 @@ categories:
       - name: Unit Testing
         level: advanced
         yearsOfExperience: 3
+      - name: Playwright
+        level: advanced
+        yearsOfExperience: 2
+      - name: End-to-End Tests
+        level: advanced
+        yearsOfExperience: 2
 
   - category: Firebase & Cloud Services
     skills:
