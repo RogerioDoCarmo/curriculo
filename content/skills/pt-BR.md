@@ -63,7 +63,7 @@ categories:
         level: advanced
         yearsOfExperience: 2
 
-  - category: Firebase & Cloud Services
+  - category: Firebase e Serviços em Nuvem
     skills:
       - name: Firebase Analytics
         level: advanced
