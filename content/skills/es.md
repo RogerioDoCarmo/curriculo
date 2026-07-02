@@ -1,6 +1,6 @@
 ---
 categories:
-  - category: Mobile Development
+  - category: Desarrollo Móvil
     skills:
       - name: React Native
         level: expert
@@ -18,7 +18,7 @@ categories:
         level: expert
         yearsOfExperience: 5
 
-  - category: State Management & Architecture
+  - category: Gestión de Estado & Arquitectura
     skills:
       - name: Redux/Saga
         level: advanced
@@ -33,7 +33,7 @@ categories:
         level: intermediate
         yearsOfExperience: 1
 
-  - category: UI & Styling
+  - category: UI & Estilos
     skills:
       - name: React Native StyleSheet
         level: expert
@@ -45,25 +45,25 @@ categories:
         level: advanced
         yearsOfExperience: 3
 
-  - category: Forms & Validation
+  - category: Formularios & Validación
     skills:
       - name: react-hook-form
         level: advanced
         yearsOfExperience: 2
-      - name: Validação de Formulários
+      - name: Validación de Formularios
         level: expert
         yearsOfExperience: 3
 
-  - category: Testing
+  - category: Pruebas
     skills:
       - name: Jest
         level: advanced
         yearsOfExperience: 2
-      - name: Testes Unitários
+      - name: Pruebas Unitarias
         level: advanced
         yearsOfExperience: 3
 
-  - category: Firebase & Cloud Services
+  - category: Firebase & Servicios en la Nube
     skills:
       - name: Firebase Analytics
         level: advanced
@@ -78,7 +78,7 @@ categories:
         level: intermediate
         yearsOfExperience: 4
 
-  - category: APIs & Integration
+  - category: APIs & Integración
     skills:
       - name: REST APIs
         level: expert
@@ -90,28 +90,28 @@ categories:
         level: intermediate
         yearsOfExperience: 1
 
-  - category: Internationalization
+  - category: Internacionalización
     skills:
       - name: i18next
         level: advanced
         yearsOfExperience: 2
-      - name: Localização de Apps
+      - name: Localización de Apps
         level: advanced
         yearsOfExperience: 3
 
-  - category: Native Modules & Integrations
+  - category: Módulos Nativos & Integraciones
     skills:
       - name: Expo Modules
         level: intermediate
         yearsOfExperience: 2
-      - name: Daon (Biometria)
+      - name: Daon (Biometría)
         level: intermediate
         yearsOfExperience: 1
       - name: Qualtrics
         level: intermediate
         yearsOfExperience: 1
 
-  - category: Database & Storage
+  - category: Base de Datos & Almacenamiento
     skills:
       - name: SQFlite
         level: intermediate
@@ -123,7 +123,7 @@ categories:
         level: intermediate
         yearsOfExperience: 1
 
-  - category: Maps & Location
+  - category: Mapas & Ubicación
     skills:
       - name: OpenStreetMaps
         level: intermediate
@@ -131,7 +131,7 @@ categories:
       - name: GNSS/GPS
         level: expert
         yearsOfExperience: 4
-      - name: Geolocalização
+      - name: Geolocalización
         level: advanced
         yearsOfExperience: 4
 
@@ -156,7 +156,7 @@ categories:
         level: expert
         yearsOfExperience: 6
 
-  - category: Monitoring & Analytics
+  - category: Monitoreo & Analytics
     skills:
       - name: Elastic
         level: intermediate
@@ -168,7 +168,7 @@ categories:
         level: intermediate
         yearsOfExperience: 1
 
-  - category: Project Management
+  - category: Gestión de Proyectos
     skills:
       - name: Jira
         level: advanced
@@ -176,7 +176,7 @@ categories:
       - name: Confluence
         level: intermediate
         yearsOfExperience: 2
-      - name: Metodologias Ágeis
+      - name: Metodologías Ágiles
         level: advanced
         yearsOfExperience: 3
 
@@ -195,41 +195,41 @@ categories:
         level: intermediate
         yearsOfExperience: 2
 
-  - category: Domain Knowledge
+  - category: Conocimiento del Dominio
     skills:
       - name: Sistema Pix (DICT)
         level: expert
         yearsOfExperience: 2
-      - name: Aplicações Bancárias
+      - name: Aplicaciones Bancarias
         level: expert
         yearsOfExperience: 3
-      - name: Biometria e Autenticação
+      - name: Biometría y Autenticación
         level: advanced
         yearsOfExperience: 2
-      - name: Processamento de Imagens
+      - name: Procesamiento de Imágenes
         level: intermediate
         yearsOfExperience: 2
-      - name: Ciências Cartográficas
+      - name: Ciencias Cartográficas
         level: advanced
         yearsOfExperience: 4
 
-  - category: Languages
+  - category: Idiomas
     skills:
-      - name: Português (Nativo)
+      - name: Portugués (Nativo)
         level: expert
-      - name: Inglês (Intermediário-Avançado B2)
+      - name: Inglés (Intermedio-Avanzado B2)
         level: advanced
 
   - category: Soft Skills
     skills:
-      - name: Comunicação com Stakeholders
+      - name: Comunicación con Stakeholders
         level: expert
-      - name: Orientação de Desenvolvedores
+      - name: Mentoría de Desarrolladores
         level: advanced
-      - name: Trabalho em Equipe
+      - name: Trabajo en Equipo
         level: expert
-      - name: Resolução de Problemas
+      - name: Resolución de Problemas
         level: expert
-      - name: Metodologias Ágeis
+      - name: Metodologías Ágiles
         level: advanced
 ---
