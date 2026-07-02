@@ -156,7 +156,7 @@ categories:
         level: expert
         yearsOfExperience: 6
 
-  - category: Monitoramento & Analytics
+  - category: Monitoramento & Análise
     skills:
       - name: Elastic
         level: intermediate
