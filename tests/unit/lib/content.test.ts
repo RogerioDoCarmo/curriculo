@@ -341,13 +341,13 @@ describe("Content Management System", () => {
       // Missing skills file in development → warn + empty array
       setNodeEnv("development");
       const emptyDir = makeContentDir();
-      await expect(getSkills(emptyDir)).resolves.toEqual([]);
+      await expect(getSkills(undefined, emptyDir)).resolves.toEqual([]);
       expect(warnSpy).toHaveBeenCalled();
 
       // categories not an array → validation error
       const badDir = makeContentDir();
       write(badDir, "skills.md", `---\ncategories: nope\n---\n`);
-      await expect(getSkills(badDir)).rejects.toThrow(/Content validation error/);
+      await expect(getSkills(undefined, badDir)).rejects.toThrow(/Content validation error/);
 
       // valid categories → returned as-is
       const goodDir = makeContentDir();
@@ -356,7 +356,7 @@ describe("Content Management System", () => {
         "skills.md",
         `---\ncategories:\n  - category: Frontend\n    skills:\n      - name: React\n---\n`
       );
-      const skills = await getSkills(goodDir);
+      const skills = await getSkills(undefined, goodDir);
       expect(skills).toHaveLength(1);
       expect(skills[0].category).toBe("Frontend");
     });

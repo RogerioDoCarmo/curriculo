@@ -131,7 +131,7 @@ export async function generateJsonResume(contentDir?: string): Promise<JsonResum
       getProjects(contentDir),
       getExperiences("professional", contentDir),
       getExperiences("academic", contentDir),
-      getSkills(contentDir),
+      getSkills(undefined, contentDir),
     ]);
 
   // Suppress unused variable warning — projects are available for future use

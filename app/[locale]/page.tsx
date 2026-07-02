@@ -30,7 +30,7 @@ export default async function HomePage({ params }: HomePageProps) {
   const [experiences, projects, skills] = await Promise.all([
     getExperiences(undefined, locale),
     getProjects(),
-    getSkills(),
+    getSkills(locale),
   ]);
 
   return (

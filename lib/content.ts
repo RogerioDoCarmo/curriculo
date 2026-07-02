@@ -270,17 +270,28 @@ export async function getExperiences(
 // ─── Skills ──────────────────────────────────────────────────────────────────
 
 /**
- * Reads `<contentDir>/skills.md`, parses the `categories` frontmatter array,
- * and returns the skill categories.
+ * Reads the locale-specific skills file (`<contentDir>/skills/<locale>.md`),
+ * parses the `categories` frontmatter array, and returns the skill categories.
+ * Falls back to the default locale (`pt-BR`), then to the legacy single-file
+ * location (`<contentDir>/skills.md`).
  *
+ * @param locale - Locale code (e.g., 'pt-BR', 'en', 'es'). Defaults to 'pt-BR'.
  * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
  * @returns Array of {@link SkillCategory} objects.
- * @throws If the skills file is missing or malformed.
+ * @throws If the skills file is malformed.
  */
 export async function getSkills(
+  locale: string = "pt-BR",
   contentDir: string = DEFAULT_CONTENT_DIR
 ): Promise<SkillCategory[]> {
-  const skillsFile = path.join(contentDir, "skills.md");
+  const localeSkillsFile = path.join(contentDir, "skills", `${locale}.md`);
+  const defaultSkillsFile = path.join(contentDir, "skills", "pt-BR.md");
+  const legacySkillsFile = path.join(contentDir, "skills.md");
+  const skillsFile = fs.existsSync(localeSkillsFile)
+    ? localeSkillsFile
+    : fs.existsSync(defaultSkillsFile)
+      ? defaultSkillsFile
+      : legacySkillsFile;
 
   if (!fs.existsSync(skillsFile)) {
     if (process.env.NODE_ENV === "development") {

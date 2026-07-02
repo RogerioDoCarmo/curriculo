@@ -196,6 +196,12 @@
     "noMatch": "Nenhuma habilidade corresponde ao seu filtro.",
     "skillsLabel": "habilidades",
     "levelLabel": "Nível",
+    "levels": {
+      "beginner": "Iniciante",
+      "intermediate": "Intermediário",
+      "advanced": "Avançado",
+      "expert": "Especialista"
+    },
     "expandDetails": "Expandir habilidades",
     "collapseDetails": "Recolher habilidades"
   },
