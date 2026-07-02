@@ -21,6 +21,12 @@ const messages: AbstractIntlMessages = {
     noMatch: "No skills match your filter",
     skillsLabel: "skills",
     levelLabel: "Level",
+    levels: {
+      beginner: "Beginner",
+      intermediate: "Intermediate",
+      advanced: "Advanced",
+      expert: "Expert",
+    },
     expandDetails: "Expand skills",
     collapseDetails: "Collapse skills",
   },
@@ -84,11 +90,11 @@ describe("SkillsSection Component", () => {
 
     // Expand the first card (Mobile Development)
     await user.click(screen.getByRole("button", { name: "Mobile Development" }));
-    expect(screen.getAllByText("expert").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Expert").length).toBeGreaterThan(0);
 
-    // Cards toggle independently — open Backend to reveal "intermediate".
+    // Cards toggle independently — open Backend to reveal "Intermediate".
     await user.click(screen.getByRole("button", { name: "Backend" }));
-    expect(screen.getByText("intermediate")).toBeInTheDocument();
+    expect(screen.getByText("Intermediate")).toBeInTheDocument();
   });
 
   it("renders a search/filter input", () => {
