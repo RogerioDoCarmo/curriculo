@@ -196,6 +196,12 @@
     "noMatch": "No skills match your filter.",
     "skillsLabel": "skills",
     "levelLabel": "Level",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    },
     "expandDetails": "Expand skills",
     "collapseDetails": "Collapse skills"
   },

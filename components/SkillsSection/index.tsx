@@ -143,10 +143,10 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                           />
                           {skill.level && (
                             <span
-                              className={`rounded-full px-2 py-0.5 text-sm font-medium capitalize ${levelColors[skill.level]}`}
-                              aria-label={`${t("skills.levelLabel")}: ${skill.level}`}
+                              className={`rounded-full px-2 py-0.5 text-sm font-medium ${levelColors[skill.level]}`}
+                              aria-label={`${t("skills.levelLabel")}: ${t(`skills.levels.${skill.level}`)}`}
                             >
-                              {skill.level}
+                              {t(`skills.levels.${skill.level}`)}
                             </span>
                           )}
                         </li>
