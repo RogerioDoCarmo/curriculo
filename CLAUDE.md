@@ -68,7 +68,12 @@ When asked to run the "post-merge workflow" or "update repo after merge":
 2. `git checkout main && git pull`
 3. Delete local feature branch: `git branch -d <branch-name>` (ask if not provided)
 4. Suggest semantic version bump based on changes (major/minor/patch), confirm with user
-5. Create annotated tag: `git tag -a <version> -m "<release-notes>"`
+5. Create annotated tag: `git tag -a <version> --cleanup=verbatim -m "<release-notes>"`
+   — **`--cleanup=verbatim` is required.** Without it, git's default `strip`
+   cleanup silently deletes every line starting with `#`, which eats every
+   `## Category` / `### Subsection` heading in the release-notes format below.
+   This bug affected every release from at least v1.10.0 through v1.14.6
+   before being caught and fixed.
 6. `git push --tags` — this triggers the GitHub Actions release workflow automatically
 
 ### Release Artifacts (standard, automated)
@@ -91,20 +96,38 @@ it, and never add `NEXT_PUBLIC_*` secrets back to `release.yml`'s build step.
 Never rename the checksum suffix or drop an archive variant — this is the
 project standard.
 
+Category emoji convention — pick the emoji matching the category's content
+(mirrors the PR title types above):
+
+- ✨ Features
+- 🐛 Fixes
+- ⚡ Performance
+- 🔒 Security
+- 📚 Documentation
+- 🧪 Testing
+- ♻️ Refactor
+- 🎨 Style / UI
+- 🔄 CI/CD
+- 🧹 Chore / Tooling
+
 Release notes format:
 
-```
-v<version> - <Title>
+```markdown
+🚀 v<version> - <Title>
 
-## <Category>
+## ✨ <Category>
+
 ### <Subsection>
+
 - <Change>
 - Metric: ✅ 22% faster (3.2s → 2.5s)
 
-## Files Changed
+## 📁 Files Changed
+
 - file.ts (created/updated/deleted)
 
-## Related
+## 🔗 Related
+
 - Commit: <hash>
 - Previous: <prev-tag>
 ```
@@ -122,7 +145,7 @@ Types: `fix` `feat` `docs` `test` `chore` `refactor` `perf` `style` `ci`
 
 Use `✅` for improvements, `❌` for regressions, always with a semantic label:
 
-```
+```text
 Build Time: ✅ 22% faster (3.2s → 2.5s)
 Bundle Size: ✅ 1.6% smaller (185KB → 182KB)
 Lighthouse:  ✅ +1 point (92 → 93)
