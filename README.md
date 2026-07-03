@@ -1,5 +1,9 @@
 # Personal Resume Website
 
+🌐 **Live:** <https://rogeriodocarmo.com/>
+
+🔗 **Personal Hub:** [rogeriodocarmo.github.io](https://rogeriodocarmo.github.io/) — a lightweight static hub that points back to this site, links my other projects, and permanently hosts documents I need to keep online, like the privacy policy for my **Miroji** app.
+
 <!-- Build & Deployment Status -->
 
 [![CI](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml/badge.svg)](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml)
@@ -317,6 +321,10 @@ The website is deployed on Vercel with automatic deployments from the main branc
 - rogeriodocarmo.xyz
 
 See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
+
+### GitHub Releases (Source Snapshots)
+
+Every `v*.*.*` tag also publishes a [GitHub Release](https://github.com/RogerioDoCarmo/curriculo/releases) with a `dist` archive (the built static export) and checksums. **These release builds intentionally ship with zero `NEXT_PUBLIC_*` secrets** — Firebase and Sentry stay unconfigured in that artifact by design, since release archives are public and downloadable and we don't bake runtime credentials into them. The live site at [rogeriodocarmo.com](https://rogeriodocarmo.com) is deployed separately via Vercel, which injects the real production environment variables at build time.
 
 ## SEO & Search Engine Submission
 

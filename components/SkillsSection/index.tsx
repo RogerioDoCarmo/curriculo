@@ -113,14 +113,17 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                   }`}
                 >
                   {/* The whole header is the toggle: clicking the title text or the
-                      chevron expands/collapses the card (WAI-ARIA accordion). */}
+                      chevron expands/collapses the card (WAI-ARIA accordion).
+                      min-h-14 reserves two text-xl lines so a two-line category
+                      title (e.g. "Gerenciamento de Estado & Arquitetura") doesn't
+                      make its card taller than single-line siblings while collapsed. */}
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     <button
                       type="button"
                       {...expandedProps}
                       aria-controls={detailsId}
                       onClick={() => toggleExpanded(cat.category)}
-                      className="flex w-full items-center justify-between gap-4 rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300"
+                      className="flex min-h-14 w-full items-center justify-between gap-4 rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300"
                     >
                       <span>{cat.category}</span>
                       {chevron}

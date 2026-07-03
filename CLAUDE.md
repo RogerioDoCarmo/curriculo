@@ -80,10 +80,16 @@ to the GitHub Release, for prefix `<repo>-<tag>` (e.g. `curriculo-v1.7.3`):
 - **Checksums**: one file per archive named `<archive-filename>_checksums.txt`
   (same prefix as the compressed file + `_checksums.txt`), each containing `sha256` + `sha512`.
 
-So a release has 2 archives + 2 checksum files. The dist build reads
-`NEXT_PUBLIC_*` from GitHub secrets to match production; if unset it still builds
-(Firebase/Sentry just stay unconfigured in that artifact). Never rename the
-checksum suffix or drop an archive variant — this is the project standard.
+So a release has 2 archives + 2 checksum files. **The dist build intentionally
+gets zero `NEXT_PUBLIC_*` secrets** — release archives are public, downloadable
+artifacts, and we never bake runtime credentials (Firebase, Sentry, etc.) into
+them, as a security precaution. Firebase/Sentry stay unconfigured in that
+artifact by design. The live site is deployed separately via Vercel, which
+injects the real production env vars at build time. The workflow appends a
+security-note disclaimer to every release body explaining this — never remove
+it, and never add `NEXT_PUBLIC_*` secrets back to `release.yml`'s build step.
+Never rename the checksum suffix or drop an archive variant — this is the
+project standard.
 
 Release notes format:
 

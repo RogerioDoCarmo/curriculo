@@ -283,7 +283,7 @@ if (element) {
 
 ### Issue: TypeScript Errors with Schema Types
 
-**Problem**: "Property 'sameAs' does not exist on type 'WithContext<Person>'"
+**Problem**: `Property 'sameAs' does not exist on type 'WithContext<Person>'`
 
 **Solution**: Use type assertion for runtime properties:
 
