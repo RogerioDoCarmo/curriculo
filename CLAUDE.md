@@ -98,18 +98,22 @@ project standard.
 
 Release notes format:
 
-```
+```markdown
 v<version> - <Title>
 
 ## <Category>
+
 ### <Subsection>
+
 - <Change>
 - Metric: ✅ 22% faster (3.2s → 2.5s)
 
 ## Files Changed
+
 - file.ts (created/updated/deleted)
 
 ## Related
+
 - Commit: <hash>
 - Previous: <prev-tag>
 ```
@@ -127,7 +131,7 @@ Types: `fix` `feat` `docs` `test` `chore` `refactor` `perf` `style` `ci`
 
 Use `✅` for improvements, `❌` for regressions, always with a semantic label:
 
-```
+```text
 Build Time: ✅ 22% faster (3.2s → 2.5s)
 Bundle Size: ✅ 1.6% smaller (185KB → 182KB)
 Lighthouse:  ✅ +1 point (92 → 93)
