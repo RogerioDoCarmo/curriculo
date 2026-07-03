@@ -318,6 +318,10 @@ The website is deployed on Vercel with automatic deployments from the main branc
 
 See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
 
+### GitHub Releases (Source Snapshots)
+
+Every `v*.*.*` tag also publishes a [GitHub Release](https://github.com/RogerioDoCarmo/curriculo/releases) with a `dist` archive (the built static export) and checksums. **These release builds intentionally ship with zero `NEXT_PUBLIC_*` secrets** — Firebase and Sentry stay unconfigured in that artifact by design, since release archives are public and downloadable and we don't bake runtime credentials into them. The live site at [rogeriodocarmo.com](https://rogeriodocarmo.com) is deployed separately via Vercel, which injects the real production environment variables at build time.
+
 ## SEO & Search Engine Submission
 
 The website is fully optimized for search engines and submitted to major search platforms:
