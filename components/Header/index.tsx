@@ -33,7 +33,7 @@ const NAV_SECTIONS = ["home", "projects", "experience", "skills", "contact"] as 
  */
 function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
   if (!useLocaleSpecificPdfs) {
-    return "/resumes/resume.pdf";
+    return "/resumes/resume-pt-BR.pdf";
   }
 
   const localeMap: Record<string, string> = {
@@ -42,7 +42,7 @@ function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
     es: "/resumes/resume-es.pdf",
   };
 
-  return localeMap[locale] || "/resumes/resume.pdf";
+  return localeMap[locale] || "/resumes/resume-pt-BR.pdf";
 }
 
 export default function Header({ locale }: HeaderProps) {

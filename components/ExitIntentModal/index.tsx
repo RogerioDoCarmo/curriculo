@@ -40,8 +40,8 @@ interface ExitIntentModalProps {
  */
 function getResumeUrl(locale?: string, useLocaleSpecificPdfs?: boolean): string {
   if (!useLocaleSpecificPdfs) {
-    // Use single PDF for all locales
-    return "/resumes/resume.pdf";
+    // Default resume when locale-specific PDFs are disabled
+    return "/resumes/resume-pt-BR.pdf";
   }
 
   // Use locale-specific PDFs
@@ -51,7 +51,7 @@ function getResumeUrl(locale?: string, useLocaleSpecificPdfs?: boolean): string 
     es: "/resumes/resume-es.pdf",
   };
 
-  return localeMap[locale || "pt-BR"] || "/resumes/resume.pdf";
+  return localeMap[locale || "pt-BR"] || "/resumes/resume-pt-BR.pdf";
 }
 
 export default function ExitIntentModal({
