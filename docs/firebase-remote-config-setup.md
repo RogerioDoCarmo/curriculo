@@ -45,7 +45,7 @@ This guide documents how to configure the `use_locale_specific_pdfs` feature fla
 
 You can create conditions to enable the feature for specific user segments:
 
-**Example: Enable for specific locales**
+#### Example: Enable for specific locales
 
 1. Click **"Add value for condition"**
 2. Create a new condition:
@@ -53,7 +53,7 @@ You can create conditions to enable the feature for specific user segments:
    - **Applies if:** User in language → `pt-BR`
    - **Value:** `true`
 
-**Example: Enable for testing**
+#### Example: Enable for testing
 
 1. Create another condition:
    - **Condition name:** `Development Environment`
@@ -134,7 +134,7 @@ For safer rollouts, use percentage-based conditions:
 The application automatically tracks feature flag usage with Firebase Analytics:
 
 **Event:** `feature_flag_checked`
-**Parameters:**
+Parameters:
 
 - `flag_name`: "use_locale_specific_pdfs"
 - `flag_value`: true/false
@@ -153,12 +153,12 @@ The application automatically tracks feature flag usage with Firebase Analytics:
 ### Monitor PDF Downloads
 
 **Event:** `pdf_download`
-**Parameters:**
+Parameters:
 
 - `locale`: Language of the downloaded PDF (pt-BR, en, es, or "universal")
 - `feature_flag_enabled`: true/false
 
-**To view:**
+To view:
 
 1. Go to Firebase Console → Analytics → Events
 2. Search for `pdf_download` event
@@ -170,14 +170,16 @@ The application automatically tracks feature flag usage with Firebase Analytics:
 
 **Symptom:** Application still shows old flag value after publishing changes
 
-**Solutions:**
+Solutions:
 
 1. **Wait for cache expiration:** The app caches flag values for 5 minutes
 2. **Clear browser cache:** Force refresh with Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
 3. **Clear feature flag cache:** Run in browser console:
+
    ```javascript
    clearFeatureFlagCache();
    ```
+
 4. **Check fetch interval:** In development, flags update immediately. In production, they update every hour.
 
 ### Flag Returns the Caller's Default Instead of the Published Value
@@ -186,7 +188,7 @@ The application automatically tracks feature flag usage with Firebase Analytics:
 returns the caller's default (e.g. the footer serves the default `resume-pt-BR.pdf`
 for every locale).
 
-**Possible Causes:**
+Possible Causes:
 
 1. **Firebase not configured:** Check environment variables in `.env.local`
 2. **Remote Config not initialized:** Check browser console for Firebase errors
@@ -203,25 +205,29 @@ for every locale).
 > repeat visits (nothing new to activate). It now always reads `getValue` and
 > only honours the caller default when the value source is `"static"`.
 
-**Debug Steps:**
+Debug Steps:
 
 1. Check Firebase initialization:
+
    ```javascript
    const configured = isFirebaseConfigured();
    console.log("Firebase configured:", configured);
    ```
+
 2. Check Remote Config instance:
+
    ```javascript
    const config = await getFirebaseRemoteConfig();
    console.log("Remote Config:", config);
    ```
+
 3. Check browser console for errors
 
 ### Parameter Not Found in Console
 
 **Symptom:** Cannot find `use_locale_specific_pdfs` in Remote Config
 
-**Solutions:**
+Solutions:
 
 1. Verify you're in the correct Firebase project
 2. Check that you published the parameter (not just saved as draft)
