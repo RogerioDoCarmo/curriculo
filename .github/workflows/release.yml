@@ -50,20 +50,12 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build static site (dist)
+        # Deliberately built with NO NEXT_PUBLIC_* secrets: release archives are
+        # public, downloadable artifacts, and we don't bake runtime credentials
+        # (Firebase, Sentry, etc.) into them. Firebase/Sentry stay unconfigured
+        # in this build. The live site is deployed separately via Vercel, which
+        # injects the real production env vars at build time.
         run: npm run build
-        env:
-          # Sourced from GitHub secrets so the dist artifact matches production.
-          # If a secret is unset the build still succeeds (Firebase/Sentry stay
-          # unconfigured in that artifact). Set these to mirror the Vercel env.
-          NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
-          NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
-          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
-          NEXT_PUBLIC_FIREBASE_VAPID_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_VAPID_KEY }}
-          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
 
       - name: Package release artifacts (dist) with checksums
         id: artifacts
@@ -87,7 +79,17 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.tag_info.outputs.tag_name }}
-          body: ${{ steps.tag_info.outputs.tag_message }}
+          body: |
+            ${{ steps.tag_info.outputs.tag_message }}
+
+            ---
+
+            **Security note:** The `dist` archive below is built with **no**
+            `NEXT_PUBLIC_*` secrets (Firebase, Sentry, etc.) — it's a public,
+            downloadable artifact and we don't bake runtime credentials into it.
+            Firebase/Sentry are unconfigured in this build by design. The live
+            site is deployed separately via Vercel, which injects the real
+            production environment variables at build time.
           draft: false
           prerelease: false
           files: |

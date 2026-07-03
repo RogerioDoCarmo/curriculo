@@ -200,7 +200,6 @@ How this integrates with existing project conventions and documentation.
 ---
 
 **Full Changelog**: [v<prev>...v<current>](github-compare-link)
-```
 
 ## Known Issues
 
@@ -210,7 +209,6 @@ How this integrates with existing project conventions and documentation.
 
 - Commit: <commit-hash>
 - Previous: <previous-tag>
-
 ```
 
 ## Example Release Notes
@@ -251,7 +249,7 @@ v0.18.0 - Next.js 16.2.4 Upgrade + Documentation Standards
 - Commit: cacec59
 - Previous: v0.17.0
 
-````
+```
 
 ## Tips
 
@@ -269,7 +267,7 @@ If you encounter issues:
 
 ```bash
 git branch -D <branch-name>  # Force delete (use with caution)
-````
+```
 
 **Tag already exists**:
 
