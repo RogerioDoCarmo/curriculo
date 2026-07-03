@@ -34,11 +34,11 @@ This guide documents how to configure the `use_locale_specific_pdfs` feature fla
 2. This matches the in-app `defaultConfig` in `lib/firebase.ts`
    (`use_locale_specific_pdfs: true`), so locale-specific PDFs are the default —
    including when Remote Config can't initialize. Publish `false` later only as a
-   kill-switch to fall back to the single universal PDF.
+   kill-switch to fall back to the default `resume-pt-BR.pdf`.
 
 > **Important:** The published Remote Config value always wins over the in-app
 > `defaultConfig`. If this parameter is published as `false`, every locale falls
-> back to the universal `resume.pdf` even though the app default is `true`. Keep
+> back to the default `resume-pt-BR.pdf` even though the app default is `true`. Keep
 > the two in sync unless you are deliberately using `false` as a kill-switch.
 
 ### 2.3 Add Parameter Conditions (Optional)
@@ -183,7 +183,7 @@ The application automatically tracks feature flag usage with Firebase Analytics:
 ### Flag Returns the Caller's Default Instead of the Published Value
 
 **Symptom:** `getFeatureFlag()` ignores the published Remote Config value and
-returns the caller's default (e.g. the footer serves the universal `resume.pdf`
+returns the caller's default (e.g. the footer serves the default `resume-pt-BR.pdf`
 for every locale).
 
 **Possible Causes:**
