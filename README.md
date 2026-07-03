@@ -1,5 +1,9 @@
 # Personal Resume Website
 
+🌐 **Live:** <https://rogeriodocarmo.com/>
+
+🔗 **Personal Hub:** [rogeriodocarmo.github.io](https://rogeriodocarmo.github.io/) — a lightweight static hub that points back to this site, links my other projects, and permanently hosts documents I need to keep online, like the privacy policy for my **Miroji** app.
+
 <!-- Build & Deployment Status -->
 
 [![CI](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml/badge.svg)](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml)
