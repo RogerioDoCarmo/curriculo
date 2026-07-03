@@ -26,7 +26,7 @@ jest.mock("@/hooks/useExitIntent", () => ({
 // Mock useFeatureFlag hook
 jest.mock("@/hooks/useFeatureFlag", () => ({
   useFeatureFlag: jest.fn(() => ({
-    value: false, // Default to false (single PDF for all locales)
+    value: false, // Default to false (feature flag disabled → default resume)
     loading: false,
     error: false,
   })),
@@ -80,7 +80,7 @@ describe.skip("Resume Download Integration Tests", () => {
       fireEvent.click(downloadButton);
 
       await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
     });
 
@@ -98,7 +98,7 @@ describe.skip("Resume Download Integration Tests", () => {
       fireEvent.click(downloadButton);
 
       await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
     });
 
@@ -116,21 +116,21 @@ describe.skip("Resume Download Integration Tests", () => {
       fireEvent.click(downloadButton);
 
       await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
     });
   });
 
   describe("PDF file accessibility", () => {
-    it("should verify that main resume.pdf file exists", () => {
-      const resumePath = path.join(process.cwd(), "public", "resumes", "resume.pdf");
+    it("should verify that the default resume-pt-BR.pdf file exists", () => {
+      const resumePath = path.join(process.cwd(), "public", "resumes", "resume-pt-BR.pdf");
       const fileExists = fs.existsSync(resumePath);
 
       expect(fileExists).toBe(true);
     });
 
-    it("should verify that resume.pdf is a valid PDF file", () => {
-      const resumePath = path.join(process.cwd(), "public", "resumes", "resume.pdf");
+    it("should verify that resume-pt-BR.pdf is a valid PDF file", () => {
+      const resumePath = path.join(process.cwd(), "public", "resumes", "resume-pt-BR.pdf");
 
       if (fs.existsSync(resumePath)) {
         const fileBuffer = fs.readFileSync(resumePath);
@@ -141,8 +141,8 @@ describe.skip("Resume Download Integration Tests", () => {
       }
     });
 
-    it("should verify that resume.pdf file size is reasonable (< 2MB)", () => {
-      const resumePath = path.join(process.cwd(), "public", "resumes", "resume.pdf");
+    it("should verify that resume-pt-BR.pdf file size is reasonable (< 2MB)", () => {
+      const resumePath = path.join(process.cwd(), "public", "resumes", "resume-pt-BR.pdf");
 
       if (fs.existsSync(resumePath)) {
         const stats = fs.statSync(resumePath);
@@ -154,7 +154,7 @@ describe.skip("Resume Download Integration Tests", () => {
   });
 
   describe("Fallback behavior", () => {
-    it("should use fallback resume.pdf when locale-specific file doesn't exist", async () => {
+    it("should use fallback resume-pt-BR.pdf when locale-specific file doesn't exist", async () => {
       // Test with a locale that doesn't have a specific PDF
       render(
         <NextIntlClientProvider locale="fr" messages={messages}>
@@ -169,8 +169,8 @@ describe.skip("Resume Download Integration Tests", () => {
       fireEvent.click(downloadButton);
 
       await waitFor(() => {
-        // Should fallback to main resume.pdf
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        // Should fallback to default resume-pt-BR.pdf
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
     });
 
@@ -188,7 +188,7 @@ describe.skip("Resume Download Integration Tests", () => {
       fireEvent.click(downloadButton);
 
       await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
     });
   });
@@ -216,7 +216,7 @@ describe.skip("Resume Download Integration Tests", () => {
       // Verify window.open was called with correct parameters
       await waitFor(() => {
         expect(mockWindowOpen).toHaveBeenCalledTimes(1);
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
       });
 
       // Verify modal remains open (doesn't auto-dismiss)
@@ -250,7 +250,7 @@ describe.skip("Resume Download Integration Tests", () => {
   });
 
   describe("Feature flag behavior", () => {
-    it("should use single PDF when USE_LOCALE_SPECIFIC_PDFS is false", async () => {
+    it("should use default resume-pt-BR.pdf when USE_LOCALE_SPECIFIC_PDFS is false", async () => {
       // Test all locales use the same PDF
       const locales = ["pt-BR", "en", "es"];
 
@@ -270,7 +270,7 @@ describe.skip("Resume Download Integration Tests", () => {
         fireEvent.click(downloadButton);
 
         await waitFor(() => {
-          expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+          expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
         });
 
         unmount();

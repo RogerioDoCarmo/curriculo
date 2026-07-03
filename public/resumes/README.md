@@ -4,14 +4,15 @@ This directory contains PDF resume files for all supported locales.
 
 ## Current Setup
 
-For now, we're using a single PDF file (`resume.pdf`) for all locales. In the future, you can add locale-specific versions.
+Each locale has its own PDF. `resume-pt-BR.pdf` is the default/standard file —
+it's used as the fallback whenever a locale has no dedicated PDF, or when the
+`use_locale_specific_pdfs` feature flag is disabled.
 
 ## Files
 
-- `resume.pdf` - Main resume file (used for all locales currently)
-- `resume-pt-BR.pdf` - Portuguese (Brazil) resume (optional, falls back to resume.pdf)
-- `resume-en.pdf` - English resume (optional, falls back to resume.pdf)
-- `resume-es.pdf` - Spanish resume (optional, falls back to resume.pdf)
+- `resume-pt-BR.pdf` - Portuguese (Brazil) resume — **default/fallback file**
+- `resume-en.pdf` - English resume
+- `resume-es.pdf` - Spanish resume
 
 ## Requirements
 
@@ -22,9 +23,10 @@ For now, we're using a single PDF file (`resume.pdf`) for all locales. In the fu
 
 ## Adding Your Resume
 
-1. Place your PDF file in this directory as `resume.pdf`
-2. Optionally, create locale-specific versions (resume-pt-BR.pdf, resume-en.pdf, resume-es.pdf)
-3. The application will automatically use locale-specific versions if available, otherwise falls back to `resume.pdf`
+1. Place your PDF file in this directory as `resume-pt-BR.pdf` (the default)
+2. Optionally, create locale-specific versions (`resume-en.pdf`, `resume-es.pdf`)
+3. The application automatically selects the locale-specific version, falling back
+   to `resume-pt-BR.pdf` if one isn't available
 
 ## Updating Resumes
 
@@ -37,11 +39,13 @@ To update a resume:
 
 ## Usage
 
-These files are served statically from `/resumes/resume-{locale}.pdf` (or `/resumes/resume.pdf` as fallback) and are used by:
+These files are served statically from `/resumes/resume-{locale}.pdf` (falling back
+to `/resumes/resume-pt-BR.pdf`) and are used by:
 
 - ExitIntentModal component (download button)
 - Footer component (download link)
+- Header component (download link)
 - Any other components that need to link to the resume
 
-The correct locale-specific resume is automatically selected based on the user's current language preference, with fallback to the main resume.pdf file.
-
+The correct locale-specific resume is automatically selected based on the user's
+current language preference, with fallback to `resume-pt-BR.pdf`.
