@@ -96,23 +96,37 @@ it, and never add `NEXT_PUBLIC_*` secrets back to `release.yml`'s build step.
 Never rename the checksum suffix or drop an archive variant — this is the
 project standard.
 
+Category emoji convention — pick the emoji matching the category's content
+(mirrors the PR title types above):
+
+- ✨ Features
+- 🐛 Fixes
+- ⚡ Performance
+- 🔒 Security
+- 📚 Documentation
+- 🧪 Testing
+- ♻️ Refactor
+- 🎨 Style / UI
+- 🔄 CI/CD
+- 🧹 Chore / Tooling
+
 Release notes format:
 
 ```markdown
-v<version> - <Title>
+🚀 v<version> - <Title>
 
-## <Category>
+## ✨ <Category>
 
 ### <Subsection>
 
 - <Change>
 - Metric: ✅ 22% faster (3.2s → 2.5s)
 
-## Files Changed
+## 📁 Files Changed
 
 - file.ts (created/updated/deleted)
 
-## Related
+## 🔗 Related
 
 - Commit: <hash>
 - Previous: <prev-tag>
