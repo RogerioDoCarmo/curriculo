@@ -68,7 +68,12 @@ When asked to run the "post-merge workflow" or "update repo after merge":
 2. `git checkout main && git pull`
 3. Delete local feature branch: `git branch -d <branch-name>` (ask if not provided)
 4. Suggest semantic version bump based on changes (major/minor/patch), confirm with user
-5. Create annotated tag: `git tag -a <version> -m "<release-notes>"`
+5. Create annotated tag: `git tag -a <version> --cleanup=verbatim -m "<release-notes>"`
+   — **`--cleanup=verbatim` is required.** Without it, git's default `strip`
+   cleanup silently deletes every line starting with `#`, which eats every
+   `## Category` / `### Subsection` heading in the release-notes format below.
+   This bug affected every release from at least v1.10.0 through v1.14.6
+   before being caught and fixed.
 6. `git push --tags` — this triggers the GitHub Actions release workflow automatically
 
 ### Release Artifacts (standard, automated)
