@@ -76,12 +76,11 @@ When asked to run the "post-merge workflow" or "update repo after merge":
 Every `v*.*.*` tag triggers `.github/workflows/release.yml`, which **must** attach
 to the GitHub Release, for prefix `<repo>-<tag>` (e.g. `curriculo-v1.7.3`):
 
-- **Source** archives: `<prefix>-source.tar.gz`, `<prefix>-source.zip` (via `git archive` of the tag)
 - **Dist** archives: `<prefix>-dist.tar.gz`, `<prefix>-dist.zip` (the built `out/` static export)
 - **Checksums**: one file per archive named `<archive-filename>_checksums.txt`
   (same prefix as the compressed file + `_checksums.txt`), each containing `sha256` + `sha512`.
 
-So a release has 4 archives + 4 checksum files. The dist build reads
+So a release has 2 archives + 2 checksum files. The dist build reads
 `NEXT_PUBLIC_*` from GitHub secrets to match production; if unset it still builds
 (Firebase/Sentry just stay unconfigured in that artifact). Never rename the
 checksum suffix or drop an archive variant — this is the project standard.

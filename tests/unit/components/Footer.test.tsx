@@ -318,13 +318,13 @@ describe("Footer", () => {
     });
   });
 
-  it("falls back to the generic PDF for every locale when the flag is off (kill-switch)", async () => {
+  it("falls back to the default pt-BR PDF for every locale when the flag is off (kill-switch)", async () => {
     mockUseFeatureFlag.mockReturnValue({ value: false, loading: false, error: false });
     for (const locale of ["pt-BR", "en", "es"]) {
       const { unmount } = renderFooter(locale);
       await waitFor(() => {
         const resumeLink = screen.getByRole("link", { name: /download resume/i });
-        expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+        expect(resumeLink).toHaveAttribute("href", "/resumes/resume-pt-BR.pdf");
       });
       unmount();
     }
