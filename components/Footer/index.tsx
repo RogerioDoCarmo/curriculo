@@ -27,8 +27,8 @@ interface FooterProps {
  */
 function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
   if (!useLocaleSpecificPdfs) {
-    // Use single PDF for all locales
-    return "/resumes/resume.pdf";
+    // Default resume when locale-specific PDFs are disabled
+    return "/resumes/resume-pt-BR.pdf";
   }
 
   // Use locale-specific PDFs
@@ -38,7 +38,7 @@ function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
     es: "/resumes/resume-es.pdf",
   };
 
-  return localeMap[locale] || "/resumes/resume.pdf";
+  return localeMap[locale] || "/resumes/resume-pt-BR.pdf";
 }
 
 const SOCIAL_LINKS = [
