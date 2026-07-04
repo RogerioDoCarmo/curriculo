@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import CookieConsent from "@/components/CookieConsent";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import BackToTopButton from "@/components/BackToTopButton";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -213,6 +214,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                 <Header locale={locale} />
                 <main className="min-h-screen">{children}</main>
                 <Footer locale={locale} />
+                <BackToTopButton />
                 <CookieConsent />
               </ErrorBoundary>
             </AnalyticsProvider>

@@ -103,11 +103,6 @@ jest.mock("@/components/ContactForm", () => ({
   default: () => <div data-testid="contact-form">Contact Form</div>,
 }));
 
-jest.mock("@/components/BackToTopButton", () => ({
-  __esModule: true,
-  default: () => <button data-testid="back-to-top">Back to Top</button>,
-}));
-
 describe("HomePageContent Component", () => {
   const mockExperiences: Experience[] = [
     {
@@ -198,7 +193,6 @@ describe("HomePageContent Component", () => {
       // Tech Stack section moved to separate page
       expect(screen.queryByTestId("tech-stack-section")).not.toBeInTheDocument();
       expect(screen.getByTestId("contact-form")).toBeInTheDocument();
-      expect(screen.getByTestId("back-to-top")).toBeInTheDocument();
       expect(screen.getByTestId("exit-intent-modal")).toBeInTheDocument();
     });
 
@@ -444,7 +438,6 @@ describe("HomePageContent Component", () => {
         "skills-section",
         "ai-stack-section",
         "contact-form",
-        "back-to-top",
         "exit-intent-modal",
       ]);
     });
