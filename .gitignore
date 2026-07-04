@@ -181,3 +181,4 @@ chromatic.config.*
 
 # Local operational docs (non-code, never commit)
 docs/security-remediation/
+docs/personal-notes/
