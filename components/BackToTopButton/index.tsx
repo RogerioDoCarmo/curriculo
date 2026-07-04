@@ -74,7 +74,7 @@ export default function BackToTopButton({ className = "", threshold = 300 }: Bac
         ${className}
       `.trim()}
     >
-      <span aria-hidden="true" className="text-lg leading-none">
+      <span aria-hidden="true" className="text-2xl leading-none">
         ↑
       </span>
     </button>
