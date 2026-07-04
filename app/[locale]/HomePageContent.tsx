@@ -12,7 +12,6 @@ import SkillsSection from "@/components/SkillsSection";
 import AiStackSection from "@/components/AiStackSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactForm from "@/components/ContactForm";
-import BackToTopButton from "@/components/BackToTopButton";
 import type { Experience, Project, SkillCategory, CareerPath } from "@/types/index";
 
 interface HomePageContentProps {
@@ -125,9 +124,6 @@ export default function HomePageContent({
           <ContactForm locale={locale} />
         </div>
       </section>
-
-      {/* Back to Top Button */}
-      <BackToTopButton />
 
       {/* Exit Intent Modal - Lazy loaded, client-side only */}
       <LazyExitIntentModal
