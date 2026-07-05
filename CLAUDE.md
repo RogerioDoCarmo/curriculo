@@ -130,7 +130,12 @@ Release notes format:
 
 - Commit: <hash>
 - Previous: <prev-tag>
+- Full Changelog: <prev-tag>...<version>
 ```
+
+The `Full Changelog` line is a GitHub compare link — render it as
+`Full Changelog: [<prev-tag>...<version>](https://github.com/RogerioDoCarmo/curriculo/compare/<prev-tag>...<version>)`
+so it's clickable in the rendered release body.
 
 ## PR & Release Descriptions
 
