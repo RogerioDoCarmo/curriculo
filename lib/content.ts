@@ -7,7 +7,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import yaml from "js-yaml";
+import { load as loadYaml } from "js-yaml";
 import type { Project, Experience, SkillCategory } from "@/types/index";
 
 /** Default content root directory (relative to project root). */
@@ -34,7 +34,7 @@ interface ParsedFrontmatter {
  * Parses YAML frontmatter delimited by `---` at the start of a markdown file,
  * returning the parsed `data` object and the remaining `content` body.
  *
- * Replaces the (unmaintained) `gray-matter` dependency with a direct js-yaml v4
+ * Replaces the (unmaintained) `gray-matter` dependency with a direct js-yaml
  * call. Files without a leading `---` delimiter (or with an unterminated block)
  * yield `data: {}` and the original string as `content`, matching gray-matter's
  * behaviour. YAML is parsed with js-yaml's safe-by-default `load`.
@@ -60,7 +60,7 @@ function parseFrontmatter(raw: string): ParsedFrontmatter {
 
   const yamlBlock = afterOpen.slice(0, close.index);
   const content = afterOpen.slice(close.index + close[0].length);
-  const parsed = yaml.load(yamlBlock);
+  const parsed = loadYaml(yamlBlock);
   const data =
     typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
 
