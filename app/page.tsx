@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_LOCALE } from "@/types/index";
+import { getStoredLocale } from "@/hooks/useLanguage";
 // Load Tailwind on this standalone redirect page so utility classes apply
 // (it renders its own <html>/<body> outside the locale layout).
 import "./globals.css";
@@ -27,7 +28,10 @@ export default function RootPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`/${DEFAULT_LOCALE}`);
+    // Honor a returning visitor's previously chosen language (localStorage
+    // persists across tab close/reopen; there's no cookie or middleware in
+    // this statically-exported site to do that redirect server-side).
+    router.replace(`/${getStoredLocale() ?? DEFAULT_LOCALE}`);
   }, [router]);
 
   return (
