@@ -204,13 +204,28 @@ describe("useLanguage - Hook", () => {
     expect(mockPush).toHaveBeenCalled();
   });
 
-  it("should load saved locale preference on mount", () => {
+  it("should reflect currentLocale even when a different locale is saved", () => {
     localStorage.setItem("preferred-locale", "es");
 
     const { result } = renderHook(() => useLanguage("pt-BR"));
 
-    // The hook will detect the saved preference
-    expect(result.current.locale).toBe("es");
+    // The displayed locale must always match what's actually rendered (the
+    // URL-derived currentLocale), never silently diverge to a stale
+    // localStorage value without navigating.
+    expect(result.current.locale).toBe("pt-BR");
+  });
+
+  it("should update locale state when currentLocale prop changes", () => {
+    const { result, rerender } = renderHook(
+      (locale: "pt-BR" | "en" | "es") => useLanguage(locale),
+      {
+        initialProps: "pt-BR",
+      }
+    );
+    expect(result.current.locale).toBe("pt-BR");
+
+    rerender("en");
+    expect(result.current.locale).toBe("en");
   });
 
   it("should support switching between all locales", () => {
