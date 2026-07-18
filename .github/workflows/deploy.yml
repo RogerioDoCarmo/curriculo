@@ -176,12 +176,13 @@ jobs:
         run: |
           # Create notification script
           cat > send-notification.js << 'EOF'
-          const admin = require('firebase-admin');
+          const { initializeApp, cert } = require('firebase-admin/app');
+          const { getMessaging } = require('firebase-admin/messaging');
 
           // Initialize Firebase Admin SDK
           const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-          admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount)
+          const app = initializeApp({
+            credential: cert(serviceAccount)
           });
 
           // Send notification to topic
@@ -193,7 +194,7 @@ jobs:
             topic: 'deployments'
           };
 
-          admin.messaging().send(message)
+          getMessaging(app).send(message)
             .then((response) => {
               console.log('✅ Notification sent successfully:', response);
               process.exit(0);
