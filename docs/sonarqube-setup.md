@@ -102,7 +102,7 @@ For stricter standards, create a custom quality gate:
 | Metric                     | Operator        | Value |
 | -------------------------- | --------------- | ----- |
 | Coverage                   | is less than    | 90%   |
-| Duplicated Lines (%)       | is greater than | 3%    |
+| Duplicated Lines (%)       | is greater than | 5%    |
 | Maintainability Rating     | is worse than   | A     |
 | Reliability Rating         | is worse than   | A     |
 | Security Rating            | is worse than   | A     |
