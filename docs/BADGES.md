@@ -84,7 +84,7 @@ These badges are provided by SonarCloud, a comprehensive code quality and securi
 **Quality Gate Conditions**:
 
 - Coverage on new code ≥ 80%
-- Duplicated lines on new code ≤ 5%
+- Duplicated lines on new code ≤ 3%
 - Maintainability rating on new code = A
 - Reliability rating on new code = A
 - Security rating on new code = A
