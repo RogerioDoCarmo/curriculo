@@ -83,38 +83,26 @@ export interface UseLanguageReturn {
 }
 
 /**
- * Manages locale state with browser detection and localStorage persistence.
+ * Manages locale state with localStorage persistence.
  *
- * Priority order:
- * 1. Saved localStorage preference
- * 2. Browser language detection
- * 3. Default locale (pt-BR)
+ * `currentLocale` (derived from the URL) is the single source of truth for
+ * what's actually rendered, so the displayed locale always tracks it — the
+ * saved localStorage preference is only ever read by the root redirect
+ * (see `app/page.tsx`) to pick which locale URL to send a returning visitor
+ * to. Overriding the displayed locale from localStorage without navigating
+ * would show a selection that doesn't match the rendered content.
  */
 export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
   const router = useRouter();
   const pathname = usePathname();
 
   // Initialize with currentLocale to ensure server/client consistency
-  // We'll sync with localStorage after hydration to avoid hydration mismatch
   const [locale, setLocaleState] = useState<SupportedLocale>(currentLocale);
 
-  // Sync with localStorage after hydration to respect user's saved preference
+  // Keep local state in sync whenever the URL-derived locale changes.
   useEffect(() => {
-    const saved = getStoredLocale();
-    if (saved && saved !== locale) {
-      setLocaleState(saved);
-    }
-  }, []); // Run only once after mount
-
-  // Sync state with currentLocale only when currentLocale changes AND
-  // there's no saved preference (to respect user's explicit choice)
-  useEffect(() => {
-    const saved = getStoredLocale();
-    // Only update if there's no saved preference and currentLocale differs
-    if (!saved && locale !== currentLocale) {
-      setLocaleState(currentLocale);
-    }
-  }, [currentLocale, locale]);
+    setLocaleState(currentLocale);
+  }, [currentLocale]);
 
   const setLocale = useCallback(
     (newLocale: SupportedLocale) => {
