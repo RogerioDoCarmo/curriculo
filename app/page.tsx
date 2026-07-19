@@ -35,7 +35,7 @@ export default function RootPage() {
   }, [router]);
 
   return (
-    <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
+    <html lang={DEFAULT_LOCALE} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />

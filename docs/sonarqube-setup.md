@@ -90,7 +90,14 @@ SonarQube Cloud uses the "Sonar way" quality gate by default:
 - **Reliability Rating**: A on new code
 - **Security Rating**: A on new code
 
-### Custom Quality Gate (Recommended)
+### Custom Quality Gate (requires a paid plan)
+
+> **Note:** associating a custom quality gate with a project is blocked on
+> the Free plan ("Your current plan does not allow you to associate a
+> quality gate other than Sonar way (Default) to this project"). The gate
+> itself can still be created and configured, but SonarQube Cloud will
+> keep enforcing "Sonar way" on this project regardless. Revisit this if
+> the plan changes.
 
 For stricter standards, create a custom quality gate:
 
@@ -112,7 +119,7 @@ For stricter standards, create a custom quality gate:
 
 5. Click **"Save"**
 6. Go to your project → **Administration → Quality Gate**
-7. Select your custom quality gate
+7. Select your custom quality gate (requires a paid plan — see note above)
 
 ## Troubleshooting
 

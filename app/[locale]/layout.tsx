@@ -169,6 +169,11 @@ export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
+// `output: "export"` can't render params outside generateStaticParams() at
+// request time, so disable the dynamic-render fallback — an unlisted locale
+// (e.g. /f/) 404s immediately instead of logging a "missing param" dev error.
+export const dynamicParams = false;
+
 interface LocaleLayoutProps {
   readonly children: React.ReactNode;
   readonly params: Promise<{ locale: string }>;
