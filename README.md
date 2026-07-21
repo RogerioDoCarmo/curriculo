@@ -43,12 +43,19 @@
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97706?logo=anthropic&logoColor=white)](https://claude.ai/code)
 [![Chromatic](https://img.shields.io/badge/storybook-chromatic-FC521F?logo=storybook&logoColor=white)](https://www.chromatic.com/builds?appId=6a1b4e8a78d533ad545f5bc0)
 
+<!-- Content Protection -->
+
+[![DMCA.com Protection Status](https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)](https://www.dmca.com/Protection/Status.aspx?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)
+
 A modern, responsive personal resume website built with Next.js 16.2.6, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
 
 [![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
 
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
-> e
+
+<!-- -->
+
+> **🛡️ Content Protection**: This site is registered with [DMCA.com](https://www.dmca.com/), a third-party copyright-protection service unrelated to DMARC (the site's separate email-authentication setup — see [`docs/security-remediation/TASKS-1-3.md`](./docs/security-remediation/TASKS-1-3.md)). The badge above links to a live status page verifying registration, and lets DMCA.com file takedowns on my behalf if this site's original content (text, images, the résumé/dissertation PDFs) is republished elsewhere without permission.
 
 ## 🎬 Demo
 

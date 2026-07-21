@@ -8,6 +8,7 @@ This document explains all the quality badges displayed in the project README, w
 - [Code Quality Metrics](#code-quality-metrics)
 - [Tech Stack Badges](#tech-stack-badges)
 - [Project Information](#project-information)
+- [Content Protection](#content-protection)
 - [How to Update Badges](#how-to-update-badges)
 
 ---
@@ -386,6 +387,43 @@ These badges provide general information about the project.
 
 ---
 
+## Content Protection
+
+This badge is unrelated to the other categories above — it's not a CI/quality/tech-stack
+indicator, but a registration mark from a third-party copyright-protection service.
+
+### DMCA.com Protection Status
+
+```markdown
+[![DMCA.com Protection Status](https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)](https://www.dmca.com/Protection/Status.aspx?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)
+```
+
+**What it shows**: That this site is registered with [DMCA.com](https://www.dmca.com/). Clicking
+the badge opens a live status page confirming the registration is active.
+
+**Why it matters**: If this site's original content (text, images, the résumé/dissertation PDFs)
+is republished elsewhere without permission, DMCA.com can file a takedown notice on the owner's
+behalf. The badge itself is also a mild deterrent — scrapers are less likely to target a site that
+visibly tracks copies of its content.
+
+**Not to be confused with DMARC**: DMARC is an unrelated email-authentication standard (SPF/DKIM/DMARC
+DNS records that stop email spoofing), already configured for this domain — see
+[`docs/security-remediation/TASKS-1-3.md`](./security-remediation/TASKS-1-3.md). DMCA.com protects
+website _content_ from copying; DMARC protects the domain's _email_ from being impersonated. The
+similar acronyms are the only thing they share.
+
+**Scope**: Only the canonical domain (`rogeriodocarmo.com`) carries the badge. The site's other
+defensively-registered domains just redirect to it and serve no content of their own to protect —
+and DMCA.com's own plans cap free/Basic accounts at one tracked badge ID, so a single badge is both
+sufficient and the natural fit.
+
+**Source**: Registered account at [dmca.com](https://www.dmca.com/); embed code (badge image link +
+`DMCABadgeHelper.min.js`) added in [`components/Footer/index.tsx`](../components/Footer/index.tsx).
+The helper script only rewrites the badge's `href` with a `refurl` param on click — no cookies, no
+network calls of its own — so it isn't gated behind the site's cookie-consent banner.
+
+---
+
 ## How to Update Badges
 
 ### Automatic Updates
@@ -480,10 +518,11 @@ When adding new badges, consider:
 
 ### Badge Services
 
-- **Shields.io**: https://shields.io/ - General-purpose badge generator
-- **SonarCloud**: https://sonarcloud.io/ - Code quality badges
+- **Shields.io**: <https://shields.io/> - General-purpose badge generator
+- **SonarCloud**: <https://sonarcloud.io/> - Code quality badges
 - **GitHub Actions**: Built-in CI/CD badges
-- **Vercel**: https://github.com/therealsujitk/vercel-badge - Deployment badges
+- **Vercel**: <https://github.com/therealsujitk/vercel-badge> - Deployment badges
+- **DMCA.com**: <https://www.dmca.com/> - Content-protection badges and takedown service
 
 ---
 

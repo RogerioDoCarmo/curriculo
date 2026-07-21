@@ -7,6 +7,7 @@
  */
 
 import { useTranslations } from "next-intl";
+import Script from "next/script";
 import {
   trackFooterLinkClick,
   trackSocialLinkClick,
@@ -14,6 +15,11 @@ import {
 } from "@/lib/analytics";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
+
+const DMCA_STATUS_URL =
+  "https://www.dmca.com/Protection/Status.aspx?ID=79db3b92-8bad-4179-a596-0b5a5ff92364";
+const DMCA_BADGE_IMAGE_URL =
+  "https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=79db3b92-8bad-4179-a596-0b5a5ff92364";
 
 interface FooterProps {
   readonly locale: string;
@@ -400,8 +406,39 @@ export default function Footer({ locale }: FooterProps) {
             © {year} Rogério do Carmo.{" "}
             <span className="block sm:inline">{t("footer.copyright")}</span>
           </p>
+          <div className="mt-4 flex justify-center print:hidden">
+            <a
+              href={DMCA_STATUS_URL}
+              title="DMCA.com Protection Status"
+              className="dmca-badge"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: DMCA_STATUS_URL,
+                  context: "footer_dmca_badge",
+                })
+              }
+            >
+              {/* Plain <img>, not next/image: DMCA.com serves this badge from
+                  their own CDN and may swap it server-side; hotlinking the
+                  vendor's exact URL is how their protection status stays
+                  accurate. */}
+              <img
+                src={DMCA_BADGE_IMAGE_URL}
+                alt="DMCA.com Protection Status"
+                width={121}
+                height={24}
+              />
+            </a>
+          </div>
         </div>
       </div>
+      {/* DMCA badge helper: rewrites the badge link with a `refurl` param on
+          load so DMCA.com knows which page a click originated from. Verified
+          it sets no cookies and makes no network calls of its own — safe to
+          load unconditionally, no cookie-consent gating needed. */}
+      <Script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js" strategy="lazyOnload" />
     </footer>
   );
 }
