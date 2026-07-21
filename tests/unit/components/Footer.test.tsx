@@ -409,6 +409,41 @@ describe("Footer", () => {
     });
   });
 
+  // -------------------------------------------------------------------------
+  // DMCA protection badge
+  // -------------------------------------------------------------------------
+  it("renders the DMCA badge link pointing to the protection status page", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const dmcaLink = screen.getByRole("link", { name: /dmca\.com protection status/i });
+      expect(dmcaLink).toBeInTheDocument();
+      expect(dmcaLink).toHaveAttribute(
+        "href",
+        expect.stringContaining("dmca.com/Protection/Status.aspx")
+      );
+    });
+  });
+
+  it("DMCA badge link opens in a new tab", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const dmcaLink = screen.getByRole("link", { name: /dmca\.com protection status/i });
+      expect(dmcaLink).toHaveAttribute("target", "_blank");
+      expect(dmcaLink).toHaveAttribute("rel", "noopener noreferrer");
+    });
+  });
+
+  it("renders the DMCA badge image with alt text and explicit dimensions", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const badgeImage = screen.getByAltText("DMCA.com Protection Status");
+      expect(badgeImage).toBeInTheDocument();
+      expect(badgeImage).toHaveAttribute("src", expect.stringContaining("images.dmca.com"));
+      expect(badgeImage).toHaveAttribute("width", "121");
+      expect(badgeImage).toHaveAttribute("height", "24");
+    });
+  });
+
   it("print button is keyboard accessible", async () => {
     renderFooter();
     await waitFor(() => {
