@@ -123,6 +123,7 @@
     "@vitest/browser": ">=4.1.10",
     "js-yaml": "^5.2.1",
     "sharp": ">=0.35.0",
+    "brace-expansion": ">=1.1.16",
     "@firebase/firestore": {
       "@grpc/grpc-js": "~1.9.16"
     },
