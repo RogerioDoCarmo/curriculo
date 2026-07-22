@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>/* Resume PDF template — replicates the original Word "chronological resume" look.
+   Colors extracted from the original PDF: accent #77448B, links #886288,
+   header band #F7F7F7, body text #4C4C4C. Fonts: Carlito (Regular/Bold), a
+   free, metrically-compatible substitute for Calibri — Calibri itself is a
+   Microsoft-licensed font and can't be redistributed via this repo. Carlito
+   has no distinct "Light" weight, so .name renders at regular weight instead
+   of Calibri Light. */
+
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Italic.ttf");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-BoldItalic.ttf");
+  font-weight: 700;
+  font-style: italic;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Carlito", sans-serif;
+  font-size: 10pt;
+  color: #000;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ---------- Header band ---------- */
+
+.masthead {
+  background: #f7f7f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7mm 15mm 8mm 31mm;
+}
+
+.name {
+  font-family: "Carlito", sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  line-height: 1.13;
+  letter-spacing: 0.4pt;
+  color: #111;
+}
+
+.name strong {
+  font-family: "Carlito", sans-serif;
+  font-weight: 700;
+}
+
+.contacts {
+  text-align: right;
+  font-size: 9pt;
+  padding-top: 15mm;
+}
+
+.contacts a {
+  display: block;
+  color: #886288;
+  text-decoration: underline;
+  margin-bottom: 1.4mm;
+}
+
+.contacts .cgroup {
+  margin-bottom: 4.5mm;
+}
+
+.contacts .cgroup:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Content ---------- */
+
+.content {
+  padding: 11mm 24mm 0 27mm;
+}
+
+.sec {
+  display: grid;
+  grid-template-columns: 8mm 1fr;
+  column-gap: 3mm;
+  margin-top: 5.5mm;
+}
+
+.sec:first-child {
+  margin-top: 0;
+}
+
+.badge {
+  width: 8mm;
+  height: 8mm;
+  border-radius: 50%;
+  background: #77448b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge svg {
+  width: 3.8mm;
+  height: 3.8mm;
+  fill: #fff;
+}
+
+h2 {
+  font-size: 14pt;
+  font-weight: 700;
+  color: #111;
+  line-height: 8mm;
+  letter-spacing: 0.2pt;
+}
+
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #111;
+  text-align: justify;
+  line-height: 1.32;
+  margin-top: 5mm;
+}
+
+h3 .accent {
+  color: #77448b;
+}
+
+h4 {
+  font-size: 10pt;
+  font-weight: 400;
+  color: #4c4c4c;
+  margin-top: 0.6mm;
+}
+
+h4 strong {
+  color: #111;
+}
+
+p {
+  color: #4c4c4c;
+  text-align: justify;
+  line-height: 1.28;
+  margin-top: 2.2mm;
+}
+
+p strong,
+li strong {
+  color: #111;
+}
+
+ul {
+  margin-top: 1.6mm;
+  padding-left: 7.5mm;
+  color: #4c4c4c;
+}
+
+li {
+  line-height: 1.28;
+  margin-bottom: 0.4mm;
+  text-align: justify;
+  padding-left: 1mm;
+}
+
+a {
+  color: #886288;
+}
+
+/* Two-column bullet list (Skills section) */
+.cols-2 ul {
+  columns: 2;
+  column-gap: 9mm;
+}
+
+.cols-2 li {
+  break-inside: avoid;
+}
+
+/* Explicit page break (<!-- pagebreak --> in markdown) */
+.pagebreak {
+  break-before: page;
+  height: 0;
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="name"><div>ROGÉRIO R.</div><div>RODRIGUES</div><div><strong>DO CARMO</strong></div></div>
+  <div class="contacts">
+    <div class="cgroup"><a href="https://www.google.com/maps/place/Pres.+Prudente,+SP/@-22.1190543,-51.5119605,11.66z/data=!4m6!3m5!1s0x9493f45d3ca3d435:0x7db8d361d2635f6a!8m2!3d-22.1207836!4d-51.3873199!16s%2Fg%2F11bc6w421y!5m1!1e2?entry=ttu&amp;g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D">Presidente Prudente (SP) / Brasil</a></div>
+    <div class="cgroup"><a href="mailto:contact@rogeriodocarmo.com">contact@rogeriodocarmo.com</a><a href="https://www.linkedin.com/in/rogeriodocarmo/">Linkedin</a><a href="https://rogeriodocarmo.com/">Sitio web</a></div>
+  </div>
+</header>
+<main class="content">
+<section class="sec"><div class="badge"><svg viewBox="0 0 24 24"><path d="M3 5h18v2.4H3zm0 5.8h18v2.4H3zm0 5.8h18V19H3z"/></svg></div><div class="sec-body">
+<h2>OBJETIVO</h2>
+<p>Desarrollador sénior de front-end con <strong>React Native</strong>. Actualmente, trabajo con React Native creando aplicaciones para el sector bancario. Tengo experiencia en el desarrollo y mantenimiento de funcionalidades críticas, como el módulo Pix para aplicaciones bancarias. Durante mi maestría, trabajé en el <strong>desarrollo nativo para Android</strong> utilizando datos de GPS. Mi objetivo es trabajar y aportar valor en aplicaciones móviles híbridas <strong>(Android y iOS).</strong></p>
+</div></section>
+<section class="sec"><div class="badge"><svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg></div><div class="sec-body">
+<h2>ESCOLARIDAD</h2>
+<h3><span class="accent">Máster en Ciencias Cartográficas |</span> UNESP - Universidade Estadual Paulista "Júlio de Mesquita Filho"</h3>
+<h4>MAR 2019 – MAR 2023</h4>
+<p>Título de la tesis: <strong>Evaluación de la calidad de las medidas y del posicionamiento GNSS con smartphones Android</strong></p>
+<ul>
+<li>He utilizado <strong>Java</strong> para Android, <strong>Java Swing</strong> (desktop) y <strong>Python</strong> para la captura de datos por la aplicación y el post-procesamiento y análisis de los datos GPS.</li>
+<li>He utilizado <strong>Firebase para el almacenamiento</strong> y la distribución de los datos.</li>
+</ul>
+<p>- <em>Publicación del trabajo:</em> <strong>Evaluación de mediciones GNSS sin procesar obtenidas de teléfonos inteligentes Android.</strong> In: XI Colóquio Brasileiro de Ciências Geodésicas, 2020, Curitiba.</p>
+<p>- <em>Pasantía Docencia:</em> He impartido clases sobre <strong>Teoría de los Grafos</strong> en la disciplina <strong>Estructura de Datos II</strong>, para el curso de Licenciatura en Ciencias de la Computación de la UNESP. Preparé material didáctico (diapositivas y códigos) y di clases, bajo supervisión.</p>
+<h3><span class="accent">Licenciatura en Ciencias de la Computación |</span> UNESP - Universidade Estadual Paulista "Júlio de Mesquita Filho"</h3>
+<h4>MAR 2014 – AGO 2018</h4>
+<p>Trabajo de Fin de Grado: <strong>Procesamiento de datos GNSS capturados por un sensor en un dispositivo móvil Android.</strong></p>
+<p>- <em>Publicación del trabajo:</em> <strong>Implementación de soporte para archivos TIFF en el software de procesamiento de imágenes CARTOMORPH</strong>. In: XXVIII Congresso de Iniciação Científica da UNESP (Phase 2), 2016, Bauru.</p>
+<p>En este trabajo actué en un software de procesamiento de imágenes, utilizando el lenguaje <strong>C++</strong>. Añadí soporte al formato de archivo TIFF, generalmente ofrecido por los centros de procesamiento de imágenes satelitales, lo que facilitó el trabajo de investigadores del área, y contribuye a la mejora en el resultado de los procesamientos del software.</p>
+</div></section>
+<div class="pagebreak"></div>
+<section class="sec"><div class="badge"><svg viewBox="0 0 24 24"><path d="M10 2h4a2 2 0 0 1 2 2v2h4a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4V4a2 2 0 0 1 2-2zm0 4h4V4h-4v2z"/></svg></div><div class="sec-body">
+<h2>EXPERIENCIA</h2>
+<h3><span class="accent">Desarrollador móvil de React Native |</span> Topaz</h3>
+<h4>MAR 2023 - ACTUALIDAD: <strong>3 AÑOS</strong></h4>
+<p>Actuación en el producto interno de la empresa, dirigido al sector bancario. He añadido nuevos módulos y funcionalidades, como Pix, Login Biométrico y Préstamo. He hecho mantenimiento y corregido errores en las aplicaciones.</p>
+<p>También he sido asignado a proyectos para clientes específicos por demanda:</p>
+<ul>
+<li><strong>CrediSIS</strong> (Brasil); <strong>Bradescard</strong> (México); <strong>Banco Macro</strong> (Argentina) e <strong>Banco do Nordeste – BNB</strong> (Brasil).</li>
+</ul>
+<p>Tecnologías utilizadas:</p>
+<ul>
+<li>Micro-frontend; Micro-apps; Super-app y Design System</li>
+<li>Google Play Console; Apple Developer y TestFlight</li>
+<li>Firebase Analytics, Crashlytics y Distribution</li>
+<li>Redux/Saga; Jotai; TanStack; Daon y Qualtrics</li>
+<li>Expo Modules; i18next; react-hook-form y JEST</li>
+<li>React Native StyleSheet; Styled Components; Async Storage y APIs REST</li>
+<li>Jira; Confluence; Jenkins, Fastlane; Elastic; Kibana y Grafana</li>
+</ul>
+<h3><span class="accent">Desarrollador móvil de React Native |</span> Rubcube</h3>
+<h4>FEBRERO DE 2022 - ABR 2023: <strong>1 AÑO Y 3 MESES</strong></h4>
+<p>Actuación junto a la aplicación móvil del cliente <strong>Banco Digi+</strong>. Creé el módulo <strong>Pix</strong>, además de efectuar el mantenimiento y correcciones de bugs en la app.</p>
+<ul>
+<li>Componentes de React Native en <strong>formato funcional y de clases</strong></li>
+<li>Desarrollo del sitio web de la empresa, con React JS</li>
+</ul>
+<h3><span class="accent">Desarrollador Flutter |</span> Rubcube</h3>
+<h4>NOV 2021 – FEB 2022: <strong>4 MESES</strong></h4>
+<p>Actuación en la aplicación móvil del <strong>Virtus Pay</strong>. Mantenimiento y corrección de errores.</p>
+<h3><span class="accent">Desarrollador Android/Flutter |</span> Engeselt</h3>
+<h4>MAY 2021 – NOV 2021: <strong>7 MESES</strong></h4>
+<p>Entré en la empresa para realizar una prueba de concepto de mi Máster, sobre los datos <strong>GNSS (GPS)</strong> y después de eso, permanecí en la empresa para actuar en sus propios productos, del sector eléctrico. He realizado mantenimiento y correcciones de errores en la aplicación de la empresa.</p>
+<ul>
+<li>Flutter MobX, sqflite y OpenStreetMaps (<em>offline first</em>)</li>
+<li>Desarrollo Nativo para Android (Java y XML)</li>
+</ul>
+</div></section>
+<section class="sec cols-2"><div class="badge"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg></div><div class="sec-body">
+<h2>HABILIDADES</h2>
+<ul>
+<li>Experiencia con metodologías ágiles</li>
+<li>Comunicación eficiente entre los diversos stakeholders (POs, BAs y QAs)</li>
+<li>Conocimiento del sistema brasileño Pix</li>
+<li>Orientación de los desarrolladores</li>
+<li>Experiencia en Git, GitHub/Gitlab</li>
+</ul>
+</div></section>
+<section class="sec"><div class="badge"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.4"/><circle cx="12" cy="12" r="2.4"/><circle cx="19" cy="12" r="2.4"/></svg></div><div class="sec-body">
+<h2>ACTIVIDADES</h2>
+<p>Competencia <strong>intermedia-avanzada en inglés, JULIO</strong> 2024:</p>
+<ul>
+<li><strong>Level B2</strong> en el examen TOEIC <em>Listening and Reading (TLR)</em></li>
+</ul>
+<p><strong>Escribir artículos para LinkedIn:</strong></p>
+<ul>
+<li><a href="https://www.linkedin.com/pulse/ferramentas-%C3%BAteis-para-iniciantes-desenvolvimento-web-rog%C3%A9rio-1sjzf/">Herramientas útiles para principiantes en desarrollo web</a> (portugués)</li>
+</ul>
+</div></section>
+</main>
+</body>
+</html>

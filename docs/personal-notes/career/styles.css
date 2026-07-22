@@ -1,0 +1,201 @@
+/* Resume PDF template — replicates the original Word "chronological resume" look.
+   Colors extracted from the original PDF: accent #77448B, links #886288,
+   header band #F7F7F7, body text #4C4C4C. Fonts: Carlito (Regular/Bold), a
+   free, metrically-compatible substitute for Calibri — Calibri itself is a
+   Microsoft-licensed font and can't be redistributed via this repo. Carlito
+   has no distinct "Light" weight, so .name renders at regular weight instead
+   of Calibri Light. */
+
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-Italic.ttf");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Carlito";
+  src: url("../fonts/Carlito-BoldItalic.ttf");
+  font-weight: 700;
+  font-style: italic;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Carlito", sans-serif;
+  font-size: 10pt;
+  color: #000;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ---------- Header band ---------- */
+
+.masthead {
+  background: #f7f7f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 7mm 15mm 8mm 31mm;
+}
+
+.name {
+  font-family: "Carlito", sans-serif;
+  font-weight: 400;
+  font-size: 28pt;
+  line-height: 1.13;
+  letter-spacing: 0.4pt;
+  color: #111;
+}
+
+.name strong {
+  font-family: "Carlito", sans-serif;
+  font-weight: 700;
+}
+
+.contacts {
+  text-align: right;
+  font-size: 9pt;
+  padding-top: 15mm;
+}
+
+.contacts a {
+  display: block;
+  color: #886288;
+  text-decoration: underline;
+  margin-bottom: 1.4mm;
+}
+
+.contacts .cgroup {
+  margin-bottom: 4.5mm;
+}
+
+.contacts .cgroup:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Content ---------- */
+
+.content {
+  padding: 11mm 24mm 0 27mm;
+}
+
+.sec {
+  display: grid;
+  grid-template-columns: 8mm 1fr;
+  column-gap: 3mm;
+  margin-top: 5.5mm;
+}
+
+.sec:first-child {
+  margin-top: 0;
+}
+
+.badge {
+  width: 8mm;
+  height: 8mm;
+  border-radius: 50%;
+  background: #77448b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge svg {
+  width: 3.8mm;
+  height: 3.8mm;
+  fill: #fff;
+}
+
+h2 {
+  font-size: 14pt;
+  font-weight: 700;
+  color: #111;
+  line-height: 8mm;
+  letter-spacing: 0.2pt;
+}
+
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #111;
+  text-align: justify;
+  line-height: 1.32;
+  margin-top: 5mm;
+}
+
+h3 .accent {
+  color: #77448b;
+}
+
+h4 {
+  font-size: 10pt;
+  font-weight: 400;
+  color: #4c4c4c;
+  margin-top: 0.6mm;
+}
+
+h4 strong {
+  color: #111;
+}
+
+p {
+  color: #4c4c4c;
+  text-align: justify;
+  line-height: 1.28;
+  margin-top: 2.2mm;
+}
+
+p strong,
+li strong {
+  color: #111;
+}
+
+ul {
+  margin-top: 1.6mm;
+  padding-left: 7.5mm;
+  color: #4c4c4c;
+}
+
+li {
+  line-height: 1.28;
+  margin-bottom: 0.4mm;
+  text-align: justify;
+  padding-left: 1mm;
+}
+
+a {
+  color: #886288;
+}
+
+/* Two-column bullet list (Skills section) */
+.cols-2 ul {
+  columns: 2;
+  column-gap: 9mm;
+}
+
+.cols-2 li {
+  break-inside: avoid;
+}
+
+/* Explicit page break (<!-- pagebreak --> in markdown) */
+.pagebreak {
+  break-before: page;
+  height: 0;
+}
