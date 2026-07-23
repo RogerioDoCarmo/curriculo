@@ -93,10 +93,17 @@ The result is assembled into a single self-contained HTML document with
 The goal was that the generated PDF looks like the Word original, not merely
 "close." Two things made that possible:
 
-- **The exact fonts.** The original used Microsoft **Calibri** (Light /
-  Regular / Bold). Those exact TTF files were copied from the locally
-  installed Microsoft Word app bundle into `fonts/` and embedded via
-  `@font-face`, so the typeface is identical rather than a substitute.
+- **The fonts.** The original used Microsoft **Calibri** (Light / Regular /
+  Bold). Early versions of this pipeline embedded the exact Calibri TTFs
+  copied from a locally installed Word app bundle, but Calibri is
+  Microsoft-licensed and can't be redistributed through a public git repo.
+  Once this folder became git-tracked, those files were swapped for
+  **Carlito** — Google/Red Hat's free, metrically-compatible substitute
+  (identical glyph widths and line breaks) — embedded via `@font-face` from
+  `fonts/`. Carlito has no distinct "Light" weight, so the header name
+  renders at regular weight instead of Calibri Light; otherwise the layout
+  is pixel-identical. See `README.md`'s "Why Carlito, not Calibri?" section
+  for the full licensing rationale.
 - **The exact colors.** The accent purple (`#77448B`), link purple
   (`#886288`), header band gray (`#F7F7F7`), and body text gray (`#4C4C4C`)
   were read straight out of the original PDF's color operators, not guessed.
@@ -127,6 +134,29 @@ node docs/personal-notes/career/build-pdfs.mjs --publish
 The build also writes `output/resume-*.html`, so you can open a language in a
 browser and tweak styling quickly without regenerating the PDF each time.
 
+## Browser-based editor
+
+`npm run resume-editor` starts `editor-server.mjs`, a dependency-free Node
+`http` server bound to `127.0.0.1` only (port `5055`, overridable via `PORT`)
+that serves `editor.html` — a small split-pane UI (markdown source on the
+left, live preview `<iframe>` on the right) with per-language tabs, a Save
+button, and Build / Build & Publish buttons.
+
+It's a thin wrapper around the same two building blocks above, not a
+separate implementation:
+
+- `GET/PUT /api/resumes/:id` read and write a `resume-*.md` file directly —
+  Save just persists the textarea content to disk.
+- `POST /api/build` shells out to `build-pdfs.mjs` via `child_process.spawn`
+  (optionally with `--publish`), and streams its stdout/stderr back as a log
+  shown in the UI.
+- `GET /preview/:id.html|.pdf` serves the build's own `output/` files back
+  to the browser for the preview pane and the "Open PDF" link.
+
+This exists so the whole edit → rebuild → publish loop can be driven from a
+browser tab instead of the terminal, without changing how the pipeline
+itself works underneath.
+
 ## Publishing and git
 
 `--publish` copies the PDFs into `public/resumes/`, which **is** tracked by
@@ -147,9 +177,13 @@ git checkout public/resumes/
   footprint at zero and the rendering 100% predictable, at the cost of only
   supporting the documented subset. If a new construct is needed, extend the
   parser.
-- **Fonts are not committed to a public repo** — the Calibri TTFs are licensed
-  with the local Office install. They're fine in this gitignored folder for
-  personal/local builds, but should not be pushed to a public repository.
+- **Fonts are committed, but Carlito, not Calibri** — Calibri is licensed
+  with the local Office install and can't be redistributed through a public
+  repo, so the committed `fonts/` TTFs are Carlito, a free/OFL substitute
+  with matching metrics. This folder is git-tracked (unlike the rest of
+  `docs/personal-notes/`, which stays gitignored) specifically because the
+  font problem was solved this way, rather than by keeping the folder
+  private/untracked.
 - **Two intentional fidelity differences** from the Word original: the Skills
   badge is a single wrench (the original had crossed hammer-and-wrench), and
   vertical spacing is normalized by the stylesheet rather than replicating the
@@ -158,8 +192,11 @@ git checkout public/resumes/
 
 ## Roadmap
 
-- [ ] Move this folder to a **private repo** — it is currently _not_ backed up
-      by git, so these files exist only on this machine.
-- [ ] Build a **simple UI** to edit the content and trigger builds without the
-      command line.
+- [x] ~~Move this folder to a private repo~~ — resolved differently: switching
+      from Calibri to Carlito removed the licensing blocker, so the folder was
+      carved out of the gitignored `docs/personal-notes/` and is now
+      git-tracked directly in this repo instead.
+- [x] Build a **simple UI** to edit the content and trigger builds without the
+      command line — see `editor-server.mjs` / `editor.html`,
+      `npm run resume-editor`.
 - [ ] Optionally match the Skills badge icon to the original crossed-tools glyph.
