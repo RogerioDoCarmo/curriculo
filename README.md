@@ -311,6 +311,10 @@ npm run test:lighthouse         # Terminal 2
 
 See [TESTING.md](./docs/testing/TESTING.md) for comprehensive testing guidelines and best practices.
 
+## Résumé PDF Pipeline
+
+The downloadable résumé PDFs (EN/ES/pt-BR) served from `public/resumes/` are generated from plain-markdown source in [`docs/personal-notes/career/`](./docs/personal-notes/career/) — a small, git-tracked pipeline (`node docs/personal-notes/career/build-pdfs.mjs --publish`) that renders each `resume-*.md` to HTML and prints it to PDF with Playwright/Chromium, replicating the original Word template's layout, colors, and typography. The template font is [Carlito](https://fonts.google.com/specimen/Carlito) rather than Calibri, since Calibri is Microsoft-licensed and can't be redistributed via a public git repo — see that folder's [README](./docs/personal-notes/career/README.md) for the full rationale and the constrained markdown syntax it supports.
+
 ## Deployment
 
 The website is deployed on Vercel with automatic deployments from the main branch. The site is accessible through **11 custom domains**, all pointing to the same deployment:

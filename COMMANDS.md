@@ -33,6 +33,21 @@ npm run start        # Start production server (preview build)
 npm run storybook    # Start Storybook component explorer (http://localhost:6006)
 ```
 
+## Résumé PDF Pipeline
+
+Local-only pipeline that generates the downloadable résumé PDFs (EN/ES/pt-BR)
+from markdown source in `docs/personal-notes/career/` — see that folder's
+[README.md](docs/personal-notes/career/README.md) for the full markdown
+syntax and font notes.
+
+```bash
+npm run resume-editor       # Web UI to edit resumes + build/publish (http://127.0.0.1:5055)
+
+node docs/personal-notes/career/build-pdfs.mjs             # Build all 3 resume PDFs into output/
+node docs/personal-notes/career/build-pdfs.mjs resume-en   # Build just one
+node docs/personal-notes/career/build-pdfs.mjs --publish   # Build + copy into public/resumes/ (live site)
+```
+
 ## Testing
 
 ```bash
