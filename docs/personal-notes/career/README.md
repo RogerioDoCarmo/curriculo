@@ -20,6 +20,9 @@ node docs/personal-notes/career/build-pdfs.mjs resume-en
 
 # Regenerate all AND copy them into public/resumes/ (the live site downloads)
 node docs/personal-notes/career/build-pdfs.mjs --publish
+
+# Or drive the whole thing from a browser instead of the CLI
+npm run resume-editor   # → http://127.0.0.1:5055 (local only)
 ```
 
 The build also writes `output/resume-*.html` — open one in a browser to
@@ -30,15 +33,17 @@ the repo's own `node_modules`.
 
 ## Files
 
-| File              | Purpose                                                       |
-| ----------------- | ------------------------------------------------------------- |
-| `resume-en.md`    | English resume (source of truth)                              |
-| `resume-es.md`    | Spanish resume                                                |
-| `resume-pt-BR.md` | Portuguese resume                                             |
-| `styles.css`      | Visual template (colors/fonts extracted from original)        |
-| `build-pdfs.mjs`  | md → HTML → PDF converter (Playwright/Chromium)               |
-| `fonts/`          | Carlito TTFs (free, metrically-compatible Calibri substitute) |
-| `output/`         | Generated PDFs + intermediate HTML (tracked for convenience)  |
+| File                | Purpose                                                         |
+| ------------------- | --------------------------------------------------------------- |
+| `resume-en.md`      | English resume (source of truth)                                |
+| `resume-es.md`      | Spanish resume                                                  |
+| `resume-pt-BR.md`   | Portuguese resume                                               |
+| `styles.css`        | Visual template (colors/fonts extracted from original)          |
+| `build-pdfs.mjs`    | md → HTML → PDF converter (Playwright/Chromium)                 |
+| `editor-server.mjs` | Local-only (`127.0.0.1`) HTTP server backing the browser editor |
+| `editor.html`       | Browser UI: edit markdown, preview, trigger builds              |
+| `fonts/`            | Carlito TTFs (free, metrically-compatible Calibri substitute)   |
+| `output/`           | Generated PDFs + intermediate HTML (tracked for convenience)    |
 
 ### Why Carlito, not Calibri?
 
