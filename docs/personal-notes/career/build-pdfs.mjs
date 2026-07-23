@@ -41,13 +41,13 @@ const ICONS = {
 // ---------- markdown mini-parser (constrained subset, see README) ----------
 
 const esc = (s) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 function inline(text) {
   let s = esc(text);
   s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
   s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  s = s.replace(/(^|[\s(>])\*([^*\n]+)\*(?=[\s.,;:)<]|$)/g, "$1<em>$2</em>");
+  s = s.replace(/(^|[\s(>])_([^_\n]+)_(?=[\s.,;:)<]|$)/g, "$1<em>$2</em>");
   return s;
 }
 
@@ -138,9 +138,7 @@ function renderBody(md) {
       if (pipe !== -1) {
         const left = text.slice(0, pipe + 1).trim();
         const right = text.slice(pipe + 1).trim();
-        html.push(
-          `<h3><span class="accent">${inline(left)}</span> ${inline(right)}</h3>`
-        );
+        html.push(`<h3><span class="accent">${inline(left)}</span> ${inline(right)}</h3>`);
       } else {
         html.push(`<h3>${inline(text)}</h3>`);
       }
@@ -171,9 +169,7 @@ function renderBody(md) {
 }
 
 function renderHeader(meta) {
-  const nameLines = meta.name
-    .map((l) => `<div>${inline(l)}</div>`)
-    .join("");
+  const nameLines = meta.name.map((l) => `<div>${inline(l)}</div>`).join("");
   const linkEl = (item) => `<a href="${esc(item.url)}">${esc(item.label)}</a>`;
   return `<header class="masthead">
   <div class="name">${nameLines}</div>
@@ -185,10 +181,13 @@ function renderHeader(meta) {
 }
 
 function renderDocument(meta, bodyMd, css) {
+  const title = `${meta.name.map((l) => l.replace(/\*\*/g, "")).join(" ")} — Resume`;
   return `<!DOCTYPE html>
 <html lang="${esc(meta.lang)}">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
 <style>${css}</style>
 </head>
 <body>
@@ -207,9 +206,7 @@ async function main() {
   const publish = args.includes("--publish");
   const only = args.filter((a) => !a.startsWith("--"));
 
-  let files = readdirSync(DIR).filter(
-    (f) => f.startsWith("resume-") && f.endsWith(".md")
-  );
+  let files = readdirSync(DIR).filter((f) => f.startsWith("resume-") && f.endsWith(".md"));
   if (only.length) {
     files = files.filter((f) => only.includes(f.replace(/\.md$/, "")));
     if (!files.length) {
@@ -226,9 +223,7 @@ async function main() {
 
   for (const file of files) {
     const base = file.replace(/\.md$/, "");
-    const { meta, body } = splitFrontmatter(
-      readFileSync(path.join(DIR, file), "utf8")
-    );
+    const { meta, body } = splitFrontmatter(readFileSync(path.join(DIR, file), "utf8"));
     const htmlPath = path.join(OUT, `${base}.html`);
     writeFileSync(htmlPath, renderDocument(meta, body, css));
 
