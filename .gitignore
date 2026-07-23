@@ -181,4 +181,6 @@ chromatic.config.*
 
 # Local operational docs (non-code, never commit)
 docs/security-remediation/
-docs/personal-notes/
+docs/personal-notes/*
+# ...except the career docs, which are tracked so they're never lost
+!docs/personal-notes/career/
