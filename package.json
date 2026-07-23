@@ -36,7 +36,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "commitlint": "commitlint --edit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "resume-editor": "node docs/personal-notes/career/editor-server.mjs"
   },
   "dependencies": {
     "@sentry/nextjs": "^10.50.0",

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Résumé Editor</title>
+    <style>
+      :root {
+        --accent: #77448b;
+        --accent-dark: #5e3670;
+        --bg: #ffffff;
+        --panel: #f7f7f7;
+        --border: #e0e0e0;
+        --text: #222222;
+        --muted: #666666;
+        --danger: #b3261e;
+        --ok: #1e7a34;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1c1e;
+          --panel: #262629;
+          --border: #3a3a3d;
+          --text: #eaeaea;
+          --muted: #9a9a9a;
+          --danger: #ff6b60;
+          --ok: #4ade80;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        padding: 1rem 1.5rem;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      header h1 {
+        font-size: 1.1rem;
+        margin: 0;
+        color: var(--accent);
+      }
+      .tabs {
+        display: flex;
+        gap: 0.25rem;
+      }
+      .tab {
+        padding: 0.4rem 0.9rem;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .tab.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .tab .dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--danger);
+        margin-left: 0.4rem;
+        visibility: hidden;
+      }
+      .tab.dirty .dot {
+        visibility: visible;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--border);
+        height: calc(100vh - 64px);
+      }
+      @media (max-width: 900px) {
+        main {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+      }
+      .pane {
+        background: var(--bg);
+        display: flex;
+        flex-direction: column;
+        min-height: 320px;
+      }
+      .pane-header {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      textarea {
+        flex: 1;
+        border: none;
+        outline: none;
+        resize: none;
+        padding: 1rem;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        background: var(--bg);
+        color: var(--text);
+      }
+      iframe {
+        flex: 1;
+        border: none;
+        background: #fff;
+      }
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 0.45rem 0.9rem;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        cursor: pointer;
+      }
+      button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      button.primary:hover {
+        background: var(--accent-dark);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .status {
+        font-size: 0.8rem;
+        color: var(--muted);
+        padding: 0 0.9rem 0.6rem;
+      }
+      .status.error {
+        color: var(--danger);
+      }
+      .status.ok {
+        color: var(--ok);
+      }
+      details {
+        border-top: 1px solid var(--border);
+      }
+      summary {
+        padding: 0.5rem 0.9rem;
+        cursor: pointer;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      pre.log {
+        margin: 0;
+        padding: 0.75rem 0.9rem;
+        font-size: 0.75rem;
+        max-height: 220px;
+        overflow: auto;
+        background: var(--panel);
+        white-space: pre-wrap;
+      }
+      .links {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+        border-top: 1px solid var(--border);
+      }
+      .links a {
+        color: var(--accent);
+        margin-right: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Résumé Editor</h1>
+      <div class="tabs" id="tabs"></div>
+      <div class="actions">
+        <button id="reload">Reload from disk</button>
+        <button id="save" class="primary">Save</button>
+        <button id="build">Build</button>
+        <button id="publish" class="primary">Build &amp; Publish</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="pane">
+        <div class="pane-header">
+          <span>Markdown source</span>
+          <span id="saveStatus"></span>
+        </div>
+        <textarea id="editor" spellcheck="false"></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane-header">
+          <span>Preview (last build)</span>
+        </div>
+        <iframe id="preview" title="Résumé preview"></iframe>
+        <div class="links">
+          <a id="openPdf" href="#" target="_blank" rel="noopener">Open PDF</a>
+          <a id="openHtml" href="#" target="_blank" rel="noopener">Open HTML in new tab</a>
+        </div>
+        <details>
+          <summary id="logSummary">Build log</summary>
+          <pre class="log" id="log">No build run yet.</pre>
+        </details>
+      </div>
+    </main>
+
+    <div class="status" id="status"></div>
+
+    <script>
+      const state = {}; // { [id]: { content, dirty, loaded } }
+      let current = null;
+      let resumes = [];
+
+      const $ = (id) => document.getElementById(id);
+      const tabsEl = $("tabs");
+      const editorEl = $("editor");
+      const statusEl = $("status");
+      const saveStatusEl = $("saveStatus");
+      const logEl = $("log");
+      const logSummaryEl = $("logSummary");
+      const previewEl = $("preview");
+
+      function setStatus(msg, kind) {
+        statusEl.textContent = msg;
+        statusEl.className = "status" + (kind ? " " + kind : "");
+      }
+
+      function renderTabs() {
+        tabsEl.innerHTML = "";
+        for (const r of resumes) {
+          const btn = document.createElement("button");
+          btn.className =
+            "tab" + (r.id === current ? " active" : "") + (state[r.id]?.dirty ? " dirty" : "");
+          btn.innerHTML = `${r.label}<span class="dot"></span>`;
+          btn.onclick = () => switchTo(r.id);
+          tabsEl.appendChild(btn);
+        }
+      }
+
+      async function loadResume(id) {
+        if (state[id]?.loaded) return;
+        const res = await fetch(`/api/resumes/${id}`);
+        const data = await res.json();
+        state[id] = { content: data.content, dirty: false, loaded: true };
+      }
+
+      async function switchTo(id) {
+        await loadResume(id);
+        current = id;
+        editorEl.value = state[id].content;
+        updatePreviewLinks();
+        renderTabs();
+      }
+
+      function updatePreviewLinks() {
+        previewEl.src = `/preview/${current}.html?t=${Date.now()}`;
+        $("openPdf").href = `/preview/${current}.pdf`;
+        $("openHtml").href = `/preview/${current}.html`;
+      }
+
+      editorEl.addEventListener("input", () => {
+        if (!current) return;
+        state[current].content = editorEl.value;
+        state[current].dirty = true;
+        renderTabs();
+      });
+
+      $("reload").onclick = async () => {
+        if (!current) return;
+        if (state[current].dirty && !confirm("Discard unsaved changes and reload from disk?"))
+          return;
+        state[current].loaded = false;
+        await loadResume(current);
+        editorEl.value = state[current].content;
+        renderTabs();
+        setStatus("Reloaded from disk.", "ok");
+      };
+
+      $("save").onclick = async () => {
+        if (!current) return;
+        setStatus("Saving…");
+        const res = await fetch(`/api/resumes/${current}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: state[current].content }),
+        });
+        if (res.ok) {
+          state[current].dirty = false;
+          renderTabs();
+          setStatus("Saved.", "ok");
+        } else {
+          const err = await res.json().catch(() => ({}));
+          setStatus(`Save failed: ${err.error || res.statusText}`, "error");
+        }
+      };
+
+      async function runBuild(publish) {
+        const dirtyIds = resumes.filter((r) => state[r.id]?.dirty).map((r) => r.label);
+        if (dirtyIds.length) {
+          alert(`Save your changes first (unsaved: ${dirtyIds.join(", ")}).`);
+          return;
+        }
+        if (
+          publish &&
+          !confirm("This will overwrite the live site's public/resumes/*.pdf. Continue?")
+        ) {
+          return;
+        }
+        $("build").disabled = true;
+        $("publish").disabled = true;
+        setStatus(publish ? "Building and publishing…" : "Building…");
+        const res = await fetch("/api/build", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publish }),
+        });
+        const data = await res.json();
+        logEl.textContent = data.log || "(no output)";
+        logSummaryEl.textContent = data.ok ? "Build log (success)" : "Build log (failed)";
+        $("build").disabled = false;
+        $("publish").disabled = false;
+        if (data.ok) {
+          setStatus(publish ? "Built and published." : "Built.", "ok");
+          if (current) updatePreviewLinks();
+        } else {
+          setStatus("Build failed — see log below.", "error");
+        }
+      }
+
+      $("build").onclick = () => runBuild(false);
+      $("publish").onclick = () => runBuild(true);
+
+      window.addEventListener("beforeunload", (e) => {
+        if (resumes.some((r) => state[r.id]?.dirty)) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+
+      (async function init() {
+        const res = await fetch("/api/resumes");
+        resumes = await res.json();
+        await switchTo(resumes[0].id);
+      })();
+    </script>
+  </body>
+</html>
