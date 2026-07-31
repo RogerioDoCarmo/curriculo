@@ -202,6 +202,7 @@ describe("HomePageContent Component", () => {
       const contactSection = screen.getByRole("region", { name: "Get in Touch" });
       expect(contactSection).toBeInTheDocument();
       expect(contactSection).toHaveAttribute("id", "contact");
+      expect(contactSection).toHaveAttribute("tabIndex", "-1");
     });
 
     it("renders contact section heading", () => {

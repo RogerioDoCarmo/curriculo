@@ -44,7 +44,12 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
     .filter((cat) => cat.skills.length > 0);
 
   return (
-    <section id="skills" aria-label={t("sections.skills")} className="py-8 px-4 sm:px-6 lg:px-8">
+    <section
+      id="skills"
+      tabIndex={-1}
+      aria-label={t("sections.skills")}
+      className="py-8 px-4 sm:px-6 lg:px-8"
+    >
       <div className="mx-auto max-w-7xl">
         <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">
           {t("sections.skills")}

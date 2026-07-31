@@ -56,6 +56,9 @@ function firePopstate(hash: string) {
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
+// jsdom doesn't implement scrollIntoView.
+Element.prototype.scrollIntoView = jest.fn();
+
 // ─── Test Sections ────────────────────────────────────────────────────────────
 
 const DEFAULT_SECTIONS = ["home", "projects", "experience", "skills", "contact", "tech-stack"];
@@ -356,7 +359,53 @@ describe("useAnchorNavigation", () => {
     });
   });
 
-  // ── 9. Cleanup ───────────────────────────────────────────────────────────────
+  // ── 9. Focus management ─────────────────────────────────────────────────────
+
+  describe("focus management", () => {
+    it("moves focus to the target element after navigateTo, so keyboard/SR users get a landing cue", () => {
+      const el = document.createElement("section");
+      el.id = "projects";
+      el.tabIndex = -1;
+      document.body.appendChild(el);
+
+      const { result } = renderHook(() => useAnchorNavigation(DEFAULT_SECTIONS));
+      act(() => {
+        result.current.navigateTo("projects");
+      });
+
+      expect(document.activeElement).toBe(el);
+      document.body.removeChild(el);
+    });
+
+    it("moves focus to the target element after a popstate navigation", async () => {
+      const el = document.createElement("section");
+      el.id = "experience";
+      el.tabIndex = -1;
+      document.body.appendChild(el);
+
+      renderHook(() => useAnchorNavigation(DEFAULT_SECTIONS));
+      act(() => {
+        firePopstate("#experience");
+      });
+
+      await waitFor(() => {
+        expect(document.activeElement).toBe(el);
+      });
+      document.body.removeChild(el);
+    });
+
+    it("does nothing (no throw) when the target element doesn't exist in the DOM", () => {
+      const { result } = renderHook(() => useAnchorNavigation(DEFAULT_SECTIONS));
+
+      expect(() => {
+        act(() => {
+          result.current.navigateTo("skills");
+        });
+      }).not.toThrow();
+    });
+  });
+
+  // ── 10. Cleanup ──────────────────────────────────────────────────────────────
 
   describe("cleanup", () => {
     it("should disconnect IntersectionObserver on unmount", () => {

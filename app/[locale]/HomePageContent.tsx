@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
+import ScrollMinimap from "@/components/ScrollMinimap";
 import Hero from "@/components/Hero";
 import FeaturedExperience from "@/components/FeaturedExperience";
 import BanksSection from "@/components/BanksSection";
@@ -47,6 +48,8 @@ export default function HomePageContent({
 
   return (
     <>
+      <ScrollMinimap />
+
       {/* Hero Section with Profile Photo */}
       <div className="bg-white dark:bg-gray-900">
         <Hero
@@ -113,6 +116,7 @@ export default function HomePageContent({
       {/* Contact Form Section */}
       <section
         id="contact"
+        tabIndex={-1}
         aria-labelledby="contact-title"
         className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
       >

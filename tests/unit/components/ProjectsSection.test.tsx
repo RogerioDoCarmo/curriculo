@@ -241,6 +241,11 @@ describe("ProjectsSection Component", () => {
     expect(document.getElementById("projects")).toBeInTheDocument();
   });
 
+  it("is programmatically focusable so the scroll minimap can land focus here", () => {
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    expect(document.getElementById("projects")).toHaveAttribute("tabIndex", "-1");
+  });
+
   it("shows empty state message when no projects match filter", async () => {
     const user = userEvent.setup();
     renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);

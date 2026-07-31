@@ -44,6 +44,7 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   return (
     <section
       id="projects"
+      tabIndex={-1}
       aria-label={t("sections.projects")}
       className="py-8 px-4 sm:px-6 lg:px-8"
     >
