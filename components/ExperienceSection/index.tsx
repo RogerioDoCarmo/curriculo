@@ -58,6 +58,7 @@ export default function ExperienceSection({
   return (
     <section
       id="experience"
+      tabIndex={-1}
       aria-label={`${careerPath === "professional" ? t("professionalExperience") : t("academicBackground")} ${t("section")}`}
       className="py-8 px-4 sm:px-6 lg:px-8"
     >

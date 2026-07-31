@@ -159,6 +159,11 @@ describe("Hero Component", () => {
     expect(section).toBeInTheDocument();
   });
 
+  it("is programmatically focusable so the scroll minimap can land focus here", () => {
+    renderWithIntl(<Hero {...defaultProps} />, "en");
+    expect(document.getElementById("home")).toHaveAttribute("tabIndex", "-1");
+  });
+
   it("has accessible section label", () => {
     renderWithIntl(<Hero {...defaultProps} />, "en");
     const section = screen.getByRole("region", { name: /hero/i });

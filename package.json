@@ -1,6 +1,6 @@
 {
   "name": "personal-resume-website",
-  "version": "1.16.2",
+  "version": "1.17.0",
   "private": true,
   "description": "A modern, responsive personal resume website built with Next.js 16, TypeScript, and Tailwind CSS",
   "author": "Rogério do Carmo",
@@ -47,7 +47,7 @@
     "firebase": "^12.12.1",
     "js-yaml": "^5.2.1",
     "lucide-react": "^1.8.0",
-    "next": "^16.2.10",
+    "next": "^16.2.12",
     "next-intl": "^4.9.2",
     "react": "^19",
     "react-dom": "^19",

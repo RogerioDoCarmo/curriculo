@@ -167,6 +167,11 @@
   "backToTop": {
     "label": "Back to top"
   },
+  "scrollMinimap": {
+    "ariaLabel": "Page section map",
+    "jumpTo": "Jump to {section}",
+    "thumbLabel": "Current scroll position"
+  },
   "exitIntent": {
     "title": "Hey, wait!",
     "headline": "Before you go...",

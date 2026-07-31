@@ -253,6 +253,13 @@ describe("ExperienceSection Component", () => {
     expect(document.getElementById("experience")).toBeInTheDocument();
   });
 
+  it("is programmatically focusable so the scroll minimap can land focus here", () => {
+    renderWithIntl(
+      <ExperienceSection careerPath="professional" experiences={allExperiences} locale="en" />
+    );
+    expect(document.getElementById("experience")).toHaveAttribute("tabIndex", "-1");
+  });
+
   it("renders a Timeline component for the experiences", () => {
     renderWithIntl(
       <ExperienceSection careerPath="professional" experiences={allExperiences} locale="en" />
