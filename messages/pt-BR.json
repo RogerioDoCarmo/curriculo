@@ -167,6 +167,11 @@
   "backToTop": {
     "label": "Voltar ao topo"
   },
+  "scrollMinimap": {
+    "ariaLabel": "Mapa de seções da página",
+    "jumpTo": "Ir para {section}",
+    "thumbLabel": "Posição atual de rolagem"
+  },
   "exitIntent": {
     "title": "Ei, espera!",
     "headline": "Antes de ir...",

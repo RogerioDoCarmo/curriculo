@@ -18,13 +18,12 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { trackNavLinkClick, trackExternalLinkClick } from "@/lib/analytics";
+import { NAV_SECTIONS } from "@/lib/nav-sections";
 import type { SupportedLocale } from "@/types/index";
 
 interface HeaderProps {
   readonly locale: string;
 }
-
-const NAV_SECTIONS = ["home", "projects", "experience", "skills", "contact"] as const;
 
 /**
  * Get the resume URL based on locale and feature flag.

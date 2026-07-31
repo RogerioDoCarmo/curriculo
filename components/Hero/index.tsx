@@ -24,6 +24,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
   return (
     <section
       id="home"
+      tabIndex={-1}
       aria-label="Hero section"
       className="flex min-h-[80vh] items-center justify-center px-4 py-16 md:px-8 lg:px-16"
     >

@@ -148,6 +148,11 @@ describe("SkillsSection Component", () => {
     expect(document.getElementById("skills")).toBeInTheDocument();
   });
 
+  it("is programmatically focusable so the scroll minimap can land focus here", () => {
+    renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
+    expect(document.getElementById("skills")).toHaveAttribute("tabIndex", "-1");
+  });
+
   it("renders skills in a responsive grid", () => {
     renderWithIntl(<SkillsSection skills={sampleSkills} locale="en" />);
     const grid = document.querySelector(".grid");
