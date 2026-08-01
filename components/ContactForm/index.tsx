@@ -144,7 +144,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
     });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     // Validate all fields
     const errs = validateForm(formData);
