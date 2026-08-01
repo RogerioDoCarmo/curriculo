@@ -172,8 +172,8 @@ function FeaturedCard({
               {t("achievements")}
             </h4>
             <div className="space-y-1">
-              {exp.achievements.map((achievement, i) => (
-                <MarkdownText key={i} text={achievement} />
+              {exp.achievements.map((achievement) => (
+                <MarkdownText key={achievement} text={achievement} />
               ))}
             </div>
           </div>
