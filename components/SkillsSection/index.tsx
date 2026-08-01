@@ -72,9 +72,7 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
         </div>
 
         {filteredSkills.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400" role="status">
-            {t("skills.noMatch")}
-          </p>
+          <output className="block text-gray-500 dark:text-gray-400">{t("skills.noMatch")}</output>
         ) : (
           // items-start keeps a *collapsed* card at its natural height, so expanding
           // one card never stretches its collapsed row-siblings. Expanded cards opt

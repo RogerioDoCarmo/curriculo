@@ -91,9 +91,9 @@ export default function Timeline({
 
   if (!items || items.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400" role="status">
+      <output className="block text-gray-500 dark:text-gray-400">
         No timeline items to display.
-      </p>
+      </output>
     );
   }
 
