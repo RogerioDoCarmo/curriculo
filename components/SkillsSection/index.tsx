@@ -140,23 +140,26 @@ export default function SkillsSection({ skills, locale: _locale }: SkillsSection
                       className="mt-4 space-y-2"
                       aria-label={`${cat.category} ${t("skills.skillsLabel")}`}
                     >
-                      {cat.skills.map((skill) => (
-                        <li key={skill.name} className="flex items-center justify-between gap-2">
-                          <HighlightedText
-                            text={skill.name}
-                            highlight={filter}
-                            className="text-sm text-gray-800 dark:text-gray-200"
-                          />
-                          {skill.level && (
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-sm font-medium ${levelColors[skill.level]}`}
-                              aria-label={`${t("skills.levelLabel")}: ${t(`skills.levels.${skill.level}`)}`}
-                            >
-                              {t(`skills.levels.${skill.level}`)}
-                            </span>
-                          )}
-                        </li>
-                      ))}
+                      {cat.skills.map((skill) => {
+                        const levelLabel = skill.level ? t(`skills.levels.${skill.level}`) : null;
+                        return (
+                          <li key={skill.name} className="flex items-center justify-between gap-2">
+                            <HighlightedText
+                              text={skill.name}
+                              highlight={filter}
+                              className="text-sm text-gray-800 dark:text-gray-200"
+                            />
+                            {skill.level && (
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-sm font-medium ${levelColors[skill.level]}`}
+                                aria-label={`${t("skills.levelLabel")}: ${levelLabel}`}
+                              >
+                                {levelLabel}
+                              </span>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                 </div>
