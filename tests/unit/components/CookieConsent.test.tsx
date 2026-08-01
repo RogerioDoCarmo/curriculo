@@ -387,11 +387,10 @@ describe("CookieConsent", () => {
   });
 
   describe("Accessibility", () => {
-    it("should have role='dialog' and aria-modal='true'", () => {
+    it("should have role='dialog' (native <dialog> element)", () => {
       renderWithIntl("en", mockMessages.en);
 
-      const dialog = screen.getByRole("dialog");
-      expect(dialog).toHaveAttribute("aria-modal", "true");
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
     it("should have aria-labelledby pointing to title", () => {
@@ -438,6 +437,14 @@ describe("CookieConsent", () => {
       expect(rejectButton).not.toHaveAttribute("tabindex", "-1");
       expect(customizeButton).not.toHaveAttribute("tabindex", "-1");
     });
+
+    it("should NOT be dismissible via the ESC key (GDPR/LGPD requires an explicit choice)", () => {
+      renderWithIntl("en", mockMessages.en);
+
+      fireEvent.keyDown(document, { key: "Escape" });
+
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
   });
 
   describe("Translations", () => {
@@ -474,25 +481,19 @@ describe("CookieConsent", () => {
       renderWithIntl("en", mockMessages.en);
 
       const dialog = screen.getByRole("dialog");
-      const container = dialog.querySelector("div");
 
-      if (container) {
-        // Check for light mode classes
-        expect(container.className).toContain("bg-white");
-        expect(container.className).toContain("dark:bg-gray-800");
-      }
+      // Check for light mode classes
+      expect(dialog.className).toContain("bg-white");
+      expect(dialog.className).toContain("dark:bg-gray-800");
     });
 
     it("should have dark mode classes", () => {
       renderWithIntl("en", mockMessages.en);
 
       const dialog = screen.getByRole("dialog");
-      const container = dialog.querySelector("div");
 
-      if (container) {
-        // Verify dark mode classes are present
-        expect(container.className).toMatch(/dark:/);
-      }
+      // Verify dark mode classes are present
+      expect(dialog.className).toMatch(/dark:/);
     });
   });
 
