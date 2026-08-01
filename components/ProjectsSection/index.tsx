@@ -146,14 +146,14 @@ function FilterButton({
       ? "bg-primary-600 text-white dark:bg-primary-600"
       : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
   ].join(" ");
-  const props = { type: "button" as const, onClick, className };
+  const props = { onClick, className };
 
   return active ? (
-    <button {...props} aria-pressed="true">
+    <button type="button" {...props} aria-pressed="true">
       {label}
     </button>
   ) : (
-    <button {...props} aria-pressed="false">
+    <button type="button" {...props} aria-pressed="false">
       {label}
     </button>
   );

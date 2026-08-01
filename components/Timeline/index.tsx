@@ -26,18 +26,17 @@ function ToggleButton({
   readonly children: ReactNode;
 }) {
   const props = {
-    type: "button" as const,
     "aria-controls": controlsId,
     onClick,
     className,
     ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
   };
   return expanded ? (
-    <button {...props} aria-expanded="true">
+    <button type="button" {...props} aria-expanded="true">
       {children}
     </button>
   ) : (
-    <button {...props} aria-expanded="false">
+    <button type="button" {...props} aria-expanded="false">
       {children}
     </button>
   );

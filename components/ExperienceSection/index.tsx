@@ -79,7 +79,6 @@ export default function ExperienceSection({
               // expressions and would otherwise flag aria-expanded={expr} as an
               // invalid value; shared props/icon keep the markup DRY.
               const toggleProps = {
-                type: "button" as const,
                 "aria-controls": `exp-details-${exp.id}`,
                 onClick: () => setExpandedId(isExpanded ? null : exp.id),
                 className:
@@ -102,11 +101,11 @@ export default function ExperienceSection({
                 </svg>
               );
               const toggleButton = isExpanded ? (
-                <button {...toggleProps} aria-expanded="true">
+                <button type="button" {...toggleProps} aria-expanded="true">
                   {toggleIcon}
                 </button>
               ) : (
-                <button {...toggleProps} aria-expanded="false">
+                <button type="button" {...toggleProps} aria-expanded="false">
                   {toggleIcon}
                 </button>
               );
@@ -114,18 +113,17 @@ export default function ExperienceSection({
               // The role title is also a toggle, so clicking the text expands or
               // collapses the card (same two-branch literal aria-expanded pattern).
               const titleToggleProps = {
-                type: "button" as const,
                 "aria-controls": `exp-details-${exp.id}`,
                 onClick: () => setExpandedId(isExpanded ? null : exp.id),
                 className:
                   "rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300",
               };
               const titleButton = isExpanded ? (
-                <button {...titleToggleProps} aria-expanded="true">
+                <button type="button" {...titleToggleProps} aria-expanded="true">
                   {exp.role}
                 </button>
               ) : (
-                <button {...titleToggleProps} aria-expanded="false">
+                <button type="button" {...titleToggleProps} aria-expanded="false">
                   {exp.role}
                 </button>
               );
