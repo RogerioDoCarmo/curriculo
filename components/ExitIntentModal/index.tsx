@@ -24,6 +24,7 @@ import Button from "@/components/Button";
 import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 import { useExitIntent } from "@/hooks/useExitIntent";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { trackExitIntentShown, trackExitIntentAction } from "@/lib/analytics";
 
 interface ExitIntentModalProps {
   readonly enabled?: boolean;
@@ -78,28 +79,24 @@ export default function ExitIntentModal({
   // Track analytics when modal is shown
   useEffect(() => {
     if (showModal && typeof window !== "undefined") {
-      // TODO: Integrate with analytics service (Firebase Analytics, etc.)
-      // trackEvent('exit_intent_modal_shown');
+      trackExitIntentShown();
     }
   }, [showModal]);
 
   const handleDownloadResume = () => {
-    // TODO: Track download event with analytics
-    // trackEvent('exit_intent_resume_download');
+    trackExitIntentAction({ action: "download_resume" });
     window.open(resumeUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleConnectLinkedIn = () => {
-    // TODO: Track LinkedIn click with analytics
-    // trackEvent('exit_intent_linkedin_click');
+    trackExitIntentAction({ action: "connect_linkedin" });
     window.open(linkedInUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleStarGitHub = () => {
-    // TODO: Track GitHub star click with analytics
-    // trackEvent('exit_intent_github_click');
+    trackExitIntentAction({ action: "star_github" });
     window.open(githubUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
