@@ -126,16 +126,16 @@ function skillCategoryToJsonResumeSkill(category: SkillCategory): JsonResumeSkil
  * @returns A JSON Resume schema-compliant object.
  */
 export async function generateJsonResume(contentDir?: string): Promise<JsonResume> {
-  const [projects, professionalExperiences, academicExperiences, skillCategories] =
+  // _projects: fetched for future use, not consumed yet.
+  const [_projects, professionalExperiences, academicExperiences, skillCategories] =
     await Promise.all([
       getProjects(contentDir),
-      getExperiences("professional", contentDir),
-      getExperiences("academic", contentDir),
+      // `locale` (2nd param) explicitly passed through as undefined so contentDir
+      // lands in its actual 3rd parameter slot, not misinterpreted as a locale.
+      getExperiences("professional", undefined, contentDir),
+      getExperiences("academic", undefined, contentDir),
       getSkills(undefined, contentDir),
     ]);
-
-  // Suppress unused variable warning — projects are available for future use
-  void projects;
 
   const basics: JsonResumeBasics = {
     name: "Your Name",
