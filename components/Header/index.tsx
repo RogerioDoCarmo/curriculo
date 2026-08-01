@@ -60,7 +60,6 @@ export default function Header({ locale }: HeaderProps) {
     language: getLanguageName(locale as SupportedLocale),
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [_isMobile, _setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { isActive, navigateTo } = useAnchorNavigation([...NAV_SECTIONS]);
@@ -75,15 +74,8 @@ export default function Header({ locale }: HeaderProps) {
   const isHomePage = pathname === `/${locale}` || pathname === `/${locale}/`;
   const isTechStackPage = pathname?.includes("/tech-stack");
 
-  // Detect mobile viewport and set mounted flag
   useEffect(() => {
     setMounted(true);
-    function checkMobile() {
-      _setIsMobile(window.innerWidth < 768);
-    }
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   function openSidebar() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ContactFormData } from "@/types/index";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
@@ -62,7 +62,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
   );
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [_submissionStartTime, setSubmissionStartTime] = useState<number>(0);
+  const submissionStartTimeRef = useRef<number>(0);
   const [showNotificationPrompt, setShowNotificationPrompt] = useState<boolean>(false);
 
   function validateForm(
@@ -154,7 +154,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
 
     setStatus("submitting");
     const startTime = Date.now();
-    setSubmissionStartTime(startTime);
+    submissionStartTimeRef.current = startTime;
     trackFormSubmissionStart({ form_name: "contact_form" });
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;

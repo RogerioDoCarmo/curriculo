@@ -10,7 +10,7 @@
  * Requirements: 17.1, 17.2, 17.4, 17.7
  */
 
-import { useState, useEffect, useCallback, createContext, useContext } from "react";
+import { useState, useEffect, useCallback, useMemo, createContext, useContext } from "react";
 import type { ReactNode } from "react";
 import type { Theme } from "@/types/index";
 
@@ -104,7 +104,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children, defaultTheme }: ThemeProviderProps) {
   // Initialize with the actual theme from localStorage/system preference
   // This ensures the icon matches the applied theme from the start
-  const [theme, setThemeState] = useState<Theme>(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return defaultTheme ?? "light";
     return getInitialTheme();
   });
@@ -114,14 +114,14 @@ export function ThemeProvider({ children, defaultTheme }: ThemeProviderProps) {
     applyTheme(theme);
   }, [theme]);
 
-  const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme);
+  const updateTheme = useCallback((newTheme: Theme) => {
+    setTheme(newTheme);
     setStoredTheme(newTheme);
     applyTheme(newTheme);
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setThemeState((current) => {
+    setTheme((current) => {
       const next: Theme = current === "light" ? "dark" : "light";
       setStoredTheme(next);
       applyTheme(next);
@@ -129,11 +129,12 @@ export function ThemeProvider({ children, defaultTheme }: ThemeProviderProps) {
     });
   }, []);
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+  const value = useMemo(
+    () => ({ theme, setTheme: updateTheme, toggleTheme }),
+    [theme, updateTheme, toggleTheme]
   );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────

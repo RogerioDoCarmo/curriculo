@@ -97,16 +97,16 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
   const pathname = usePathname();
 
   // Initialize with currentLocale to ensure server/client consistency
-  const [locale, setLocaleState] = useState<SupportedLocale>(currentLocale);
+  const [locale, setLocale] = useState<SupportedLocale>(currentLocale);
 
   // Keep local state in sync whenever the URL-derived locale changes.
   useEffect(() => {
-    setLocaleState(currentLocale);
+    setLocale(currentLocale);
   }, [currentLocale]);
 
-  const setLocale = useCallback(
+  const updateLocale = useCallback(
     (newLocale: SupportedLocale) => {
-      setLocaleState(newLocale);
+      setLocale(newLocale);
       setStoredLocale(newLocale);
 
       // Navigate to the new locale using next-intl router
@@ -130,7 +130,7 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
 
   return {
     locale,
-    setLocale,
+    setLocale: updateLocale,
     availableLocales: [...SUPPORTED_LOCALES],
   };
 }
