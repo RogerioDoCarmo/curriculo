@@ -43,7 +43,7 @@ describe("HighlightedText Component", () => {
     );
 
     const strongs = container.querySelectorAll("strong");
-    expect(strongs.length).toBe(2);
+    expect(strongs).toHaveLength(2);
     expect(strongs[0]).toHaveTextContent("React");
     expect(strongs[1]).toHaveTextContent("React");
   });

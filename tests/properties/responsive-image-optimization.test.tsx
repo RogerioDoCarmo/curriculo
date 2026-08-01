@@ -266,7 +266,7 @@ describe("Property 10: Responsive Image Optimization", () => {
 
     // No images should be present
     const images = container.querySelectorAll("img");
-    expect(images.length).toBe(0);
+    expect(images).toHaveLength(0);
   });
 
   it("should use lazy loading for project card images", () => {
@@ -316,7 +316,7 @@ describe("Property 10: Responsive Image Optimization", () => {
 
     // Find all project card images (first image of each project)
     const cardImages = container.querySelectorAll('img[alt*="screenshot 1"]');
-    expect(cardImages.length).toBe(2);
+    expect(cardImages).toHaveLength(2);
 
     cardImages.forEach((img) => {
       const sizes = img.getAttribute("data-sizes");

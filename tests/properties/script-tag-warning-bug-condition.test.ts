@@ -97,7 +97,7 @@ describe("Property 1: Bug Condition - No Console Warnings for Script Tags", () =
 
     // Document the bug condition
     expect(bugConditionChecklist.scriptCount).toBe(3);
-    expect(bugConditionChecklist.scripts.length).toBe(3);
+    expect(bugConditionChecklist.scripts).toHaveLength(3);
     expect(bugConditionChecklist.expectedBehavior.noWarnings).toBe(true);
   });
 
@@ -249,8 +249,8 @@ describe("Property 1: Bug Condition - No Console Warnings for Script Tags", () =
     console.log("=============================\n");
 
     // Verify we have the expected number of affected scripts
-    expect(affectedScripts.length).toBe(3);
-    expect(affectedScripts.filter((s) => s.critical).length).toBe(1);
+    expect(affectedScripts).toHaveLength(3);
+    expect(affectedScripts.filter((s) => s.critical)).toHaveLength(1);
   });
 
   it("should verify the expected behavior properties are documented", () => {

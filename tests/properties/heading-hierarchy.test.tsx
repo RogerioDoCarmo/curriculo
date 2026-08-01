@@ -35,7 +35,7 @@ describe("Property 15: Proper Heading Hierarchy", () => {
         const { container } = render(<TestPageWithHeadings />);
 
         const h1Elements = container.querySelectorAll("h1");
-        expect(h1Elements.length).toBe(1);
+        expect(h1Elements).toHaveLength(1);
       }),
       { numRuns: 100 }
     );

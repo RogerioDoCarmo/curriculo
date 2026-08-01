@@ -73,7 +73,7 @@ describe("Property 36: Print Mode Expands Collapsed Content", () => {
     );
 
     const allDetails = container.querySelectorAll("details");
-    expect(allDetails.length).toBe(3);
+    expect(allDetails).toHaveLength(3);
 
     allDetails.forEach((details) => {
       expect(hasPrintExpansionStyles(details)).toBe(true);
@@ -125,7 +125,7 @@ describe("Property 36: Print Mode Expands Collapsed Content", () => {
     );
 
     const allDetails = container.querySelectorAll("details");
-    expect(allDetails.length).toBe(2);
+    expect(allDetails).toHaveLength(2);
 
     allDetails.forEach((details) => {
       expect(hasPrintExpansionStyles(details)).toBe(true);
@@ -149,7 +149,7 @@ describe("Property 36: Print Mode Expands Collapsed Content", () => {
           );
 
           const allDetails = container.querySelectorAll("details");
-          expect(allDetails.length).toBe(contentItems.length);
+          expect(allDetails).toHaveLength(contentItems.length);
 
           allDetails.forEach((details) => {
             expect(hasPrintExpansionStyles(details)).toBe(true);

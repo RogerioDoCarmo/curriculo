@@ -163,7 +163,7 @@ describe("Property 4: Complete Project Rendering", () => {
         expect(rendered.title).toBe(project.title);
         expect(rendered.description).toBe(project.description);
         expect(rendered.technologies).toEqual(project.technologies);
-        expect(rendered.images.length).toBe(project.images.length);
+        expect(rendered.images).toHaveLength(project.images.length);
       }),
       { numRuns: 100 }
     );
@@ -408,7 +408,7 @@ describe("Property 12: Lazy Loading for Below-Fold Images", () => {
     fc.assert(
       fc.property(projectArb, (project) => {
         const rendered = renderProject(project);
-        expect(rendered.images.length).toBe(project.images.length);
+        expect(rendered.images).toHaveLength(project.images.length);
       }),
       { numRuns: 100 }
     );

@@ -271,7 +271,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
     it("should preserve openGraph alternateLocale for all locales", () => {
       SUPPORTED_LOCALES.forEach((locale) => {
         const alternateLocales = SUPPORTED_LOCALES.filter((l) => l !== locale);
-        expect(alternateLocales.length).toBe(SUPPORTED_LOCALES.length - 1);
+        expect(alternateLocales).toHaveLength(SUPPORTED_LOCALES.length - 1);
         alternateLocales.forEach((altLocale) => {
           expect(SUPPORTED_LOCALES).toContain(altLocale);
         });
