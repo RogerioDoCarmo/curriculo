@@ -30,7 +30,6 @@ describe("Hero Component", () => {
   const defaultProps = {
     name: "John Doe",
     title: "React Native Developer",
-    locale: "en",
     greeting: "Hello, I'm",
     ctaText: "View My Work",
     contactText: "Get in Touch",
@@ -54,12 +53,12 @@ describe("Hero Component", () => {
   });
 
   it("renders translated greeting for Portuguese", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" greeting="Olá, eu sou" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} greeting="Olá, eu sou" />, "pt-BR");
     expect(screen.getByText("Olá, eu sou")).toBeInTheDocument();
   });
 
   it("renders translated greeting for Spanish", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" greeting="Hola, soy" />, "es");
+    renderWithIntl(<Hero {...defaultProps} greeting="Hola, soy" />, "es");
     expect(screen.getByText("Hola, soy")).toBeInTheDocument();
   });
 
@@ -101,22 +100,19 @@ describe("Hero Component", () => {
   });
 
   it("contact button has mailto link with correct email for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     const emailButton = screen.getByRole("link", { name: "Get in Touch" });
     expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
   });
 
   it("contact button has mailto link with correct email for Portuguese locale", () => {
-    renderWithIntl(
-      <Hero {...defaultProps} locale="pt-BR" contactText="Entre em Contato" />,
-      "pt-BR"
-    );
+    renderWithIntl(<Hero {...defaultProps} contactText="Entre em Contato" />, "pt-BR");
     const emailButton = screen.getByRole("link", { name: "Entre em Contato" });
     expect(emailButton).toHaveAttribute("href", "mailto:contato@rogeriodocarmo.com");
   });
 
   it("contact button has mailto link with correct email for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" contactText="Ponte en Contacto" />, "es");
+    renderWithIntl(<Hero {...defaultProps} contactText="Ponte en Contacto" />, "es");
     const emailButton = screen.getByRole("link", { name: "Ponte en Contacto" });
     expect(emailButton).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
   });
@@ -132,22 +128,22 @@ describe("Hero Component", () => {
   });
 
   it("displays professional email address below CTA buttons for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
   });
 
   it("displays professional email address below CTA buttons for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     expect(screen.getByText("contato@rogeriodocarmo.com")).toBeInTheDocument();
   });
 
   it("displays professional email address below CTA buttons for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    renderWithIntl(<Hero {...defaultProps} />, "es");
     expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
   });
 
   it("professional email is a clickable mailto link", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     const emailLink = screen.getByRole("link", { name: "contact@rogeriodocarmo.com" });
     expect(emailLink).toBeInTheDocument();
     expect(emailLink).toHaveAttribute("href", "mailto:contact@rogeriodocarmo.com");
@@ -175,7 +171,6 @@ describe("Hero Component", () => {
       <Hero
         name="Jane Smith"
         title="Full Stack Engineer"
-        locale="pt-BR"
         greeting="Olá, eu sou"
         ctaText="Ver Meu Trabalho"
         contactText="Entre em Contato"
@@ -207,7 +202,7 @@ describe("Hero Component", () => {
   });
 
   it("renders education section with UNESP logo for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     expect(screen.getByText("Bacharel em Ciência da Computação")).toBeInTheDocument();
     expect(screen.getByText("Mestre em Ciências Cartográficas")).toBeInTheDocument();
     const unespLogo = screen.getByAltText("UNESP Logo");
@@ -215,7 +210,7 @@ describe("Hero Component", () => {
   });
 
   it("renders education section with UNESP logo for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     expect(screen.getByText("Bachelor in Computer Science")).toBeInTheDocument();
     expect(screen.getByText("Master in Cartographic Sciences")).toBeInTheDocument();
     const unespLogo = screen.getByAltText("UNESP Logo");
@@ -223,7 +218,7 @@ describe("Hero Component", () => {
   });
 
   it("renders dissertation link for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     expect(screen.getByText("Dissertação de mestrado completa:")).toBeInTheDocument();
     const dissertationLink = screen.getByRole("link", {
       name: /Avaliação da qualidade das medidas e posicionamento GNSS em smartphones Android/i,
@@ -235,7 +230,7 @@ describe("Hero Component", () => {
   });
 
   it("renders dissertation link for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     expect(screen.getByText("Complete master's dissertation:")).toBeInTheDocument();
     const dissertationLink = screen.getByRole("link", {
       name: /Evaluation of GNSS measurement quality and positioning in Android smartphones/i,
@@ -247,7 +242,7 @@ describe("Hero Component", () => {
   });
 
   it("renders download dissertation button for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     const downloadButton = screen.getByRole("link", { name: /baixar dissertação/i });
     expect(downloadButton).toBeInTheDocument();
     expect(downloadButton).toHaveAttribute(
@@ -260,7 +255,7 @@ describe("Hero Component", () => {
   });
 
   it("renders download dissertation button for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     const downloadButton = screen.getByRole("link", { name: /download.*dissertation/i });
     expect(downloadButton).toBeInTheDocument();
     expect(downloadButton).toHaveAttribute(
@@ -273,7 +268,7 @@ describe("Hero Component", () => {
   });
 
   it("renders current job section for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="pt-BR" />, "pt-BR");
+    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     expect(screen.getByText("Desenvolvedor Mobile Sênior")).toBeInTheDocument();
     expect(screen.getByText("2023 - 2026 (3 anos)")).toBeInTheDocument();
     const companyLogo = screen.getByAltText("Company Logo");
@@ -281,7 +276,7 @@ describe("Hero Component", () => {
   });
 
   it("renders current job section for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="en" />, "en");
+    renderWithIntl(<Hero {...defaultProps} />, "en");
     expect(screen.getByText("Senior Mobile Developer")).toBeInTheDocument();
     expect(screen.getByText("2023 - 2026 (3 years)")).toBeInTheDocument();
     const companyLogo = screen.getByAltText("Company Logo");
@@ -289,7 +284,7 @@ describe("Hero Component", () => {
   });
 
   it("renders current job section for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    renderWithIntl(<Hero {...defaultProps} />, "es");
     expect(screen.getByText("Desarrollador Mobile Senior")).toBeInTheDocument();
     expect(screen.getByText("2023 - 2026 (3 años)")).toBeInTheDocument();
     const companyLogo = screen.getByAltText("Company Logo");
@@ -297,7 +292,7 @@ describe("Hero Component", () => {
   });
 
   it("renders education section with UNESP logo for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    renderWithIntl(<Hero {...defaultProps} />, "es");
     expect(screen.getByText("Licenciado en Ciencias de la Computación")).toBeInTheDocument();
     expect(screen.getByText("Máster en Ciencias Cartográficas")).toBeInTheDocument();
     const unespLogo = screen.getByAltText("UNESP Logo");
@@ -305,7 +300,7 @@ describe("Hero Component", () => {
   });
 
   it("renders dissertation link for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    renderWithIntl(<Hero {...defaultProps} />, "es");
     expect(screen.getByText("Disertación de maestría completa:")).toBeInTheDocument();
     const dissertationLink = screen.getByRole("link", {
       name: /Evaluación de la calidad de las medidas y posicionamiento GNSS en smartphones Android/i,
@@ -317,7 +312,7 @@ describe("Hero Component", () => {
   });
 
   it("renders download dissertation button for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} locale="es" />, "es");
+    renderWithIntl(<Hero {...defaultProps} />, "es");
     const downloadButton = screen.getByRole("link", { name: /descargar disertación/i });
     expect(downloadButton).toBeInTheDocument();
     expect(downloadButton).toHaveAttribute(
@@ -339,7 +334,6 @@ describe("Hero Component", () => {
     const incompleteProps = {
       name: "John Doe",
       title: "Developer",
-      locale: "en",
     } as any;
 
     const { container } = renderWithIntl(<Hero {...incompleteProps} />, "en");

@@ -26,12 +26,11 @@ jest.mock("@/lib/lazy-components", () => ({
 // Mock all child components
 jest.mock("@/components/Hero", () => ({
   __esModule: true,
-  default: ({ name, title, locale, greeting, ctaText, contactText }: any) => (
+  default: ({ name, title, greeting, ctaText, contactText }: any) => (
     <div
       data-testid="hero"
       data-name={name}
       data-title={title}
-      data-locale={locale}
       data-greeting={greeting}
       data-cta={ctaText}
       data-contact={contactText}
@@ -229,7 +228,6 @@ describe("HomePageContent Component", () => {
       const hero = screen.getByTestId("hero");
       expect(hero).toHaveAttribute("data-name", "Rogério do Carmo");
       expect(hero).toHaveAttribute("data-title", "Frontend Mobile React Native Developer");
-      expect(hero).toHaveAttribute("data-locale", "en");
       expect(hero).toHaveAttribute("data-greeting", "Hello, I'm");
       expect(hero).toHaveAttribute("data-cta", "View My Work");
       expect(hero).toHaveAttribute("data-contact", "Get in Touch");
@@ -302,7 +300,6 @@ describe("HomePageContent Component", () => {
       renderWithIntl(<HomePageContent {...ptProps} />, "pt-BR");
 
       const hero = screen.getByTestId("hero");
-      expect(hero).toHaveAttribute("data-locale", "pt-BR");
       expect(hero).toHaveAttribute("data-greeting", "Olá, eu sou");
       expect(hero).toHaveAttribute("data-cta", "Ver Meu Trabalho");
       expect(hero).toHaveAttribute("data-contact", "Entre em Contato");
@@ -328,7 +325,6 @@ describe("HomePageContent Component", () => {
       renderWithIntl(<HomePageContent {...esProps} />, "es");
 
       const hero = screen.getByTestId("hero");
-      expect(hero).toHaveAttribute("data-locale", "es");
       expect(hero).toHaveAttribute("data-greeting", "Hola, soy");
       expect(hero).toHaveAttribute("data-cta", "Ver Mi Trabajo");
       expect(hero).toHaveAttribute("data-contact", "Ponte en Contacto");
