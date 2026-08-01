@@ -5,8 +5,8 @@
  * using Node.js file system APIs. They are NOT intended for browser use.
  */
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { load as loadYaml } from "js-yaml";
 import type { Project, Experience, SkillCategory } from "@/types/index";
 
@@ -44,7 +44,7 @@ interface ParsedFrontmatter {
  */
 function parseFrontmatter(raw: string): ParsedFrontmatter {
   // Strip a leading UTF-8 BOM if present.
-  const input = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
+  const input = raw.codePointAt(0) === 0xfeff ? raw.slice(1) : raw;
 
   // Frontmatter must open with a `---` delimiter on its own line.
   if (!input.startsWith("---") || !/^[\r\n]/.test(input.slice(3))) {
@@ -304,7 +304,9 @@ export async function getSkills(
   const { data } = parseFrontmatter(raw);
 
   if (!Array.isArray(data.categories)) {
-    throw new Error(`Content validation error in "${skillsFile}": "categories" must be an array.`);
+    throw new TypeError(
+      `Content validation error in "${skillsFile}": "categories" must be an array.`
+    );
   }
 
   return data.categories as SkillCategory[];

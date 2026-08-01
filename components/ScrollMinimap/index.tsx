@@ -86,7 +86,7 @@ export default function ScrollMinimap() {
   const hoveredSection =
     hoverPercent === null
       ? null
-      : (markers.filter((marker) => marker.topPercent <= hoverPercent).at(-1) ?? null);
+      : (markers.findLast((marker) => marker.topPercent <= hoverPercent) ?? null);
 
   const handleThumbPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     event.stopPropagation();
