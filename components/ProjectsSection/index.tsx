@@ -24,7 +24,9 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Collect all unique technologies
-  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort();
+  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const filtered = techFilter
     ? projects.filter((p) => p.technologies.includes(techFilter))
