@@ -89,6 +89,15 @@ A guided walkthrough of the live site, captured at two viewport sizes. It covers
 
 > If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
 
+## 📢 LinkedIn Posts
+
+Announcements about this site's launch and new features, kept here for reference and cross-linking between posts.
+
+| Date       | Topic                    | Link                                                                                                                              |
+| ---------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-28 | Site launch              | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_desenvolvimentoweb-nextjs-pix-ugcPost-7477162179394465792-dB1H/)    |
+| 2026-08-01 | Scroll minimap navigator | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_nextjs-typescript-acessibilidade-ugcPost-7489457588682743808-vOrL/) |
+
 ## Development Progress
 
 This project follows an incremental development approach with checkpoints to validate progress:
