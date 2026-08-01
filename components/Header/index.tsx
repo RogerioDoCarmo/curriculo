@@ -9,13 +9,14 @@
  * Requirements: 4.1, 4.2, 4.3, 17.5, 24.1-24.10
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import LanguageSelector, { getLanguageName } from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
+import { useDialogElement } from "@/hooks/useDialogElement";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { trackNavLinkClick, trackExternalLinkClick } from "@/lib/analytics";
 import { NAV_SECTIONS } from "@/lib/nav-sections";
@@ -84,6 +85,12 @@ export default function Header({ locale }: HeaderProps) {
 
   function closeSidebar() {
     setSidebarOpen(false);
+  }
+
+  const sidebarRef = useDialogElement(sidebarOpen, closeSidebar);
+
+  function handleSidebarBackdropClick(e: MouseEvent<HTMLDialogElement>) {
+    if (e.target === sidebarRef.current) closeSidebar();
   }
 
   // Close the side menu when another control asks for it (e.g. the back-to-top
@@ -317,106 +324,94 @@ export default function Header({ locale }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile: Sidebar overlay */}
-      {sidebarOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            data-testid="sidebar-backdrop"
+      {/* Mobile: Sidebar overlay, driven imperatively by useDialogElement */}
+      <dialog
+        ref={sidebarRef}
+        aria-label="Navigation menu"
+        onClick={handleSidebarBackdropClick}
+        className="
+          hidden fixed top-0 left-0 z-50
+          h-full max-h-none w-64 max-w-none
+          bg-background border-r border-border
+          open:flex flex-col
+          animate-slide-in-left
+          backdrop:bg-black/50
+        "
+      >
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+          <span className="font-semibold text-foreground">Menu</span>
+          <button
+            type="button"
+            aria-label="Close menu"
             onClick={closeSidebar}
-            className="fixed inset-0 z-40 bg-black/50"
-            aria-hidden="true"
-          />
-
-          {/* Sidebar */}
-          <div
-            role="dialog"
-            aria-label="Navigation menu"
-            aria-modal="true"
             className="
-              fixed top-0 left-0 z-50
-              h-full w-64
-              bg-background border-r border-border
-              flex flex-col
-              animate-slide-in-left
+              inline-flex items-center justify-center
+              w-8 h-8 rounded-md
+              text-foreground
+              hover:bg-accent hover:text-accent-foreground
+              focus:outline-none focus:ring-2 focus:ring-ring
             "
           >
-            {/* Sidebar header */}
-            <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-              <span className="font-semibold text-foreground">Menu</span>
-              <button
-                type="button"
-                aria-label="Close menu"
-                onClick={closeSidebar}
-                className="
-                  inline-flex items-center justify-center
-                  w-8 h-8 rounded-md
-                  text-foreground
+            <span aria-hidden="true" className="text-lg leading-none">
+              ✕
+            </span>
+          </button>
+        </div>
+
+        {/* Sidebar nav links */}
+        <nav className="flex flex-col gap-1 p-4 flex-1">
+          {navLinks.map(({ key, label, href, isExternal }) =>
+            isExternal ? (
+              <Link
+                key={key}
+                href={href}
+                onClick={() => {
+                  trackNavLinkClick({ link_text: label, link_url: href });
+                  closeSidebar();
+                }}
+                className={`
+                  px-3 py-2 rounded-md text-sm font-medium
+                  transition-colors duration-200
                   hover:bg-accent hover:text-accent-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring
-                "
+                  ${isTechStackPage && key === "tech-stack" ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
+                `}
               >
-                <span aria-hidden="true" className="text-lg leading-none">
-                  ✕
-                </span>
-              </button>
-            </div>
+                {label}
+              </Link>
+            ) : (
+              <a
+                key={key}
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(key, label);
+                }}
+                className={`
+                  px-3 py-2 rounded-md text-sm font-medium
+                  transition-colors duration-200
+                  hover:bg-accent hover:text-accent-foreground
+                  focus:outline-none focus:ring-2 focus:ring-ring
+                  ${mounted && isActive(key) ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
+                `}
+              >
+                {label}
+              </a>
+            )
+          )}
+        </nav>
 
-            {/* Sidebar nav links */}
-            <nav className="flex flex-col gap-1 p-4 flex-1">
-              {navLinks.map(({ key, label, href, isExternal }) =>
-                isExternal ? (
-                  <Link
-                    key={key}
-                    href={href}
-                    onClick={() => {
-                      trackNavLinkClick({ link_text: label, link_url: href });
-                      closeSidebar();
-                    }}
-                    className={`
-                      px-3 py-2 rounded-md text-sm font-medium
-                      transition-colors duration-200
-                      hover:bg-accent hover:text-accent-foreground
-                      focus:outline-none focus:ring-2 focus:ring-ring
-                      ${isTechStackPage && key === "tech-stack" ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
-                    `}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <a
-                    key={key}
-                    href={href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(key, label);
-                    }}
-                    className={`
-                      px-3 py-2 rounded-md text-sm font-medium
-                      transition-colors duration-200
-                      hover:bg-accent hover:text-accent-foreground
-                      focus:outline-none focus:ring-2 focus:ring-ring
-                      ${mounted && isActive(key) ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
-                    `}
-                  >
-                    {label}
-                  </a>
-                )
-              )}
-            </nav>
-
-            {/* Sidebar controls */}
-            <div className="flex items-center gap-2 p-4 border-t border-border">
-              <LanguageSelector
-                currentLocale={locale as SupportedLocale}
-                className="mr-2"
-                label={languageLabel}
-              />
-              <ThemeToggle {...themeToggleLabels} />
-            </div>
-          </div>
-        </>
-      )}
+        {/* Sidebar controls */}
+        <div className="flex items-center gap-2 p-4 border-t border-border">
+          <LanguageSelector
+            currentLocale={locale as SupportedLocale}
+            className="mr-2"
+            label={languageLabel}
+          />
+          <ThemeToggle {...themeToggleLabels} />
+        </div>
+      </dialog>
     </header>
   );
 }
