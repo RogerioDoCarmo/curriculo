@@ -206,23 +206,17 @@ describe("Property 2: Preservation - Non-TechStack Elements Unchanged", () => {
     expect(componentsChecked.length + componentsNotFound.length).toBe(otherComponents.length);
   });
 
-  it("should document the scope of the fix (TechStack section only)", () => {
-    console.log("\n=== Fix Scope Documentation ===");
-    console.log("This fix is scoped to:");
-    console.log("  - TechStack section links only");
-    console.log("  - Changes text-primary-600 to text-primary-700");
-    console.log("  - Changes hover:text-primary-700 to hover:text-primary-800");
-    console.log("\nThis fix does NOT affect:");
-    console.log("  - Links in other sections (Hero, About, Projects, Contact, Footer)");
-    console.log("  - Non-link elements using text-primary-600");
-    console.log("  - Card styling (backgrounds, borders, padding, shadows)");
-    console.log("  - Non-link text colors (headings, descriptions, labels)");
-    console.log("  - Grid layout and responsive behavior");
-    console.log("  - Link hover and focus states (except color)");
-    console.log("  - ExternalLink icon display");
-    console.log("================================\n");
-
-    // This test always passes - it's for documentation purposes
-    expect(true).toBe(true);
-  });
+  // Fix scope (TechStack section only):
+  //   - TechStack section links only
+  //   - Changes text-primary-600 to text-primary-700
+  //   - Changes hover:text-primary-700 to hover:text-primary-800
+  //
+  // Explicitly NOT affected:
+  //   - Links in other sections (Hero, About, Projects, Contact, Footer)
+  //   - Non-link elements using text-primary-600
+  //   - Card styling (backgrounds, borders, padding, shadows)
+  //   - Non-link text colors (headings, descriptions, labels)
+  //   - Grid layout and responsive behavior
+  //   - Link hover and focus states (except color)
+  //   - ExternalLink icon display
 });

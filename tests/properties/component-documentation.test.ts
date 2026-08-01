@@ -249,10 +249,11 @@ describe("Property 25: Component Documentation Completeness", () => {
       if (hasStory) {
         console.log(`Note: Non-UI component ${componentName} has a story file (this is optional)`);
       }
-    });
 
-    // This test always passes - it's just for documentation
-    expect(true).toBe(true);
+      // Real (if weak) assertion: the check itself must produce a proper
+      // boolean, not silently swallow an error into undefined/null.
+      expect(typeof hasStory).toBe("boolean");
+    });
   });
 
   it("should verify all story files are valid TypeScript files", () => {

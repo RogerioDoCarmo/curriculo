@@ -159,6 +159,10 @@ describe("ScrollMinimap Component", () => {
   it("scrolls to the clicked percentage when the bare track is clicked", () => {
     renderMinimap();
     const track = screen.getByRole("slider").parentElement as HTMLElement;
+    // The click-to-jump handler lives on a dedicated aria-hidden overlay
+    // (decorative, mouse-only — the thumb provides the keyboard-accessible
+    // equivalent), not on the track container itself.
+    const clickCatcher = track.querySelector('[aria-hidden="true"]') as HTMLElement;
 
     jest.spyOn(track, "getBoundingClientRect").mockReturnValue({
       top: 0,
@@ -172,7 +176,7 @@ describe("ScrollMinimap Component", () => {
       toJSON: () => {},
     });
 
-    fireEvent.click(track, { clientY: 100 });
+    fireEvent.click(clickCatcher, { clientY: 100 });
 
     expect(mockScrollToPercent).toHaveBeenCalledWith(50, "smooth");
   });

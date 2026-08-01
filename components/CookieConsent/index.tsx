@@ -64,12 +64,10 @@ export default function CookieConsent() {
           e.preventDefault();
           lastElement.focus();
         }
-      } else {
+      } else if (document.activeElement === lastElement) {
         // Tab
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
+        e.preventDefault();
+        firstElement.focus();
       }
     };
 

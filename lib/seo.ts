@@ -211,10 +211,11 @@ export function generatePageMetadata(
   };
 
   const pageData = translations[locale]?.[page] || translations["pt-BR"][page];
+  const pagePath = page === "home" ? "" : `/${page}`;
 
   return generateMetadata({
     ...pageData,
     locale,
-    url: `${baseUrl}/${locale}${page === "home" ? "" : `/${page}`}`,
+    url: `${baseUrl}/${locale}${pagePath}`,
   });
 }

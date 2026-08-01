@@ -81,7 +81,7 @@ export default function EmailSubscribeForm({
   const [emailError, setEmailError] = useState("");
   const [status, setStatus] = useState<Status>("idle");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const err = validateEmail(email);
     if (err) {

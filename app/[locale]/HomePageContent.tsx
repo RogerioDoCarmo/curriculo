@@ -55,7 +55,6 @@ export default function HomePageContent({
         <Hero
           name="Rogério do Carmo"
           title={heroTitle}
-          locale={locale}
           greeting={heroGreeting}
           ctaText={heroCtaText}
           contactText={heroContactText}

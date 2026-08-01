@@ -100,38 +100,14 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
     });
 
-    it("should generate correct locale-specific URL for pt-BR", () => {
+    it.each([
+      ["pt-BR", "pt-BR"],
+      ["English", "en"],
+      ["Spanish", "es"],
+    ] as const)("should generate correct locale-specific URL for %s", (_label, locale) => {
       render(
-        <NextIntlClientProvider locale="pt-BR" messages={messages}>
-          <ExitIntentModal enabled={true} locale="pt-BR" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      expect(downloadButton).toBeInTheDocument();
-    });
-
-    it("should generate correct locale-specific URL for English", () => {
-      render(
-        <NextIntlClientProvider locale="en" messages={messages}>
-          <ExitIntentModal enabled={true} locale="en" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      expect(downloadButton).toBeInTheDocument();
-    });
-
-    it("should generate correct locale-specific URL for Spanish", () => {
-      render(
-        <NextIntlClientProvider locale="es" messages={messages}>
-          <ExitIntentModal enabled={true} locale="es" />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ExitIntentModal enabled={true} locale={locale} />
         </NextIntlClientProvider>
       );
 

@@ -164,29 +164,25 @@ describe("CookieConsent", () => {
   });
 
   describe("Main view", () => {
-    it("should display title and description", () => {
+    it.each([
+      [
+        "title and description",
+        ["This site uses cookies", "We use essential cookies for site functionality."],
+      ],
+      [
+        "essential cookies category",
+        ["Essential Cookies", "Required for basic site functionality."],
+      ],
+      [
+        "analytics cookies category",
+        ["Analytics Cookies", "Help understand how visitors interact with the site."],
+      ],
+    ] as const)("should display %s", (_label, texts) => {
       renderWithIntl("en", mockMessages.en);
 
-      expect(screen.getByText("This site uses cookies")).toBeInTheDocument();
-      expect(
-        screen.getByText("We use essential cookies for site functionality.")
-      ).toBeInTheDocument();
-    });
-
-    it("should show essential cookies category", () => {
-      renderWithIntl("en", mockMessages.en);
-
-      expect(screen.getByText("Essential Cookies")).toBeInTheDocument();
-      expect(screen.getByText("Required for basic site functionality.")).toBeInTheDocument();
-    });
-
-    it("should show analytics cookies category", () => {
-      renderWithIntl("en", mockMessages.en);
-
-      expect(screen.getByText("Analytics Cookies")).toBeInTheDocument();
-      expect(
-        screen.getByText("Help understand how visitors interact with the site.")
-      ).toBeInTheDocument();
+      texts.forEach((text) => {
+        expect(screen.getByText(text)).toBeInTheDocument();
+      });
     });
 
     it("should have Accept All button", () => {

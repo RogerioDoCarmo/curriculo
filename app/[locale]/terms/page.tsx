@@ -4,7 +4,7 @@ import { SUPPORTED_LOCALES } from "@/types/index";
 import type { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {

@@ -105,7 +105,7 @@ describe("Property 1: Bug Condition - Open Graph and Twitter Images", () => {
       console.log(JSON.stringify(expectedStructure, null, 2));
 
       // Verify structure is defined for all locales
-      expect(expectedStructure.length).toBe(SUPPORTED_LOCALES.length);
+      expect(expectedStructure).toHaveLength(SUPPORTED_LOCALES.length);
       expectedStructure.forEach((structure) => {
         expect(structure.openGraph.images[0].url).toBe("/og-image.png");
         expect(structure.openGraph.images[0].width).toBe(1200);

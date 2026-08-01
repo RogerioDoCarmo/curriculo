@@ -11,7 +11,7 @@ export default function HighlightedText({ text, highlight, className }: Highligh
     return <span className={className}>{text}</span>;
   }
 
-  const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
   const regex = new RegExp(`(${escapedHighlight})`, "gi");
   const parts = text.split(regex);
 

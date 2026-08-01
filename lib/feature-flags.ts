@@ -14,7 +14,6 @@
 
 import { getFirebaseRemoteConfig } from "./firebase";
 import { trackFeatureFlagChecked } from "./analytics";
-import type { RemoteConfig as _RemoteConfig, Value as _Value } from "firebase/remote-config";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,6 +50,13 @@ const CACHE_TTL = 5 * 60 * 1000;
  */
 export function clearFeatureFlagCache(): void {
   featureFlagCache.clear();
+}
+
+/** Tracks flag usage with analytics, when tracking is enabled for this call. */
+function trackFlagUsage(trackUsage: boolean, key: string, value: FeatureFlagValue): void {
+  if (trackUsage) {
+    trackFeatureFlagChecked({ flag_name: key, flag_value: value });
+  }
 }
 
 // ─── Feature Flag Retrieval ───────────────────────────────────────────────────
@@ -96,13 +102,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
     // Check cache first
     const cached = featureFlagCache.get(key);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      // Track cached flag usage
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: cached.value,
-        });
-      }
+      trackFlagUsage(trackUsage, key, cached.value);
       return cached.value as T;
     }
 
@@ -111,13 +111,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
 
     // If Remote Config is unavailable (SSR, missing config, etc.), return default
     if (!remoteConfig) {
-      // Track default value usage
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: defaultValue,
-        });
-      }
+      trackFlagUsage(trackUsage, key, defaultValue);
       return defaultValue;
     }
 
@@ -147,12 +141,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
     // A "static" source means the key is configured in neither Remote Config nor
     // `defaultConfig`; honour the caller's default in that case.
     if (value.getSource() === "static") {
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: defaultValue,
-        });
-      }
+      trackFlagUsage(trackUsage, key, defaultValue);
       return defaultValue;
     }
 
@@ -173,13 +162,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
       timestamp: Date.now(),
     });
 
-    // Track flag usage
-    if (trackUsage) {
-      trackFeatureFlagChecked({
-        flag_name: key,
-        flag_value: flagValue,
-      });
-    }
+    trackFlagUsage(trackUsage, key, flagValue);
 
     return flagValue;
   } catch (error) {
@@ -187,12 +170,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
     console.warn(`[FeatureFlags] Failed to fetch flag "${key}":`, error);
 
     // Track default value usage on error
-    if (trackUsage) {
-      trackFeatureFlagChecked({
-        flag_name: key,
-        flag_value: defaultValue,
-      });
-    }
+    trackFlagUsage(trackUsage, key, defaultValue);
 
     // Return default value on any error
     return defaultValue;
