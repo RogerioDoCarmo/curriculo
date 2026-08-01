@@ -61,7 +61,6 @@ function FeaturedCard({
   // Render the toggle in two branches so aria-expanded is a literal "true"/"false"
   // string that static a11y linters can validate (matches ExperienceSection).
   const toggleProps = {
-    type: "button" as const,
     "aria-controls": detailsId,
     onClick: () => setShowAchievements((open) => !open),
     className:
@@ -84,17 +83,18 @@ function FeaturedCard({
     </svg>
   );
   const hasAchievements = exp.achievements.length > 0;
-  const toggleButton = hasAchievements ? (
-    showAchievements ? (
-      <button {...toggleProps} aria-expanded="true">
+  let toggleButton = null;
+  if (hasAchievements) {
+    toggleButton = showAchievements ? (
+      <button type="button" {...toggleProps} aria-expanded="true">
         {toggleIcon}
       </button>
     ) : (
-      <button {...toggleProps} aria-expanded="false">
+      <button type="button" {...toggleProps} aria-expanded="false">
         {toggleIcon}
       </button>
-    )
-  ) : null;
+    );
+  }
 
   return (
     <>
@@ -172,8 +172,8 @@ function FeaturedCard({
               {t("achievements")}
             </h4>
             <div className="space-y-1">
-              {exp.achievements.map((achievement, i) => (
-                <MarkdownText key={i} text={achievement} />
+              {exp.achievements.map((achievement) => (
+                <MarkdownText key={achievement} text={achievement} />
               ))}
             </div>
           </div>

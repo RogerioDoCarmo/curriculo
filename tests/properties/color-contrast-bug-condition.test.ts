@@ -157,6 +157,6 @@ describe("Property 1: Bug Condition - TechStack Links Meet WCAG AA Contrast", ()
     console.log("==================================\n");
 
     // Verify we have the expected number of affected links
-    expect(affectedLinks.length).toBe(11);
+    expect(affectedLinks).toHaveLength(11);
   });
 });

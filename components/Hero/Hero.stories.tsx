@@ -19,7 +19,6 @@ export const Default: Story = {
   args: {
     name: "Rogério do Carmo",
     title: "Mobile React Native Developer",
-    locale: "en",
     greeting: "Hi, I'm",
     ctaText: "View my work",
     contactText: "Get in touch",

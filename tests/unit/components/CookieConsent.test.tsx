@@ -164,29 +164,25 @@ describe("CookieConsent", () => {
   });
 
   describe("Main view", () => {
-    it("should display title and description", () => {
+    it.each([
+      [
+        "title and description",
+        ["This site uses cookies", "We use essential cookies for site functionality."],
+      ],
+      [
+        "essential cookies category",
+        ["Essential Cookies", "Required for basic site functionality."],
+      ],
+      [
+        "analytics cookies category",
+        ["Analytics Cookies", "Help understand how visitors interact with the site."],
+      ],
+    ] as const)("should display %s", (_label, texts) => {
       renderWithIntl("en", mockMessages.en);
 
-      expect(screen.getByText("This site uses cookies")).toBeInTheDocument();
-      expect(
-        screen.getByText("We use essential cookies for site functionality.")
-      ).toBeInTheDocument();
-    });
-
-    it("should show essential cookies category", () => {
-      renderWithIntl("en", mockMessages.en);
-
-      expect(screen.getByText("Essential Cookies")).toBeInTheDocument();
-      expect(screen.getByText("Required for basic site functionality.")).toBeInTheDocument();
-    });
-
-    it("should show analytics cookies category", () => {
-      renderWithIntl("en", mockMessages.en);
-
-      expect(screen.getByText("Analytics Cookies")).toBeInTheDocument();
-      expect(
-        screen.getByText("Help understand how visitors interact with the site.")
-      ).toBeInTheDocument();
+      texts.forEach((text) => {
+        expect(screen.getByText(text)).toBeInTheDocument();
+      });
     });
 
     it("should have Accept All button", () => {
@@ -391,11 +387,10 @@ describe("CookieConsent", () => {
   });
 
   describe("Accessibility", () => {
-    it("should have role='dialog' and aria-modal='true'", () => {
+    it("should have role='dialog' (native <dialog> element)", () => {
       renderWithIntl("en", mockMessages.en);
 
-      const dialog = screen.getByRole("dialog");
-      expect(dialog).toHaveAttribute("aria-modal", "true");
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
     it("should have aria-labelledby pointing to title", () => {
@@ -442,6 +437,14 @@ describe("CookieConsent", () => {
       expect(rejectButton).not.toHaveAttribute("tabindex", "-1");
       expect(customizeButton).not.toHaveAttribute("tabindex", "-1");
     });
+
+    it("should NOT be dismissible via the ESC key (GDPR/LGPD requires an explicit choice)", () => {
+      renderWithIntl("en", mockMessages.en);
+
+      fireEvent.keyDown(document, { key: "Escape" });
+
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
   });
 
   describe("Translations", () => {
@@ -478,25 +481,19 @@ describe("CookieConsent", () => {
       renderWithIntl("en", mockMessages.en);
 
       const dialog = screen.getByRole("dialog");
-      const container = dialog.querySelector("div");
 
-      if (container) {
-        // Check for light mode classes
-        expect(container.className).toContain("bg-white");
-        expect(container.className).toContain("dark:bg-gray-800");
-      }
+      // Check for light mode classes
+      expect(dialog.className).toContain("bg-white");
+      expect(dialog.className).toContain("dark:bg-gray-800");
     });
 
     it("should have dark mode classes", () => {
       renderWithIntl("en", mockMessages.en);
 
       const dialog = screen.getByRole("dialog");
-      const container = dialog.querySelector("div");
 
-      if (container) {
-        // Verify dark mode classes are present
-        expect(container.className).toMatch(/dark:/);
-      }
+      // Verify dark mode classes are present
+      expect(dialog.className).toMatch(/dark:/);
     });
   });
 

@@ -66,59 +66,30 @@ describe.skip("Resume Download Integration Tests", () => {
   });
 
   describe("Download flow for each locale", () => {
-    it("should open correct PDF when download button is clicked for pt-BR", async () => {
-      render(
-        <NextIntlClientProvider locale="pt-BR" messages={messages}>
-          <ExitIntentModal enabled={true} locale="pt-BR" />
-        </NextIntlClientProvider>
-      );
+    it.each([
+      ["pt-BR", "pt-BR"],
+      ["English", "en"],
+      ["Spanish", "es"],
+    ] as const)(
+      "should open correct PDF when download button is clicked for %s",
+      async (_label, locale) => {
+        render(
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <ExitIntentModal enabled={true} locale={locale} />
+          </NextIntlClientProvider>
+        );
 
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
+        const downloadButton = screen.getByRole("button", {
+          name: /download resume/i,
+        });
 
-      fireEvent.click(downloadButton);
+        fireEvent.click(downloadButton);
 
-      await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
-      });
-    });
-
-    it("should open correct PDF when download button is clicked for English", async () => {
-      render(
-        <NextIntlClientProvider locale="en" messages={messages}>
-          <ExitIntentModal enabled={true} locale="en" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      fireEvent.click(downloadButton);
-
-      await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
-      });
-    });
-
-    it("should open correct PDF when download button is clicked for Spanish", async () => {
-      render(
-        <NextIntlClientProvider locale="es" messages={messages}>
-          <ExitIntentModal enabled={true} locale="es" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      fireEvent.click(downloadButton);
-
-      await waitFor(() => {
-        expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
-      });
-    });
+        await waitFor(() => {
+          expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
+        });
+      }
+    );
   });
 
   describe("PDF file accessibility", () => {
@@ -201,8 +172,8 @@ describe.skip("Resume Download Integration Tests", () => {
         </NextIntlClientProvider>
       );
 
-      // Verify modal is visible
-      const modal = container.querySelector('[role="dialog"]');
+      // Verify modal is visible (native <dialog> — role="dialog" is implicit)
+      const modal = container.querySelector("dialog");
       expect(modal).toBeInTheDocument();
 
       // Find and click download button

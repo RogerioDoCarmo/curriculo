@@ -228,13 +228,34 @@ describe("Header — responsive navigation", () => {
     const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
     await user.click(hamburger);
 
+    let sidebar: HTMLElement;
+    await waitFor(() => {
+      sidebar = screen.getByRole("dialog", { name: /navigation|menu/i });
+      expect(sidebar).toBeInTheDocument();
+    });
+
+    // Native <dialog> has no separate backdrop element — clicking the
+    // dialog's own box (outside any descendant) is the backdrop click.
+    await user.click(sidebar!);
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: /navigation|menu/i })).not.toBeInTheDocument();
+    });
+  });
+
+  it("closes sidebar when the ESC key is pressed (native <dialog> behavior)", async () => {
+    const user = userEvent.setup();
+    setViewportWidth(375);
+    renderHeader();
+
+    const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
+    await user.click(hamburger);
+
     await waitFor(() => {
       expect(screen.getByRole("dialog", { name: /navigation|menu/i })).toBeInTheDocument();
     });
 
-    // Click the backdrop
-    const backdrop = screen.getByTestId("sidebar-backdrop");
-    await user.click(backdrop);
+    await user.keyboard("{Escape}");
 
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: /navigation|menu/i })).not.toBeInTheDocument();

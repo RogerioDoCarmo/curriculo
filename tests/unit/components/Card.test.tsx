@@ -36,7 +36,7 @@ describe("Card Component", () => {
     );
 
     const headings = screen.queryAllByRole("heading");
-    expect(headings.length).toBe(0);
+    expect(headings).toHaveLength(0);
   });
 
   it("applies custom className", () => {

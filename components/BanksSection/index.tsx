@@ -299,7 +299,7 @@ export default function BanksSection() {
       if (!el) return;
       const item = el.querySelector("li");
       const list = item?.parentElement;
-      const gap = list ? parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
+      const gap = list ? Number.parseFloat(getComputedStyle(list).columnGap) || 0 : 0;
       const tile = item ? item.getBoundingClientRect().width + gap : 256;
 
       // Wrap-around so the buttons loop infinitely like the auto-scroll instead of

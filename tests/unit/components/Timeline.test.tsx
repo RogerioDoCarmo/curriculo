@@ -42,24 +42,15 @@ const sampleItems: TimelineItem[] = [
 ];
 
 describe("Timeline Component", () => {
-  it("renders all timeline items", () => {
+  it.each([
+    ["titles", ["Senior Developer", "MSc Computer Science", "Best App Award", "First Job"]],
+    ["subtitles", ["Acme Corp", "State University"]],
+    ["descriptions", ["Led mobile development team.", "Research in distributed systems."]],
+  ] as const)("renders item %s", (_label, texts) => {
     render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Senior Developer")).toBeInTheDocument();
-    expect(screen.getByText("MSc Computer Science")).toBeInTheDocument();
-    expect(screen.getByText("Best App Award")).toBeInTheDocument();
-    expect(screen.getByText("First Job")).toBeInTheDocument();
-  });
-
-  it("renders item subtitles when provided", () => {
-    render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Acme Corp")).toBeInTheDocument();
-    expect(screen.getByText("State University")).toBeInTheDocument();
-  });
-
-  it("renders item descriptions", () => {
-    render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Led mobile development team.")).toBeInTheDocument();
-    expect(screen.getByText("Research in distributed systems.")).toBeInTheDocument();
+    texts.forEach((text) => {
+      expect(screen.getByText(text)).toBeInTheDocument();
+    });
   });
 
   it("expands an entry by clicking its circular marker", () => {

@@ -78,6 +78,40 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 };
 
+// Mock HTMLDialogElement.showModal/close for tests (jsdom doesn't implement
+// the native <dialog> element's imperative API). Also simulates the browser's
+// native ESC -> "cancel" -> "close" sequence, and the native
+// autofocus-first-focusable-descendant / restore-focus-on-close behavior, so
+// existing keyboard/focus-driven tests and cancel-suppression behavior (e.g.
+// non-dismissible dialogs) keep working without real-browser-only coverage.
+if (!HTMLDialogElement.prototype.showModal) {
+  HTMLDialogElement.prototype.showModal = function () {
+    this.setAttribute("open", "");
+    this._previouslyFocused = document.activeElement;
+    const focusable = this.querySelector(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    (focusable || this).focus();
+    this._escHandler = (e) => {
+      if (e.key === "Escape") {
+        const notPrevented = this.dispatchEvent(new Event("cancel", { cancelable: true }));
+        if (notPrevented) this.close();
+      }
+    };
+    document.addEventListener("keydown", this._escHandler);
+  };
+  HTMLDialogElement.prototype.close = function () {
+    this.removeAttribute("open");
+    if (this._escHandler) {
+      document.removeEventListener("keydown", this._escHandler);
+      this._escHandler = null;
+    }
+    this._previouslyFocused?.focus?.();
+    this._previouslyFocused = null;
+    this.dispatchEvent(new Event("close"));
+  };
+}
+
 // Mock window.matchMedia for tests
 Object.defineProperty(window, "matchMedia", {
   writable: true,

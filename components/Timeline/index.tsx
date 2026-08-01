@@ -26,18 +26,17 @@ function ToggleButton({
   readonly children: ReactNode;
 }) {
   const props = {
-    type: "button" as const,
     "aria-controls": controlsId,
     onClick,
     className,
     ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
   };
   return expanded ? (
-    <button {...props} aria-expanded="true">
+    <button type="button" {...props} aria-expanded="true">
       {children}
     </button>
   ) : (
-    <button {...props} aria-expanded="false">
+    <button type="button" {...props} aria-expanded="false">
       {children}
     </button>
   );
@@ -92,9 +91,9 @@ export default function Timeline({
 
   if (!items || items.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400" role="status">
+      <output className="block text-gray-500 dark:text-gray-400">
         No timeline items to display.
-      </p>
+      </output>
     );
   }
 

@@ -134,7 +134,7 @@ export default function SwipeCarousel({
     const el = trackRef.current;
     if (!el) return;
     const item = el.querySelector("li");
-    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const gap = Number.parseFloat(getComputedStyle(el).columnGap) || 0;
     const tile = item ? item.getBoundingClientRect().width + gap : 0;
     el.scrollBy({ left: tile * direction, behavior: "smooth" });
   }, []);

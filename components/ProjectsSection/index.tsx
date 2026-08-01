@@ -24,7 +24,9 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Collect all unique technologies
-  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort();
+  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const filtered = techFilter
     ? projects.filter((p) => p.technologies.includes(techFilter))
@@ -55,11 +57,8 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
 
         {/* Technology filter */}
         {allTechs.length > 0 && (
-          <div
-            className="mb-8 flex flex-wrap gap-2"
-            role="group"
-            aria-label={t("projects.filterByTech")}
-          >
+          <fieldset className="mb-8 flex min-w-0 flex-wrap gap-2 border-0 p-0">
+            <legend className="sr-only">{t("projects.filterByTech")}</legend>
             <FilterButton
               label={t("projects.all")}
               active={!techFilter}
@@ -73,14 +72,14 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
                 onClick={() => setTechFilter(tech === techFilter ? "" : tech)}
               />
             ))}
-          </div>
+          </fieldset>
         )}
 
         {/* Projects grid */}
         {filtered.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400" role="status">
+          <output className="block text-gray-500 dark:text-gray-400">
             {t("projects.noMatch")}
-          </p>
+          </output>
         ) : isMobile ? (
           /* Mobile: one card per swipe, looping infinitely. */
           <SwipeCarousel
@@ -146,14 +145,14 @@ function FilterButton({
       ? "bg-primary-600 text-white dark:bg-primary-600"
       : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
   ].join(" ");
-  const props = { type: "button" as const, onClick, className };
+  const props = { onClick, className };
 
   return active ? (
-    <button {...props} aria-pressed="true">
+    <button type="button" {...props} aria-pressed="true">
       {label}
     </button>
   ) : (
-    <button {...props} aria-pressed="false">
+    <button type="button" {...props} aria-pressed="false">
       {label}
     </button>
   );
@@ -182,17 +181,11 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         project.featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : "",
       ].join(" ")}
     >
-      <div
+      <button
+        type="button"
         onClick={onClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onClick();
-          }
-        }}
-        role="button"
-        tabIndex={0}
         aria-label={`${t("projects.viewDetails")} ${project.title}`}
+        className="block w-full text-left"
       >
         {/* Project image — contained (aligned with the card content, not full
             bleed) and centered, with breathing room around it. */}
@@ -262,7 +255,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
             </span>
           )}
         </div>
-      </div>
+      </button>
     </Card>
   );
 }

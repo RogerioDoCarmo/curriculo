@@ -11,37 +11,15 @@ import Button from "@/components/Button";
 describe("Button Component", () => {
   // --- Variants ---
   describe("variants", () => {
-    it("should render primary variant", () => {
+    it.each(["primary", "secondary", "ghost"] as const)("should render %s variant", (variant) => {
       render(
-        <Button variant="primary" size="md">
+        <Button variant={variant} size="md">
           Click me
         </Button>
       );
       const button = screen.getByRole("button", { name: /click me/i });
       expect(button).toBeInTheDocument();
-      expect(button).toHaveClass("primary");
-    });
-
-    it("should render secondary variant", () => {
-      render(
-        <Button variant="secondary" size="md">
-          Click me
-        </Button>
-      );
-      const button = screen.getByRole("button", { name: /click me/i });
-      expect(button).toBeInTheDocument();
-      expect(button).toHaveClass("secondary");
-    });
-
-    it("should render ghost variant", () => {
-      render(
-        <Button variant="ghost" size="md">
-          Click me
-        </Button>
-      );
-      const button = screen.getByRole("button", { name: /click me/i });
-      expect(button).toBeInTheDocument();
-      expect(button).toHaveClass("ghost");
+      expect(button).toHaveClass(variant);
     });
   });
 

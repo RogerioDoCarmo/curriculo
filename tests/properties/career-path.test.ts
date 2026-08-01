@@ -173,7 +173,7 @@ describe("Property 1: Career Path Selection Displays Correct Content", () => {
           // All returned experiences must be professional
           expect(filtered.every((e) => e.type === "professional")).toBe(true);
           // All professional experiences must be included
-          expect(filtered.length).toBe(professionalExps.length);
+          expect(filtered).toHaveLength(professionalExps.length);
         }
       ),
       { numRuns: 50 }
@@ -192,7 +192,7 @@ describe("Property 1: Career Path Selection Displays Correct Content", () => {
           // All returned experiences must be academic
           expect(filtered.every((e) => e.type === "academic")).toBe(true);
           // All academic experiences must be included
-          expect(filtered.length).toBe(academicExps.length);
+          expect(filtered).toHaveLength(academicExps.length);
         }
       ),
       { numRuns: 50 }
@@ -213,7 +213,7 @@ describe("Property 1: Career Path Selection Displays Correct Content", () => {
           const professionalIds = new Set(professional.map((e) => e.id));
           const academicIds = new Set(academic.map((e) => e.id));
           const intersection = Array.from(professionalIds).filter((id) => academicIds.has(id));
-          expect(intersection.length).toBe(0);
+          expect(intersection).toHaveLength(0);
         }
       ),
       { numRuns: 50 }

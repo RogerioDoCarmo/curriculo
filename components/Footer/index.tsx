@@ -367,6 +367,7 @@ export default function Footer({ locale }: FooterProps) {
               {/* Print Button */}
               <li>
                 <button
+                  type="button"
                   onClick={() => window.print()}
                   aria-label={t("footer.printPageLabel")}
                   className="
