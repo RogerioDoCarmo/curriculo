@@ -156,11 +156,22 @@ export default function ScrollMinimap() {
 
       <div
         ref={trackRef}
-        onClick={handleTrackClick}
         onMouseMove={handleTrackMouseMove}
         onMouseLeave={handleTrackMouseLeave}
-        className="relative h-full w-full cursor-pointer overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700"
+        className="relative h-full w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700"
       >
+        {/* Decorative click-to-jump layer: a mouse-only convenience on top
+            of the fully keyboard-accessible thumb below (the WAI-ARIA APG
+            slider pattern treats click-anywhere-on-track as a supplementary
+            affordance, not a replacement for the thumb's own keyboard
+            support) — aria-hidden so assistive tech skips it, and painted
+            first so the real markers/thumb stack above and stay clickable. */}
+        <div
+          aria-hidden="true"
+          onClick={handleTrackClick}
+          className="absolute inset-0 cursor-pointer"
+        />
+
         {markers.map((marker, index) => {
           const isActive = currentSection === marker.id;
           return (
