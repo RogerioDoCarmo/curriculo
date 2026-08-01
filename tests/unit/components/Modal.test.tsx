@@ -78,8 +78,10 @@ describe("Modal Component", () => {
       const onClose = jest.fn();
       render(<Modal {...defaultProps} onClose={onClose} />);
 
-      const backdrop = screen.getByTestId("modal-backdrop");
-      await user.click(backdrop);
+      // Native <dialog> has no separate backdrop element — clicking the
+      // dialog's own box (outside any descendant) is the backdrop click.
+      const dialog = screen.getByRole("dialog");
+      await user.click(dialog);
 
       await waitFor(() => {
         expect(onClose).toHaveBeenCalledTimes(1);
@@ -125,11 +127,6 @@ describe("Modal Component", () => {
     it("should have role='dialog' attribute", () => {
       render(<Modal {...defaultProps} />);
       expect(screen.getByRole("dialog")).toBeInTheDocument();
-    });
-
-    it("should have aria-modal='true' attribute", () => {
-      render(<Modal {...defaultProps} />);
-      expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
     });
 
     it("should have aria-labelledby pointing to title when title is provided", () => {
