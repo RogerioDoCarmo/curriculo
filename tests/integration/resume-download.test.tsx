@@ -172,8 +172,8 @@ describe.skip("Resume Download Integration Tests", () => {
         </NextIntlClientProvider>
       );
 
-      // Verify modal is visible
-      const modal = container.querySelector('[role="dialog"]');
+      // Verify modal is visible (native <dialog> — role="dialog" is implicit)
+      const modal = container.querySelector("dialog");
       expect(modal).toBeInTheDocument();
 
       // Find and click download button

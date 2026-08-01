@@ -235,11 +235,9 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
       </Modal>
     );
 
-    const dialog = container.querySelector('[role="dialog"]');
+    // Native <dialog> — role="dialog" is implicit, not a literal attribute.
+    const dialog = container.querySelector("dialog");
     expect(dialog).toBeTruthy();
-
-    // Should have aria-modal
-    expect(dialog?.getAttribute("aria-modal")).toBe("true");
 
     // Should have aria-labelledby when title is provided
     const ariaLabelledBy = dialog?.getAttribute("aria-labelledby");

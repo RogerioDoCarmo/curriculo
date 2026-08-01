@@ -26,8 +26,10 @@ export async function dismissCookieBanner(
   action: "accept" | "reject" = "accept"
 ): Promise<void> {
   try {
-    // Wait for the banner to appear (with a short timeout)
-    const banner = page.locator('div[role="dialog"][aria-modal="true"]');
+    // Wait for the banner to appear (with a short timeout).
+    // Native <dialog> exposes role="dialog" implicitly, not as a literal
+    // attribute, so this must be an accessibility-tree role query.
+    const banner = page.getByRole("dialog");
 
     // Check if banner is visible
     const isVisible = await banner.isVisible({ timeout: 2000 }).catch(() => false);

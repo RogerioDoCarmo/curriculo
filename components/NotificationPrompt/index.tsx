@@ -67,10 +67,9 @@ export default function NotificationPrompt({
   if (state !== "visible") return null;
 
   return (
-    <div
-      role="dialog"
+    <dialog
+      open
       aria-label="Notification permission request"
-      aria-modal="false"
       className="fixed bottom-4 left-4 z-50 max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800"
     >
       <p className="mb-3 text-sm text-gray-700 dark:text-gray-300">
@@ -93,6 +92,6 @@ export default function NotificationPrompt({
           No thanks
         </button>
       </div>
-    </div>
+    </dialog>
   );
 }

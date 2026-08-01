@@ -232,7 +232,9 @@ describe("NotificationPrompt Component", () => {
     await waitFor(() => {
       const dialog = screen.getByRole("dialog");
       expect(dialog).toHaveAttribute("aria-label", "Notification permission request");
-      expect(dialog).toHaveAttribute("aria-modal", "false");
+      // Native <dialog> rendered via the `open` attribute (not showModal()) is
+      // non-modal by construction — no aria-modal needed.
+      expect(dialog).not.toHaveAttribute("aria-modal");
     });
   });
 

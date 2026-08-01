@@ -160,7 +160,7 @@ test.describe("Component Gallery Page", () => {
       await modalButton.click();
 
       // Modal should be visible
-      const modal = page.locator('[role="dialog"]');
+      const modal = page.getByRole("dialog");
       await expect(modal).toBeVisible();
 
       // Modal should have title
@@ -186,7 +186,7 @@ test.describe("Component Gallery Page", () => {
       await confirmButton.click();
 
       // Modal should be visible with confirmation content
-      const modal = page.locator('[role="dialog"]');
+      const modal = page.getByRole("dialog");
       await expect(modal).toBeVisible();
       await expect(modal.getByText(/Are you sure|Tem certeza|Estás seguro/i)).toBeVisible();
 
@@ -203,7 +203,7 @@ test.describe("Component Gallery Page", () => {
       await infoButton.click();
 
       // Modal should be visible with list
-      const modal = page.locator('[role="dialog"]');
+      const modal = page.getByRole("dialog");
       await expect(modal).toBeVisible();
 
       // Should contain list items
@@ -219,7 +219,7 @@ test.describe("Component Gallery Page", () => {
       await formButton.click();
 
       // Modal should be visible with form inputs
-      const modal = page.locator('[role="dialog"]');
+      const modal = page.getByRole("dialog");
       await expect(modal).toBeVisible();
 
       // Should have name and email inputs (locale-aware)
@@ -349,7 +349,7 @@ test.describe("Component Gallery Page", () => {
       await modalButton.click();
 
       // Modal should have role="dialog"
-      const modal = page.locator('[role="dialog"]');
+      const modal = page.getByRole("dialog");
       await expect(modal).toBeVisible();
 
       // Modal should be properly labeled

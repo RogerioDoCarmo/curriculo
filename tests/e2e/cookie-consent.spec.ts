@@ -87,9 +87,11 @@ test.describe("Cookie Consent Banner", () => {
       const banner = page.getByRole("dialog");
       await expect(banner).toBeVisible({ timeout: 10000 });
 
-      // Verify banner has proper ARIA attributes
-      await expect(banner).toHaveAttribute("aria-modal", "true");
-      await expect(banner).toHaveAttribute("role", "dialog");
+      // Verify the banner is a native <dialog> shown modally (role="dialog"
+      // and modal semantics are implicit, not literal attributes, once
+      // rendered via showModal()).
+      await expect(banner).toHaveJSProperty("tagName", "DIALOG");
+      await expect(banner).toHaveJSProperty("open", true);
     });
 
     test("should show essential and analytics cookie categories", async ({ page }) => {
@@ -554,6 +556,19 @@ test.describe("Cookie Consent Banner", () => {
   });
 
   test.describe("Accessibility", () => {
+    test("should NOT be dismissible via the ESC key (GDPR/LGPD requires an explicit choice)", async ({
+      page,
+    }) => {
+      await page.goto("/en");
+
+      const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
+      await expect(banner).toBeVisible();
+
+      await page.keyboard.press("Escape");
+
+      await expect(banner).toBeVisible();
+    });
+
     test("should be keyboard navigable", async ({ page }) => {
       await page.goto("/en");
 
@@ -585,9 +600,10 @@ test.describe("Cookie Consent Banner", () => {
       const banner = page.getByRole("dialog", { name: /cookie|privacy/i });
       await expect(banner).toBeVisible();
 
-      // Check ARIA attributes
-      await expect(banner).toHaveAttribute("role", "dialog");
-      await expect(banner).toHaveAttribute("aria-modal", "true");
+      // Check the banner is a native, modally-shown <dialog> (role="dialog"
+      // and modal semantics are implicit here, not literal attributes).
+      await expect(banner).toHaveJSProperty("tagName", "DIALOG");
+      await expect(banner).toHaveJSProperty("open", true);
 
       // Go to customize view
       await banner.getByRole("button", { name: /customize/i }).click();
