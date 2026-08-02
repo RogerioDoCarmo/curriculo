@@ -37,7 +37,7 @@ describe("Lighthouse Performance Audits", () => {
     test.skip("Lighthouse tests are disabled in CI (known Chrome interstitial issue)", () => {
       // This test is intentionally skipped in CI — body never executes.
       // Run locally with: npm run test:lighthouse:full
-      expect.hasAssertions();
+      expect(isCI).toBe(true);
     });
     return;
   }
