@@ -92,11 +92,17 @@ function requireField(
  */
 function requireString(value: unknown, fieldName: string, filePath: string): string {
   requireField(value, fieldName, filePath);
+  if (typeof value === "object" && !(value instanceof Date)) {
+    throw new TypeError(
+      `Content validation error in "${filePath}": field "${fieldName}" must be a scalar value, not an object or array.`
+    );
+  }
   return String(value);
 }
 
-/** Coerces an optional frontmatter field to a string, or `undefined` if absent. */
+/** Coerces an optional frontmatter field to a string, or `undefined` if absent or not a scalar. */
 function optionalString(value: unknown): string | undefined {
+  if (typeof value === "object" && !(value instanceof Date)) return undefined;
   return value ? String(value) : undefined;
 }
 
