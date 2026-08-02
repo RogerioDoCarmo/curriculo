@@ -42,14 +42,16 @@ describe("Hero Component", () => {
     expect(heading).toHaveTextContent("John Doe");
   });
 
-  it("renders the professional title", () => {
+  it.each([
+    ["renders the professional title", "React Native Developer"],
+    ["renders the greeting text", "Hello, I'm"],
+    [
+      "displays professional email address below CTA buttons for English locale",
+      "contact@rogeriodocarmo.com",
+    ],
+  ] as const)("%s", (_label, expectedText) => {
     renderWithIntl(<Hero {...defaultProps} />, "en");
-    expect(screen.getByText("React Native Developer")).toBeInTheDocument();
-  });
-
-  it("renders the greeting text", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "en");
-    expect(screen.getByText("Hello, I'm")).toBeInTheDocument();
+    expect(screen.getByText(expectedText)).toBeInTheDocument();
   });
 
   it("renders translated greeting for Portuguese", () => {
@@ -127,11 +129,6 @@ describe("Hero Component", () => {
     }
   });
 
-  it("displays professional email address below CTA buttons for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "en");
-    expect(screen.getByText("contact@rogeriodocarmo.com")).toBeInTheDocument();
-  });
-
   it("displays professional email address below CTA buttons for Portuguese locale", () => {
     renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
     expect(screen.getByText("contato@rogeriodocarmo.com")).toBeInTheDocument();
@@ -201,21 +198,30 @@ describe("Hero Component", () => {
     expect(photo.className).toMatch(/rounded-lg/);
   });
 
-  it("renders education section with UNESP logo for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
-    expect(screen.getByText("Bacharel em Ciência da Computação")).toBeInTheDocument();
-    expect(screen.getByText("Mestre em Ciências Cartográficas")).toBeInTheDocument();
-    const unespLogo = screen.getByAltText("UNESP Logo");
-    expect(unespLogo).toBeInTheDocument();
-  });
-
-  it("renders education section with UNESP logo for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "en");
-    expect(screen.getByText("Bachelor in Computer Science")).toBeInTheDocument();
-    expect(screen.getByText("Master in Cartographic Sciences")).toBeInTheDocument();
-    const unespLogo = screen.getByAltText("UNESP Logo");
-    expect(unespLogo).toBeInTheDocument();
-  });
+  it.each([
+    [
+      "Portuguese",
+      "pt-BR",
+      "Bacharel em Ciência da Computação",
+      "Mestre em Ciências Cartográficas",
+    ],
+    ["English", "en", "Bachelor in Computer Science", "Master in Cartographic Sciences"],
+    [
+      "Spanish",
+      "es",
+      "Licenciado en Ciencias de la Computación",
+      "Máster en Ciencias Cartográficas",
+    ],
+  ] as const)(
+    "renders education section with UNESP logo for %s locale",
+    (_localeName, locale, bachelorDegree, masterDegree) => {
+      renderWithIntl(<Hero {...defaultProps} />, locale);
+      expect(screen.getByText(bachelorDegree)).toBeInTheDocument();
+      expect(screen.getByText(masterDegree)).toBeInTheDocument();
+      const unespLogo = screen.getByAltText("UNESP Logo");
+      expect(unespLogo).toBeInTheDocument();
+    }
+  );
 
   it("renders dissertation link for Portuguese locale", () => {
     renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
@@ -267,37 +273,20 @@ describe("Hero Component", () => {
     expect(downloadButton).toHaveTextContent("Download Dissertation (PDF)");
   });
 
-  it("renders current job section for Portuguese locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "pt-BR");
-    expect(screen.getByText("Desenvolvedor Mobile Sênior")).toBeInTheDocument();
-    expect(screen.getByText("2023 - 2026 (3 anos)")).toBeInTheDocument();
-    const companyLogo = screen.getByAltText("Company Logo");
-    expect(companyLogo).toBeInTheDocument();
-  });
-
-  it("renders current job section for English locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "en");
-    expect(screen.getByText("Senior Mobile Developer")).toBeInTheDocument();
-    expect(screen.getByText("2023 - 2026 (3 years)")).toBeInTheDocument();
-    const companyLogo = screen.getByAltText("Company Logo");
-    expect(companyLogo).toBeInTheDocument();
-  });
-
-  it("renders current job section for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "es");
-    expect(screen.getByText("Desarrollador Mobile Senior")).toBeInTheDocument();
-    expect(screen.getByText("2023 - 2026 (3 años)")).toBeInTheDocument();
-    const companyLogo = screen.getByAltText("Company Logo");
-    expect(companyLogo).toBeInTheDocument();
-  });
-
-  it("renders education section with UNESP logo for Spanish locale", () => {
-    renderWithIntl(<Hero {...defaultProps} />, "es");
-    expect(screen.getByText("Licenciado en Ciencias de la Computación")).toBeInTheDocument();
-    expect(screen.getByText("Máster en Ciencias Cartográficas")).toBeInTheDocument();
-    const unespLogo = screen.getByAltText("UNESP Logo");
-    expect(unespLogo).toBeInTheDocument();
-  });
+  it.each([
+    ["Portuguese", "pt-BR", "Desenvolvedor Mobile Sênior", "2023 - 2026 (3 anos)"],
+    ["English", "en", "Senior Mobile Developer", "2023 - 2026 (3 years)"],
+    ["Spanish", "es", "Desarrollador Mobile Senior", "2023 - 2026 (3 años)"],
+  ] as const)(
+    "renders current job section for %s locale",
+    (_localeName, locale, jobTitle, dateRange) => {
+      renderWithIntl(<Hero {...defaultProps} />, locale);
+      expect(screen.getByText(jobTitle)).toBeInTheDocument();
+      expect(screen.getByText(dateRange)).toBeInTheDocument();
+      const companyLogo = screen.getByAltText("Company Logo");
+      expect(companyLogo).toBeInTheDocument();
+    }
+  );
 
   it("renders dissertation link for Spanish locale", () => {
     renderWithIntl(<Hero {...defaultProps} />, "es");
