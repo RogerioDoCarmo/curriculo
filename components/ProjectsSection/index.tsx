@@ -43,6 +43,41 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   };
   const canNavProjects = !!selectedProject && filtered.length > 1;
 
+  let projectsContent: React.ReactNode;
+  if (filtered.length === 0) {
+    projectsContent = (
+      <output className="block text-gray-500 dark:text-gray-400">{t("projects.noMatch")}</output>
+    );
+  } else if (isMobile) {
+    projectsContent = (
+      /* Mobile: one card per swipe, looping infinitely. */
+      <SwipeCarousel
+        ariaLabel={t("sections.projects")}
+        itemClassName="w-[85%]"
+        showControls
+        prevLabel={t("projects.previousProject")}
+        nextLabel={t("projects.nextProject")}
+        items={filtered.map((project, index) => ({
+          key: `${project.id}-${index}`,
+          node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
+        }))}
+      />
+    );
+  } else {
+    projectsContent = (
+      /* Desktop: grid. */
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((project, index) => (
+          <ProjectCard
+            key={`${project.id}-${index}`}
+            project={project}
+            onClick={() => setSelectedProject(project)}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <section
       id="projects"
@@ -76,35 +111,7 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
         )}
 
         {/* Projects grid */}
-        {filtered.length === 0 ? (
-          <output className="block text-gray-500 dark:text-gray-400">
-            {t("projects.noMatch")}
-          </output>
-        ) : isMobile ? (
-          /* Mobile: one card per swipe, looping infinitely. */
-          <SwipeCarousel
-            ariaLabel={t("sections.projects")}
-            itemClassName="w-[85%]"
-            showControls
-            prevLabel={t("projects.previousProject")}
-            nextLabel={t("projects.nextProject")}
-            items={filtered.map((project, index) => ({
-              key: `${project.id}-${index}`,
-              node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
-            }))}
-          />
-        ) : (
-          /* Desktop: grid. */
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((project, index) => (
-              <ProjectCard
-                key={`${project.id}-${index}`}
-                project={project}
-                onClick={() => setSelectedProject(project)}
-              />
-            ))}
-          </div>
-        )}
+        {projectsContent}
 
         {/* Project detail modal — Prev/Next step through the (filtered) projects */}
         <Modal
