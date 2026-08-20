@@ -1,6 +1,7 @@
 import React from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "../hooks/useTheme";
+import { FilterPulseProvider } from "../hooks/useFilterPulse";
 import messages from "../messages/en.json";
 import "../app/globals.css";
 
@@ -13,7 +14,9 @@ import "../app/globals.css";
 const withProviders = (Story: React.ComponentType<any>) => (
   <NextIntlClientProvider locale="en" messages={messages}>
     <ThemeProvider>
-      <Story />
+      <FilterPulseProvider>
+        <Story />
+      </FilterPulseProvider>
     </ThemeProvider>
   </NextIntlClientProvider>
 );

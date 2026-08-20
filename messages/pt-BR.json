@@ -140,6 +140,11 @@
     "selector": "Selecionar idioma",
     "selectTooltip": "Selecionar idioma (atualmente {language})"
   },
+  "filterPulse": {
+    "sepia": {
+      "label": "Ativar efeito de pulso sépia"
+    }
+  },
   "footer": {
     "copyright": "Todos os direitos reservados.",
     "sitemap": "Mapa do site",
