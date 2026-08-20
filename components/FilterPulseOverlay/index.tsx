@@ -40,6 +40,16 @@ export default function FilterPulseOverlay() {
     "--pulse-cx": `${origin.x}px`,
     "--pulse-cy": `${origin.y}px`,
     "--pulse-radius": covering ? `${maxRadius}px` : "0px",
+    // A CSS transition on a property animates over its full duration the
+    // moment that property's *value* changes, regardless of whether the
+    // change is visually a no-op (a 0px-radius circle renders nothing no
+    // matter where it's centered) -- it does not apply instantly just
+    // because nothing is drawn yet. While idle, disable the transition
+    // outright so useFilterPulse's origin-then-phase two-step commit (see
+    // its trigger()) actually repositions instantly instead of quietly
+    // animating the position in the background, only to still be mid-flight
+    // once the radius transition starts a couple of frames later.
+    ...(phase === "idle" ? { transition: "none" } : {}),
   } as CSSProperties;
 
   return (

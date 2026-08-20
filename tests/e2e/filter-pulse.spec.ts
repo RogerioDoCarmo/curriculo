@@ -53,32 +53,26 @@ test.describe("Filter Pulse button", () => {
     await page.goto(`${BASE_URL}/en`);
     const button = page.getByRole("button", { name: /pulse effect/i });
 
-    // Phase timeline (see hooks/useFilterPulse.tsx DURATIONS.full): expanding
-    // 0-1200ms, holding 1200-1900ms, contracting 1900-3100ms. Checkpoints are
-    // anchored to elapsed time since the click, not chained relative waits,
-    // so per-call overhead can't drift a sample across a phase boundary.
-    const clickTime = Date.now();
+    // expect.poll retries the callback until the assertion holds (or times
+    // out), instead of comparing two fixed-instant samples -- point-in-time
+    // sampling (waitForTimeout(N) then read once) is inherently prone to two
+    // close checkpoints landing on the same simulated frame under CI/runner
+    // contention, producing a coincidental tie rather than a real failure.
+    // Phase timeline for reference (hooks/useFilterPulse.tsx DURATIONS.full):
+    // expanding 0-1200ms, holding 1200-1900ms, contracting 1900-3100ms.
+    const startRadius = await getOverlayRadius(page);
     await button.click();
 
-    async function radiusAt(targetMs: number): Promise<number> {
-      const wait = targetMs - (Date.now() - clickTime);
-      if (wait > 0) await page.waitForTimeout(wait);
-      return getOverlayRadius(page);
-    }
+    // Grows: radius moves well past its starting value.
+    await expect
+      .poll(() => getOverlayRadius(page), { timeout: 2000 })
+      .toBeGreaterThan(startRadius + 100);
 
-    const early = await radiusAt(300);
-    const grown = await radiusAt(900);
-    expect(grown).toBeGreaterThan(early);
+    // Reaches (and holds at) a large, viewport-covering radius.
+    await expect.poll(() => getOverlayRadius(page), { timeout: 2000 }).toBeGreaterThan(400);
 
-    // Well inside the holding window (1200-1900ms) — should be at/near max.
-    const atFullCoverage = await radiusAt(1700);
-    expect(atFullCoverage).toBeGreaterThan(400);
-
-    // Past the full ~3.1s cycle — back to (near) zero. Generous margin for
-    // slower CI runners: the assertion only needs "substantially closed, not
-    // still near max", not "closed at exactly the theoretical millisecond".
-    const final = await radiusAt(4200);
-    expect(final).toBeLessThan(200);
+    // Shrinks back down to (near) zero once the full ~3.1s cycle completes.
+    await expect.poll(() => getOverlayRadius(page), { timeout: 5000 }).toBeLessThan(200);
   });
 
   test("applies the negative (invert) filter at full coverage", async ({ page }) => {

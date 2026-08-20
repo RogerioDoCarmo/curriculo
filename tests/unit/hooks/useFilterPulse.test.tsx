@@ -71,11 +71,43 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.phase).toBe("idle");
   });
 
+  it("commits the new origin (at phase idle) before flipping to expanding, so position never transitions alongside radius", () => {
+    // Regression test for a Firefox-only bug: setting origin and phase
+    // "expanding" in the same commit made the clip-path's position AND
+    // radius change together, which Firefox visibly interpolates (the
+    // circle appeared to sweep in from the previous origin instead of
+    // growing in place). The fix commits origin/maxRadius on their own,
+    // one paint before phase flips, via a double requestAnimationFrame.
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.trigger({ x: 42, y: 24 });
+    });
+    // Immediately after trigger(), before the rAF pair has had a chance to
+    // run: origin/maxRadius/activeFilterId are already committed, but phase
+    // is still "idle" -- exactly the position-only, radius-still-0 paint
+    // the fix relies on.
+    expect(result.current.phase).toBe("idle");
+    expect(result.current.origin).toEqual({ x: 42, y: 24 });
+    expect(result.current.maxRadius).toBeGreaterThan(0);
+
+    act(() => {
+      jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
+    });
+    expect(result.current.phase).toBe("expanding");
+    // Origin is unchanged from the pre-expanding commit -- confirms the
+    // radius-only transition has a stable position to animate from.
+    expect(result.current.origin).toEqual({ x: 42, y: 24 });
+  });
+
   it("walks through expanding -> holding -> contracting -> idle (normal motion)", () => {
     const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
 
     act(() => {
       result.current.trigger({ x: 10, y: 10 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
     });
     expect(result.current.phase).toBe("expanding");
     expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
@@ -102,6 +134,9 @@ describe("FilterPulseProvider / useFilterPulse", () => {
 
     act(() => {
       result.current.trigger({ x: 10, y: 10 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
     });
     expect(result.current.phase).toBe("expanding");
 
@@ -137,19 +172,51 @@ describe("FilterPulseProvider / useFilterPulse", () => {
       result.current.trigger({ x: 10, y: 10 });
     });
     act(() => {
-      jest.advanceTimersByTime(600);
+      jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
+    });
+    expect(result.current.phase).toBe("expanding");
+
+    // Attempted re-trigger while already running: must be a no-op. Kept in
+    // its own act() so the "expanding" phase (and the guard ref it sets)
+    // has actually committed before this call reads it.
+    act(() => {
       result.current.trigger({ x: 999, y: 999 });
     });
     expect(result.current.origin).toEqual({ x: 10, y: 10 });
 
     // Total time to idle still matches a single trigger's timeline.
     act(() => {
-      jest.advanceTimersByTime(600 + 700 + 1200);
+      jest.advanceTimersByTime(1200 + 700 + 1200);
     });
     expect(result.current.phase).toBe("idle");
   });
 
+  it("cancels the pending requestAnimationFrame pair on unmount", () => {
+    // Regression test: the "holding"/"contracting"/"idle" setTimeout chain
+    // is only created once the second rAF fires, so unmounting *before*
+    // that (the common case, since trigger() -> unmount can happen well
+    // within one frame) previously left both rAF callbacks uncancelled --
+    // they'd still fire later and call setPhase on the unmounted component.
+    const cancelSpy = jest.spyOn(window, "cancelAnimationFrame");
+    const { result, unmount } = renderHook(() => useFilterPulse(), {
+      wrapper: FilterPulseProvider,
+    });
+
+    act(() => {
+      result.current.trigger({ x: 10, y: 10 });
+    });
+    // Unmount before the double rAF has a chance to flush: only the first
+    // rAF has been requested yet (the second is only scheduled from inside
+    // the first's callback), so cancelling that one is enough to prevent
+    // the whole chain from ever running.
+    unmount();
+
+    expect(cancelSpy).toHaveBeenCalledTimes(1);
+    cancelSpy.mockRestore();
+  });
+
   it("cleans up pending timers on unmount without warning", () => {
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     const { result, unmount } = renderHook(() => useFilterPulse(), {
       wrapper: FilterPulseProvider,
     });
@@ -164,5 +231,11 @@ describe("FilterPulseProvider / useFilterPulse", () => {
         jest.advanceTimersByTime(5000);
       });
     }).not.toThrow();
+
+    // No "state update on an unmounted component" (or similar) warning --
+    // confirms the rAF pair and any setTimeout chain it would have created
+    // are genuinely cancelled, not just silently swallowed.
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });

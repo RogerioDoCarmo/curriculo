@@ -75,9 +75,18 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
   const reducedMotionRef = useRef(prefersReducedMotion);
   reducedMotionRef.current = prefersReducedMotion;
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const rafIdsRef = useRef<number[]>([]);
 
   useEffect(() => {
     return () => {
+      // Cancel the rAF pair too, not just the setTimeout chain: the
+      // "holding"/"contracting"/"idle" timeouts are only created once the
+      // second rAF fires, so if unmount happens before then, an uncancelled
+      // rAF would still fire later and call setPhase on an unmounted
+      // component, plus schedule setTimeouts cleanup here already ran and
+      // can never clear.
+      rafIdsRef.current.forEach(cancelAnimationFrame);
+      rafIdsRef.current = [];
       timeoutsRef.current.forEach(clearTimeout);
       timeoutsRef.current = [];
     };
@@ -87,7 +96,9 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     if (phaseRef.current !== "idle") return;
 
     // Only one pulse can be in flight at a time (guarded above), so any
-    // previously-scheduled timers have already fired — safe to reset.
+    // previously-scheduled timers/frames have already fired — safe to reset.
+    rafIdsRef.current.forEach(cancelAnimationFrame);
+    rafIdsRef.current = [];
     timeoutsRef.current = [];
 
     const durations = reducedMotionRef.current ? DURATIONS.reduced : DURATIONS.full;
@@ -96,26 +107,44 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
       height: window.innerHeight,
     });
 
+    // Commit the new origin while phase is still "idle" (radius stays 0px,
+    // so this paint is visually a no-op) before starting the "expanding"
+    // transition on a second paint. Setting origin/radius/phase together in
+    // one commit would transition the clip-path's position AND radius in a
+    // single step -- fine on Chromium/WebKit, which don't visibly animate a
+    // circle's position, but Firefox does interpolate it, which reads as the
+    // circle sweeping in from the origin's *previous* value (initial (0, 0)
+    // on the very first trigger) instead of growing in place from the
+    // button. The double rAF guarantees this position-only paint has
+    // actually been committed before the radius change starts, so the
+    // radius transition has nothing but radius to interpolate.
     setOrigin(triggerOrigin);
     setMaxRadius(radius);
     setActiveFilterId(filterId ?? DEFAULT_FILTER_PULSE_ID);
-    setPhase("expanding");
 
-    timeoutsRef.current.push(
-      setTimeout(() => {
-        setPhase("holding");
+    const raf1 = requestAnimationFrame(() => {
+      const raf2 = requestAnimationFrame(() => {
+        setPhase("expanding");
+
         timeoutsRef.current.push(
           setTimeout(() => {
-            setPhase("contracting");
+            setPhase("holding");
             timeoutsRef.current.push(
               setTimeout(() => {
-                setPhase("idle");
-              }, durations.contracting)
+                setPhase("contracting");
+                timeoutsRef.current.push(
+                  setTimeout(() => {
+                    setPhase("idle");
+                  }, durations.contracting)
+                );
+              }, durations.holding)
             );
-          }, durations.holding)
+          }, durations.expanding)
         );
-      }, durations.expanding)
-    );
+      });
+      rafIdsRef.current.push(raf2);
+    });
+    rafIdsRef.current.push(raf1);
   }, []);
 
   const value = useMemo(
