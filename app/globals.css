@@ -93,10 +93,10 @@
    circle() values set inline by the component. */
 .filter-pulse-overlay {
   clip-path: circle(var(--pulse-radius, 0px) at var(--pulse-cx, 50%) var(--pulse-cy, 50%));
-  transition: clip-path 600ms ease-in-out;
+  transition: clip-path 1200ms ease-in-out;
 }
 .filter-pulse-overlay--reduced-motion {
-  transition: opacity 250ms ease-in-out;
+  transition: opacity 400ms ease-in-out;
 }
 
 @keyframes fadeIn {

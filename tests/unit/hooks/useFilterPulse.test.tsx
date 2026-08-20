@@ -81,17 +81,17 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
 
     act(() => {
-      jest.advanceTimersByTime(600);
+      jest.advanceTimersByTime(1200);
     });
     expect(result.current.phase).toBe("holding");
 
     act(() => {
-      jest.advanceTimersByTime(400);
+      jest.advanceTimersByTime(700);
     });
     expect(result.current.phase).toBe("contracting");
 
     act(() => {
-      jest.advanceTimersByTime(600);
+      jest.advanceTimersByTime(1200);
     });
     expect(result.current.phase).toBe("idle");
   });
@@ -106,17 +106,17 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.phase).toBe("expanding");
 
     act(() => {
-      jest.advanceTimersByTime(250);
+      jest.advanceTimersByTime(400);
     });
     expect(result.current.phase).toBe("holding");
 
     act(() => {
-      jest.advanceTimersByTime(300);
+      jest.advanceTimersByTime(400);
     });
     expect(result.current.phase).toBe("contracting");
 
     act(() => {
-      jest.advanceTimersByTime(250);
+      jest.advanceTimersByTime(400);
     });
     expect(result.current.phase).toBe("idle");
   });
@@ -137,14 +137,14 @@ describe("FilterPulseProvider / useFilterPulse", () => {
       result.current.trigger({ x: 10, y: 10 });
     });
     act(() => {
-      jest.advanceTimersByTime(300);
+      jest.advanceTimersByTime(600);
       result.current.trigger({ x: 999, y: 999 });
     });
     expect(result.current.origin).toEqual({ x: 10, y: 10 });
 
     // Total time to idle still matches a single trigger's timeline.
     act(() => {
-      jest.advanceTimersByTime(300 + 400 + 600);
+      jest.advanceTimersByTime(600 + 700 + 1200);
     });
     expect(result.current.phase).toBe("idle");
   });

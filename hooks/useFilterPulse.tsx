@@ -28,8 +28,8 @@ export interface FilterPulseOrigin {
 }
 
 const DURATIONS = {
-  full: { expanding: 600, holding: 400, contracting: 600 },
-  reduced: { expanding: 250, holding: 300, contracting: 250 },
+  full: { expanding: 1200, holding: 700, contracting: 1200 },
+  reduced: { expanding: 400, holding: 400, contracting: 400 },
 } as const;
 
 /**
