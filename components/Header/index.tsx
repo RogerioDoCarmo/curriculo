@@ -323,7 +323,7 @@ export default function Header({ locale }: HeaderProps) {
               label={languageLabel}
             />
             <ThemeToggle {...themeToggleLabels} />
-            <FilterPulseButton label={filterPulseLabel} />
+            <FilterPulseButton label={filterPulseLabel} className="ml-2" />
           </div>
         </div>
       </div>
@@ -414,7 +414,7 @@ export default function Header({ locale }: HeaderProps) {
             label={languageLabel}
           />
           <ThemeToggle {...themeToggleLabels} />
-          <FilterPulseButton label={filterPulseLabel} onTriggered={closeSidebar} />
+          <FilterPulseButton label={filterPulseLabel} onTriggered={closeSidebar} className="ml-2" />
         </div>
       </dialog>
     </header>
