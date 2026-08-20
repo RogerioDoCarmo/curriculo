@@ -143,6 +143,9 @@
   "filterPulse": {
     "sepia": {
       "label": "Trigger sepia pulse effect"
+    },
+    "negative": {
+      "label": "Trigger negative pulse effect"
     }
   },
   "footer": {

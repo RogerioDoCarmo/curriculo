@@ -9,7 +9,7 @@ import React from "react";
 import { render } from "@testing-library/react";
 import FilterPulseOverlay from "@/components/FilterPulseOverlay";
 import * as useFilterPulseModule from "@/hooks/useFilterPulse";
-import { getFilterPulse } from "@/lib/filterPulses";
+import { FilterPulseId, getFilterPulse } from "@/lib/filterPulses";
 
 function mockFilterPulse(
   overrides: Partial<ReturnType<typeof useFilterPulseModule.useFilterPulse>>
@@ -18,7 +18,7 @@ function mockFilterPulse(
     phase: "idle",
     origin: { x: 0, y: 0 },
     maxRadius: 0,
-    activeFilterId: "sepia",
+    activeFilterId: FilterPulseId.Sepia,
     prefersReducedMotion: false,
     trigger: jest.fn(),
     ...overrides,
@@ -59,11 +59,19 @@ describe("FilterPulseOverlay Component", () => {
   });
 
   it("applies the active filter's CSS via backdrop-filter", () => {
-    mockFilterPulse({ activeFilterId: "sepia" });
+    mockFilterPulse({ activeFilterId: FilterPulseId.Sepia });
     const { container } = render(<FilterPulseOverlay />);
     const overlay = container.firstElementChild as HTMLElement;
 
-    expect(overlay.style.backdropFilter).toBe(getFilterPulse("sepia").filter);
+    expect(overlay.style.backdropFilter).toBe(getFilterPulse(FilterPulseId.Sepia).filter);
+  });
+
+  it("applies the negative filter's CSS via backdrop-filter", () => {
+    mockFilterPulse({ activeFilterId: FilterPulseId.Negative });
+    const { container } = render(<FilterPulseOverlay />);
+    const overlay = container.firstElementChild as HTMLElement;
+
+    expect(overlay.style.backdropFilter).toBe(getFilterPulse(FilterPulseId.Negative).filter);
   });
 
   it("switches to the reduced-motion class and skips spatial custom properties", () => {

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import FilterPulseButton from "./index";
 import FilterPulseOverlay from "@/components/FilterPulseOverlay";
+import { FilterPulseId } from "@/lib/filterPulses";
 
 /**
  * FilterPulseButton component — triggers a one-shot circular filter-pulse
@@ -20,7 +21,8 @@ const meta: Meta<typeof FilterPulseButton> = {
       description: "Additional CSS classes to apply to the button",
     },
     filterId: {
-      control: "text",
+      control: "select",
+      options: Object.values(FilterPulseId),
       description: "Which registered filter (lib/filterPulses.ts) to trigger",
     },
   },

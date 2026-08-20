@@ -7,7 +7,7 @@
 import { act } from "react";
 import { renderHook } from "@testing-library/react";
 import { FilterPulseProvider, useFilterPulse, computeMaxRadius } from "@/hooks/useFilterPulse";
-import { DEFAULT_FILTER_PULSE_ID } from "@/lib/filterPulses";
+import { DEFAULT_FILTER_PULSE_ID, FilterPulseId } from "@/lib/filterPulses";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -125,9 +125,9 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
 
     act(() => {
-      result.current.trigger({ x: 10, y: 10 }, "sepia");
+      result.current.trigger({ x: 10, y: 10 }, FilterPulseId.Sepia);
     });
-    expect(result.current.activeFilterId).toBe("sepia");
+    expect(result.current.activeFilterId).toBe(FilterPulseId.Sepia);
   });
 
   it("ignores a re-trigger while a pulse is already running", () => {

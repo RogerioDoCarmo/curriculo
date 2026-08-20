@@ -9,6 +9,7 @@ import userEvent from "@testing-library/user-event";
 import FilterPulseButton from "@/components/FilterPulseButton";
 import { FilterPulseProvider } from "@/hooks/useFilterPulse";
 import * as useFilterPulseModule from "@/hooks/useFilterPulse";
+import { FilterPulseId } from "@/lib/filterPulses";
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <FilterPulseProvider>{children}</FilterPulseProvider>
@@ -61,18 +62,18 @@ describe("FilterPulseButton Component", () => {
       phase: "idle",
       origin: { x: 0, y: 0 },
       maxRadius: 0,
-      activeFilterId: "sepia",
+      activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
       trigger: triggerSpy,
     });
 
-    render(<FilterPulseButton filterId="sepia" />);
+    render(<FilterPulseButton filterId={FilterPulseId.Sepia} />);
     await user.click(screen.getByRole("button"));
 
     expect(triggerSpy).toHaveBeenCalledTimes(1);
     expect(triggerSpy).toHaveBeenCalledWith(
       expect.objectContaining({ x: expect.any(Number), y: expect.any(Number) }),
-      "sepia"
+      FilterPulseId.Sepia
     );
 
     jest.restoreAllMocks();
@@ -94,7 +95,7 @@ describe("FilterPulseButton Component", () => {
       phase: "expanding",
       origin: { x: 0, y: 0 },
       maxRadius: 100,
-      activeFilterId: "sepia",
+      activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
       trigger: triggerSpy,
     });
