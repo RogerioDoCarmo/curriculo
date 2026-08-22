@@ -45,6 +45,49 @@ test.describe("The World pulse", () => {
     await expect(pulseButton(page)).toHaveAttribute("aria-label", /the world/i);
   });
 
+  test("stays completely inert until triggered — it must not play on page load", async ({
+    page,
+  }) => {
+    // Regression guard. The grade layers are always mounted, and the
+    // animations were originally declared on their base classes, so they
+    // started the moment those layers hit the DOM: the effect played itself
+    // once on load and then never again, because re-adding a class does not
+    // restart an animation whose name never changed. Clicking appeared to do
+    // nothing. Waiting out a full pulse before asserting is the point of this
+    // test -- sampling immediately after load would have caught the tail of
+    // that stray animation and passed.
+    test.setTimeout(45_000);
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).waitFor({ state: "visible" });
+    await page.waitForTimeout(5000);
+
+    const idle = await page.evaluate(() =>
+      ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"].map((id) => {
+        const el = document.querySelector(`[data-testid='${id}']`);
+        if (!el) return null;
+        const cs = getComputedStyle(el);
+        return { anim: cs.animationName, bg: cs.backgroundColor };
+      })
+    );
+    for (const layer of idle) {
+      expect(layer).not.toBeNull();
+      expect(layer?.anim).toBe("none");
+      expect(alphaOf(layer?.bg ?? "")).toBe(0);
+    }
+
+    // ...and it does start once actually triggered.
+    await pulseButton(page).click();
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            getComputedStyle(document.querySelector("[data-testid='fp-layer-color']") as Element)
+              .animationName
+        )
+      )
+      .not.toBe("none");
+  });
+
   test("activates the grade layers and rings for the pulse, then goes quiet", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
@@ -59,10 +102,26 @@ test.describe("The World pulse", () => {
 
     await pulseButton(page).click();
 
-    await expect(rings).toHaveClass(/fp-rings--active/);
-    for (const id of ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"]) {
-      await expect(page.locator(`[data-testid='${id}']`)).toHaveClass(/fp-grade/);
-    }
+    // Polled, not read once: trigger() deliberately waits two animation
+    // frames before moving off "idle" (so the clip-path origin commits before
+    // the radius starts growing -- see useFilterPulse), so the active class
+    // is not on the DOM the instant the click resolves. Polling in a single
+    // evaluate also keeps this cheap enough to catch the class well inside
+    // the pulse window under parallel load.
+    await expect
+      .poll(
+        () =>
+          page.evaluate(() => {
+            const cls = (id: string) =>
+              document.querySelector(`[data-testid='${id}']`)?.className ?? "";
+            const graded = ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"].every((id) =>
+              cls(id).includes("fp-grade")
+            );
+            return cls("cinematic-layers").includes("fp-rings--active") && graded;
+          }),
+        { timeout: 3000 }
+      )
+      .toBe(true);
 
     // Back to quiet once the pulse finishes: no active class, clip closed.
     await expect(rings).not.toHaveClass(/fp-rings--active/, { timeout: 12_000 });

@@ -131,13 +131,25 @@
 }
 .fp-invert {
   mix-blend-mode: difference;
-  animation: fp-invert-beat var(--pulse-total, 6000ms) linear both;
 }
 .fp-color {
   mix-blend-mode: color;
+}
+
+/* The animations are gated on .fp-grade, which is only present while a pulse
+   is running. Declaring them on the base classes instead meant they started
+   the moment the always-mounted layers hit the DOM: the whole effect played
+   itself once on page load and, since re-adding a class does not restart an
+   animation whose name never changed, clicking then did nothing at all.
+   Gating on the class also gives the restart -- the animation is removed and
+   re-added with it, so each pulse begins from 0%. */
+.fp-grade.fp-invert {
+  animation: fp-invert-beat var(--pulse-total, 6000ms) linear both;
+}
+.fp-grade.fp-color {
   animation: fp-color-beat var(--pulse-total, 6000ms) linear both;
 }
-.fp-lum {
+.fp-grade.fp-lum {
   animation: fp-lum-beat var(--pulse-total, 6000ms) linear both;
 }
 
