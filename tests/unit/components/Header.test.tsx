@@ -45,6 +45,9 @@ jest.mock("next-intl", () => ({
       "nav.resume": "Resume",
       "footer.downloadResume": "Download Resume",
       "footer.downloadResumeLabel": "Download resume in PDF format",
+      "filterPulse.sepia.label": "Trigger sepia pulse effect",
+      "filterPulse.negative.label": "Trigger negative pulse effect",
+      "filterPulse.theWorld.label": "Trigger The World time-stop effect",
     };
     return translations[key] ?? key;
   },
@@ -72,6 +75,24 @@ jest.mock("@/hooks/useTheme", () => ({
     setTheme: jest.fn(),
   }),
   ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mock useFilterPulse so FilterPulseButton renders without a provider
+jest.mock("@/hooks/useFilterPulse", () => ({
+  useFilterPulse: () => ({
+    phase: "idle",
+    origin: { x: 0, y: 0 },
+    maxRadius: 0,
+    activeFilterId: "sepia",
+    prefersReducedMotion: false,
+    durations: { expanding: 1050, holding: 500, contracting: 875 },
+    trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
+  }),
+  FilterPulseProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock useLanguage so LanguageSelector renders without side-effects
@@ -281,6 +302,27 @@ describe("Header — responsive navigation", () => {
       name: /switch between|theme\.switch|tema/i,
     });
     expect(themeToggle).toBeInTheDocument();
+  });
+
+  it("renders FilterPulseButton in the header (sidebar closed, single instance)", () => {
+    setViewportWidth(1280);
+    renderHeader();
+
+    const filterPulseButton = screen.getByRole("button", { name: /^trigger /i });
+    expect(filterPulseButton).toBeInTheDocument();
+  });
+
+  it("renders a second FilterPulseButton inside the mobile sidebar once it's open", async () => {
+    const user = userEvent.setup();
+    setViewportWidth(375);
+    renderHeader();
+
+    const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
+    await user.click(hamburger);
+    await screen.findByRole("dialog", { name: /navigation|menu/i });
+
+    const filterPulseButtons = screen.getAllByRole("button", { name: /^trigger /i });
+    expect(filterPulseButtons).toHaveLength(2);
   });
 
   it("renders the resume download link with the locale-specific PDF href", () => {

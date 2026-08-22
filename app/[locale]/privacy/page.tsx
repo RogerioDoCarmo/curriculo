@@ -145,6 +145,7 @@ function PrivacyPolicyContent() {
             <li>{t("dataCollection.browserStorage.consent")}</li>
             <li>{t("dataCollection.browserStorage.session")}</li>
             <li>{t("dataCollection.browserStorage.notifications")}</li>
+            <li>{t("dataCollection.browserStorage.filterPulse")}</li>
           </ul>
         </div>
       </section>

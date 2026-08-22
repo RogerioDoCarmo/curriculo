@@ -140,6 +140,23 @@
     "selector": "Select language",
     "selectTooltip": "Select language (currently {language})"
   },
+  "filterPulse": {
+    "sepia": {
+      "label": "Trigger sepia pulse effect"
+    },
+    "negative": {
+      "label": "Trigger negative pulse effect"
+    },
+    "theWorld": {
+      "label": "Trigger The World time-stop effect"
+    },
+    "warning": {
+      "title": "Heads up: flashing visual effect",
+      "body": "This effect briefly flashes and inverts the colours of the whole page. It may be uncomfortable, or unsafe, if you are sensitive to flashing light. You only need to make this choice once.",
+      "continue": "Play the effect",
+      "cancel": "Cancel"
+    }
+  },
   "footer": {
     "copyright": "All rights reserved.",
     "sitemap": "Sitemap",
@@ -395,7 +412,7 @@
     "metaDescription": "Learn about the cookies we use, how to manage them, and your choices. Detailed information about Firebase Analytics cookies.",
     "title": "Cookie Policy",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "June 2026",
+    "lastUpdatedDate": "August 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "This Cookie Policy explains what cookies are, how we use them on our website, and your choices regarding cookies.",
@@ -495,6 +512,10 @@
         "notifications": {
           "name": "fcm_topic_subscriptions",
           "purpose": "Your notification subscription preferences"
+        },
+        "filterPulse": {
+          "name": "filter-pulse-photosensitivity-consent",
+          "purpose": "Your acknowledgement of the flashing visual effect warning, so it is only shown to you once"
         }
       },
       "howToManage": "How to manage localStorage: You can clear localStorage through your browser's developer tools or by clearing all site data. This will reset your preferences but won't affect cookies."
@@ -602,7 +623,7 @@
     "metaDescription": "Learn how we collect, use, and protect your data. GDPR and LGPD compliant privacy policy.",
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "June 2026",
+    "lastUpdatedDate": "August 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website.",
@@ -670,7 +691,8 @@
         "language": "Language preference (pt-BR, en, es)",
         "consent": "Cookie consent preferences",
         "session": "Session data (exit intent modal state)",
-        "notifications": "Notification subscription preferences"
+        "notifications": "Notification subscription preferences",
+        "filterPulse": "Acknowledgement of the flashing visual effect warning"
       }
     },
     "dataUsage": {

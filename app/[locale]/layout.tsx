@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { FilterPulseProvider } from "@/hooks/useFilterPulse";
 import { generateStructuredDataScript } from "@/lib/structured-data";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -12,6 +13,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import CookieConsent from "@/components/CookieConsent";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import BackToTopButton from "@/components/BackToTopButton";
+import FilterPulseOverlay from "@/components/FilterPulseOverlay";
+import FilterPulseWarningDialog from "@/components/FilterPulseWarningDialog";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -214,15 +217,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <AnalyticsProvider>
-              <ErrorBoundary component="RootLayout">
-                <Header locale={locale} />
-                <main className="min-h-screen">{children}</main>
-                <Footer locale={locale} />
-                <BackToTopButton />
-                <CookieConsent />
-              </ErrorBoundary>
-            </AnalyticsProvider>
+            <FilterPulseProvider>
+              <AnalyticsProvider>
+                <ErrorBoundary component="RootLayout">
+                  <Header locale={locale} />
+                  <main className="min-h-screen">{children}</main>
+                  <Footer locale={locale} />
+                  <BackToTopButton />
+                  <CookieConsent />
+                  <FilterPulseOverlay />
+                  <FilterPulseWarningDialog />
+                </ErrorBoundary>
+              </AnalyticsProvider>
+            </FilterPulseProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
