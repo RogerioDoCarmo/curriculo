@@ -55,9 +55,9 @@ describe("FilterPulseButton Component", () => {
     expect(screen.getByRole("button")).toHaveClass("custom-class");
   });
 
-  it("should trigger the pulse from the button's own position when clicked", async () => {
+  it("should request the pulse from the button's own position when clicked", async () => {
     const user = userEvent.setup();
-    const triggerSpy = jest.fn();
+    const requestSpy = jest.fn();
     jest.spyOn(useFilterPulseModule, "useFilterPulse").mockReturnValue({
       phase: "idle",
       origin: { x: 0, y: 0 },
@@ -65,14 +65,20 @@ describe("FilterPulseButton Component", () => {
       activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
       durations: { expanding: 1200, holding: 700, contracting: 1200 },
-      trigger: triggerSpy,
+      trigger: jest.fn(),
+      requestPulse: requestSpy,
+      awaitingConsent: false,
+      confirmPulse: jest.fn(),
+      cancelPulse: jest.fn(),
     });
 
     render(<FilterPulseButton filterId={FilterPulseId.Sepia} />);
     await user.click(screen.getByRole("button"));
 
-    expect(triggerSpy).toHaveBeenCalledTimes(1);
-    expect(triggerSpy).toHaveBeenCalledWith(
+    // requestPulse, not trigger: the button asks, and the provider decides
+    // whether the photosensitivity warning has to come first.
+    expect(requestSpy).toHaveBeenCalledTimes(1);
+    expect(requestSpy).toHaveBeenCalledWith(
       expect.objectContaining({ x: expect.any(Number), y: expect.any(Number) }),
       FilterPulseId.Sepia
     );
@@ -80,18 +86,9 @@ describe("FilterPulseButton Component", () => {
     jest.restoreAllMocks();
   });
 
-  it("should call onTriggered after a successful click", async () => {
-    const user = userEvent.setup();
-    const onTriggered = jest.fn();
-    render(<FilterPulseButton onTriggered={onTriggered} />, { wrapper });
-
-    await user.click(screen.getByRole("button"));
-    expect(onTriggered).toHaveBeenCalledTimes(1);
-  });
-
   it("should disable the button while a pulse is in progress and ignore clicks", async () => {
     const user = userEvent.setup();
-    const triggerSpy = jest.fn();
+    const requestSpy = jest.fn();
     jest.spyOn(useFilterPulseModule, "useFilterPulse").mockReturnValue({
       phase: "expanding",
       origin: { x: 0, y: 0 },
@@ -99,7 +96,11 @@ describe("FilterPulseButton Component", () => {
       activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
       durations: { expanding: 1200, holding: 700, contracting: 1200 },
-      trigger: triggerSpy,
+      trigger: jest.fn(),
+      requestPulse: requestSpy,
+      awaitingConsent: false,
+      confirmPulse: jest.fn(),
+      cancelPulse: jest.fn(),
     });
 
     render(<FilterPulseButton />);
@@ -107,7 +108,7 @@ describe("FilterPulseButton Component", () => {
     expect(button).toBeDisabled();
 
     await user.click(button);
-    expect(triggerSpy).not.toHaveBeenCalled();
+    expect(requestSpy).not.toHaveBeenCalled();
 
     jest.restoreAllMocks();
   });

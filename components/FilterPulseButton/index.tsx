@@ -27,27 +27,21 @@ interface FilterPulseButtonProps {
   readonly className?: string;
   /** Accessible name / tooltip text. Defaults to English. */
   readonly label?: string;
-  /**
-   * Called right after a trigger fires. Used e.g. to close a containing
-   * mobile sidebar `<dialog>`, whose top-layer promotion would otherwise
-   * visually hide the fixed overlay underneath it.
-   */
-  readonly onTriggered?: () => void;
 }
 
 export default function FilterPulseButton({
   filterId,
   className = "",
   label = "Trigger filter pulse effect",
-  onTriggered,
 }: FilterPulseButtonProps) {
-  const { phase, trigger } = useFilterPulse();
+  const { phase, requestPulse } = useFilterPulse();
   const isIdle = phase === "idle";
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     const rect = event.currentTarget.getBoundingClientRect();
-    trigger({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }, filterId);
-    onTriggered?.();
+    // requestPulse, not trigger: it shows the photosensitivity warning first
+    // unless the visitor has already acknowledged it.
+    requestPulse({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }, filterId);
   }
 
   return (

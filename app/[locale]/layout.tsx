@@ -14,6 +14,7 @@ import CookieConsent from "@/components/CookieConsent";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import BackToTopButton from "@/components/BackToTopButton";
 import FilterPulseOverlay from "@/components/FilterPulseOverlay";
+import FilterPulseWarningDialog from "@/components/FilterPulseWarningDialog";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -225,6 +226,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                   <BackToTopButton />
                   <CookieConsent />
                   <FilterPulseOverlay />
+                  <FilterPulseWarningDialog />
                 </ErrorBoundary>
               </AnalyticsProvider>
             </FilterPulseProvider>

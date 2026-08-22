@@ -22,6 +22,10 @@ function mockFilterPulse(
     prefersReducedMotion: false,
     durations: { expanding: 1200, holding: 700, contracting: 1200 },
     trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
     ...overrides,
   });
 }

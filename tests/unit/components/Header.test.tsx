@@ -85,7 +85,12 @@ jest.mock("@/hooks/useFilterPulse", () => ({
     maxRadius: 0,
     activeFilterId: "sepia",
     prefersReducedMotion: false,
+    durations: { expanding: 1050, holding: 500, contracting: 875 },
     trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
   }),
   FilterPulseProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));

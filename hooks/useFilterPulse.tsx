@@ -18,6 +18,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { hasPulseConsent, setPulseConsent } from "@/lib/filterPulseConsent";
 import {
   DEFAULT_FILTER_PULSE_ID,
   getPulseDurations,
@@ -53,7 +54,23 @@ interface FilterPulseContextValue {
   readonly prefersReducedMotion: boolean;
   /** Phase timings of the in-flight (or most recent) pulse, for the overlay's CSS vars. */
   readonly durations: FilterPulsePhaseDurations;
+  /**
+   * Starts a pulse immediately, skipping the photosensitivity warning. Use
+   * requestPulse from UI instead; this stays exposed for the confirmation
+   * dialog and for tests.
+   */
   readonly trigger: (origin: FilterPulseOrigin, filterId?: FilterPulseId) => void;
+  /**
+   * Asks for a pulse. Shows the photosensitivity warning first unless the
+   * visitor has already acknowledged it, in which case it starts straight away.
+   */
+  readonly requestPulse: (origin: FilterPulseOrigin, filterId?: FilterPulseId) => void;
+  /** True while the warning dialog should be open. */
+  readonly awaitingConsent: boolean;
+  /** Acknowledge the warning and play the pulse that was requested. */
+  readonly confirmPulse: () => void;
+  /** Dismiss the warning without playing anything. */
+  readonly cancelPulse: () => void;
 }
 
 const FilterPulseContext = createContext<FilterPulseContextValue | null>(null);
@@ -71,6 +88,10 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
   const [durations, setDurations] = useState<FilterPulsePhaseDurations>(() =>
     getPulseDurations(DEFAULT_FILTER_PULSE_ID, false)
   );
+  const [pending, setPending] = useState<{
+    origin: FilterPulseOrigin;
+    filterId?: FilterPulseId;
+  } | null>(null);
 
   // Refs let `trigger` (stable identity) read latest values without becoming
   // a moving dependency, and let unmount cleanup clear whatever timers are
@@ -105,6 +126,11 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     rafIdsRef.current.forEach(cancelAnimationFrame);
     rafIdsRef.current = [];
     timeoutsRef.current = [];
+
+    // The mobile sidebar is a native <dialog> in the browser's top layer, so
+    // it would sit over the fixed overlay. BackToTopButton already uses this
+    // same signal, and Header listens for it.
+    window.dispatchEvent(new CustomEvent("app:close-sidebar"));
 
     const resolvedId = filterId ?? DEFAULT_FILTER_PULSE_ID;
     const durations = getPulseDurations(resolvedId, reducedMotionRef.current);
@@ -154,9 +180,59 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     rafIdsRef.current.push(raf1);
   }, []);
 
+  const requestPulse = useCallback(
+    (triggerOrigin: FilterPulseOrigin, filterId?: FilterPulseId) => {
+      if (phaseRef.current !== "idle") return;
+      if (hasPulseConsent()) {
+        trigger(triggerOrigin, filterId);
+        return;
+      }
+      setPending({ origin: triggerOrigin, filterId });
+    },
+    [trigger]
+  );
+
+  const confirmPulse = useCallback(() => {
+    setPending((current) => {
+      if (current) {
+        setPulseConsent();
+        // Deferred so the dialog has closed (and released the top layer)
+        // before the overlay starts painting underneath it.
+        requestAnimationFrame(() => trigger(current.origin, current.filterId));
+      }
+      return null;
+    });
+  }, [trigger]);
+
+  const cancelPulse = useCallback(() => setPending(null), []);
+
   const value = useMemo(
-    () => ({ phase, origin, maxRadius, activeFilterId, prefersReducedMotion, durations, trigger }),
-    [phase, origin, maxRadius, activeFilterId, prefersReducedMotion, durations, trigger]
+    () => ({
+      phase,
+      origin,
+      maxRadius,
+      activeFilterId,
+      prefersReducedMotion,
+      durations,
+      trigger,
+      requestPulse,
+      awaitingConsent: pending !== null,
+      confirmPulse,
+      cancelPulse,
+    }),
+    [
+      phase,
+      origin,
+      maxRadius,
+      activeFilterId,
+      prefersReducedMotion,
+      durations,
+      trigger,
+      requestPulse,
+      pending,
+      confirmPulse,
+      cancelPulse,
+    ]
   );
 
   return <FilterPulseContext.Provider value={value}>{children}</FilterPulseContext.Provider>;

@@ -149,6 +149,12 @@
     },
     "theWorld": {
       "label": "Trigger The World time-stop effect"
+    },
+    "warning": {
+      "title": "Heads up: flashing visual effect",
+      "body": "This effect briefly flashes and inverts the colours of the whole page. It may be uncomfortable, or unsafe, if you are sensitive to flashing light. You only need to make this choice once.",
+      "continue": "Play the effect",
+      "cancel": "Cancel"
     }
   },
   "footer": {

@@ -8,6 +8,7 @@ import { act } from "react";
 import { renderHook } from "@testing-library/react";
 import { FilterPulseProvider, useFilterPulse, computeMaxRadius } from "@/hooks/useFilterPulse";
 import { DEFAULT_FILTER_PULSE_ID, FilterPulseId } from "@/lib/filterPulses";
+import { setPulseConsent } from "@/lib/filterPulseConsent";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -274,5 +275,115 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     // are genuinely cancelled, not just silently swallowed.
     expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
+  });
+});
+
+describe("FilterPulseProvider — photosensitivity consent", () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    mockMatchMedia(false);
+    localStorage.clear();
+    Object.defineProperty(window, "innerWidth", { writable: true, value: 1000 });
+    Object.defineProperty(window, "innerHeight", { writable: true, value: 800 });
+  });
+  afterEach(() => jest.useRealTimers());
+
+  it("holds the pulse and asks first when the warning has not been acknowledged", () => {
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.requestPulse({ x: 10, y: 10 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(64);
+    });
+
+    expect(result.current.awaitingConsent).toBe(true);
+    // Nothing has started: the visitor has not agreed yet.
+    expect(result.current.phase).toBe("idle");
+  });
+
+  it("plays the requested pulse, from its original origin, once confirmed", () => {
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.requestPulse({ x: 42, y: 24 }, FilterPulseId.Sepia);
+    });
+    act(() => {
+      result.current.confirmPulse();
+    });
+    act(() => {
+      jest.advanceTimersByTime(64);
+    });
+
+    expect(result.current.awaitingConsent).toBe(false);
+    expect(result.current.phase).toBe("expanding");
+    // The origin captured at click time survives the dialog round-trip, so the
+    // circle still grows out of the button rather than from (0, 0).
+    expect(result.current.origin).toEqual({ x: 42, y: 24 });
+    expect(result.current.activeFilterId).toBe(FilterPulseId.Sepia);
+  });
+
+  it("remembers the acknowledgement so later pulses start immediately", () => {
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.requestPulse({ x: 10, y: 10 });
+    });
+    act(() => {
+      result.current.confirmPulse();
+    });
+    act(() => {
+      jest.advanceTimersByTime(64 + 1050 + 500 + 875);
+    });
+    expect(result.current.phase).toBe("idle");
+
+    // Second request: no dialog this time.
+    act(() => {
+      result.current.requestPulse({ x: 60, y: 60 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(64);
+    });
+    expect(result.current.awaitingConsent).toBe(false);
+    expect(result.current.phase).toBe("expanding");
+  });
+
+  it("skips the warning when consent was stored on an earlier visit", () => {
+    setPulseConsent();
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.requestPulse({ x: 10, y: 10 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(64);
+    });
+
+    expect(result.current.awaitingConsent).toBe(false);
+    expect(result.current.phase).toBe("expanding");
+  });
+
+  it("plays nothing when the warning is cancelled, and does not remember a refusal", () => {
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.requestPulse({ x: 10, y: 10 });
+    });
+    act(() => {
+      result.current.cancelPulse();
+    });
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+
+    expect(result.current.awaitingConsent).toBe(false);
+    expect(result.current.phase).toBe("idle");
+
+    // Declining stores nothing, so a mis-click does not lock the effect away.
+    act(() => {
+      result.current.requestPulse({ x: 10, y: 10 });
+    });
+    expect(result.current.awaitingConsent).toBe(true);
   });
 });

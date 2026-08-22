@@ -11,6 +11,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
 import { FilterPulseId, getFilterPulse } from "@/lib/filterPulses";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
@@ -40,6 +41,13 @@ test.beforeEach(async ({ context, page }) => {
 });
 
 test.describe("The World pulse", () => {
+  // These exercise the pulse itself, so the photosensitivity warning that
+  // normally gates it is pre-acknowledged; the warning has its own describe
+  // below, which deliberately does not seed it.
+  test.beforeEach(async ({ context }) => {
+    await acceptPulseWarningBeforeLoad(context);
+  });
+
   test("is the effect the navbar button triggers", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
     await expect(pulseButton(page)).toHaveAttribute("aria-label", /the world/i);
@@ -141,17 +149,21 @@ test.describe("The World pulse", () => {
     await page.goto(`${BASE_URL}/en`);
     await pulseButton(page).click();
 
-    await page.waitForTimeout(350);
-    const earlyColor = await layerColor(page, "fp-layer-color");
-    const earlyInvert = await layerColor(page, "fp-layer-invert");
+    // Collects distinct colours across the pulse rather than comparing two
+    // fixed instants: the sequence is only a couple of seconds long, so under
+    // parallel load two fixed samples can land close enough together to read
+    // as unchanged even though the animation is running fine.
+    const seenColor = new Set<string>();
+    const seenInvert = new Set<string>();
+    for (let i = 0; i < 16; i++) {
+      seenColor.add(await layerColor(page, "fp-layer-color"));
+      seenInvert.add(await layerColor(page, "fp-layer-invert"));
+      await page.waitForTimeout(110);
+    }
 
-    await page.waitForTimeout(750);
-    const laterColor = await layerColor(page, "fp-layer-color");
-    const laterInvert = await layerColor(page, "fp-layer-invert");
-
-    // If the keyframes weren't animating, these samples would be identical.
-    expect(earlyColor).not.toBe(laterColor);
-    expect(earlyInvert).not.toBe(laterInvert);
+    // If the keyframes weren't animating, each set would hold a single value.
+    expect(seenColor.size).toBeGreaterThan(2);
+    expect(seenInvert.size).toBeGreaterThan(2);
   });
 
   test("settles into a dark tinted 'stopped time' state and then releases", async ({ page }) => {
@@ -194,5 +206,73 @@ test.describe("The World pulse", () => {
     expect(await page.locator("[data-testid='fp-layer-invert']").count()).toBe(0);
 
     await expect(page.locator(".filter-pulse-overlay--reduced-motion")).toBeAttached();
+  });
+});
+
+/**
+ * The warning itself, which the specs above deliberately pre-acknowledge.
+ * These do NOT seed consent, so they see the real first-visit flow.
+ */
+test.describe("The World pulse — photosensitivity warning", () => {
+  test("asks before playing anything on a first visit", async ({ page }) => {
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).click();
+
+    const dialog = page.getByTestId("filter-pulse-warning");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute("role", "alertdialog");
+
+    // Nothing has started: the visitor has not agreed yet.
+    expect(await page.locator(".fp-grade").count()).toBe(0);
+  });
+
+  test("plays nothing when cancelled, and asks again next time", async ({ page }) => {
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).click();
+
+    const dialog = page.getByTestId("filter-pulse-warning");
+    await expect(dialog).toBeVisible();
+    await dialog.getByRole("button", { name: /cancel|cancelar/i }).click();
+    await expect(dialog).not.toBeVisible();
+    expect(await page.locator(".fp-grade").count()).toBe(0);
+
+    // Declining stores nothing, so a mis-click does not lock the effect away.
+    await pulseButton(page).click();
+    await expect(dialog).toBeVisible();
+  });
+
+  test("plays the effect on continue, and stops asking afterwards", async ({ page }) => {
+    test.setTimeout(45_000);
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).click();
+
+    const dialog = page.getByTestId("filter-pulse-warning");
+    await dialog.getByRole("button", { name: /play the effect|reproduc/i }).click();
+    await expect(dialog).not.toBeVisible();
+
+    // The pulse actually runs.
+    await expect
+      .poll(() => page.locator(".fp-grade").count(), { timeout: 5000 })
+      .toBeGreaterThan(0);
+    await expect(pulseButton(page)).toBeEnabled({ timeout: 12_000 });
+
+    // Second time around it goes straight to the effect.
+    await pulseButton(page).click();
+    await expect(dialog).not.toBeVisible();
+    await expect
+      .poll(() => page.locator(".fp-grade").count(), { timeout: 5000 })
+      .toBeGreaterThan(0);
+  });
+
+  test("is dismissible with ESC without playing", async ({ page }) => {
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).click();
+
+    const dialog = page.getByTestId("filter-pulse-warning");
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press("Escape");
+
+    await expect(dialog).not.toBeVisible();
+    expect(await page.locator(".fp-grade").count()).toBe(0);
   });
 });

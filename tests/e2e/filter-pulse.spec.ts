@@ -27,6 +27,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -47,6 +48,9 @@ const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /
 
 test.beforeEach(async ({ context, page }) => {
   await setCookieConsentBeforeLoad(context);
+  // These specs exercise the pulse itself; the photosensitivity warning that
+  // normally gates it has its own coverage in the-world-pulse.spec.ts.
+  await acceptPulseWarningBeforeLoad(context);
   // Vercel Speed Insights / Web Analytics 404 off-Vercel; stub to avoid noise.
   await page.route(/\/_vercel\/(insights|speed-insights)\//, (route) =>
     route.fulfill({ status: 200, contentType: "application/javascript", body: "" })

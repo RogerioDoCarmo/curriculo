@@ -149,6 +149,12 @@
     },
     "theWorld": {
       "label": "Ativar o efeito de parada do tempo The World"
+    },
+    "warning": {
+      "title": "Atenção: efeito visual com flashes",
+      "body": "Este efeito pisca rapidamente e inverte as cores de toda a página. Pode ser desconfortável, ou não ser seguro, se você tem sensibilidade a luzes piscantes. Você só precisa fazer essa escolha uma vez.",
+      "continue": "Reproduzir o efeito",
+      "cancel": "Cancelar"
     }
   },
   "footer": {

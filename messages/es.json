@@ -149,6 +149,12 @@
     },
     "theWorld": {
       "label": "Activar el efecto de parada del tiempo The World"
+    },
+    "warning": {
+      "title": "Aviso: efecto visual con destellos",
+      "body": "Este efecto produce destellos breves e invierte los colores de toda la página. Puede resultar incómodo, o poco seguro, si tienes sensibilidad a las luces intermitentes. Solo tendrás que elegir una vez.",
+      "continue": "Reproducir el efecto",
+      "cancel": "Cancelar"
     }
   },
   "footer": {
