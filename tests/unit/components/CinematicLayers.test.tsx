@@ -8,10 +8,19 @@ import { render, screen } from "@testing-library/react";
 import CinematicLayers from "@/components/FilterPulseOverlay/CinematicLayers";
 import type { CinematicSpec } from "@/lib/filterPulses";
 
-const SPEC: CinematicSpec = { rings: 2, blurPx: 6, distortion: true, durationMs: 6000 };
+const SPEC: CinematicSpec = { rings: 2, distortion: true, durationMs: 6000 };
 
 function renderLayers(spec: Partial<CinematicSpec> = {}, origin = { x: 120, y: 40 }) {
-  return render(<CinematicLayers origin={origin} maxRadius={500} spec={{ ...SPEC, ...spec }} />);
+  return render(
+    <CinematicLayers
+      origin={origin}
+      maxRadius={500}
+      spec={{ ...SPEC, ...spec }}
+      layerStyle={{}}
+      active
+      gradeClass="fp-grade fp-grade--full"
+    />
+  );
 }
 
 describe("CinematicLayers", () => {
@@ -54,13 +63,42 @@ describe("CinematicLayers", () => {
     expect(ring.style.marginTop).toBe("-500px");
   });
 
-  it("applies the SVG ripple filter when distortion is enabled", () => {
+  it("opts the ring layer into the windowed ripple when distortion is enabled", () => {
+    // The filter itself is applied by the .fp-rings--rippled keyframes rather
+    // than inline, so it only runs across the second-ring window.
     renderLayers({ distortion: true });
-    expect(screen.getByTestId("cinematic-layers").style.filter).toBe("url(#fp-timestop-ripple)");
+    expect(screen.getByTestId("cinematic-layers")).toHaveClass("fp-rings--rippled");
   });
 
-  it("omits the ripple filter when distortion is disabled", () => {
+  it("omits the ripple opt-in when distortion is disabled", () => {
     renderLayers({ distortion: false });
-    expect(screen.getByTestId("cinematic-layers").style.filter).toBe("");
+    expect(screen.getByTestId("cinematic-layers")).not.toHaveClass("fp-rings--rippled");
+  });
+
+  it("only marks the ring layer active while a pulse is running", () => {
+    // Layers stay mounted while idle so the clip-path transition has a
+    // previous value to animate from; the class is what starts the motion.
+    const { rerender } = renderLayers();
+    expect(screen.getByTestId("cinematic-layers")).toHaveClass("fp-rings--active");
+
+    rerender(
+      <CinematicLayers
+        origin={{ x: 120, y: 40 }}
+        maxRadius={500}
+        spec={SPEC}
+        layerStyle={{}}
+        active={false}
+        gradeClass="fp-grade fp-grade--full"
+      />
+    );
+    expect(screen.getByTestId("cinematic-layers")).not.toHaveClass("fp-rings--active");
+    expect(screen.getByTestId("fp-layer-invert")).not.toHaveClass("fp-grade");
+  });
+
+  it("renders the three blended grade layers", () => {
+    renderLayers();
+    expect(screen.getByTestId("fp-layer-invert")).toBeInTheDocument();
+    expect(screen.getByTestId("fp-layer-color")).toBeInTheDocument();
+    expect(screen.getByTestId("fp-layer-lum")).toBeInTheDocument();
   });
 });

@@ -25,8 +25,12 @@ export enum FilterPulseId {
  * Total duration of the "The World" pulse, in milliseconds. Drives both the JS
  * phase machine and the CSS staging (via the --pulse-* custom properties the
  * overlay sets), so changing this one value rescales the whole sequence.
+ *
+ * The reference footage's own pacing is ~6000, but that reads as sluggish for
+ * a page interaction where the visitor is waiting to get back to the content.
+ * Set to 6000 for a source-faithful run.
  */
-export const THE_WORLD_DURATION_MS = 6000;
+export const THE_WORLD_DURATION_MS = 3500;
 
 /**
  * How hard the effect flashes.
@@ -53,9 +57,15 @@ export interface FilterPulsePhaseDurations {
 export interface CinematicSpec {
   /** Number of expanding glow rings. */
   readonly rings: number;
-  /** Peak backdrop blur, in px, approximating the source's radial blur. */
-  readonly blurPx: number;
-  /** Whether to apply the SVG turbulence ripple to the ring layer. */
+  /**
+   * Whether to apply the SVG turbulence ripple to the ring layer.
+   *
+   * Defaults off: a full-viewport feDisplacementMap is a per-pixel gather, and
+   * measured on a production build it was the sole remaining source of dropped
+   * frames (57fps / 8 frames over 100ms / worst 174ms with it, versus 66fps /
+   * zero / worst 51ms without). A side-by-side capture through its window
+   * showed almost no visible difference. Flip to true to get it back.
+   */
   readonly distortion: boolean;
   /** Total pulse duration in ms. */
   readonly durationMs: number;
@@ -96,8 +106,7 @@ export const FILTER_PULSES: readonly FilterPulseDefinition[] = [
     messageKey: "theWorld",
     cinematic: {
       rings: 2,
-      blurPx: 6,
-      distortion: true,
+      distortion: false,
       durationMs: THE_WORLD_DURATION_MS,
     },
   },

@@ -1,9 +1,9 @@
 /**
  * E2E Test: "The World" cinematic filter pulse
  *
- * Effect-specific coverage for the default cinematic effect — the parts that
- * a simple single-filter effect doesn't have: expanding glow rings, the SVG
- * ripple filter, and the multi-beat colour grade staged in CSS @keyframes.
+ * Effect-specific coverage for the default cinematic effect — the parts a
+ * simple single-filter effect doesn't have: expanding glow rings and the
+ * multi-beat colour grade built from blended layers.
  *
  * Generic pulse behaviour (button presence, disable guard, no navigation,
  * mobile sidebar) lives in filter-pulse.spec.ts.
@@ -11,27 +11,25 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+import { FilterPulseId, getFilterPulse } from "@/lib/filterPulses";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+const SPEC = getFilterPulse(FilterPulseId.TheWorld).cinematic;
 
 const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /i });
 
-/** Computed backdrop-filter on the overlay (empty string when unset). */
-async function backdropFilter(page: Page): Promise<string> {
-  return page.evaluate(() => {
-    const el = document.querySelector(".filter-pulse-overlay") as HTMLElement | null;
-    if (!el) return "";
-    const cs = getComputedStyle(el);
-    return cs.backdropFilter || cs.getPropertyValue("-webkit-backdrop-filter") || "";
-  });
+/** Computed background-color of one blended grade layer. */
+async function layerColor(page: Page, testid: string): Promise<string> {
+  return page.evaluate((id) => {
+    const el = document.querySelector(`[data-testid='${id}']`);
+    return el ? getComputedStyle(el).backgroundColor : "";
+  }, testid);
 }
 
-/** Computed background-color of the overlay — the tint layer that carries the colour. */
-async function tint(page: Page): Promise<string> {
-  return page.evaluate(() => {
-    const el = document.querySelector(".filter-pulse-overlay") as HTMLElement | null;
-    return el ? getComputedStyle(el).backgroundColor : "";
-  });
+/** Alpha of a computed rgb/rgba string (1 when opaque, 0 when absent). */
+function alphaOf(color: string): number {
+  const m = color.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+  return m ? parseFloat(m[4] ?? "1") : 0;
 }
 
 test.beforeEach(async ({ context, page }) => {
@@ -47,42 +45,54 @@ test.describe("The World pulse", () => {
     await expect(pulseButton(page)).toHaveAttribute("aria-label", /the world/i);
   });
 
-  test("renders both glow rings and the ripple filter while running, and cleans them up", async ({
-    page,
-  }) => {
+  test("activates the grade layers and rings for the pulse, then goes quiet", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
 
-    // Nothing before the trigger.
-    expect(await page.locator("[data-testid='pulse-ring']").count()).toBe(0);
+    // The layers are always mounted -- the clip-path transition needs a
+    // previous value to animate from -- so what changes is the active class
+    // and the clip radius, not their presence.
+    const rings = page.locator("[data-testid='cinematic-layers']");
+    await expect(rings).toHaveCount(1);
+    await expect(rings).not.toHaveClass(/fp-rings--active/);
+    await expect(page.locator("[data-testid='pulse-ring']")).toHaveCount(SPEC?.rings ?? 2);
 
     await pulseButton(page).click();
 
-    await expect(page.locator("[data-testid='pulse-ring']")).toHaveCount(2);
-    await expect(page.locator("[data-testid='time-stop-filter']")).toBeAttached();
+    await expect(rings).toHaveClass(/fp-rings--active/);
+    for (const id of ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"]) {
+      await expect(page.locator(`[data-testid='${id}']`)).toHaveClass(/fp-grade/);
+    }
 
-    // Back to nothing once the pulse finishes.
-    await expect(page.locator("[data-testid='pulse-ring']")).toHaveCount(0, { timeout: 12_000 });
+    // Back to quiet once the pulse finishes: no active class, clip closed.
+    await expect(rings).not.toHaveClass(/fp-rings--active/, { timeout: 12_000 });
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const el = document.querySelector(".filter-pulse-overlay");
+          const m = el && getComputedStyle(el).clipPath.match(/circle\(([\d.]+)px/);
+          return m ? parseFloat(m[1]) : 0;
+        })
+      )
+      .toBeLessThan(50);
   });
 
-  test("runs the staged grade — the backdrop-filter actually changes between beats", async ({
-    page,
-  }) => {
+  test("grades through distinct beats — the layer colours actually change", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
     await pulseButton(page).click();
 
-    // Sampled mid-sequence. If the keyframe function lists didn't match,
-    // backdrop-filter would snap between discrete values rather than
-    // interpolate, and these samples would be identical.
-    await page.waitForTimeout(700);
-    const early = await backdropFilter(page);
-    await page.waitForTimeout(1200);
-    const later = await backdropFilter(page);
+    await page.waitForTimeout(350);
+    const earlyColor = await layerColor(page, "fp-layer-color");
+    const earlyInvert = await layerColor(page, "fp-layer-invert");
 
-    expect(early).not.toBe("");
-    expect(later).not.toBe("");
-    expect(early).not.toBe(later);
+    await page.waitForTimeout(750);
+    const laterColor = await layerColor(page, "fp-layer-color");
+    const laterInvert = await layerColor(page, "fp-layer-invert");
+
+    // If the keyframes weren't animating, these samples would be identical.
+    expect(earlyColor).not.toBe(laterColor);
+    expect(earlyInvert).not.toBe(laterInvert);
   });
 
   test("settles into a dark tinted 'stopped time' state and then releases", async ({ page }) => {
@@ -90,44 +100,40 @@ test.describe("The World pulse", () => {
     await page.goto(`${BASE_URL}/en`);
     await pulseButton(page).click();
 
-    // The tint layer is what carries the colour (a filter chain alone cannot
-    // add colour to a near-white page). By the held beat it must be a
-    // visible, non-transparent wash.
+    // The luminance layer carries the dark wash of the held beat.
     await expect
-      .poll(
-        async () => {
-          const c = await tint(page);
-          const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
-          if (!m) return 0;
-          return parseFloat(m[4] ?? "1");
-        },
-        { timeout: 8000 }
-      )
+      .poll(async () => alphaOf(await layerColor(page, "fp-layer-lum")), { timeout: 8000 })
       .toBeGreaterThan(0.3);
 
-    // ...and it clears again once the pulse ends.
+    // ...and the wash clears once the pulse ends.
     await expect
-      .poll(
-        async () => {
-          const c = await tint(page);
-          return c === "rgba(0, 0, 0, 0)" || c === "transparent";
-        },
-        { timeout: 12_000 }
-      )
-      .toBe(true);
+      .poll(async () => alphaOf(await layerColor(page, "fp-layer-lum")), { timeout: 12_000 })
+      .toBeLessThan(0.05);
   });
 
-  test("skips rings, ripple and grade entirely under reduced motion", async ({ page }) => {
+  test("opts into the ripple only when the registry enables it", async ({ page }) => {
+    await page.goto(`${BASE_URL}/en`);
+    await pulseButton(page).click();
+    await expect(page.locator("[data-testid='cinematic-layers']")).toHaveCount(1);
+
+    const rippled = await page
+      .locator("[data-testid='cinematic-layers'].fp-rings--rippled")
+      .count();
+    expect(rippled).toBe(SPEC?.distortion ? 1 : 0);
+  });
+
+  test("skips rings and grade layers entirely under reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/en`);
 
     await pulseButton(page).click();
 
+    // Reduced motion takes a different branch entirely: a single faded
+    // overlay, with none of the cinematic structure mounted at all.
     expect(await page.locator("[data-testid='pulse-ring']").count()).toBe(0);
     expect(await page.locator("[data-testid='cinematic-layers']").count()).toBe(0);
+    expect(await page.locator("[data-testid='fp-layer-invert']").count()).toBe(0);
 
-    // The reduced-motion branch applies the settled grade as a plain fade.
-    const overlay = page.locator(".filter-pulse-overlay--reduced-motion");
-    await expect(overlay).toBeAttached();
+    await expect(page.locator(".filter-pulse-overlay--reduced-motion")).toBeAttached();
   });
 });

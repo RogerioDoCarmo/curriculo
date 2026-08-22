@@ -97,53 +97,73 @@ describe("FilterPulseOverlay Component", () => {
   it("exposes the phase timings to CSS so the registry's duration reaches the stylesheet", () => {
     mockFilterPulse({
       phase: "expanding",
-      durations: { expanding: 1800, holding: 2700, contracting: 1500 },
+      durations: { expanding: 1050, holding: 1575, contracting: 875 },
+      activeFilterId: FilterPulseId.Sepia,
     });
     render(<FilterPulseOverlay />);
     const overlay = screen.getByTestId("filter-pulse-overlay");
 
-    expect(overlay.style.getPropertyValue("--pulse-expand-ms")).toBe("1800ms");
-    expect(overlay.style.getPropertyValue("--pulse-total")).toBe("6000ms");
+    expect(overlay.style.getPropertyValue("--pulse-expand-ms")).toBe("1050ms");
+    expect(overlay.style.getPropertyValue("--pulse-total")).toBe("3500ms");
   });
 
   describe("cinematic effects", () => {
-    it("hands the grade over to the keyframe track instead of an inline backdrop-filter", () => {
+    it("grades with blended layers, not an inline backdrop-filter", () => {
       mockFilterPulse({ phase: "expanding", activeFilterId: FilterPulseId.TheWorld });
       render(<FilterPulseOverlay />);
-      const overlay = screen.getByTestId("filter-pulse-overlay");
 
-      // The @keyframes track owns backdrop-filter for cinematic effects;
-      // setting it inline as well would be a competing declaration.
-      // (jsdom reports an unset property as undefined rather than "".)
-      expect(overlay.style.backdropFilter).toBeFalsy();
-      expect(overlay).toHaveClass("fp-grade");
-      expect(overlay.className).toMatch(/fp-grade--(full|safe)/);
+      // Cinematic effects grade via blended sibling layers; a backdrop-filter
+      // here would be per-pixel filter passes over the whole viewport every
+      // frame (see CinematicLayers for the measurements).
+      for (const id of ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"]) {
+        const layer = screen.getByTestId(id);
+        expect(layer.style.backdropFilter).toBeFalsy();
+        expect(layer).toHaveClass("fp-grade");
+        expect(layer.className).toMatch(/fp-grade--(full|safe)/);
+      }
     });
 
-    it("renders the ring layers and the ripple filter while a pulse is in flight", () => {
+    it("renders the ring layers while a pulse is in flight", () => {
       mockFilterPulse({ phase: "expanding", activeFilterId: FilterPulseId.TheWorld });
       render(<FilterPulseOverlay />);
 
       expect(screen.getByTestId("cinematic-layers")).toBeInTheDocument();
       expect(screen.getAllByTestId("pulse-ring")).toHaveLength(2);
-      expect(screen.getByTestId("time-stop-filter")).toBeInTheDocument();
     });
 
-    it("does not run the grade or render rings while idle", () => {
-      mockFilterPulse({ phase: "idle", activeFilterId: FilterPulseId.TheWorld });
+    it("keeps the layers mounted while idle but runs no animation", () => {
+      // They stay mounted (clipped to a zero-radius circle, so nothing
+      // paints) because the clip-path transition needs a previous value to
+      // animate from -- swapping in fresh elements made the reveal snap
+      // straight to full coverage instead of growing out of the button.
+      mockFilterPulse({ phase: "idle", activeFilterId: FilterPulseId.TheWorld, maxRadius: 500 });
       render(<FilterPulseOverlay />);
-      const overlay = screen.getByTestId("filter-pulse-overlay");
 
-      expect(overlay).not.toHaveClass("fp-grade");
-      expect(screen.queryByTestId("cinematic-layers")).not.toBeInTheDocument();
+      expect(screen.getByTestId("cinematic-layers")).toBeInTheDocument();
+      expect(screen.getByTestId("cinematic-layers")).not.toHaveClass("fp-rings--active");
+      for (const id of ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"]) {
+        const layer = screen.getByTestId(id);
+        expect(layer).not.toHaveClass("fp-grade");
+        expect(layer.style.getPropertyValue("--pulse-radius")).toBe("0px");
+      }
     });
 
-    it("exposes the configured blur radius to CSS", () => {
-      mockFilterPulse({ phase: "expanding", activeFilterId: FilterPulseId.TheWorld });
+    it("shares the clip and timing custom properties across every layer", () => {
+      mockFilterPulse({
+        phase: "expanding",
+        activeFilterId: FilterPulseId.TheWorld,
+        origin: { x: 12, y: 34 },
+        maxRadius: 500,
+        durations: { expanding: 1050, holding: 1575, contracting: 875 },
+      });
       render(<FilterPulseOverlay />);
-      const overlay = screen.getByTestId("filter-pulse-overlay");
 
-      expect(overlay.style.getPropertyValue("--pulse-blur")).toBe("6px");
+      for (const id of ["fp-layer-invert", "fp-layer-color", "fp-layer-lum"]) {
+        const layer = screen.getByTestId(id);
+        expect(layer.style.getPropertyValue("--pulse-radius")).toBe("500px");
+        expect(layer.style.getPropertyValue("--pulse-cx")).toBe("12px");
+        expect(layer.style.getPropertyValue("--pulse-total")).toBe("3500ms");
+      }
     });
 
     it("falls back to the settled grade, with no rings, under reduced motion", () => {
@@ -158,6 +178,7 @@ describe("FilterPulseOverlay Component", () => {
       expect(overlay).toHaveClass("filter-pulse-overlay--reduced-motion");
       expect(overlay.style.backdropFilter).toBe(getFilterPulse(FilterPulseId.TheWorld).filter);
       expect(screen.queryByTestId("cinematic-layers")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("fp-layer-invert")).not.toBeInTheDocument();
     });
   });
 });

@@ -143,25 +143,25 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
     expect(result.current.activeFilterId).toBe(FilterPulseId.TheWorld);
     expect(result.current.phase).toBe("expanding");
-    // 6000ms split 30/45/25 -> 1800 / 2700 / 1500.
+    // 3500ms split 30/45/25 -> 1050 / 1575 / 875.
     expect(result.current.durations).toEqual({
-      expanding: 1800,
-      holding: 2700,
-      contracting: 1500,
+      expanding: 1050,
+      holding: 1575,
+      contracting: 875,
     });
 
     act(() => {
-      jest.advanceTimersByTime(1800);
+      jest.advanceTimersByTime(1050);
     });
     expect(result.current.phase).toBe("holding");
 
     act(() => {
-      jest.advanceTimersByTime(2700);
+      jest.advanceTimersByTime(1575);
     });
     expect(result.current.phase).toBe("contracting");
 
     act(() => {
-      jest.advanceTimersByTime(1500);
+      jest.advanceTimersByTime(875);
     });
     expect(result.current.phase).toBe("idle");
   });

@@ -47,9 +47,8 @@ describe("filterPulses registry", () => {
     expect(result.messageKey).toBe("theWorld");
     expect(result.cinematic).toEqual({
       rings: 2,
-      blurPx: 6,
-      distortion: true,
-      durationMs: 6000,
+      distortion: false,
+      durationMs: 3500,
     });
   });
 
@@ -126,9 +125,9 @@ describe("getPulseDurations", () => {
 
   it("uses the derived cinematic timing for the-world", () => {
     expect(getPulseDurations(FilterPulseId.TheWorld)).toEqual({
-      expanding: 1800,
-      holding: 2700,
-      contracting: 1500,
+      expanding: 1050,
+      holding: 1575,
+      contracting: 875,
     });
   });
 
@@ -145,7 +144,7 @@ describe("getPulseDurations", () => {
 
 describe("getTotalDuration", () => {
   it("returns the configured total for the-world", () => {
-    expect(getTotalDuration(FilterPulseId.TheWorld)).toBe(6000);
+    expect(getTotalDuration(FilterPulseId.TheWorld)).toBe(3500);
   });
 
   it("returns the simple total for sepia", () => {
@@ -158,8 +157,8 @@ describe("getTotalDuration", () => {
 });
 
 describe("tunables", () => {
-  it("exposes a 6s default duration for the-world", () => {
-    expect(THE_WORLD_DURATION_MS).toBe(6000);
+  it("exposes the configured default duration for the-world", () => {
+    expect(THE_WORLD_DURATION_MS).toBe(3500);
   });
 
   it("exposes a flash intensity that the stylesheet has a keyframe set for", () => {

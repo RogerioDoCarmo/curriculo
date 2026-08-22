@@ -2,15 +2,15 @@
 
 /**
  * FilterPulseOverlay component — the full-viewport visual layer driven by
- * useFilterPulse. Applies the active filter's CSS backdrop-filter to
- * whatever's rendered behind it, clipped to a circle that grows/shrinks
- * between the idle and covering phases. Purely decorative: aria-hidden,
- * pointer-events-none, hidden on print. Mount once, near the app root.
+ * useFilterPulse. Purely decorative: aria-hidden, pointer-events-none, hidden
+ * on print. Mount once, near the app root.
  *
  * Two render paths:
- *  - Simple effects (sepia, negative) apply one static backdrop-filter.
- *  - Cinematic effects (the-world) instead let a CSS @keyframes track stage a
- *    multi-beat colour grade, and add expanding glow rings on top.
+ *  - Simple effects (sepia, negative) apply one static backdrop-filter to a
+ *    single clipped layer.
+ *  - Cinematic effects (the-world) instead stage a blended, multi-beat colour
+ *    grade plus expanding glow rings (see CinematicLayers for why blend modes
+ *    rather than backdrop-filter).
  * prefers-reduced-motion short-circuits both to a plain opacity fade.
  */
 
@@ -47,23 +47,16 @@ export default function FilterPulseOverlay() {
   const total = durations.expanding + durations.holding + durations.contracting;
   const cinematic = activeFilter.cinematic;
 
-  const style = {
+  const sharedStyle = {
     "--pulse-cx": `${origin.x}px`,
     "--pulse-cy": `${origin.y}px`,
     "--pulse-radius": covering ? `${maxRadius}px` : "0px",
     "--pulse-expand-ms": `${durations.expanding}ms`,
     "--pulse-total": `${total}ms`,
-    ...(cinematic ? { "--pulse-blur": `${cinematic.blurPx}px` } : {}),
-    // A cinematic pulse's backdrop-filter is owned by the @keyframes track, so
-    // it must not also be set inline here; a simple pulse applies it directly.
-    ...(cinematic
-      ? {}
-      : { backdropFilter: activeFilter.filter, WebkitBackdropFilter: activeFilter.filter }),
     // A CSS transition on a property animates over its full duration the
     // moment that property's *value* changes, regardless of whether the
     // change is visually a no-op (a 0px-radius circle renders nothing no
-    // matter where it's centered) -- it does not apply instantly just
-    // because nothing is drawn yet. While idle, disable the transition
+    // matter where it's centered). While idle, disable the transition
     // outright so useFilterPulse's origin-then-phase two-step commit (see
     // its trigger()) actually repositions instantly instead of quietly
     // animating the position in the background, only to still be mid-flight
@@ -71,21 +64,39 @@ export default function FilterPulseOverlay() {
     ...(idle ? { transition: "none" } : {}),
   } as CSSProperties;
 
-  const gradeClass = cinematic && !idle ? ` fp-grade fp-grade--${FLASH_INTENSITY}` : "";
+  if (cinematic) {
+    // Layers stay mounted even while idle (clipped to a zero-radius circle, so
+    // nothing paints): the clip-path transition needs a previous value to
+    // animate from, and the keyframe animations restart when the active class
+    // is re-added. They also stay mounted through the release, so the grade
+    // animates back to neutral rather than snapping the moment holding ends.
+    return (
+      <>
+        {cinematic.distortion && <TimeStopFilter />}
+        <CinematicLayers
+          origin={origin}
+          maxRadius={maxRadius}
+          spec={cinematic}
+          layerStyle={sharedStyle}
+          active={!idle}
+          gradeClass={`fp-grade fp-grade--${FLASH_INTENSITY}`}
+        />
+      </>
+    );
+  }
+
+  const style = {
+    ...sharedStyle,
+    backdropFilter: activeFilter.filter,
+    WebkitBackdropFilter: activeFilter.filter,
+  } as CSSProperties;
 
   return (
-    <>
-      {cinematic?.distortion && <TimeStopFilter />}
-      <div
-        aria-hidden="true"
-        data-testid="filter-pulse-overlay"
-        className={`${baseClassName} filter-pulse-overlay${gradeClass}`}
-        style={style}
-      >
-        {cinematic && !idle && (
-          <CinematicLayers origin={origin} maxRadius={maxRadius} spec={cinematic} />
-        )}
-      </div>
-    </>
+    <div
+      aria-hidden="true"
+      data-testid="filter-pulse-overlay"
+      className={`${baseClassName} filter-pulse-overlay`}
+      style={style}
+    />
   );
 }

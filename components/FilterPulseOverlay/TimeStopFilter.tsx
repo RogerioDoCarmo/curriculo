@@ -5,9 +5,16 @@
  * to give its glow rings the wavy "time stop" shimmer seen in the reference
  * footage (frames 58-64).
  *
- * Rendered once alongside the overlay and referenced via `filter: url(#…)`.
- * The turbulence is animated with SMIL so the ripple keeps moving for the
- * whole pulse without a JS render loop.
+ * Rendered only while the ring layers are mounted, and referenced via
+ * `filter: url(#…)`.
+ *
+ * Performance: the turbulence is deliberately STATIC. An earlier version
+ * animated `baseFrequency` via SMIL, which forces the browser to regenerate
+ * the Perlin noise texture every single frame across the whole filter region
+ * — measured at ~10fps of the pulse's total budget, and the single largest
+ * source of the stalls. The rings are already scaling, so they sweep through
+ * a fixed noise field and still read as rippling. numOctaves is 1 for the
+ * same reason: each additional octave is another full noise pass.
  *
  * Note: this can only be applied to the overlay's own graphics, not to the
  * page behind it — `backdrop-filter` does not reliably accept `url()` SVG
@@ -29,25 +36,27 @@ export default function TimeStopFilter() {
       data-testid="time-stop-filter"
     >
       <defs>
-        <filter id={TIME_STOP_FILTER_ID} x="-25%" y="-25%" width="150%" height="150%">
+        {/* Tight filter region: the default -10%/120% would enlarge the
+            already full-viewport source, multiplying the pixels filtered. */}
+        <filter
+          id={TIME_STOP_FILTER_ID}
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          filterUnits="objectBoundingBox"
+        >
           <feTurbulence
             type="turbulence"
-            baseFrequency="0.006 0.014"
-            numOctaves="2"
+            baseFrequency="0.009 0.018"
+            numOctaves="1"
             seed="7"
             result="noise"
-          >
-            <animate
-              attributeName="baseFrequency"
-              dur="4s"
-              values="0.006 0.014;0.013 0.024;0.006 0.014"
-              repeatCount="indefinite"
-            />
-          </feTurbulence>
+          />
           <feDisplacementMap
             in="SourceGraphic"
             in2="noise"
-            scale="22"
+            scale="18"
             xChannelSelector="R"
             yChannelSelector="G"
           />
