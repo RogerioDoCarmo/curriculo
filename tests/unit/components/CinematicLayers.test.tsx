@@ -8,7 +8,11 @@ import { render, screen } from "@testing-library/react";
 import CinematicLayers from "@/components/FilterPulseOverlay/CinematicLayers";
 import type { CinematicSpec } from "@/lib/filterPulses";
 
-const SPEC: CinematicSpec = { rings: 2, distortion: true, durationMs: 6000 };
+const SPEC: CinematicSpec = {
+  rings: 2,
+  distortion: true,
+  timing: { expanding: 1050, holding: 500, contracting: 875 },
+};
 
 function renderLayers(spec: Partial<CinematicSpec> = {}, origin = { x: 120, y: 40 }) {
   return render(

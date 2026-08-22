@@ -157,16 +157,16 @@
    spikes again with the second ring (42%), matching frames 50-62. */
 @keyframes fp-invert-beat {
   0%,
-  15% {
+  18% {
     background-color: rgb(0, 0, 0);
   }
-  30% {
+  33% {
     background-color: rgb(217, 217, 217);
   }
-  42% {
+  43% {
     background-color: rgb(140, 140, 140);
   }
-  52%,
+  50%,
   100% {
     background-color: rgb(0, 0, 0);
   }
@@ -175,20 +175,20 @@
 /* Hue/saturation beat: violet wash -> chartreuse -> settled violet. */
 @keyframes fp-color-beat {
   0%,
-  4% {
+  5% {
     background-color: rgba(128, 128, 128, 0);
   }
-  15% {
+  18% {
     background-color: rgba(96, 44, 150, 0.85);
   }
-  30% {
+  33% {
     background-color: rgba(150, 180, 45, 0.8);
   }
-  42% {
+  43% {
     background-color: rgba(120, 90, 170, 0.8);
   }
-  52%,
-  85% {
+  46%,
+  66% {
     background-color: rgba(78, 56, 104, 0.9);
   }
   100% {
@@ -201,20 +201,20 @@
   0% {
     background-color: rgba(255, 255, 255, 0);
   }
-  4% {
+  5% {
     background-color: rgba(255, 255, 255, var(--fp-flash, 0.55));
   }
-  15% {
+  18% {
     background-color: rgba(26, 10, 44, 0.22);
   }
-  30% {
+  33% {
     background-color: rgba(20, 20, 10, 0.12);
   }
-  42% {
+  43% {
     background-color: rgba(255, 255, 228, var(--fp-flash-2, 0.5));
   }
-  52%,
-  85% {
+  46%,
+  66% {
     background-color: rgba(20, 13, 31, 0.78);
   }
   100% {
@@ -233,10 +233,10 @@
   0% {
     filter: none;
   }
-  34% {
+  30% {
     filter: url("#fp-timestop-ripple");
   }
-  58% {
+  60% {
     filter: none;
   }
 }
@@ -257,12 +257,12 @@
   will-change: transform, opacity;
 }
 .fp-rings--active .fp-ring {
-  animation: fp-ring-expand calc(var(--pulse-total, 6000ms) * 0.3) cubic-bezier(0.15, 0.75, 0.3, 1)
+  animation: fp-ring-expand calc(var(--pulse-total, 6000ms) * 0.43) cubic-bezier(0.15, 0.75, 0.3, 1)
     both;
 }
 .fp-ring--2 {
   border-color: rgba(243, 255, 214, 0.95);
-  animation-delay: calc(var(--pulse-total, 6000ms) * 0.38);
+  animation-delay: calc(var(--pulse-total, 6000ms) * 0.28);
 }
 
 @keyframes fp-ring-expand {

@@ -14,11 +14,11 @@ import {
   THE_WORLD_DURATION_MS,
   SIMPLE_DURATIONS,
   REDUCED_MOTION_DURATIONS,
+  THE_WORLD_TIMING,
   getFilterPulse,
   getPulseDurations,
   getTotalDuration,
   isCinematic,
-  splitCinematicDuration,
 } from "@/lib/filterPulses";
 
 describe("filterPulses registry", () => {
@@ -48,7 +48,7 @@ describe("filterPulses registry", () => {
     expect(result.cinematic).toEqual({
       rings: 2,
       distortion: false,
-      durationMs: 3500,
+      timing: { expanding: 1050, holding: 500, contracting: 875 },
     });
   });
 
@@ -89,28 +89,16 @@ describe("isCinematic", () => {
   });
 });
 
-describe("splitCinematicDuration", () => {
-  it("splits 6000ms into 1800 / 2700 / 1500", () => {
-    expect(splitCinematicDuration(6000)).toEqual({
-      expanding: 1800,
-      holding: 2700,
-      contracting: 1500,
-    });
+describe("THE_WORLD_TIMING", () => {
+  it("holds at full coverage for less time than it spends opening or closing", () => {
+    // The held beat is the part a visitor is just waiting through, so it is
+    // deliberately the shortest phase.
+    expect(THE_WORLD_TIMING.holding).toBeLessThan(THE_WORLD_TIMING.expanding);
+    expect(THE_WORLD_TIMING.holding).toBeLessThan(THE_WORLD_TIMING.contracting);
   });
 
-  it("rescales proportionally for a shorter total", () => {
-    expect(splitCinematicDuration(3000)).toEqual({
-      expanding: 900,
-      holding: 1350,
-      contracting: 750,
-    });
-  });
-
-  it("always sums back to exactly the requested total, with no rounding drift", () => {
-    for (const total of [1000, 2500, 3333, 4001, 6000, 9999]) {
-      const d = splitCinematicDuration(total);
-      expect(d.expanding + d.holding + d.contracting).toBe(total);
-    }
+  it("uses the documented per-phase values", () => {
+    expect(THE_WORLD_TIMING).toEqual({ expanding: 1050, holding: 500, contracting: 875 });
   });
 });
 
@@ -123,10 +111,10 @@ describe("getPulseDurations", () => {
     });
   });
 
-  it("uses the derived cinematic timing for the-world", () => {
+  it("uses the registered per-phase timing for the-world", () => {
     expect(getPulseDurations(FilterPulseId.TheWorld)).toEqual({
       expanding: 1050,
-      holding: 1575,
+      holding: 500,
       contracting: 875,
     });
   });
@@ -144,7 +132,7 @@ describe("getPulseDurations", () => {
 
 describe("getTotalDuration", () => {
   it("returns the configured total for the-world", () => {
-    expect(getTotalDuration(FilterPulseId.TheWorld)).toBe(3500);
+    expect(getTotalDuration(FilterPulseId.TheWorld)).toBe(2425);
   });
 
   it("returns the simple total for sepia", () => {
@@ -157,8 +145,8 @@ describe("getTotalDuration", () => {
 });
 
 describe("tunables", () => {
-  it("exposes the configured default duration for the-world", () => {
-    expect(THE_WORLD_DURATION_MS).toBe(3500);
+  it("derives the total duration from the per-phase timing", () => {
+    expect(THE_WORLD_DURATION_MS).toBe(2425);
   });
 
   it("exposes a flash intensity that the stylesheet has a keyframe set for", () => {

@@ -21,16 +21,34 @@ export enum FilterPulseId {
 
 // ─── Tunables ────────────────────────────────────────────────────────────────
 
+export interface FilterPulsePhaseDurations {
+  readonly expanding: number;
+  readonly holding: number;
+  readonly contracting: number;
+}
+
 /**
- * Total duration of the "The World" pulse, in milliseconds. Drives both the JS
- * phase machine and the CSS staging (via the --pulse-* custom properties the
- * overlay sets), so changing this one value rescales the whole sequence.
+ * Phase timings for "The World", in milliseconds. Each phase is set directly
+ * rather than derived as a share of one total, so any of them can be tuned by
+ * feel without the others silently absorbing the difference:
  *
- * The reference footage's own pacing is ~6000, but that reads as sluggish for
- * a page interaction where the visitor is waiting to get back to the content.
- * Set to 6000 for a source-faithful run.
+ * - expanding:   the circle grows from the button out to full coverage
+ * - holding:     the full-page filter sits still, before the circle closes
+ * - contracting: the circle shrinks back and the grade releases
+ *
+ * The reference footage holds for far longer (~45% of a ~6s run), but on a
+ * page the visitor is waiting to get back to the content, so the hold is the
+ * first thing worth trimming.
  */
-export const THE_WORLD_DURATION_MS = 3500;
+export const THE_WORLD_TIMING: FilterPulsePhaseDurations = {
+  expanding: 1050,
+  holding: 500,
+  contracting: 875,
+};
+
+/** Total wall-clock duration of "The World", derived from its phases. */
+export const THE_WORLD_DURATION_MS =
+  THE_WORLD_TIMING.expanding + THE_WORLD_TIMING.holding + THE_WORLD_TIMING.contracting;
 
 /**
  * How hard the effect flashes.
@@ -48,12 +66,6 @@ export const FLASH_INTENSITY: FlashIntensity = "full";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export interface FilterPulsePhaseDurations {
-  readonly expanding: number;
-  readonly holding: number;
-  readonly contracting: number;
-}
-
 export interface CinematicSpec {
   /** Number of expanding glow rings. */
   readonly rings: number;
@@ -67,8 +79,8 @@ export interface CinematicSpec {
    * showed almost no visible difference. Flip to true to get it back.
    */
   readonly distortion: boolean;
-  /** Total pulse duration in ms. */
-  readonly durationMs: number;
+  /** Per-phase timing for the pulse. */
+  readonly timing: FilterPulsePhaseDurations;
 }
 
 export interface FilterPulseDefinition {
@@ -107,7 +119,7 @@ export const FILTER_PULSES: readonly FilterPulseDefinition[] = [
     cinematic: {
       rings: 2,
       distortion: false,
-      durationMs: THE_WORLD_DURATION_MS,
+      timing: THE_WORLD_TIMING,
     },
   },
 ];
@@ -132,18 +144,6 @@ export const REDUCED_MOTION_DURATIONS: FilterPulsePhaseDurations = {
 };
 
 /**
- * Splits a cinematic effect's total duration into phases, using the same
- * proportions as the reference footage: the ring/grade sequence runs for the
- * first ~30%, the "stopped time" state is held for ~45%, and the release takes
- * the remaining ~25%.
- */
-export function splitCinematicDuration(totalMs: number): FilterPulsePhaseDurations {
-  const expanding = Math.round(totalMs * 0.3);
-  const holding = Math.round(totalMs * 0.45);
-  return { expanding, holding, contracting: totalMs - expanding - holding };
-}
-
-/**
  * Resolves the phase durations for an effect. Reduced motion always collapses
  * to the short, motion-free timing regardless of which effect is active.
  */
@@ -153,7 +153,7 @@ export function getPulseDurations(
 ): FilterPulsePhaseDurations {
   if (prefersReducedMotion) return REDUCED_MOTION_DURATIONS;
   const cinematic = getFilterPulse(id).cinematic;
-  return cinematic ? splitCinematicDuration(cinematic.durationMs) : SIMPLE_DURATIONS;
+  return cinematic ? cinematic.timing : SIMPLE_DURATIONS;
 }
 
 /** Total wall-clock duration of a pulse, in ms. */

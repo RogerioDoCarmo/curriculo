@@ -97,14 +97,14 @@ describe("FilterPulseOverlay Component", () => {
   it("exposes the phase timings to CSS so the registry's duration reaches the stylesheet", () => {
     mockFilterPulse({
       phase: "expanding",
-      durations: { expanding: 1050, holding: 1575, contracting: 875 },
+      durations: { expanding: 1050, holding: 500, contracting: 875 },
       activeFilterId: FilterPulseId.Sepia,
     });
     render(<FilterPulseOverlay />);
     const overlay = screen.getByTestId("filter-pulse-overlay");
 
     expect(overlay.style.getPropertyValue("--pulse-expand-ms")).toBe("1050ms");
-    expect(overlay.style.getPropertyValue("--pulse-total")).toBe("3500ms");
+    expect(overlay.style.getPropertyValue("--pulse-total")).toBe("2425ms");
   });
 
   describe("cinematic effects", () => {
@@ -154,7 +154,7 @@ describe("FilterPulseOverlay Component", () => {
         activeFilterId: FilterPulseId.TheWorld,
         origin: { x: 12, y: 34 },
         maxRadius: 500,
-        durations: { expanding: 1050, holding: 1575, contracting: 875 },
+        durations: { expanding: 1050, holding: 500, contracting: 875 },
       });
       render(<FilterPulseOverlay />);
 
@@ -162,7 +162,7 @@ describe("FilterPulseOverlay Component", () => {
         const layer = screen.getByTestId(id);
         expect(layer.style.getPropertyValue("--pulse-radius")).toBe("500px");
         expect(layer.style.getPropertyValue("--pulse-cx")).toBe("12px");
-        expect(layer.style.getPropertyValue("--pulse-total")).toBe("3500ms");
+        expect(layer.style.getPropertyValue("--pulse-total")).toBe("2425ms");
       }
     });
 

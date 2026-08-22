@@ -143,10 +143,9 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
     expect(result.current.activeFilterId).toBe(FilterPulseId.TheWorld);
     expect(result.current.phase).toBe("expanding");
-    // 3500ms split 30/45/25 -> 1050 / 1575 / 875.
     expect(result.current.durations).toEqual({
       expanding: 1050,
-      holding: 1575,
+      holding: 500,
       contracting: 875,
     });
 
@@ -156,7 +155,7 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.phase).toBe("holding");
 
     act(() => {
-      jest.advanceTimersByTime(1575);
+      jest.advanceTimersByTime(500);
     });
     expect(result.current.phase).toBe("contracting");
 
