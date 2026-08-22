@@ -228,6 +228,12 @@ function CookiePolicyContent() {
           <p>{t("browserStorage.items.notifications.purpose")}</p>
         </div>
 
+        {/* Photosensitivity warning acknowledgement */}
+        <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <h4 className="text-lg font-medium mb-2">{t("browserStorage.items.filterPulse.name")}</h4>
+          <p>{t("browserStorage.items.filterPulse.purpose")}</p>
+        </div>
+
         <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
           {t("browserStorage.howToManage")}
         </p>
