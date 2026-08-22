@@ -47,6 +47,7 @@ jest.mock("next-intl", () => ({
       "footer.downloadResumeLabel": "Download resume in PDF format",
       "filterPulse.sepia.label": "Trigger sepia pulse effect",
       "filterPulse.negative.label": "Trigger negative pulse effect",
+      "filterPulse.theWorld.label": "Trigger The World time-stop effect",
     };
     return translations[key] ?? key;
   },
@@ -302,7 +303,7 @@ describe("Header — responsive navigation", () => {
     setViewportWidth(1280);
     renderHeader();
 
-    const filterPulseButton = screen.getByRole("button", { name: /pulse effect/i });
+    const filterPulseButton = screen.getByRole("button", { name: /^trigger /i });
     expect(filterPulseButton).toBeInTheDocument();
   });
 
@@ -315,7 +316,7 @@ describe("Header — responsive navigation", () => {
     await user.click(hamburger);
     await screen.findByRole("dialog", { name: /navigation|menu/i });
 
-    const filterPulseButtons = screen.getAllByRole("button", { name: /pulse effect/i });
+    const filterPulseButtons = screen.getAllByRole("button", { name: /^trigger /i });
     expect(filterPulseButtons).toHaveLength(2);
   });
 

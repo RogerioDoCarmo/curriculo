@@ -1,5 +1,5 @@
 /**
- * E2E Test: Filter Pulse
+ * E2E Test: Filter Pulse (behaviour common to every registered effect)
  *
  * Covers the navbar button that plays a one-shot circular filter-pulse
  * animation (see lib/filterPulses.ts, hooks/useFilterPulse.tsx,
@@ -7,8 +7,8 @@
  *
  * 1. The button is present in the compact controls row on every viewport
  *    (that row is not hidden on mobile — only the nav links are).
- * 2. Clicking it grows a circular backdrop-filter overlay to full viewport
- *    coverage, then shrinks it back — a real animation, not a mock.
+ * 2. Clicking it grows a circular overlay to full viewport coverage, then
+ *    shrinks it back — a real animation, not a mock.
  * 3. The button disables itself for the duration of the pulse and
  *    re-enables once it's back to idle (the re-trigger guard).
  * 4. It never causes a page navigation.
@@ -17,12 +17,21 @@
  * 7. Triggering it from inside the mobile sidebar closes the sidebar (the
  *    sidebar is a native <dialog>, promoted to the browser's top layer,
  *    which would otherwise visually hide the fixed overlay underneath it).
+ *
+ * Effect-specific assertions for the cinematic default live in
+ * the-world-pulse.spec.ts.
+ *
+ * The button is matched on /^trigger /i rather than a specific effect name so
+ * these stay valid when DEFAULT_FILTER_PULSE_ID changes.
  */
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+
+/** The default effect ("The World") runs for 6s; allow margin on slow runners. */
+const FULL_CYCLE_TIMEOUT = 12_000;
 
 /** Reads the current radius (in px) from the overlay's clip-path, or 0 if not set/closed. */
 async function getOverlayRadius(page: Page): Promise<number> {
@@ -33,6 +42,8 @@ async function getOverlayRadius(page: Page): Promise<number> {
     return match ? parseFloat(match[1]) : 0;
   });
 }
+
+const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /i });
 
 test.beforeEach(async ({ context, page }) => {
   await setCookieConsentBeforeLoad(context);
@@ -45,58 +56,43 @@ test.beforeEach(async ({ context, page }) => {
 test.describe("Filter Pulse button", () => {
   test("is present in the navbar", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
-    const button = page.getByRole("button", { name: /pulse effect/i });
-    await expect(button).toBeVisible();
+    await expect(pulseButton(page)).toBeVisible();
   });
 
   test("grows the overlay to full coverage then shrinks it back on click", async ({ page }) => {
+    test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
-    const button = page.getByRole("button", { name: /pulse effect/i });
 
     // expect.poll retries the callback until the assertion holds (or times
     // out), instead of comparing two fixed-instant samples -- point-in-time
     // sampling (waitForTimeout(N) then read once) is inherently prone to two
     // close checkpoints landing on the same simulated frame under CI/runner
     // contention, producing a coincidental tie rather than a real failure.
-    // Phase timeline for reference (hooks/useFilterPulse.tsx DURATIONS.full):
-    // expanding 0-1200ms, holding 1200-1900ms, contracting 1900-3100ms.
     const startRadius = await getOverlayRadius(page);
-    await button.click();
+    await pulseButton(page).click();
 
     // Grows: radius moves well past its starting value.
     await expect
-      .poll(() => getOverlayRadius(page), { timeout: 2000 })
+      .poll(() => getOverlayRadius(page), { timeout: 5000 })
       .toBeGreaterThan(startRadius + 100);
 
     // Reaches (and holds at) a large, viewport-covering radius.
-    await expect.poll(() => getOverlayRadius(page), { timeout: 2000 }).toBeGreaterThan(400);
+    await expect.poll(() => getOverlayRadius(page), { timeout: 5000 }).toBeGreaterThan(400);
 
-    // Shrinks back down to (near) zero once the full ~3.1s cycle completes.
-    await expect.poll(() => getOverlayRadius(page), { timeout: 5000 }).toBeLessThan(200);
-  });
-
-  test("applies the negative (invert) filter at full coverage", async ({ page }) => {
-    await page.goto(`${BASE_URL}/en`);
-    const button = page.getByRole("button", { name: /pulse effect/i });
-    await button.click();
-    await page.waitForTimeout(1500); // into the holding phase
-
-    const backdropFilter = await page.evaluate(() => {
-      const el = document.querySelector(".filter-pulse-overlay") as HTMLElement | null;
-      return el ? getComputedStyle(el).backdropFilter : "";
-    });
-    expect(backdropFilter).toContain("invert");
+    // Shrinks back down to (near) zero once the full cycle completes.
+    await expect
+      .poll(() => getOverlayRadius(page), { timeout: FULL_CYCLE_TIMEOUT })
+      .toBeLessThan(200);
   });
 
   test("disables itself during the pulse and re-enables once idle", async ({ page }) => {
+    test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
-    const button = page.getByRole("button", { name: /pulse effect/i });
+    const button = pulseButton(page);
 
     await button.click();
     await expect(button).toBeDisabled();
-
-    // Full cycle is ~3.1s; generous margin for slower CI runners.
-    await expect(button).toBeEnabled({ timeout: 6000 });
+    await expect(button).toBeEnabled({ timeout: FULL_CYCLE_TIMEOUT });
   });
 
   test("does not trigger a page navigation", async ({ page }) => {
@@ -107,8 +103,7 @@ test.describe("Filter Pulse button", () => {
     await page.goto(`${BASE_URL}/en`);
     const urlBefore = page.url();
 
-    const button = page.getByRole("button", { name: /pulse effect/i });
-    await button.click();
+    await pulseButton(page).click();
     await page.waitForTimeout(200);
 
     expect(page.url()).toBe(urlBefore);
@@ -116,8 +111,7 @@ test.describe("Filter Pulse button", () => {
 
   test("is still present after navigating to another section", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
-    const button = page.getByRole("button", { name: /pulse effect/i });
-    await expect(button).toBeVisible();
+    await expect(pulseButton(page)).toBeVisible();
 
     await page
       .getByRole("link", { name: /projects/i })
@@ -125,26 +119,27 @@ test.describe("Filter Pulse button", () => {
       .click();
     await page.waitForTimeout(200);
 
-    await expect(button).toBeVisible();
+    await expect(pulseButton(page)).toBeVisible();
   });
 
   test("still plays under reduced motion, without spatial growth", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/en`);
 
-    const button = page.getByRole("button", { name: /pulse effect/i });
+    const button = pulseButton(page);
     await button.click();
 
-    const opacity = await page.evaluate(() => {
-      const el = document.querySelector(
-        ".filter-pulse-overlay--reduced-motion"
-      ) as HTMLElement | null;
-      return el ? getComputedStyle(el).opacity : null;
+    const state = await page.evaluate(() => {
+      const el = document.querySelector(".filter-pulse-overlay--reduced-motion") as HTMLElement;
+      return el ? { opacity: getComputedStyle(el).opacity } : null;
     });
-    expect(opacity).not.toBeNull();
+    expect(state).not.toBeNull();
+
+    // No cinematic layers under reduced motion, whichever effect is default.
+    expect(await page.locator("[data-testid='pulse-ring']").count()).toBe(0);
 
     // Reduced-motion cycle is ~1.2s; generous margin for slower CI runners.
-    await expect(button).toBeEnabled({ timeout: 6000 });
+    await expect(button).toBeEnabled({ timeout: 8000 });
   });
 });
 
@@ -162,15 +157,12 @@ test.describe("Filter Pulse button — mobile sidebar", () => {
     const dialog = page.getByRole("dialog", { name: /navigation|menu/i });
     await expect(dialog).toBeVisible();
 
-    const sidebarButton = dialog.getByRole("button", { name: /pulse effect/i });
-    await sidebarButton.click();
+    await dialog.getByRole("button", { name: /^trigger /i }).click();
 
     // The dialog's top-layer promotion would otherwise hide the fixed
     // overlay beneath it — the sidebar must close as part of the trigger.
     await expect(dialog).not.toBeVisible();
 
-    await page.waitForTimeout(900);
-    const radius = await getOverlayRadius(page);
-    expect(radius).toBeGreaterThan(0);
+    await expect.poll(() => getOverlayRadius(page), { timeout: 5000 }).toBeGreaterThan(0);
   });
 });

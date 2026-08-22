@@ -64,6 +64,7 @@ describe("FilterPulseButton Component", () => {
       maxRadius: 0,
       activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
+      durations: { expanding: 1200, holding: 700, contracting: 1200 },
       trigger: triggerSpy,
     });
 
@@ -97,6 +98,7 @@ describe("FilterPulseButton Component", () => {
       maxRadius: 100,
       activeFilterId: FilterPulseId.Sepia,
       prefersReducedMotion: false,
+      durations: { expanding: 1200, holding: 700, contracting: 1200 },
       trigger: triggerSpy,
     });
 

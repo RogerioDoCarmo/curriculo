@@ -100,17 +100,19 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     expect(result.current.origin).toEqual({ x: 42, y: 24 });
   });
 
-  it("walks through expanding -> holding -> contracting -> idle (normal motion)", () => {
+  it("walks a simple effect through expanding -> holding -> contracting -> idle", () => {
     const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
 
+    // Explicitly a simple (non-cinematic) effect, so this stays pinned to the
+    // simple timing regardless of which effect DEFAULT_FILTER_PULSE_ID names.
     act(() => {
-      result.current.trigger({ x: 10, y: 10 });
+      result.current.trigger({ x: 10, y: 10 }, FilterPulseId.Sepia);
     });
     act(() => {
       jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
     });
     expect(result.current.phase).toBe("expanding");
-    expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
+    expect(result.current.activeFilterId).toBe(FilterPulseId.Sepia);
 
     act(() => {
       jest.advanceTimersByTime(1200);
@@ -124,6 +126,42 @@ describe("FilterPulseProvider / useFilterPulse", () => {
 
     act(() => {
       jest.advanceTimersByTime(1200);
+    });
+    expect(result.current.phase).toBe("idle");
+  });
+
+  it("uses the cinematic effect's longer timing, and defaults to it", () => {
+    const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
+
+    act(() => {
+      result.current.trigger({ x: 10, y: 10 });
+    });
+    act(() => {
+      jest.advanceTimersByTime(32);
+    });
+    // No explicit id -> the registry default, which is the cinematic effect.
+    expect(result.current.activeFilterId).toBe(DEFAULT_FILTER_PULSE_ID);
+    expect(result.current.activeFilterId).toBe(FilterPulseId.TheWorld);
+    expect(result.current.phase).toBe("expanding");
+    // 6000ms split 30/45/25 -> 1800 / 2700 / 1500.
+    expect(result.current.durations).toEqual({
+      expanding: 1800,
+      holding: 2700,
+      contracting: 1500,
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(1800);
+    });
+    expect(result.current.phase).toBe("holding");
+
+    act(() => {
+      jest.advanceTimersByTime(2700);
+    });
+    expect(result.current.phase).toBe("contracting");
+
+    act(() => {
+      jest.advanceTimersByTime(1500);
     });
     expect(result.current.phase).toBe("idle");
   });
@@ -169,7 +207,7 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     const { result } = renderHook(() => useFilterPulse(), { wrapper: FilterPulseProvider });
 
     act(() => {
-      result.current.trigger({ x: 10, y: 10 });
+      result.current.trigger({ x: 10, y: 10 }, FilterPulseId.Sepia);
     });
     act(() => {
       jest.advanceTimersByTime(32); // flush the double requestAnimationFrame
@@ -180,7 +218,7 @@ describe("FilterPulseProvider / useFilterPulse", () => {
     // its own act() so the "expanding" phase (and the guard ref it sets)
     // has actually committed before this call reads it.
     act(() => {
-      result.current.trigger({ x: 999, y: 999 });
+      result.current.trigger({ x: 999, y: 999 }, FilterPulseId.Sepia);
     });
     expect(result.current.origin).toEqual({ x: 10, y: 10 });
 

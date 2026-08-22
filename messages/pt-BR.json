@@ -146,6 +146,9 @@
     },
     "negative": {
       "label": "Ativar efeito de pulso negativo"
+    },
+    "theWorld": {
+      "label": "Ativar o efeito de parada do tempo The World"
     }
   },
   "footer": {

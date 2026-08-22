@@ -90,13 +90,195 @@
 
 /* FilterPulseOverlay — radius is computed at runtime per click origin, so a
    plain transition (not @keyframes) interpolates between the two clip-path
-   circle() values set inline by the component. */
+   circle() values set inline by the component. The duration is driven by a
+   custom property so the registry's per-effect timing actually reaches the
+   CSS side (see THE_WORLD_DURATION_MS in lib/filterPulses.ts). */
 .filter-pulse-overlay {
   clip-path: circle(var(--pulse-radius, 0px) at var(--pulse-cx, 50%) var(--pulse-cy, 50%));
-  transition: clip-path 1200ms ease-in-out;
+  transition: clip-path var(--pulse-expand-ms, 1200ms) ease-in-out;
 }
 .filter-pulse-overlay--reduced-motion {
   transition: opacity 400ms ease-in-out;
+}
+
+/* ── Cinematic pulse ("The World") ───────────────────────────────────────────
+   Staged colour grade recreating the reference footage: ring-1 flash -> violet
+   wash -> chartreuse/violet split -> ring-2 flash -> held "stopped time" ->
+   release.
+
+   Two things carry the grade, and both matter:
+
+   1. backdrop-filter, which re-grades the real page behind the overlay. Every
+      keyframe MUST list the same filter functions in the same order --
+      backdrop-filter only interpolates between matching function lists, and a
+      mismatched list snaps instead of animating.
+
+   2. background-color, which *adds* colour. A filter chain alone cannot: on a
+      near-white page, saturate() strips what little colour exists and
+      hue-rotate() has nothing left to rotate, so the "stopped time" beat came
+      out pure grey (measured lum 50%, sat 0%) instead of the reference's dark
+      purple (lum 27%, sat 6%, hue ~330). The tint layer is what puts the
+      colour in; grayscale()+sepia()+hue-rotate() in the chain shape it. */
+.fp-grade {
+  animation: fp-grade-full var(--pulse-total, 6000ms) linear both;
+}
+.fp-grade--safe {
+  animation-name: fp-grade-safe;
+}
+
+@keyframes fp-grade-full {
+  0% {
+    background-color: transparent;
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1)
+      brightness(1) contrast(1) blur(0px);
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1) brightness(1)
+      contrast(1) blur(0px);
+  }
+  4% {
+    background-color: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(0.4)
+      brightness(2.2) contrast(1) blur(var(--pulse-blur, 6px));
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(0.4) brightness(2.2)
+      contrast(1) blur(var(--pulse-blur, 6px));
+  }
+  15% {
+    background-color: rgba(96, 44, 150, 0.38);
+    -webkit-backdrop-filter: invert(0) grayscale(0.85) sepia(1) hue-rotate(250deg) saturate(2.4)
+      brightness(0.8) contrast(1.05) blur(calc(var(--pulse-blur, 6px) * 0.5));
+    backdrop-filter: invert(0) grayscale(0.85) sepia(1) hue-rotate(250deg) saturate(2.4)
+      brightness(0.8) contrast(1.05) blur(calc(var(--pulse-blur, 6px) * 0.5));
+  }
+  30% {
+    background-color: rgba(150, 180, 45, 0.22);
+    -webkit-backdrop-filter: invert(0.85) grayscale(0) sepia(0.35) hue-rotate(35deg) saturate(2.4)
+      brightness(1) contrast(1.15) blur(calc(var(--pulse-blur, 6px) * 0.3));
+    backdrop-filter: invert(0.85) grayscale(0) sepia(0.35) hue-rotate(35deg) saturate(2.4)
+      brightness(1) contrast(1.15) blur(calc(var(--pulse-blur, 6px) * 0.3));
+  }
+  42% {
+    background-color: rgba(255, 255, 225, 0.5);
+    -webkit-backdrop-filter: invert(0.5) grayscale(0) sepia(0.3) hue-rotate(20deg) saturate(1.8)
+      brightness(1.9) contrast(1.1) blur(var(--pulse-blur, 6px));
+    backdrop-filter: invert(0.5) grayscale(0) sepia(0.3) hue-rotate(20deg) saturate(1.8)
+      brightness(1.9) contrast(1.1) blur(var(--pulse-blur, 6px));
+  }
+  52%,
+  85% {
+    background-color: rgba(40, 26, 58, 0.58);
+    -webkit-backdrop-filter: invert(0) grayscale(1) sepia(1) hue-rotate(288deg) saturate(2)
+      brightness(0.5) contrast(1.08) blur(0px);
+    backdrop-filter: invert(0) grayscale(1) sepia(1) hue-rotate(288deg) saturate(2) brightness(0.5)
+      contrast(1.08) blur(0px);
+  }
+  100% {
+    background-color: transparent;
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1)
+      brightness(1) contrast(1) blur(0px);
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1) brightness(1)
+      contrast(1) blur(0px);
+  }
+}
+
+/* Same sequence, luminance peaks capped for photosensitivity (WCAG 2.3.1). */
+@keyframes fp-grade-safe {
+  0% {
+    background-color: transparent;
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1)
+      brightness(1) contrast(1) blur(0px);
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1) brightness(1)
+      contrast(1) blur(0px);
+  }
+  4% {
+    background-color: rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(0.5)
+      brightness(1.35) contrast(1) blur(var(--pulse-blur, 6px));
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(0.5) brightness(1.35)
+      contrast(1) blur(var(--pulse-blur, 6px));
+  }
+  15% {
+    background-color: rgba(96, 44, 150, 0.34);
+    -webkit-backdrop-filter: invert(0) grayscale(0.85) sepia(1) hue-rotate(250deg) saturate(2)
+      brightness(0.85) contrast(1.05) blur(calc(var(--pulse-blur, 6px) * 0.5));
+    backdrop-filter: invert(0) grayscale(0.85) sepia(1) hue-rotate(250deg) saturate(2)
+      brightness(0.85) contrast(1.05) blur(calc(var(--pulse-blur, 6px) * 0.5));
+  }
+  30% {
+    background-color: rgba(150, 180, 45, 0.2);
+    -webkit-backdrop-filter: invert(0.7) grayscale(0) sepia(0.35) hue-rotate(35deg) saturate(2)
+      brightness(1) contrast(1.1) blur(calc(var(--pulse-blur, 6px) * 0.3));
+    backdrop-filter: invert(0.7) grayscale(0) sepia(0.35) hue-rotate(35deg) saturate(2)
+      brightness(1) contrast(1.1) blur(calc(var(--pulse-blur, 6px) * 0.3));
+  }
+  42% {
+    background-color: rgba(255, 255, 225, 0.28);
+    -webkit-backdrop-filter: invert(0.5) grayscale(0) sepia(0.3) hue-rotate(20deg) saturate(1.5)
+      brightness(1.3) contrast(1.05) blur(var(--pulse-blur, 6px));
+    backdrop-filter: invert(0.5) grayscale(0) sepia(0.3) hue-rotate(20deg) saturate(1.5)
+      brightness(1.3) contrast(1.05) blur(var(--pulse-blur, 6px));
+  }
+  52%,
+  85% {
+    background-color: rgba(40, 26, 58, 0.5);
+    -webkit-backdrop-filter: invert(0) grayscale(1) sepia(1) hue-rotate(288deg) saturate(1.8)
+      brightness(0.58) contrast(1.05) blur(0px);
+    backdrop-filter: invert(0) grayscale(1) sepia(1) hue-rotate(288deg) saturate(1.8)
+      brightness(0.58) contrast(1.05) blur(0px);
+  }
+  100% {
+    background-color: transparent;
+    -webkit-backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1)
+      brightness(1) contrast(1) blur(0px);
+    backdrop-filter: invert(0) grayscale(0) sepia(0) hue-rotate(0deg) saturate(1) brightness(1)
+      contrast(1) blur(0px);
+  }
+}
+
+/* Expanding glow rings. Scaling a bordered circle (rather than redrawing a
+   gradient) stays on the compositor and thickens the ring as it grows, which
+   is what the reference does between frames 38 and 39. */
+.fp-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.4vmax solid rgba(255, 255, 248, 0.95);
+  box-shadow:
+    0 0 6vmax rgba(255, 250, 220, 0.85),
+    0 0 12vmax rgba(190, 150, 255, 0.5),
+    inset 0 0 5vmax rgba(214, 200, 255, 0.6);
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: fp-ring-expand calc(var(--pulse-total, 6000ms) * 0.3) cubic-bezier(0.15, 0.75, 0.3, 1)
+    both;
+}
+.fp-ring--2 {
+  border-color: rgba(243, 255, 214, 0.95);
+  animation-delay: calc(var(--pulse-total, 6000ms) * 0.38);
+}
+
+@keyframes fp-ring-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Belt-and-braces: the overlay already swaps to a plain opacity fade under
+   reduced motion, but make sure no cinematic animation can ever run. */
+@media (prefers-reduced-motion: reduce) {
+  .fp-grade,
+  .fp-ring {
+    animation: none;
+  }
 }
 
 @keyframes fadeIn {

@@ -146,6 +146,9 @@
     },
     "negative": {
       "label": "Trigger negative pulse effect"
+    },
+    "theWorld": {
+      "label": "Trigger The World time-stop effect"
     }
   },
   "footer": {

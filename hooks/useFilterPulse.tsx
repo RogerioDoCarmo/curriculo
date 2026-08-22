@@ -18,7 +18,12 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { DEFAULT_FILTER_PULSE_ID, type FilterPulseId } from "@/lib/filterPulses";
+import {
+  DEFAULT_FILTER_PULSE_ID,
+  getPulseDurations,
+  type FilterPulseId,
+  type FilterPulsePhaseDurations,
+} from "@/lib/filterPulses";
 
 export type FilterPulsePhase = "idle" | "expanding" | "holding" | "contracting";
 
@@ -26,11 +31,6 @@ export interface FilterPulseOrigin {
   readonly x: number;
   readonly y: number;
 }
-
-const DURATIONS = {
-  full: { expanding: 1200, holding: 700, contracting: 1200 },
-  reduced: { expanding: 400, holding: 400, contracting: 400 },
-} as const;
 
 /**
  * Distance from `origin` to the farthest corner of `viewport` — the radius a
@@ -51,6 +51,8 @@ interface FilterPulseContextValue {
   readonly maxRadius: number;
   readonly activeFilterId: FilterPulseId;
   readonly prefersReducedMotion: boolean;
+  /** Phase timings of the in-flight (or most recent) pulse, for the overlay's CSS vars. */
+  readonly durations: FilterPulsePhaseDurations;
   readonly trigger: (origin: FilterPulseOrigin, filterId?: FilterPulseId) => void;
 }
 
@@ -66,6 +68,9 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
   const [origin, setOrigin] = useState<FilterPulseOrigin>({ x: 0, y: 0 });
   const [maxRadius, setMaxRadius] = useState(0);
   const [activeFilterId, setActiveFilterId] = useState<FilterPulseId>(DEFAULT_FILTER_PULSE_ID);
+  const [durations, setDurations] = useState<FilterPulsePhaseDurations>(() =>
+    getPulseDurations(DEFAULT_FILTER_PULSE_ID, false)
+  );
 
   // Refs let `trigger` (stable identity) read latest values without becoming
   // a moving dependency, and let unmount cleanup clear whatever timers are
@@ -101,7 +106,8 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     rafIdsRef.current = [];
     timeoutsRef.current = [];
 
-    const durations = reducedMotionRef.current ? DURATIONS.reduced : DURATIONS.full;
+    const resolvedId = filterId ?? DEFAULT_FILTER_PULSE_ID;
+    const durations = getPulseDurations(resolvedId, reducedMotionRef.current);
     const radius = computeMaxRadius(triggerOrigin, {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -120,7 +126,8 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     // radius transition has nothing but radius to interpolate.
     setOrigin(triggerOrigin);
     setMaxRadius(radius);
-    setActiveFilterId(filterId ?? DEFAULT_FILTER_PULSE_ID);
+    setActiveFilterId(resolvedId);
+    setDurations(durations);
 
     const raf1 = requestAnimationFrame(() => {
       const raf2 = requestAnimationFrame(() => {
@@ -148,8 +155,8 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
   }, []);
 
   const value = useMemo(
-    () => ({ phase, origin, maxRadius, activeFilterId, prefersReducedMotion, trigger }),
-    [phase, origin, maxRadius, activeFilterId, prefersReducedMotion, trigger]
+    () => ({ phase, origin, maxRadius, activeFilterId, prefersReducedMotion, durations, trigger }),
+    [phase, origin, maxRadius, activeFilterId, prefersReducedMotion, durations, trigger]
   );
 
   return <FilterPulseContext.Provider value={value}>{children}</FilterPulseContext.Provider>;
