@@ -15,9 +15,86 @@ import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
 import { FilterPulseId, getFilterPulse } from "@/lib/filterPulses";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+
+declare global {
+  interface Window {
+    __pulseRecording?: {
+      lum: string[];
+      color: string[];
+      invert: string[];
+      maxLumAlpha: number;
+      lastLumAlpha: number;
+    };
+  }
+}
 const SPEC = getFilterPulse(FilterPulseId.TheWorld).cinematic;
 
 const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /i });
+
+/**
+ * Records the grade layers' computed colours from inside the page, on every
+ * animation frame, for the duration of a pulse.
+ *
+ * Sampling with a `page.evaluate` per data point cannot work here: each
+ * round-trip costs real time, and the pulse is only ~2.4s, so on a slow CI
+ * machine every sample can land after the animation has already finished --
+ * which reads as "nothing animated" when in fact the test simply never
+ * looked while it was running. Recording in-page removes the round-trip from
+ * the sampling loop entirely, so it is immune to how slow the runner is.
+ */
+async function startPulseRecorder(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const ids = ["fp-layer-lum", "fp-layer-color", "fp-layer-invert"] as const;
+    const seen: Record<string, Set<string>> = {
+      "fp-layer-lum": new Set(),
+      "fp-layer-color": new Set(),
+      "fp-layer-invert": new Set(),
+    };
+    let maxLumAlpha = 0;
+    let lastLumAlpha = 0;
+
+    const alphaOfColor = (c: string): number => {
+      const m = /rgba?\(([^)]+)\)/.exec(c);
+      if (!m) return 0;
+      const parts = m[1].split(",").map((v) => parseFloat(v));
+      return parts.length > 3 ? parts[3] : 1;
+    };
+
+    const tick = () => {
+      for (const id of ids) {
+        const el = document.querySelector(`[data-testid='${id}']`);
+        const color = el ? getComputedStyle(el).backgroundColor : "";
+        seen[id].add(color);
+        if (id === "fp-layer-lum") {
+          lastLumAlpha = alphaOfColor(color);
+          maxLumAlpha = Math.max(maxLumAlpha, lastLumAlpha);
+        }
+      }
+      window.__pulseRecording = {
+        lum: [...seen["fp-layer-lum"]],
+        color: [...seen["fp-layer-color"]],
+        invert: [...seen["fp-layer-invert"]],
+        maxLumAlpha,
+        lastLumAlpha,
+      };
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+async function readPulseRecorder(page: Page) {
+  return page.evaluate(
+    () =>
+      window.__pulseRecording ?? {
+        lum: [],
+        color: [],
+        invert: [],
+        maxLumAlpha: 0,
+        lastLumAlpha: 0,
+      }
+  );
+}
 
 /** Computed background-color of one blended grade layer. */
 async function layerColor(page: Page, testid: string): Promise<string> {
@@ -147,39 +224,39 @@ test.describe("The World pulse", () => {
   test("grades through distinct beats — the layer colours actually change", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+
+    await startPulseRecorder(page);
     await pulseButton(page).click();
+    // Wait for disabled BEFORE waiting for enabled. trigger() deliberately
+    // waits two animation frames before leaving "idle", so the button is
+    // still enabled for a moment after the click -- asserting toBeEnabled
+    // straight away resolves instantly, before the pulse has even started,
+    // and the recorder then has nothing to report. Disabled means the pulse
+    // is genuinely running; enabled again means it finished, which is a
+    // self-pacing signal with no fixed sleep to tune per machine.
+    await expect(pulseButton(page)).toBeDisabled({ timeout: 10_000 });
+    await expect(pulseButton(page)).toBeEnabled({ timeout: 20_000 });
 
-    // Collects distinct colours across the pulse rather than comparing two
-    // fixed instants: the sequence is only a couple of seconds long, so under
-    // parallel load two fixed samples can land close enough together to read
-    // as unchanged even though the animation is running fine.
-    const seenColor = new Set<string>();
-    const seenInvert = new Set<string>();
-    for (let i = 0; i < 16; i++) {
-      seenColor.add(await layerColor(page, "fp-layer-color"));
-      seenInvert.add(await layerColor(page, "fp-layer-invert"));
-      await page.waitForTimeout(110);
-    }
-
+    const rec = await readPulseRecorder(page);
     // If the keyframes weren't animating, each set would hold a single value.
-    expect(seenColor.size).toBeGreaterThan(2);
-    expect(seenInvert.size).toBeGreaterThan(2);
+    expect(rec.color.length).toBeGreaterThan(2);
+    expect(rec.invert.length).toBeGreaterThan(2);
   });
 
   test("settles into a dark tinted 'stopped time' state and then releases", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+
+    await startPulseRecorder(page);
     await pulseButton(page).click();
+    await expect(pulseButton(page)).toBeDisabled({ timeout: 10_000 });
+    await expect(pulseButton(page)).toBeEnabled({ timeout: 20_000 });
 
-    // The luminance layer carries the dark wash of the held beat.
-    await expect
-      .poll(async () => alphaOf(await layerColor(page, "fp-layer-lum")), { timeout: 8000 })
-      .toBeGreaterThan(0.3);
-
-    // ...and the wash clears once the pulse ends.
-    await expect
-      .poll(async () => alphaOf(await layerColor(page, "fp-layer-lum")), { timeout: 12_000 })
-      .toBeLessThan(0.05);
+    const rec = await readPulseRecorder(page);
+    // The luminance layer carries the dark wash of the held beat...
+    expect(rec.maxLumAlpha).toBeGreaterThan(0.3);
+    // ...and it clears again once the pulse ends.
+    expect(rec.lastLumAlpha).toBeLessThan(0.05);
   });
 
   test("opts into the ripple only when the registry enables it", async ({ page }) => {
