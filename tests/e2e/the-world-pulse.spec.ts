@@ -32,82 +32,60 @@ const SPEC = getFilterPulse(FilterPulseId.TheWorld).cinematic;
 const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /i });
 
 /**
- * Records the grade layers' computed colours from inside the page, on every
- * animation frame, for the duration of a pulse.
+ * Reads a grade layer's computed colour at an exact point in its keyframe
+ * animation, by applying the grade class, pausing the resulting animation and
+ * seeking to that point.
  *
- * Sampling with a `page.evaluate` per data point cannot work here: each
- * round-trip costs real time, and the pulse is only ~2.4s, so on a slow CI
- * machine every sample can land after the animation has already finished --
- * which reads as "nothing animated" when in fact the test simply never
- * looked while it was running. Recording in-page removes the round-trip from
- * the sampling loop entirely, so it is immune to how slow the runner is.
+ * This deliberately does NOT trigger a pulse. Sampling a live pulse cannot be
+ * made reliable: the sequence is only ~2.4s, and every approach tried raced
+ * it. A page.evaluate per sample costs a round-trip each and overran the pulse
+ * on slow runners; sampling in-page on requestAnimationFrame failed
+ * differently because headless CI throttles rAF hard (two samples for a whole
+ * pulse, peak alpha 0.267 instead of 0.55, final sample still mid-animation);
+ * and seeking the live animation still lost, because when the pulse ends the
+ * component removes the grade class and the animation disappears mid-test.
+ *
+ * What these two tests are actually about is what the keyframes resolve to,
+ * which is a property of the CSS and needs no pulse to observe. Driving it
+ * directly makes them exact and timing-free, and returns byte-identical
+ * values on Chromium, Firefox and WebKit.
+ *
+ * The live integration — that a click applies these classes, runs the
+ * animation and cleans up afterwards — is covered by "stays completely inert
+ * until triggered" and "activates the grade layers and rings", both of which
+ * assert on state that persists rather than on a moving value.
  */
-async function startPulseRecorder(page: Page): Promise<void> {
-  await page.evaluate(() => {
-    const ids = ["fp-layer-lum", "fp-layer-color", "fp-layer-invert"] as const;
-    const seen: Record<string, Set<string>> = {
-      "fp-layer-lum": new Set(),
-      "fp-layer-color": new Set(),
-      "fp-layer-invert": new Set(),
-    };
-    let maxLumAlpha = 0;
-    let lastLumAlpha = 0;
-
-    const alphaOfColor = (c: string): number => {
-      const m = /rgba?\(([^)]+)\)/.exec(c);
-      if (!m) return 0;
-      const parts = m[1].split(",").map((v) => parseFloat(v));
-      return parts.length > 3 ? parts[3] : 1;
-    };
-
-    const tick = () => {
-      for (const id of ids) {
-        const el = document.querySelector(`[data-testid='${id}']`);
-        const color = el ? getComputedStyle(el).backgroundColor : "";
-        seen[id].add(color);
-        if (id === "fp-layer-lum") {
-          lastLumAlpha = alphaOfColor(color);
-          maxLumAlpha = Math.max(maxLumAlpha, lastLumAlpha);
-        }
-      }
-      window.__pulseRecording = {
-        lum: [...seen["fp-layer-lum"]],
-        color: [...seen["fp-layer-color"]],
-        invert: [...seen["fp-layer-invert"]],
-        maxLumAlpha,
-        lastLumAlpha,
-      };
-      requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
-}
-
-async function readPulseRecorder(page: Page) {
+async function gradeAt(page: Page, testId: string, progress: number): Promise<string> {
   return page.evaluate(
-    () =>
-      window.__pulseRecording ?? {
-        lum: [],
-        color: [],
-        invert: [],
-        maxLumAlpha: 0,
-        lastLumAlpha: 0,
-      }
+    ({ testId, progress }) => {
+      const el = document.querySelector(`[data-testid='${testId}']`);
+      if (!el) return "";
+      // Only .fp-grade, without an intensity modifier: the keyframes fall back
+      // to the same alphas .fp-grade--full sets, so this matches what ships
+      // while staying independent of the FLASH_INTENSITY setting.
+      el.classList.add("fp-grade");
+      const named = (a: Animation): string =>
+        "animationName" in a ? String((a as CSSAnimation).animationName) : "";
+      // getAnimations() also returns the overlay's clip-path transition, so
+      // pick the keyframe animation by name rather than by index.
+      const anim = el.getAnimations().find((a) => named(a).startsWith("fp-"));
+      if (!anim) return "";
+      const duration = anim.effect?.getTiming().duration;
+      if (typeof duration !== "number") return "";
+      anim.pause();
+      anim.currentTime = duration * progress;
+      return getComputedStyle(el).backgroundColor;
+    },
+    { testId, progress }
   );
 }
 
-/** Computed background-color of one blended grade layer. */
-async function layerColor(page: Page, testid: string): Promise<string> {
-  return page.evaluate((id) => {
-    const el = document.querySelector(`[data-testid='${id}']`);
-    return el ? getComputedStyle(el).backgroundColor : "";
-  }, testid);
-}
-
-/** Alpha of a computed rgb/rgba string (1 when opaque, 0 when absent). */
-function alphaOf(color: string): number {
-  const m = color.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
-  return m ? parseFloat(m[4] ?? "1") : 0;
+/** Alpha channel of a computed colour, 0 when fully transparent or unset. */
+function alphaOfComputed(color: string): number {
+  const match = /rgba?\(([^)]+)\)/.exec(color);
+  if (!match) return 0;
+  const parts = match[1].split(",").map((v) => parseFloat(v));
+  return parts.length > 3 ? parts[3] : 1;
 }
 
 test.beforeEach(async ({ context, page }) => {
@@ -157,7 +135,7 @@ test.describe("The World pulse", () => {
     for (const layer of idle) {
       expect(layer).not.toBeNull();
       expect(layer?.anim).toBe("none");
-      expect(alphaOf(layer?.bg ?? "")).toBe(0);
+      expect(alphaOfComputed(layer?.bg ?? "")).toBe(0);
     }
 
     // ...and it does start once actually triggered.
@@ -222,41 +200,36 @@ test.describe("The World pulse", () => {
   });
 
   test("grades through distinct beats — the layer colours actually change", async ({ page }) => {
-    test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
 
-    await startPulseRecorder(page);
-    await pulseButton(page).click();
-    // Wait for disabled BEFORE waiting for enabled. trigger() deliberately
-    // waits two animation frames before leaving "idle", so the button is
-    // still enabled for a moment after the click -- asserting toBeEnabled
-    // straight away resolves instantly, before the pulse has even started,
-    // and the recorder then has nothing to report. Disabled means the pulse
-    // is genuinely running; enabled again means it finished, which is a
-    // self-pacing signal with no fixed sleep to tune per machine.
-    await expect(pulseButton(page)).toBeDisabled({ timeout: 10_000 });
-    await expect(pulseButton(page)).toBeEnabled({ timeout: 20_000 });
-
-    const rec = await readPulseRecorder(page);
-    // If the keyframes weren't animating, each set would hold a single value.
-    expect(rec.color.length).toBeGreaterThan(2);
-    expect(rec.invert.length).toBeGreaterThan(2);
+    // One sample per beat of the sequence.
+    const beats = [0, 0.05, 0.18, 0.33, 0.43, 0.55];
+    for (const layer of ["fp-layer-color", "fp-layer-invert", "fp-layer-lum"]) {
+      const colors: string[] = [];
+      for (const at of beats) colors.push(await gradeAt(page, layer, at));
+      // Every beat resolved to something, and they are not all the same value.
+      expect(colors.every((c) => c !== "")).toBe(true);
+      expect(new Set(colors).size).toBeGreaterThan(2);
+    }
   });
 
   test("settles into a dark tinted 'stopped time' state and then releases", async ({ page }) => {
-    test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
 
-    await startPulseRecorder(page);
-    await pulseButton(page).click();
-    await expect(pulseButton(page)).toBeDisabled({ timeout: 10_000 });
-    await expect(pulseButton(page)).toBeEnabled({ timeout: 20_000 });
+    // The held beat (46%-66% of the sequence) is the dark "stopped time" wash
+    // the luminance layer carries.
+    const held = await gradeAt(page, "fp-layer-lum", 0.55);
+    expect(alphaOfComputed(held)).toBeGreaterThan(0.3);
 
-    const rec = await readPulseRecorder(page);
-    // The luminance layer carries the dark wash of the held beat...
-    expect(rec.maxLumAlpha).toBeGreaterThan(0.3);
-    // ...and it clears again once the pulse ends.
-    expect(rec.lastLumAlpha).toBeLessThan(0.05);
+    // It flashes bright well before that, so the wash is a distinct beat and
+    // not just "the layer is always tinted".
+    const flash = await gradeAt(page, "fp-layer-lum", 0.05);
+    expect(flash).not.toBe(held);
+    expect(alphaOfComputed(flash)).toBeGreaterThan(0.3);
+
+    // ...and everything clears by the end.
+    const released = await gradeAt(page, "fp-layer-lum", 1);
+    expect(alphaOfComputed(released)).toBeLessThan(0.05);
   });
 
   test("opts into the ripple only when the registry enables it", async ({ page }) => {
