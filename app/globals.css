@@ -88,6 +88,211 @@
   display: none;
 }
 
+/* FilterPulseOverlay — radius is computed at runtime per click origin, so a
+   plain transition (not @keyframes) interpolates between the two clip-path
+   circle() values set inline by the component. The duration is driven by a
+   custom property so the registry's per-effect timing actually reaches the
+   CSS side (see THE_WORLD_DURATION_MS in lib/filterPulses.ts). */
+.filter-pulse-overlay {
+  clip-path: circle(var(--pulse-radius, 0px) at var(--pulse-cx, 50%) var(--pulse-cy, 50%));
+  transition: clip-path var(--pulse-expand-ms, 1200ms) ease-in-out;
+}
+.filter-pulse-overlay--reduced-motion {
+  transition: opacity 400ms ease-in-out;
+}
+
+/* ── Cinematic pulse ("The World") ───────────────────────────────────────────
+   The staged grade is built from blended layers rather than an animated
+   backdrop-filter. See CinematicLayers.tsx for the measurements behind that:
+   filter chains cost per-pixel passes over the full viewport every frame and
+   scale with the number of functions (8 fn -> 21.6fps, none -> 59fps, against
+   a 120fps idle baseline), while blend modes are compositor work.
+
+   Only background-color animates. Each layer owns one aspect of the grade:
+     .fp-invert  difference  -> black is a no-op, white is a full invert
+     .fp-color   color       -> imposes hue + saturation (grey desaturates)
+     .fp-lum     normal      -> white flashes and the final dark wash          */
+
+.fp-grade--full {
+  --fp-flash: 0.55;
+  --fp-flash-2: 0.5;
+}
+.fp-grade--safe {
+  /* Peak luminance capped for photosensitivity (WCAG 2.3.1). */
+  --fp-flash: 0.26;
+  --fp-flash-2: 0.24;
+}
+
+.fp-invert,
+.fp-color,
+.fp-lum {
+  background-color: transparent;
+  will-change: background-color;
+}
+.fp-invert {
+  mix-blend-mode: difference;
+}
+.fp-color {
+  mix-blend-mode: color;
+}
+
+/* The animations are gated on .fp-grade, which is only present while a pulse
+   is running. Declaring them on the base classes instead meant they started
+   the moment the always-mounted layers hit the DOM: the whole effect played
+   itself once on page load and, since re-adding a class does not restart an
+   animation whose name never changed, clicking then did nothing at all.
+   Gating on the class also gives the restart -- the animation is removed and
+   re-added with it, so each pulse begins from 0%. */
+.fp-grade.fp-invert {
+  animation: fp-invert-beat var(--pulse-total, 6000ms) linear both;
+}
+.fp-grade.fp-color {
+  animation: fp-color-beat var(--pulse-total, 6000ms) linear both;
+}
+.fp-grade.fp-lum {
+  animation: fp-lum-beat var(--pulse-total, 6000ms) linear both;
+}
+
+/* Complementary beat: ramps up around the chartreuse/violet split (30%) and
+   spikes again with the second ring (42%), matching frames 50-62. */
+@keyframes fp-invert-beat {
+  0%,
+  18% {
+    background-color: rgb(0, 0, 0);
+  }
+  33% {
+    background-color: rgb(217, 217, 217);
+  }
+  43% {
+    background-color: rgb(140, 140, 140);
+  }
+  50%,
+  100% {
+    background-color: rgb(0, 0, 0);
+  }
+}
+
+/* Hue/saturation beat: violet wash -> chartreuse -> settled violet. */
+@keyframes fp-color-beat {
+  0%,
+  5% {
+    background-color: rgba(128, 128, 128, 0);
+  }
+  18% {
+    background-color: rgba(96, 44, 150, 0.85);
+  }
+  33% {
+    background-color: rgba(150, 180, 45, 0.8);
+  }
+  43% {
+    background-color: rgba(120, 90, 170, 0.8);
+  }
+  46%,
+  66% {
+    background-color: rgba(78, 56, 104, 0.9);
+  }
+  100% {
+    background-color: rgba(128, 128, 128, 0);
+  }
+}
+
+/* Luminance beat: the two ring flashes, then the held dark "stopped time". */
+@keyframes fp-lum-beat {
+  0% {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  5% {
+    background-color: rgba(255, 255, 255, var(--fp-flash, 0.55));
+  }
+  18% {
+    background-color: rgba(26, 10, 44, 0.22);
+  }
+  33% {
+    background-color: rgba(20, 20, 10, 0.12);
+  }
+  43% {
+    background-color: rgba(255, 255, 228, var(--fp-flash-2, 0.5));
+  }
+  46%,
+  66% {
+    background-color: rgba(20, 13, 31, 0.78);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+  }
+}
+
+/* The ripple runs only across the second-ring window. A full-viewport
+   feDisplacementMap is a per-pixel gather: applied for the whole pulse it
+   measured 42fps with 15 frames over 100ms, versus 66fps and zero stalls
+   without it. step-end switches the filter on and off discretely. */
+.fp-rings--active.fp-rings--rippled {
+  animation: fp-ripple-window var(--pulse-total, 6000ms) step-end both;
+}
+@keyframes fp-ripple-window {
+  0% {
+    filter: none;
+  }
+  30% {
+    filter: url("#fp-timestop-ripple");
+  }
+  60% {
+    filter: none;
+  }
+}
+
+/* Expanding glow rings. Scaling a bordered circle (rather than redrawing a
+   gradient) stays on the compositor and thickens the ring as it grows, which
+   is what the reference does between frames 38 and 39. Shadow blur radii are
+   kept modest: large blurs on a scaling element are repaint-heavy. */
+.fp-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.2vmax solid rgba(255, 255, 248, 0.95);
+  box-shadow:
+    0 0 2.5vmax rgba(255, 250, 220, 0.8),
+    inset 0 0 2vmax rgba(214, 200, 255, 0.55);
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.fp-rings--active .fp-ring {
+  animation: fp-ring-expand calc(var(--pulse-total, 6000ms) * 0.43) cubic-bezier(0.15, 0.75, 0.3, 1)
+    both;
+}
+.fp-ring--2 {
+  border-color: rgba(243, 255, 214, 0.95);
+  animation-delay: calc(var(--pulse-total, 6000ms) * 0.28);
+}
+
+@keyframes fp-ring-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Belt-and-braces: the overlay already swaps to a plain opacity fade under
+   reduced motion, but make sure no cinematic animation can ever run. */
+@media (prefers-reduced-motion: reduce) {
+  .fp-invert,
+  .fp-color,
+  .fp-lum,
+  .fp-ring {
+    animation: none;
+  }
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;

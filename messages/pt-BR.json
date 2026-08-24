@@ -140,6 +140,23 @@
     "selector": "Selecionar idioma",
     "selectTooltip": "Selecionar idioma (atualmente {language})"
   },
+  "filterPulse": {
+    "sepia": {
+      "label": "Ativar efeito de pulso sépia"
+    },
+    "negative": {
+      "label": "Ativar efeito de pulso negativo"
+    },
+    "theWorld": {
+      "label": "Ativar o efeito de parada do tempo The World"
+    },
+    "warning": {
+      "title": "Atenção: efeito visual com flashes",
+      "body": "Este efeito pisca rapidamente e inverte as cores de toda a página. Pode ser desconfortável, ou não ser seguro, se você tem sensibilidade a luzes piscantes. Você só precisa fazer essa escolha uma vez.",
+      "continue": "Reproduzir o efeito",
+      "cancel": "Cancelar"
+    }
+  },
   "footer": {
     "copyright": "Todos os direitos reservados.",
     "sitemap": "Mapa do site",
@@ -395,7 +412,7 @@
     "metaDescription": "Saiba sobre os cookies que usamos, como gerenciá-los e suas escolhas. Informações detalhadas sobre cookies do Firebase Analytics.",
     "title": "Política de Cookies",
     "lastUpdated": "Última Atualização",
-    "lastUpdatedDate": "Junho de 2026",
+    "lastUpdatedDate": "Agosto de 2026",
     "introduction": {
       "title": "Introdução",
       "paragraph1": "Esta Política de Cookies explica o que são cookies, como os usamos em nosso site e suas escolhas em relação aos cookies.",
@@ -495,6 +512,10 @@
         "notifications": {
           "name": "fcm_topic_subscriptions",
           "purpose": "Suas preferências de assinatura de notificações"
+        },
+        "filterPulse": {
+          "name": "filter-pulse-photosensitivity-consent",
+          "purpose": "Sua confirmação do aviso sobre o efeito visual com flashes, para exibi-lo apenas uma vez"
         }
       },
       "howToManage": "Como gerenciar localStorage: Você pode limpar o localStorage através das ferramentas de desenvolvedor do seu navegador ou limpando todos os dados do site. Isso redefinirá suas preferências, mas não afetará os cookies."
@@ -602,7 +623,7 @@
     "metaDescription": "Saiba como coletamos, usamos e protegemos seus dados. Política de privacidade em conformidade com GDPR e LGPD.",
     "title": "Política de Privacidade",
     "lastUpdated": "Última Atualização",
-    "lastUpdatedDate": "Junho de 2026",
+    "lastUpdatedDate": "Agosto de 2026",
     "introduction": {
       "title": "Introdução",
       "paragraph1": "Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos suas informações pessoais quando você visita nosso site.",
@@ -670,7 +691,8 @@
         "language": "Preferência de idioma (pt-BR, en, es)",
         "consent": "Preferências de consentimento de cookies",
         "session": "Dados de sessão (estado do modal de intenção de saída)",
-        "notifications": "Preferências de assinatura de notificações"
+        "notifications": "Preferências de assinatura de notificações",
+        "filterPulse": "Confirmação do aviso sobre o efeito visual com flashes"
       }
     },
     "dataUsage": {

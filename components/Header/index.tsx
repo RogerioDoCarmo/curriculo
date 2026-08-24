@@ -15,6 +15,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import LanguageSelector, { getLanguageName } from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
+import FilterPulseButton from "@/components/FilterPulseButton";
+import { getFilterPulse } from "@/lib/filterPulses";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
 import { useDialogElement } from "@/hooks/useDialogElement";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
@@ -60,6 +62,7 @@ export default function Header({ locale }: HeaderProps) {
   const languageLabel = t("language.selectTooltip", {
     language: getLanguageName(locale as SupportedLocale),
   });
+  const filterPulseLabel = t(`filterPulse.${getFilterPulse().messageKey}.label`);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -320,6 +323,7 @@ export default function Header({ locale }: HeaderProps) {
               label={languageLabel}
             />
             <ThemeToggle {...themeToggleLabels} />
+            <FilterPulseButton label={filterPulseLabel} className="ml-2" />
           </div>
         </div>
       </div>
@@ -410,6 +414,7 @@ export default function Header({ locale }: HeaderProps) {
             label={languageLabel}
           />
           <ThemeToggle {...themeToggleLabels} />
+          <FilterPulseButton label={filterPulseLabel} className="ml-2" />
         </div>
       </dialog>
     </header>
