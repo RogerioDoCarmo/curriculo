@@ -68,7 +68,7 @@
     "@storybook/nextjs-vite": "^10.5.9",
     "@storybook/react": "^10.5.9",
     "@stryker-mutator/core": "^9.6.1",
-    "@stryker-mutator/jest-runner": "^9.6.1",
+    "@stryker-mutator/jest-runner": "^10.0.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.0",
