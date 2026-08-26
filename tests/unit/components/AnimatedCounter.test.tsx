@@ -66,7 +66,9 @@ describe("AnimatedCounter", () => {
 
     render(<AnimatedCounter value={10} label="Projects" suffix="+" />);
 
-    expect(screen.getByLabelText("10+ Projects")).toBeInTheDocument();
+    // A bare <div> has an implicit "generic" role, which isn't allowed to
+    // carry aria-label — role="group" is required for the name to be valid.
+    expect(screen.getByRole("group", { name: "10+ Projects" })).toBeInTheDocument();
     const [number, label] = screen.getAllByText(/10\+|Projects/);
     expect(number).toHaveAttribute("aria-hidden", "true");
     expect(label).toHaveAttribute("aria-hidden", "true");

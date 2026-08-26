@@ -30,6 +30,7 @@ export default function AnimatedCounter({
 
   return (
     <div
+      role="group"
       className="flex flex-col items-center text-center"
       aria-label={`${value}${suffix} ${label}`}
     >
