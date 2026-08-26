@@ -21,20 +21,18 @@ describe("HighlightedText Component", () => {
     expect(container.textContent).toBe("");
   });
 
-  it("highlights matching text case-insensitively", () => {
-    const { container } = render(<HighlightedText text="React Native" highlight="react" />);
-
+  it.each([
+    ["case-insensitively", "React Native", "react", "React"],
+    ["with different case", "TypeScript", "SCRIPT", "Script"],
+    ["special regex characters", "C++ Programming", "C++", "C++"],
+    ["parentheses", "Function (test)", "(test)", "(test)"],
+    ["brackets", "Array [1, 2, 3]", "[1, 2, 3]", "[1, 2, 3]"],
+    ["surrounded by whitespace", "  React   Native  ", "React", "React"],
+  ] as const)("highlights matching text %s", (_label, text, highlight, expectedText) => {
+    const { container } = render(<HighlightedText text={text} highlight={highlight} />);
     const strong = container.querySelector("strong");
     expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("React");
-  });
-
-  it("highlights matching text with different case", () => {
-    const { container } = render(<HighlightedText text="TypeScript" highlight="SCRIPT" />);
-
-    const strong = container.querySelector("strong");
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("Script");
+    expect(strong).toHaveTextContent(expectedText);
   });
 
   it("highlights multiple occurrences", () => {
@@ -43,7 +41,7 @@ describe("HighlightedText Component", () => {
     );
 
     const strongs = container.querySelectorAll("strong");
-    expect(strongs.length).toBe(2);
+    expect(strongs).toHaveLength(2);
     expect(strongs[0]).toHaveTextContent("React");
     expect(strongs[1]).toHaveTextContent("React");
   });
@@ -74,30 +72,6 @@ describe("HighlightedText Component", () => {
     expect(container.textContent).toBe("JavaScript");
   });
 
-  it("handles special regex characters in highlight", () => {
-    const { container } = render(<HighlightedText text="C++ Programming" highlight="C++" />);
-
-    const strong = container.querySelector("strong");
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("C++");
-  });
-
-  it("handles parentheses in highlight", () => {
-    const { container } = render(<HighlightedText text="Function (test)" highlight="(test)" />);
-
-    const strong = container.querySelector("strong");
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("(test)");
-  });
-
-  it("handles brackets in highlight", () => {
-    const { container } = render(<HighlightedText text="Array [1, 2, 3]" highlight="[1, 2, 3]" />);
-
-    const strong = container.querySelector("strong");
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("[1, 2, 3]");
-  });
-
   it("does not highlight when no match found", () => {
     const { container } = render(<HighlightedText text="Hello World" highlight="xyz" />);
 
@@ -113,14 +87,6 @@ describe("HighlightedText Component", () => {
 
     const span = container.querySelector("span");
     expect(span).toHaveClass("text-blue-500");
-
-    const strong = container.querySelector("strong");
-    expect(strong).toBeInTheDocument();
-    expect(strong).toHaveTextContent("React");
-  });
-
-  it("handles whitespace in text", () => {
-    const { container } = render(<HighlightedText text="  React   Native  " highlight="React" />);
 
     const strong = container.querySelector("strong");
     expect(strong).toBeInTheDocument();

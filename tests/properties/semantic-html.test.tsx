@@ -59,7 +59,7 @@ describe("Property 13: Semantic HTML Structure", () => {
 
         // Should have exactly one h1
         const h1Elements = container.querySelectorAll("h1");
-        expect(h1Elements.length).toBe(1);
+        expect(h1Elements).toHaveLength(1);
 
         // h1 should be the first heading
         const firstHeading = container.querySelector("h1, h2, h3, h4, h5, h6");

@@ -170,24 +170,15 @@ describe("ComponentGalleryClient", () => {
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
   });
 
-  it("renders button variants", () => {
+  it.each([
+    ["variants", ["Primary", "Secondary", "Ghost"]],
+    ["sizes", ["Small", "Medium", "Large"]],
+    ["states", ["Disabled", "Loading"]],
+  ] as const)("renders button %s", (_label, texts) => {
     renderWithIntl();
-    expect(screen.getByText("Primary")).toBeInTheDocument();
-    expect(screen.getByText("Secondary")).toBeInTheDocument();
-    expect(screen.getByText("Ghost")).toBeInTheDocument();
-  });
-
-  it("renders button sizes", () => {
-    renderWithIntl();
-    expect(screen.getByText("Small")).toBeInTheDocument();
-    expect(screen.getByText("Medium")).toBeInTheDocument();
-    expect(screen.getByText("Large")).toBeInTheDocument();
-  });
-
-  it("renders button states", () => {
-    renderWithIntl();
-    expect(screen.getByText("Disabled")).toBeInTheDocument();
-    expect(screen.getByText("Loading")).toBeInTheDocument();
+    texts.forEach((text) => {
+      expect(screen.getByText(text)).toBeInTheDocument();
+    });
   });
 
   it("opens and closes basic modal", async () => {
@@ -218,17 +209,20 @@ describe("ComponentGalleryClient", () => {
     });
   });
 
-  it("opens and closes confirmation modal", async () => {
+  it.each([
+    ["confirmation", "Confirmation Modal", "Confirm Action"],
+    ["info", "Info Modal", "Information"],
+    ["form", "Form Modal", "Contact Form"],
+  ] as const)("opens and closes %s modal", async (_label, openButtonText, modalText) => {
     const user = userEvent.setup();
     renderWithIntl();
 
-    // Click the confirmation modal button
-    const openButton = screen.getByText("Confirmation Modal");
+    const openButton = screen.getByText(openButtonText);
     await user.click(openButton);
 
     // Modal should be visible
     await waitFor(() => {
-      expect(screen.getByText("Confirm Action")).toBeInTheDocument();
+      expect(screen.getByText(modalText)).toBeInTheDocument();
     });
 
     // Close the modal
@@ -237,53 +231,7 @@ describe("ComponentGalleryClient", () => {
 
     // Modal should be hidden
     await waitFor(() => {
-      expect(screen.queryByText("Confirm Action")).not.toBeInTheDocument();
-    });
-  });
-
-  it("opens and closes info modal", async () => {
-    const user = userEvent.setup();
-    renderWithIntl();
-
-    // Click the info modal button
-    const openButton = screen.getByText("Info Modal");
-    await user.click(openButton);
-
-    // Modal should be visible
-    await waitFor(() => {
-      expect(screen.getByText("Information")).toBeInTheDocument();
-    });
-
-    // Close the modal
-    const closeButton = screen.getByText("Close");
-    await user.click(closeButton);
-
-    // Modal should be hidden
-    await waitFor(() => {
-      expect(screen.queryByText("Information")).not.toBeInTheDocument();
-    });
-  });
-
-  it("opens and closes form modal", async () => {
-    const user = userEvent.setup();
-    renderWithIntl();
-
-    // Click the form modal button
-    const openButton = screen.getByText("Form Modal");
-    await user.click(openButton);
-
-    // Modal should be visible
-    await waitFor(() => {
-      expect(screen.getByText("Contact Form")).toBeInTheDocument();
-    });
-
-    // Close the modal
-    const closeButton = screen.getByText("Close");
-    await user.click(closeButton);
-
-    // Modal should be hidden
-    await waitFor(() => {
-      expect(screen.queryByText("Contact Form")).not.toBeInTheDocument();
+      expect(screen.queryByText(modalText)).not.toBeInTheDocument();
     });
   });
 

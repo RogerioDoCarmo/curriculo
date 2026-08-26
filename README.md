@@ -1,5 +1,9 @@
 # Personal Resume Website
 
+🌐 **Live:** <https://rogeriodocarmo.com/>
+
+🔗 **Personal Hub:** [rogeriodocarmo.github.io](https://rogeriodocarmo.github.io/) ([source](https://github.com/RogerioDoCarmo/RogerioDoCarmo.github.io)) — a lightweight static hub that points back to this site, links my other projects, and permanently hosts documents I need to keep online, like the privacy policy for my **Miroji** app.
+
 <!-- Build & Deployment Status -->
 
 [![CI](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml/badge.svg)](https://github.com/RogerioDoCarmo/curriculo/actions/workflows/ci.yml)
@@ -8,7 +12,6 @@
 <!-- Code Quality -->
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=RogerioDoCarmo_curriculo)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RogerioDoCarmo_curriculo&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RogerioDoCarmo_curriculo)
@@ -16,19 +19,21 @@
 
 <!-- Tech Stack -->
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.2.4-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18-61dafb?logo=react)](https://reactjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2.6-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
 [![PWA](https://img.shields.io/badge/PWA-Enabled-5A0FC8?logo=pwa&logoColor=white)](https://rogeriodocarmo.com)
+[![Vercel Speed Insights](https://img.shields.io/badge/Vercel-Speed_Insights-000000?logo=vercel&logoColor=white)](https://vercel.com/docs/speed-insights)
+[![Vercel Analytics](https://img.shields.io/badge/Vercel-Web_Analytics-000000?logo=vercel&logoColor=white)](https://vercel.com/docs/analytics)
 
 <!-- Project Info -->
 
 [![GitHub Release](https://img.shields.io/github/v/release/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/RogerioDoCarmo/curriculo?cacheSeconds=3600)](https://github.com/RogerioDoCarmo/curriculo/stargazers)
 [![Open Issues](https://img.shields.io/github/issues/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/issues)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-green?logo=node.js)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D24.0.0-green?logo=node.js)](https://nodejs.org/)
 [![Code Size](https://img.shields.io/github/languages/code-size/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo)
 [![Last Commit](https://img.shields.io/github/last-commit/RogerioDoCarmo/curriculo)](https://github.com/RogerioDoCarmo/curriculo/commits/main)
 
@@ -38,9 +43,60 @@
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97706?logo=anthropic&logoColor=white)](https://claude.ai/code)
 [![Chromatic](https://img.shields.io/badge/storybook-chromatic-FC521F?logo=storybook&logoColor=white)](https://www.chromatic.com/builds?appId=6a1b4e8a78d533ad545f5bc0)
 
-A modern, responsive personal resume website built with Next.js 16.2.4, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+<!-- Content Protection -->
+
+[![DMCA.com Protection Status](https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)](https://www.dmca.com/Protection/Status.aspx?ID=79db3b92-8bad-4179-a596-0b5a5ff92364)
+
+A modern, responsive personal resume website built with Next.js 16.2.6, TypeScript, and Tailwind CSS. This website serves as both a professional portfolio and a functional resume, optimized for recruiters, AI agents, and human visitors.
+
+[![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
 
 > **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
+
+<!-- -->
+
+> **🛡️ Content Protection**: This site is registered with [DMCA.com](https://www.dmca.com/), a third-party copyright-protection service unrelated to DMARC (the site's separate email-authentication setup — see [`docs/security-remediation/TASKS-1-3.md`](./docs/security-remediation/TASKS-1-3.md)). The badge above links to a live status page verifying registration, and lets DMCA.com file takedowns on my behalf if this site's original content (text, images, the résumé/dissertation PDFs) is republished elsewhere without permission.
+
+## 🎬 Demo
+
+[![Walkthrough demo — rogeriodocarmo.com](showcase-media/walkthrough-video-image-thumbnail.png)](https://rogeriodocarmo.com)
+
+A guided walkthrough of the live site, captured at two viewport sizes. It covers dark mode, the three languages (PT / EN / ES), the project and INCT (master's research) image galleries, the interactive experience timeline, the **Used in this site** tech‑stack page, the **Storybook published on Chromatic**, and the downloadable résumé (PDF).
+
+**Responsive — mobile & desktop, side by side:**
+
+<video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-combined.mp4" controls muted width="100%"></video>
+
+<details>
+<summary>Individual recordings (mobile · desktop)</summary>
+
+<table>
+  <tr>
+    <td align="center"><b>📱 Mobile</b></td>
+    <td align="center"><b>🖥️ Desktop</b></td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-mobile.mp4" controls muted width="100%"></video>
+    </td>
+    <td width="50%">
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-desktop.mp4" controls muted width="100%"></video>
+    </td>
+  </tr>
+</table>
+
+</details>
+
+> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
+
+## 📢 LinkedIn Posts
+
+Announcements about this site's launch and new features, kept here for reference and cross-linking between posts.
+
+| Date       | Topic                    | Link                                                                                                                              |
+| ---------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-28 | Site launch              | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_desenvolvimentoweb-nextjs-pix-ugcPost-7477162179394465792-dB1H/)    |
+| 2026-08-01 | Scroll minimap navigator | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_nextjs-typescript-acessibilidade-ugcPost-7489457588682743808-vOrL/) |
 
 ## Development Progress
 
@@ -98,16 +154,16 @@ This website can be installed as a Progressive Web App on mobile devices, provid
 - **iOS**: Safari → Share → "Add to Home Screen"
 - **Android**: Chrome → Menu → "Add to Home screen" or "Install app"
 
-See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
+See [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) for technical details.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.2.4 (App Router) with TypeScript
+- **Framework**: Next.js 16.2.6 (App Router) with TypeScript
 - **Styling**: Tailwind CSS + CSS Modules
 - **Content**: Markdown files with Gray-matter parsing
 - **Internationalization**: next-intl 4.9.2
 - **PWA**: Web App Manifest for mobile installation
-- **Testing**: Jest, React Testing Library, Playwright, fast-check
+- **Testing**: Jest, React Testing Library, Playwright, fast-check, Stryker (mutation testing)
 - **Component Documentation**: Storybook 8
 - **Analytics**: Firebase Analytics + Vercel Analytics
 - **Error Monitoring**: Firebase Crashlytics + Sentry
@@ -117,7 +173,7 @@ See [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) for techn
 - **Deployment**: Vercel with custom domains
 - **Code Quality**: ESLint, Prettier, TypeScript strict mode
 
-> **Note**: Recently upgraded from Next.js 14 to 16.2.4 for security fixes and performance improvements. See [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) for details.
+> **Note**: Upgraded from Next.js 14 to 16.2.6 for security fixes and performance improvements.
 
 ## Project Structure
 
@@ -172,7 +228,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full breakdown of patterns, lay
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 24+
 - npm or yarn
 - Git
 
@@ -249,6 +305,9 @@ npm run test:e2e
 # Run property-based tests
 npm run test:properties
 
+# Run mutation tests (Stryker — measures test quality, scoped to lib/)
+npm run test:mutation
+
 # Run Lighthouse performance tests (all-in-one: builds, serves, tests)
 npm run test:lighthouse:full
 
@@ -259,7 +318,11 @@ npm run test:lighthouse         # Terminal 2
 
 **Note**: Lighthouse tests must run against the production build (`npm run serve`), not the dev server (`npm run dev`). Use `test:lighthouse:full` for convenience.
 
-See [TESTING.md](./TESTING.md) for comprehensive testing guidelines and best practices.
+See [TESTING.md](./docs/testing/TESTING.md) for comprehensive testing guidelines and best practices.
+
+## Résumé PDF Pipeline
+
+The downloadable résumé PDFs (EN/ES/pt-BR) served from `public/resumes/` are generated from plain-markdown source in [`docs/personal-notes/career/`](./docs/personal-notes/career/) — a small, git-tracked pipeline (`node docs/personal-notes/career/build-pdfs.mjs --publish`) that renders each `resume-*.md` to HTML and prints it to PDF with Playwright/Chromium, replicating the original Word template's layout, colors, and typography. The template font is [Carlito](https://fonts.google.com/specimen/Carlito) rather than Calibri, since Calibri is Microsoft-licensed and can't be redistributed via a public git repo — see that folder's [README](./docs/personal-notes/career/README.md) for the full rationale and the constrained markdown syntax it supports.
 
 ## Deployment
 
@@ -278,6 +341,10 @@ The website is deployed on Vercel with automatic deployments from the main branc
 - rogeriodocarmo.xyz
 
 See [docs/DOMAINS.md](./docs/DOMAINS.md) for complete domain configuration and management guide.
+
+### GitHub Releases (Source Snapshots)
+
+Every `v*.*.*` tag also publishes a [GitHub Release](https://github.com/RogerioDoCarmo/curriculo/releases) with a `dist` archive (the built static export) and checksums. **These release builds intentionally ship with zero `NEXT_PUBLIC_*` secrets** — Firebase and Sentry stay unconfigured in that artifact by design, since release archives are public and downloadable and we don't bake runtime credentials into them. The live site at [rogeriodocarmo.com](https://rogeriodocarmo.com) is deployed separately via Vercel, which injects the real production environment variables at build time.
 
 ## SEO & Search Engine Submission
 
@@ -318,8 +385,6 @@ The website is fully optimized for search engines and submitted to major search 
 
 ### 📚 Documentation
 
-- [docs/SEO-MONITORING-COMPLETION-LOG.md](./docs/SEO-MONITORING-COMPLETION-LOG.md) - **✅ Monitoring setup completion log**
-- [docs/SEARCH-VISIBILITY-TEST.md](./docs/SEARCH-VISIBILITY-TEST.md) - **Latest search visibility test results**
 - [docs/URL-INSPECTION-MONITORING-GUIDE.md](./docs/URL-INSPECTION-MONITORING-GUIDE.md) - **Complete URL inspection and monitoring setup**
 - [docs/URL-INSPECTION-QUICK-CHECKLIST.md](./docs/URL-INSPECTION-QUICK-CHECKLIST.md) - **Quick checklist for monitoring setup**
 - [docs/GOOGLE-SEARCH-CONSOLE-SETUP.md](./docs/GOOGLE-SEARCH-CONSOLE-SETUP.md) - Complete GSC setup guide
@@ -351,12 +416,13 @@ See `.env.example` for required environment variables. Create `.env.local` for l
 ## Code Quality
 
 - **Test Coverage**: Minimum 80% enforced in CI/CD
+- **Mutation Testing**: Stryker on `lib/` (50% break threshold), non-blocking signal on pull requests and deploys
 - **Code Quality**: SonarQube with 90% quality rating (A) requirement
 - **Linting**: ESLint with Next.js recommended rules
 - **Formatting**: Prettier with consistent formatting
 - **Type Safety**: TypeScript strict mode
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for code style guidelines and development workflow.
+See [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) for code style guidelines and development workflow.
 
 ## License
 
@@ -365,15 +431,15 @@ MIT
 ## Documentation
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
-- [TESTING.md](./TESTING.md) - Comprehensive testing guide and best practices
-- [CONTRIBUTING.md](./CONTRIBUTING.md) - Code style guidelines and development workflow
-- [PWA-MANIFEST-IMPLEMENTATION.md](./PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
+- [TESTING.md](./docs/testing/TESTING.md) - Comprehensive testing guide and best practices
+- [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) - Code style guidelines and development workflow
+- [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
 - [docs/BADGES.md](./docs/BADGES.md) - **Explanation of all quality badges** (16 badges)
 - [docs/GIT-WORKFLOW.md](./docs/GIT-WORKFLOW.md) - **Git workflow and branch protection guide** ⚠️
 - [docs/DOMAINS.md](./docs/DOMAINS.md) - **Domain configuration and management** (11 domains)
 - [docs/SEO-SUBMISSION-GUIDE.md](./docs/SEO-SUBMISSION-GUIDE.md) - Search engine submission guide
 - [docs/firebase-remote-config-setup.md](./docs/firebase-remote-config-setup.md) - **Firebase Remote Config setup and feature flags** 🚀
 - [docs/TOGGLE-FEATURE-FLAG.md](./docs/TOGGLE-FEATURE-FLAG.md) - **Quick reference for toggling feature flags** ⚡
-- [NEXTJS-16-UPGRADE-SUMMARY.md](./NEXTJS-16-UPGRADE-SUMMARY.md) - **Next.js 16.2.4 upgrade details** 🆕
 - [.kiro/docs/test-patterns.md](./.kiro/docs/test-patterns.md) - Quick reference for test patterns
+- [.kiro/docs/mutation-testing.md](./.kiro/docs/mutation-testing.md) - **Mutation testing (Stryker): setup, scope, thresholds, CI** 🧬
 - [.kiro/docs/code-quality-fixes.md](./.kiro/docs/code-quality-fixes.md) - Code quality improvements log

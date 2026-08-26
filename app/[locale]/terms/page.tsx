@@ -4,7 +4,7 @@ import { SUPPORTED_LOCALES } from "@/types/index";
 import type { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
@@ -204,6 +204,7 @@ function TermsOfUseContent() {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">{t("privacy.title")}</h2>
         <p className="mb-4">{t("privacy.description")}</p>
+        <p className="mb-4">{t("privacy.hosting")}</p>
         <p className="mb-4">
           {t("privacy.seeMore")}{" "}
           <a href="/privacy" className="text-blue-600 dark:text-blue-400 hover:underline">

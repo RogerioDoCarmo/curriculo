@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { LazyExitIntentModal } from "@/lib/lazy-components";
+import ScrollMinimap from "@/components/ScrollMinimap";
 import Hero from "@/components/Hero";
+import FeaturedExperience from "@/components/FeaturedExperience";
+import BanksSection from "@/components/BanksSection";
 import CareerPathSelector from "@/components/CareerPathSelector";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
+import AiStackSection from "@/components/AiStackSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactForm from "@/components/ContactForm";
-import BackToTopButton from "@/components/BackToTopButton";
 import type { Experience, Project, SkillCategory, CareerPath } from "@/types/index";
 
 interface HomePageContentProps {
@@ -45,20 +48,31 @@ export default function HomePageContent({
 
   return (
     <>
+      <ScrollMinimap />
+
       {/* Hero Section with Profile Photo */}
       <div className="bg-white dark:bg-gray-900">
         <Hero
           name="Rogério do Carmo"
           title={heroTitle}
-          locale={locale}
           greeting={heroGreeting}
           ctaText={heroCtaText}
           contactText={heroContactText}
         />
       </div>
 
+      {/* Featured experience (pinned above the career-path selector) */}
+      <div className="bg-white dark:bg-gray-900">
+        <FeaturedExperience experiences={experiences} locale={locale} now={now} />
+      </div>
+
+      {/* Banking Sector Impact — auto-scrolling carousel of client bank logos */}
+      <div className="bg-gray-50 dark:bg-gray-800/50">
+        <BanksSection />
+      </div>
+
       {/* Career Path Selector (Professional/Academic) */}
-      <div className="bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
             {tCareerPath("sectionTitle")}
@@ -67,8 +81,14 @@ export default function HomePageContent({
         </div>
       </div>
 
-      {/* Experience Section with Timeline */}
-      <div className="bg-white dark:bg-gray-900">
+      {/* Experience Section with Timeline — this is the panel the career-path
+          tabs control, so it carries the id/role referenced by their aria-controls. */}
+      <div
+        id="career-panel"
+        role="tabpanel"
+        aria-labelledby={careerPath === "professional" ? "tab-professional" : "tab-academic"}
+        className="bg-gray-50 dark:bg-gray-800/50"
+      >
         <ExperienceSection
           careerPath={careerPath}
           experiences={experiences}
@@ -78,18 +98,24 @@ export default function HomePageContent({
       </div>
 
       {/* Projects Portfolio Section */}
-      <div className="bg-gray-50 dark:bg-gray-800/50">
+      <div className="bg-white dark:bg-gray-900">
         <ProjectsSection projects={projects} locale={locale} />
       </div>
 
       {/* Skills Section */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <SkillsSection skills={skills} locale={locale} />
+      </div>
+
+      {/* AI Stack Section — tools used to build the site */}
+      <div className="bg-white dark:bg-gray-900">
+        <AiStackSection />
       </div>
 
       {/* Contact Form Section */}
       <section
         id="contact"
+        tabIndex={-1}
         aria-labelledby="contact-title"
         className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
       >
@@ -101,9 +127,6 @@ export default function HomePageContent({
           <ContactForm locale={locale} />
         </div>
       </section>
-
-      {/* Back to Top Button */}
-      <BackToTopButton />
 
       {/* Exit Intent Modal - Lazy loaded, client-side only */}
       <LazyExitIntentModal

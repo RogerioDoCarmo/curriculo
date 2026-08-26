@@ -34,6 +34,11 @@ const LOCALE_META: Record<SupportedLocale, { flag: string; label: string }> = {
   es: { flag: "🇪🇸", label: "Español" },
 };
 
+/** Native display name for a locale (e.g. "English", "Português (BR)"). */
+export function getLanguageName(locale: SupportedLocale): string {
+  return LOCALE_META[locale]?.label ?? locale;
+}
+
 /**
  * LanguageSelector component props
  */
@@ -42,9 +47,15 @@ interface LanguageSelectorProps {
   readonly currentLocale: SupportedLocale;
   /** Additional CSS classes to apply */
   readonly className?: string;
+  /** Localized accessible label / hover tooltip. Defaults to English. */
+  readonly label?: string;
 }
 
-export default function LanguageSelector({ currentLocale, className = "" }: LanguageSelectorProps) {
+export default function LanguageSelector({
+  currentLocale,
+  className = "",
+  label = "Select language",
+}: LanguageSelectorProps) {
   const { locale, setLocale, availableLocales } = useLanguage(currentLocale);
   const current = LOCALE_META[locale];
 
@@ -56,16 +67,17 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
     <div className={`relative inline-flex items-center print:hidden ${className}`}>
       <label htmlFor="language-selector" className="sr-only">
         {/* Accessible label — visible only to screen readers */}
-        Select language
+        {label}
       </label>
-      <span aria-hidden="true" className="mr-1 text-base">
+      <span aria-hidden="true" className="hidden text-base sm:mr-2 sm:inline">
         {current.flag}
       </span>
       <select
         id="language-selector"
         value={locale}
         onChange={handleChange}
-        aria-label="Select language"
+        aria-label={label}
+        title={label}
         className="
           appearance-none bg-transparent
           text-sm font-medium
@@ -90,7 +102,7 @@ export default function LanguageSelector({ currentLocale, className = "" }: Lang
       {/* Dropdown chevron */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground text-xs"
+        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground text-sm"
       >
         ▾
       </span>

@@ -9,45 +9,77 @@
  * Requirements: 4.1, 4.2, 4.3, 17.5, 24.1-24.10
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector, { getLanguageName } from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
+import FilterPulseButton from "@/components/FilterPulseButton";
+import { getFilterPulse } from "@/lib/filterPulses";
 import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
+import { useDialogElement } from "@/hooks/useDialogElement";
+import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { trackNavLinkClick, trackExternalLinkClick } from "@/lib/analytics";
+import { NAV_SECTIONS } from "@/lib/nav-sections";
 import type { SupportedLocale } from "@/types/index";
 
 interface HeaderProps {
   readonly locale: string;
 }
 
-const NAV_SECTIONS = ["home", "projects", "experience", "skills", "contact"] as const;
+/**
+ * Get the resume URL based on locale and feature flag.
+ * Mirrors the logic in Footer/ExitIntentModal so the navbar download serves
+ * the same locale-specific PDF.
+ */
+function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
+  if (!useLocaleSpecificPdfs) {
+    return "/resumes/resume-pt-BR.pdf";
+  }
+
+  const localeMap: Record<string, string> = {
+    "pt-BR": "/resumes/resume-pt-BR.pdf",
+    en: "/resumes/resume-en.pdf",
+    es: "/resumes/resume-es.pdf",
+  };
+
+  return localeMap[locale] || "/resumes/resume-pt-BR.pdf";
+}
 
 export default function Header({ locale }: HeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
+
+  // Localized tooltips: "Switch between dark and light mode (currently …)" and
+  // "Select language (currently …)". ThemeToggle picks the dark/light variant
+  // after mount; `label` is the theme-independent SSR fallback.
+  const themeToggleLabels = {
+    label: t("theme.switchLabel"),
+    darkModeLabel: t("theme.switchTooltip", { mode: t("theme.modeDark") }),
+    lightModeLabel: t("theme.switchTooltip", { mode: t("theme.modeLight") }),
+  };
+  const languageLabel = t("language.selectTooltip", {
+    language: getLanguageName(locale as SupportedLocale),
+  });
+  const filterPulseLabel = t(`filterPulse.${getFilterPulse().messageKey}.label`);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [_isMobile, _setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { isActive, navigateTo } = useAnchorNavigation([...NAV_SECTIONS]);
+
+  // Locale-specific resume PDF. Defaults to true to match the Remote Config
+  // defaultConfig so the correct PDF is served even before the flag resolves.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
+  const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
   // Check if we're on the home page (where anchor sections exist)
   // Home page paths: /{locale} or /{locale}/ or /{locale}#section
   const isHomePage = pathname === `/${locale}` || pathname === `/${locale}/`;
   const isTechStackPage = pathname?.includes("/tech-stack");
 
-  // Detect mobile viewport and set mounted flag
   useEffect(() => {
     setMounted(true);
-    function checkMobile() {
-      _setIsMobile(window.innerWidth < 768);
-    }
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   function openSidebar() {
@@ -57,6 +89,20 @@ export default function Header({ locale }: HeaderProps) {
   function closeSidebar() {
     setSidebarOpen(false);
   }
+
+  const sidebarRef = useDialogElement(sidebarOpen, closeSidebar);
+
+  function handleSidebarBackdropClick(e: MouseEvent<HTMLDialogElement>) {
+    if (e.target === sidebarRef.current) closeSidebar();
+  }
+
+  // Close the side menu when another control asks for it (e.g. the back-to-top
+  // floating button), so it doesn't stay open over the scrolled-to-top page.
+  useEffect(() => {
+    const close = () => setSidebarOpen(false);
+    window.addEventListener("app:close-sidebar", close);
+    return () => window.removeEventListener("app:close-sidebar", close);
+  }, []);
 
   function handleNavClick(section: string, label: string) {
     // Track navigation
@@ -89,8 +135,8 @@ export default function Header({ locale }: HeaderProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-md print:hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full bg-background border-b border-border shadow-md print:hidden px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="flex h-16 items-center justify-between">
           {/* Mobile: Hamburger button - Always render, hide with CSS on desktop */}
           <button
@@ -98,7 +144,7 @@ export default function Header({ locale }: HeaderProps) {
             aria-label={sidebarOpen ? "Close menu" : "Open menu"}
             onClick={sidebarOpen ? closeSidebar : openSidebar}
             className="
-              inline-flex items-center justify-center
+              inline-flex shrink-0 items-center justify-center
               w-9 h-9 rounded-md
               border border-border
               bg-transparent text-foreground
@@ -158,8 +204,52 @@ export default function Header({ locale }: HeaderProps) {
             )}
           </nav>
 
-          {/* Controls: GitHub + Linktree + LanguageSelector + ThemeToggle */}
+          {/* Controls: Resume + GitHub + Linktree + LanguageSelector + ThemeToggle */}
           <div className="flex items-center gap-2 ml-auto">
+            {/* Resume Download Link — grouped tightly with the other controls so
+                it sits clear of the mobile menu button (avoids accidental taps). */}
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("footer.downloadResumeLabel")}
+              title={t("footer.downloadResume")}
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: resumeUrl,
+                  context: "header_resume_download",
+                })
+              }
+              className="
+                inline-flex shrink-0 flex-col items-center justify-center gap-1 rounded-md px-2 py-1
+                text-gray-700 dark:text-gray-200
+                hover:text-primary-600 dark:hover:text-primary-400
+                hover:bg-gray-100 dark:hover:bg-gray-800
+                transition-colors duration-200
+                focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {/* Icon + label form one centered block, vertically aligned as a
+                  unit against the GitHub/Linktree controls. */}
+              <span className="text-sm font-medium leading-none hidden sm:block">
+                {t("nav.resume")}
+              </span>
+            </a>
+
             {/* GitHub Repository Link */}
             <a
               href="https://github.com/rogeriodocarmo/curriculo"
@@ -173,7 +263,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -207,7 +297,7 @@ export default function Header({ locale }: HeaderProps) {
                 })
               }
               className="
-                inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
+                hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md
                 text-gray-700 dark:text-gray-200
                 hover:text-primary-600 dark:hover:text-primary-400
                 hover:bg-gray-100 dark:hover:bg-gray-800
@@ -227,108 +317,106 @@ export default function Header({ locale }: HeaderProps) {
               </svg>
               <span className="text-sm font-medium hidden sm:inline">Linktree</span>
             </a>
-            <LanguageSelector currentLocale={locale as SupportedLocale} />
-            <ThemeToggle />
+            <LanguageSelector
+              currentLocale={locale as SupportedLocale}
+              className="mr-2"
+              label={languageLabel}
+            />
+            <ThemeToggle {...themeToggleLabels} />
+            <FilterPulseButton label={filterPulseLabel} className="ml-2" />
           </div>
         </div>
       </div>
 
-      {/* Mobile: Sidebar overlay */}
-      {sidebarOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            data-testid="sidebar-backdrop"
+      {/* Mobile: Sidebar overlay, driven imperatively by useDialogElement */}
+      <dialog
+        ref={sidebarRef}
+        aria-label="Navigation menu"
+        onClick={handleSidebarBackdropClick}
+        className="
+          hidden fixed top-0 left-0 z-50
+          h-full max-h-none w-64 max-w-none
+          bg-background border-r border-border
+          open:flex flex-col
+          animate-slide-in-left
+          backdrop:bg-black/50
+        "
+      >
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+          <span className="font-semibold text-foreground">Menu</span>
+          <button
+            type="button"
+            aria-label="Close menu"
             onClick={closeSidebar}
-            className="fixed inset-0 z-40 bg-black/50"
-            aria-hidden="true"
-          />
-
-          {/* Sidebar */}
-          <div
-            role="dialog"
-            aria-label="Navigation menu"
-            aria-modal="true"
             className="
-              fixed top-0 left-0 z-50
-              h-full w-64
-              bg-background border-r border-border
-              flex flex-col
-              animate-slide-in-left
+              inline-flex items-center justify-center
+              w-8 h-8 rounded-md
+              text-foreground
+              hover:bg-accent hover:text-accent-foreground
+              focus:outline-none focus:ring-2 focus:ring-ring
             "
           >
-            {/* Sidebar header */}
-            <div className="flex items-center justify-between h-16 px-4 border-b border-border">
-              <span className="font-semibold text-foreground">Menu</span>
-              <button
-                type="button"
-                aria-label="Close menu"
-                onClick={closeSidebar}
-                className="
-                  inline-flex items-center justify-center
-                  w-8 h-8 rounded-md
-                  text-foreground
+            <span aria-hidden="true" className="text-lg leading-none">
+              ✕
+            </span>
+          </button>
+        </div>
+
+        {/* Sidebar nav links */}
+        <nav className="flex flex-col gap-1 p-4 flex-1">
+          {navLinks.map(({ key, label, href, isExternal }) =>
+            isExternal ? (
+              <Link
+                key={key}
+                href={href}
+                onClick={() => {
+                  trackNavLinkClick({ link_text: label, link_url: href });
+                  closeSidebar();
+                }}
+                className={`
+                  px-3 py-2 rounded-md text-sm font-medium
+                  transition-colors duration-200
                   hover:bg-accent hover:text-accent-foreground
                   focus:outline-none focus:ring-2 focus:ring-ring
-                "
+                  ${isTechStackPage && key === "tech-stack" ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
+                `}
               >
-                <span aria-hidden="true" className="text-lg leading-none">
-                  ✕
-                </span>
-              </button>
-            </div>
+                {label}
+              </Link>
+            ) : (
+              <a
+                key={key}
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(key, label);
+                }}
+                className={`
+                  px-3 py-2 rounded-md text-sm font-medium
+                  transition-colors duration-200
+                  hover:bg-accent hover:text-accent-foreground
+                  focus:outline-none focus:ring-2 focus:ring-ring
+                  ${mounted && isActive(key) ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
+                `}
+              >
+                {label}
+              </a>
+            )
+          )}
+        </nav>
 
-            {/* Sidebar nav links */}
-            <nav className="flex flex-col gap-1 p-4 flex-1">
-              {navLinks.map(({ key, label, href, isExternal }) =>
-                isExternal ? (
-                  <Link
-                    key={key}
-                    href={href}
-                    onClick={() => {
-                      trackNavLinkClick({ link_text: label, link_url: href });
-                      closeSidebar();
-                    }}
-                    className={`
-                      px-3 py-2 rounded-md text-sm font-medium
-                      transition-colors duration-200
-                      hover:bg-accent hover:text-accent-foreground
-                      focus:outline-none focus:ring-2 focus:ring-ring
-                      ${isTechStackPage && key === "tech-stack" ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
-                    `}
-                  >
-                    {label}
-                  </Link>
-                ) : (
-                  <a
-                    key={key}
-                    href={href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(key, label);
-                    }}
-                    className={`
-                      px-3 py-2 rounded-md text-sm font-medium
-                      transition-colors duration-200
-                      hover:bg-accent hover:text-accent-foreground
-                      focus:outline-none focus:ring-2 focus:ring-ring
-                      ${mounted && isActive(key) ? "bg-accent text-accent-foreground font-semibold" : "text-foreground"}
-                    `}
-                  >
-                    {label}
-                  </a>
-                )
-              )}
-            </nav>
-
-            {/* Sidebar controls */}
-            <div className="flex items-center gap-2 p-4 border-t border-border">
-              <LanguageSelector currentLocale={locale as SupportedLocale} />
-              <ThemeToggle />
-            </div>
-          </div>
-        </>
-      )}
+        {/* Sidebar controls */}
+        <div className="flex items-center gap-2 p-4 border-t border-border">
+          <LanguageSelector
+            currentLocale={locale as SupportedLocale}
+            className="mr-2"
+            label={languageLabel}
+          />
+          <ThemeToggle {...themeToggleLabels} />
+          <FilterPulseButton label={filterPulseLabel} className="ml-2" />
+        </div>
+      </dialog>
     </header>
   );
 }

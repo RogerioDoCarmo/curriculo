@@ -1,8 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { TimelineItem, TimelineItemType } from "@/types/index";
 import MarkdownText from "@/components/MarkdownText";
+
+/**
+ * A button that expands/collapses a region. Rendered in two branches so
+ * aria-expanded is a literal "true"/"false" (static a11y linters reject
+ * aria-expanded={expr}). Defined at module scope so the JSX isn't a floating
+ * const inside the <ol>, which confuses list-structure linters.
+ */
+function ToggleButton({
+  expanded,
+  controlsId,
+  onClick,
+  className,
+  ariaLabel,
+  children,
+}: {
+  readonly expanded: boolean;
+  readonly controlsId: string;
+  readonly onClick: () => void;
+  readonly className: string;
+  readonly ariaLabel?: string;
+  readonly children: ReactNode;
+}) {
+  const props = {
+    "aria-controls": controlsId,
+    onClick,
+    className,
+    ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
+  };
+  return expanded ? (
+    <button type="button" {...props} aria-expanded="true">
+      {children}
+    </button>
+  ) : (
+    <button type="button" {...props} aria-expanded="false">
+      {children}
+    </button>
+  );
+}
 
 interface TimelineProps {
   readonly items: TimelineItem[];
@@ -53,9 +91,9 @@ export default function Timeline({
 
   if (!items || items.length === 0) {
     return (
-      <p className="text-gray-500 dark:text-gray-400" role="status">
+      <output className="block text-gray-500 dark:text-gray-400">
         No timeline items to display.
-      </p>
+      </output>
     );
   }
 
@@ -71,22 +109,34 @@ export default function Timeline({
         const { summary, details } = splitDescription(item.description);
         const hasDetails = details.length > 0;
         const isExpanded = expandedId === item.id;
+        const detailsId = `timeline-details-${item.id}`;
+        const toggle = () => setExpandedId(isExpanded ? null : item.id);
+        const markerClass = [
+          "absolute left-0 flex h-8 w-8 items-center justify-center rounded-full ring-4 ring-white dark:ring-gray-900",
+          typeColors[item.type],
+          item.highlighted ? "ring-primary-300 dark:ring-primary-700" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
 
         return (
           <li key={item.id} className="relative pl-12">
-            {/* Circular marker */}
-            <span
-              aria-label={typeLabels[item.type]}
-              className={[
-                "absolute left-0 flex h-8 w-8 items-center justify-center rounded-full ring-4 ring-white dark:ring-gray-900",
-                typeColors[item.type],
-                item.highlighted ? "ring-primary-300 dark:ring-primary-700" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <span className="sr-only">{typeLabels[item.type]}</span>
-            </span>
+            {/* Circular marker — also toggles the card when it has details */}
+            {hasDetails ? (
+              <ToggleButton
+                expanded={isExpanded}
+                controlsId={detailsId}
+                onClick={toggle}
+                ariaLabel={isExpanded ? collapseLabel : expandLabel}
+                className={`${markerClass} cursor-pointer focus:outline-none focus-visible:ring-primary-600`}
+              >
+                <span className="sr-only">{typeLabels[item.type]}</span>
+              </ToggleButton>
+            ) : (
+              <span aria-label={typeLabels[item.type]} className={markerClass}>
+                <span className="sr-only">{typeLabels[item.type]}</span>
+              </span>
+            )}
 
             {/* Date label */}
             <time
@@ -109,7 +159,18 @@ export default function Timeline({
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                    {item.title}
+                    {hasDetails ? (
+                      <ToggleButton
+                        expanded={isExpanded}
+                        controlsId={detailsId}
+                        onClick={toggle}
+                        className="rounded-md text-left transition-colors hover:text-primary-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:hover:text-primary-300"
+                      >
+                        {item.title}
+                      </ToggleButton>
+                    ) : (
+                      item.title
+                    )}
                   </h3>
                   {item.subtitle && (
                     <p className="mt-0.5 text-sm text-gray-600 dark:text-gray-400">
@@ -119,13 +180,12 @@ export default function Timeline({
                 </div>
 
                 {hasDetails && (
-                  <button
-                    type="button"
-                    aria-expanded={isExpanded}
-                    aria-controls={`timeline-details-${item.id}`}
-                    onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                  <ToggleButton
+                    expanded={isExpanded}
+                    controlsId={detailsId}
+                    onClick={toggle}
+                    ariaLabel={isExpanded ? collapseLabel : expandLabel}
                     className="shrink-0 rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                    aria-label={isExpanded ? collapseLabel : expandLabel}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +200,7 @@ export default function Timeline({
                         clipRule="evenodd"
                       />
                     </svg>
-                  </button>
+                  </ToggleButton>
                 )}
               </div>
 

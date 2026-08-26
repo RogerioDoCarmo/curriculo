@@ -7,10 +7,16 @@ import { trackHeroCTAClick, trackExternalLinkClick, trackFooterLinkClick } from 
 interface HeroProps {
   readonly name: string;
   readonly title: string;
-  readonly locale: string;
   readonly greeting: string;
   readonly ctaText: string;
   readonly contactText: string;
+}
+
+/** Picks the string for the current locale, defaulting to English. */
+function localize(locale: string, strings: { ptBR: string; es: string; en: string }): string {
+  if (locale === "pt-BR") return strings.ptBR;
+  if (locale === "es") return strings.es;
+  return strings.en;
 }
 
 export default function Hero({ name, title, greeting, ctaText, contactText }: HeroProps) {
@@ -21,9 +27,16 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
   const email =
     currentLocale === "pt-BR" ? "contato@rogeriodocarmo.com" : "contact@rogeriodocarmo.com";
 
+  const downloadDissertationLabel = localize(currentLocale, {
+    ptBR: "Baixar Dissertação (PDF)",
+    es: "Descargar Disertación (PDF)",
+    en: "Download Dissertation (PDF)",
+  });
+
   return (
     <section
       id="home"
+      tabIndex={-1}
       aria-label="Hero section"
       className="flex min-h-[80vh] items-center justify-center px-4 py-16 md:px-8 lg:px-16"
     >
@@ -51,15 +64,15 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 })
               }
               aria-label="UNESP - Universidade Estadual Paulista"
-              className="transition-opacity hover:opacity-80"
+              className="transition-opacity hover:opacity-80 dark:rounded-lg dark:bg-white dark:p-2 dark:shadow-sm"
             >
               <Image
                 src="/images/logos/logo_unesp.png"
                 alt="UNESP Logo"
                 width={1280}
                 height={427}
-                className="rounded w-[125px] h-auto"
                 priority
+                className="rounded w-31.25 h-auto"
               />
             </a>
             <div className="text-left">
@@ -75,13 +88,13 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 }
                 className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               >
-                {currentLocale === "pt-BR"
-                  ? "Bacharel em Ciência da Computação"
-                  : currentLocale === "es"
-                    ? "Licenciado en Ciencias de la Computación"
-                    : "Bachelor in Computer Science"}
+                {localize(currentLocale, {
+                  ptBR: "Bacharel em Ciência da Computação",
+                  es: "Licenciado en Ciencias de la Computación",
+                  en: "Bachelor in Computer Science",
+                })}
               </a>
-              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2018</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">UNESP - 2018</p>
               <a
                 href="https://www.fct.unesp.br/#!/pos-graduacao/--ciencias-cartograficas/"
                 target="_blank"
@@ -94,24 +107,24 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 }
                 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mt-2 hover:text-primary-600 dark:hover:text-primary-400 transition-colors inline-block"
               >
-                {currentLocale === "pt-BR"
-                  ? "Mestre em Ciências Cartográficas"
-                  : currentLocale === "es"
-                    ? "Máster en Ciencias Cartográficas"
-                    : "Master in Cartographic Sciences"}
+                {localize(currentLocale, {
+                  ptBR: "Mestre em Ciências Cartográficas",
+                  es: "Máster en Ciencias Cartográficas",
+                  en: "Master in Cartographic Sciences",
+                })}
               </a>
-              <p className="text-xs text-gray-500 dark:text-gray-400">UNESP - 2023</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">UNESP - 2023</p>
             </div>
           </div>
 
           {/* Dissertation Section */}
           <div className="mb-6">
             <p className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1 text-center md:text-left">
-              {currentLocale === "pt-BR"
-                ? "Dissertação de mestrado completa:"
-                : currentLocale === "es"
-                  ? "Disertación de maestría completa:"
-                  : "Complete master's dissertation:"}
+              {localize(currentLocale, {
+                ptBR: "Dissertação de mestrado completa:",
+                es: "Disertación de maestría completa:",
+                en: "Complete master's dissertation:",
+              })}
             </p>
             <div className="flex items-center justify-center md:justify-start mb-2">
               {/* Note: hdl.handle.net institutional repository only supports HTTP protocol */}
@@ -125,7 +138,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     context: "hero_dissertation_link",
                   })
                 }
-                className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 hover:underline flex items-center gap-1"
+                className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 hover:underline flex items-center gap-1"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -143,11 +156,11 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                   <polyline points="15 3 21 3 21 9" />
                   <line x1="10" y1="14" x2="21" y2="3" />
                 </svg>
-                {currentLocale === "pt-BR"
-                  ? "Avaliação da qualidade das medidas e posicionamento GNSS em smartphones Android"
-                  : currentLocale === "es"
-                    ? "Evaluación de la calidad de las medidas y posicionamiento GNSS en smartphones Android"
-                    : "Evaluation of GNSS measurement quality and positioning in Android smartphones"}
+                {localize(currentLocale, {
+                  ptBR: "Avaliação da qualidade das medidas e posicionamento GNSS em smartphones Android",
+                  es: "Evaluación de la calidad de las medidas y posicionamiento GNSS en smartphones Android",
+                  en: "Evaluation of GNSS measurement quality and positioning in Android smartphones",
+                })}
               </a>
             </div>
             {/* Download Dissertation Button */}
@@ -158,24 +171,17 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 rel="noopener noreferrer"
                 onClick={() =>
                   trackFooterLinkClick({
-                    link_text:
-                      currentLocale === "pt-BR"
-                        ? "Baixar Dissertação (PDF)"
-                        : currentLocale === "es"
-                          ? "Descargar Disertación (PDF)"
-                          : "Download Dissertation (PDF)",
+                    link_text: downloadDissertationLabel,
                     link_url: "/academic/masters_degree_dissertation_rogerio_do_carmo.pdf",
                     link_type: "dissertation_download",
                   })
                 }
-                aria-label={
-                  currentLocale === "pt-BR"
-                    ? "Baixar dissertação de mestrado em PDF"
-                    : currentLocale === "es"
-                      ? "Descargar disertación de maestría en PDF"
-                      : "Download master's dissertation in PDF"
-                }
-                className="inline-flex items-center gap-2 text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+                aria-label={localize(currentLocale, {
+                  ptBR: "Baixar dissertação de mestrado em PDF",
+                  es: "Descargar disertación de maestría en PDF",
+                  en: "Download master's dissertation in PDF",
+                })}
+                className="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -191,13 +197,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 >
                   <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <span>
-                  {currentLocale === "pt-BR"
-                    ? "Baixar Dissertação (PDF)"
-                    : currentLocale === "es"
-                      ? "Descargar Disertación (PDF)"
-                      : "Download Dissertation (PDF)"}
-                </span>
+                <span>{downloadDissertationLabel}</span>
               </a>
             </div>
           </div>
@@ -215,14 +215,14 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 })
               }
               aria-label="Topaz Evolution"
-              className="transition-opacity hover:opacity-80"
+              className="transition-opacity hover:opacity-80 dark:rounded-lg dark:bg-white dark:p-2 dark:shadow-sm"
             >
               <Image
                 src="/images/logos/logo_topaz.svg"
                 alt="Company Logo"
-                width={1280}
-                height={291}
-                className="rounded w-[200px] h-auto"
+                width={678}
+                height={235}
+                className="w-50 h-auto"
                 priority
               />
             </a>
@@ -239,11 +239,11 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                 }
                 className="text-base font-bold text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               >
-                {currentLocale === "pt-BR"
-                  ? "Desenvolvedor Mobile Sênior"
-                  : currentLocale === "es"
-                    ? "Desarrollador Mobile Senior"
-                    : "Senior Mobile Developer"}
+                {localize(currentLocale, {
+                  ptBR: "Desenvolvedor Mobile Sênior",
+                  es: "Desarrollador Mobile Senior",
+                  en: "Senior Mobile Developer",
+                })}
               </a>
               <a
                 href="https://www.topazevolution.com/"
@@ -255,13 +255,13 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                     context: "hero_topaz_date",
                   })
                 }
-                className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
+                className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
               >
-                {currentLocale === "pt-BR"
-                  ? "2023 - 2026 (3 anos)"
-                  : currentLocale === "es"
-                    ? "2023 - 2026 (3 años)"
-                    : "2023 - 2026 (3 years)"}
+                {localize(currentLocale, {
+                  ptBR: "2023 - 2026 (3 anos)",
+                  es: "2023 - 2026 (3 años)",
+                  en: "2023 - 2026 (3 years)",
+                })}
               </a>
             </div>
           </div>
@@ -275,7 +275,7 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
                   cta_action: "view_projects",
                 })
               }
-              className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600"
+              className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-3 text-lg font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 dark:bg-primary-600 dark:hover:bg-primary-700"
             >
               {ctaText}
             </a>
@@ -320,16 +320,13 @@ export default function Hero({ name, title, greeting, ctaText, contactText }: He
 
         {/* Profile photo */}
         <div className="shrink-0">
-          <div
-            className="relative h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48"
-            style={{ minHeight: "160px", minWidth: "160px" }}
-          >
+          <div className="relative h-40 w-40 min-h-40 min-w-40 sm:h-44 sm:w-44 md:h-48 md:w-48">
             <Image
               src="/images/profile/rogeriodocarmo.png"
               alt="Rogério do Carmo — Mobile React Native Developer"
               fill
               sizes="(max-width: 640px) 160px, (max-width: 768px) 176px, 192px"
-              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-200 dark:ring-primary-800"
+              className="rounded-lg object-cover object-top shadow-xl ring-4 ring-primary-500 dark:ring-primary-800"
               priority
             />
           </div>

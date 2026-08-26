@@ -137,6 +137,23 @@ jest.mock("@/hooks/useTheme", () => ({
   }),
 }));
 
+// Mock useFilterPulse hook
+jest.mock("@/hooks/useFilterPulse", () => ({
+  useFilterPulse: () => ({
+    phase: "idle",
+    origin: { x: 0, y: 0 },
+    maxRadius: 0,
+    activeFilterId: "sepia",
+    prefersReducedMotion: false,
+    durations: { expanding: 1050, holding: 500, contracting: 875 },
+    trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
+  }),
+}));
+
 // Mock useLanguage hook
 jest.mock("@/hooks/useLanguage", () => ({
   useLanguage: () => ({
@@ -210,7 +227,8 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
 
     const ariaLabel = button?.getAttribute("aria-label");
     expect(ariaLabel).toBeTruthy();
-    expect(ariaLabel).toMatch(/switch to (light|dark) mode/i);
+    // Default tooltip is "Switch between dark and light mode (currently …)".
+    expect(ariaLabel).toMatch(/switch between dark and light mode/i);
   });
 
   it("should ensure LanguageSelector has accessible label", () => {
@@ -234,11 +252,9 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
       </Modal>
     );
 
-    const dialog = container.querySelector('[role="dialog"]');
+    // Native <dialog> — role="dialog" is implicit, not a literal attribute.
+    const dialog = container.querySelector("dialog");
     expect(dialog).toBeTruthy();
-
-    // Should have aria-modal
-    expect(dialog?.getAttribute("aria-modal")).toBe("true");
 
     // Should have aria-labelledby when title is provided
     const ariaLabelledBy = dialog?.getAttribute("aria-labelledby");

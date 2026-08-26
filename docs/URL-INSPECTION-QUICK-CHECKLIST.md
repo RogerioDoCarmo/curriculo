@@ -170,7 +170,6 @@ Task 32.8 is complete when:
 For detailed instructions, see:
 
 - [URL Inspection & Monitoring Guide](./URL-INSPECTION-MONITORING-GUIDE.md) - Complete guide
-- [Search Visibility Test Results](./SEARCH-VISIBILITY-TEST.md) - Latest test results
 - [Google Search Console Setup](./GOOGLE-SEARCH-CONSOLE-SETUP.md) - GSC setup guide
 
 ---

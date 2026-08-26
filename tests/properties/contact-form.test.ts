@@ -148,7 +148,7 @@ describe("Property 7: Contact Form Accepts Valid Input", () => {
       fc.property(validFormDataArb, (formData) => {
         const result = validateContactForm(formData);
         expect(result.valid).toBe(true);
-        expect(Object.keys(result.errors).length).toBe(0);
+        expect(Object.keys(result.errors)).toHaveLength(0);
       }),
       { numRuns: 100 }
     );

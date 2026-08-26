@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Sync alerts to issues
         uses: actions/github-script@v9
@@ -56,7 +56,7 @@ jobs:
 
             console.log(`Filtered to ${filteredAlerts.length} alerts (severity: ${severityFilter})`);
 
-            // Get existing issues to avoid duplicates
+            // Get existing tracking issues
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -64,26 +64,55 @@ jobs:
               labels: 'security,dependabot'
             });
 
-            const existingAlertNumbers = issues
-              .map(issue => {
-                const match = issue.body?.match(/Alert #(\d+)/);
-                return match ? parseInt(match[1]) : null;
-              })
-              .filter(num => num !== null);
+            // Dedupe by GHSA ID rather than alert number: GitHub sometimes
+            // retires an alert and opens a new one under a different number
+            // when it revises an advisory (e.g. a patched-version update),
+            // which would otherwise create a duplicate issue and leave the
+            // old one open forever.
+            const ghsaFromBody = (body) => body?.match(/advisories\/(GHSA-[a-z0-9-]+)/i)?.[1] ?? null;
 
-            console.log(`Found ${existingAlertNumbers.length} existing issues for alerts`);
+            const issuesByGhsa = new Map();
+            for (const issue of issues) {
+              const ghsa = ghsaFromBody(issue.body);
+              if (ghsa) issuesByGhsa.set(ghsa, issue);
+            }
+
+            console.log(`Found ${issuesByGhsa.size} existing issues for alerts`);
+
+            // Close tracking issues whose alert is no longer open (fixed, dismissed, or superseded)
+            const openGhsas = new Set(alerts.map(alert => alert.security_advisory.ghsa_id));
+            let closedCount = 0;
+            for (const [ghsa, issue] of issuesByGhsa) {
+              if (openGhsas.has(ghsa)) continue;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `The Dependabot alert for \`${ghsa}\` is no longer open (fixed, dismissed, or superseded). Closing this tracking issue.`
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed'
+              });
+              console.log(`Closed issue #${issue.number} (${ghsa}, alert no longer open)`);
+              closedCount++;
+            }
 
             let createdCount = 0;
             let skippedCount = 0;
 
             // Create issues for alerts without existing issues
             for (const alert of filteredAlerts) {
-              if (existingAlertNumbers.includes(alert.number)) {
-                console.log(`Issue already exists for alert #${alert.number}, skipping`);
+              const ghsaId = alert.security_advisory.ghsa_id;
+              if (issuesByGhsa.has(ghsaId)) {
+                console.log(`Issue already exists for ${ghsaId} (alert #${alert.number}), skipping`);
                 skippedCount++;
                 continue;
               }
-              
+
               const severity = alert.security_advisory.severity.toUpperCase();
               const package_name = alert.security_vulnerability.package.name;
               const vulnerable_version = alert.security_vulnerability.vulnerable_version_range;
@@ -177,8 +206,9 @@ jobs:
                 ['Total Alerts', `${alerts.length}`],
                 ['Filtered Alerts', `${filteredAlerts.length}`],
                 ['Issues Created', `${createdCount}`],
-                ['Issues Skipped (already exist)', `${skippedCount}`]
+                ['Issues Skipped (already exist)', `${skippedCount}`],
+                ['Issues Closed (alert no longer open)', `${closedCount}`]
               ])
               .write();
 
-            console.log(`\n✅ Sync complete: ${createdCount} issues created, ${skippedCount} skipped`);
+            console.log(`\n✅ Sync complete: ${createdCount} issues created, ${skippedCount} skipped, ${closedCount} closed`);

@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -33,13 +33,70 @@ jobs:
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 $TAG_NAME^ 2>/dev/null || echo "")
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build static site (dist)
+        # Deliberately built with NO NEXT_PUBLIC_* secrets: release archives are
+        # public, downloadable artifacts, and we don't bake runtime credentials
+        # (Firebase, Sentry, etc.) into them. Firebase/Sentry stay unconfigured
+        # in this build. The live site is deployed separately via Vercel, which
+        # injects the real production env vars at build time.
+        run: npm run build
+
+      - name: Package release artifacts (dist) with checksums
+        id: artifacts
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag_info.outputs.tag_name }}"
+          PREFIX="${{ github.event.repository.name }}-${TAG}"
+
+          # Dist archives: the built static export (contents of out/).
+          tar -czf "${PREFIX}-dist.tar.gz" -C out .
+          ( cd out && zip -qr "../${PREFIX}-dist.zip" . )
+
+          # One checksum file per archive: <archive-filename>_checksums.txt (sha256 + sha512).
+          for f in "${PREFIX}-dist.tar.gz" "${PREFIX}-dist.zip"; do
+            { sha256sum "$f"; sha512sum "$f"; } > "${f}_checksums.txt"
+          done
+
+          echo "prefix=${PREFIX}" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.tag_info.outputs.tag_name }}
-          body: ${{ steps.tag_info.outputs.tag_message }}
+          body: |
+            ${{ steps.tag_info.outputs.tag_message }}
+
+            ---
+
+            **Security note:** The `dist` archive below is built with **no**
+            `NEXT_PUBLIC_*` secrets (Firebase, Sentry, etc.) — it's a public,
+            downloadable artifact and we don't bake runtime credentials into it.
+            Firebase/Sentry are unconfigured in this build by design. The live
+            site is deployed separately via Vercel, which injects the real
+            production environment variables at build time.
           draft: false
           prerelease: false
+          files: |
+            ${{ steps.artifacts.outputs.prefix }}-dist.tar.gz
+            ${{ steps.artifacts.outputs.prefix }}-dist.tar.gz_checksums.txt
+            ${{ steps.artifacts.outputs.prefix }}-dist.zip
+            ${{ steps.artifacts.outputs.prefix }}-dist.zip_checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -47,4 +104,5 @@ jobs:
         run: |
           echo "✅ GitHub Release created successfully!"
           echo "📦 Release: ${{ steps.tag_info.outputs.tag_name }}"
+          echo "🗜️  Assets: dist (.tar.gz/.zip) each with a *_checksums.txt"
           echo "🔗 URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.tag_info.outputs.tag_name }}"

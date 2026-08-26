@@ -16,11 +16,15 @@ test.describe("Basic Navigation", () => {
   test("should load the homepage successfully", async ({ page }) => {
     await page.goto("/");
 
+    // WebKit can briefly report an empty document title until the page finishes
+    // loading, so wait for network idle before asserting the title.
+    await page.waitForLoadState("networkidle");
+
     // Verify page loaded - title varies by language
     // pt-BR: "Rogério do Carmo | Desenvolvedor React Native Mobile"
     // en: "Rogério do Carmo | Mobile React Native Developer"
     // es: "Rogério do Carmo | Desarrollador React Native Mobile"
-    await expect(page).toHaveTitle(/Rogério do Carmo/i);
+    await expect(page).toHaveTitle(/Rogério do Carmo/i, { timeout: 10000 });
 
     // Verify main heading is visible (varies by locale)
     // pt-BR: "Site de Currículo Pessoal"

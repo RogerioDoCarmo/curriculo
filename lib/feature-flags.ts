@@ -14,7 +14,6 @@
 
 import { getFirebaseRemoteConfig } from "./firebase";
 import { trackFeatureFlagChecked } from "./analytics";
-import type { RemoteConfig as _RemoteConfig, Value as _Value } from "firebase/remote-config";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -51,6 +50,13 @@ const CACHE_TTL = 5 * 60 * 1000;
  */
 export function clearFeatureFlagCache(): void {
   featureFlagCache.clear();
+}
+
+/** Tracks flag usage with analytics, when tracking is enabled for this call. */
+function trackFlagUsage(trackUsage: boolean, key: string, value: FeatureFlagValue): void {
+  if (trackUsage) {
+    trackFeatureFlagChecked({ flag_name: key, flag_value: value });
+  }
 }
 
 // ─── Feature Flag Retrieval ───────────────────────────────────────────────────
@@ -96,13 +102,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
     // Check cache first
     const cached = featureFlagCache.get(key);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      // Track cached flag usage
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: cached.value,
-        });
-      }
+      trackFlagUsage(trackUsage, key, cached.value);
       return cached.value as T;
     }
 
@@ -111,34 +111,39 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
 
     // If Remote Config is unavailable (SSR, missing config, etc.), return default
     if (!remoteConfig) {
-      // Track default value usage
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: defaultValue,
-        });
-      }
+      trackFlagUsage(trackUsage, key, defaultValue);
       return defaultValue;
     }
 
-    // Fetch and activate Remote Config
+    // Fetch and activate Remote Config (best-effort).
+    //
+    // `fetchAndActivate` resolves to `false` when no *new* config was activated —
+    // e.g. within the `minimumFetchInterval`, or when the freshly fetched values
+    // match the already-active config (which persists across sessions in
+    // IndexedDB). That does NOT mean there is no value to read: previously
+    // activated remote values and the in-app `defaultConfig` remain available via
+    // `getValue`. So we never branch on the returned boolean — we always read the
+    // active value below. Gating on `!activated` was the bug that collapsed
+    // locale-specific resume PDFs to the generic default on repeat visits.
     const { fetchAndActivate, getValue } = await import("firebase/remote-config");
-    const activated = await fetchAndActivate(remoteConfig);
 
-    // If no new values were fetched, return default
-    if (!activated) {
-      // Track default value usage
-      if (trackUsage) {
-        trackFeatureFlagChecked({
-          flag_name: key,
-          flag_value: defaultValue,
-        });
-      }
-      return defaultValue;
+    try {
+      await fetchAndActivate(remoteConfig);
+    } catch (fetchError) {
+      // A failed fetch still leaves `defaultConfig` (and any persisted activated
+      // values) readable via `getValue`, so fall through rather than abort.
+      console.warn(`[FeatureFlags] fetchAndActivate failed for "${key}":`, fetchError);
     }
 
-    // Get the flag value
+    // Read the active value: remote → previously activated → in-app defaultConfig.
     const value = getValue(remoteConfig, key);
+
+    // A "static" source means the key is configured in neither Remote Config nor
+    // `defaultConfig`; honour the caller's default in that case.
+    if (value.getSource() === "static") {
+      trackFlagUsage(trackUsage, key, defaultValue);
+      return defaultValue;
+    }
 
     // Convert to appropriate type based on default value type
     let flagValue: T;
@@ -157,13 +162,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
       timestamp: Date.now(),
     });
 
-    // Track flag usage
-    if (trackUsage) {
-      trackFeatureFlagChecked({
-        flag_name: key,
-        flag_value: flagValue,
-      });
-    }
+    trackFlagUsage(trackUsage, key, flagValue);
 
     return flagValue;
   } catch (error) {
@@ -171,12 +170,7 @@ export async function getFeatureFlag<T extends FeatureFlagValue>(
     console.warn(`[FeatureFlags] Failed to fetch flag "${key}":`, error);
 
     // Track default value usage on error
-    if (trackUsage) {
-      trackFeatureFlagChecked({
-        flag_name: key,
-        flag_value: defaultValue,
-      });
-    }
+    trackFlagUsage(trackUsage, key, defaultValue);
 
     // Return default value on any error
     return defaultValue;

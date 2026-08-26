@@ -24,7 +24,7 @@ jest.mock("@/hooks/useExitIntent", () => ({
 // Mock useFeatureFlag hook
 jest.mock("@/hooks/useFeatureFlag", () => ({
   useFeatureFlag: jest.fn(() => ({
-    value: false, // Default to false (single PDF for all locales)
+    value: false, // Default to false (feature flag disabled → default resume)
     loading: false,
     error: false,
   })),
@@ -61,7 +61,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
   });
 
   describe("Resume URL generation", () => {
-    it("should use single PDF for all locales when feature flag is false", () => {
+    it("should use default resume-pt-BR.pdf for all locales when feature flag is false", () => {
       const { rerender } = render(
         <NextIntlClientProvider locale="pt-BR" messages={messages}>
           <ExitIntentModal enabled={true} locale="pt-BR" />
@@ -73,7 +73,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       });
       fireEvent.click(downloadButton);
 
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
 
       mockWindowOpen.mockClear();
 
@@ -85,7 +85,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       );
 
       fireEvent.click(downloadButton);
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
 
       mockWindowOpen.mockClear();
 
@@ -97,13 +97,17 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       );
 
       fireEvent.click(downloadButton);
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
     });
 
-    it("should generate correct locale-specific URL for pt-BR", () => {
+    it.each([
+      ["pt-BR", "pt-BR"],
+      ["English", "en"],
+      ["Spanish", "es"],
+    ] as const)("should generate correct locale-specific URL for %s", (_label, locale) => {
       render(
-        <NextIntlClientProvider locale="pt-BR" messages={messages}>
-          <ExitIntentModal enabled={true} locale="pt-BR" />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ExitIntentModal enabled={true} locale={locale} />
         </NextIntlClientProvider>
       );
 
@@ -114,35 +118,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       expect(downloadButton).toBeInTheDocument();
     });
 
-    it("should generate correct locale-specific URL for English", () => {
-      render(
-        <NextIntlClientProvider locale="en" messages={messages}>
-          <ExitIntentModal enabled={true} locale="en" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      expect(downloadButton).toBeInTheDocument();
-    });
-
-    it("should generate correct locale-specific URL for Spanish", () => {
-      render(
-        <NextIntlClientProvider locale="es" messages={messages}>
-          <ExitIntentModal enabled={true} locale="es" />
-        </NextIntlClientProvider>
-      );
-
-      const downloadButton = screen.getByRole("button", {
-        name: /download resume/i,
-      });
-
-      expect(downloadButton).toBeInTheDocument();
-    });
-
-    it("should fallback to default resume.pdf for undefined locale", () => {
+    it("should fallback to default resume-pt-BR.pdf for undefined locale", () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <ExitIntentModal enabled={true} locale={undefined} />
@@ -154,10 +130,10 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       });
       fireEvent.click(downloadButton);
 
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
     });
 
-    it("should fallback to default resume.pdf for unsupported locale", () => {
+    it("should fallback to default resume-pt-BR.pdf for unsupported locale", () => {
       render(
         <NextIntlClientProvider locale="en" messages={messages}>
           <ExitIntentModal enabled={true} locale="fr" />
@@ -169,7 +145,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       });
       fireEvent.click(downloadButton);
 
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
     });
   });
 
@@ -202,7 +178,7 @@ describe.skip("ExitIntentModal - Resume URL Tests", () => {
       fireEvent.click(downloadButton);
 
       expect(mockWindowOpen).toHaveBeenCalledTimes(1);
-      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume.pdf", "_blank");
+      expect(mockWindowOpen).toHaveBeenCalledWith("/resumes/resume-pt-BR.pdf", "_blank");
     });
 
     it("should not dismiss modal after download button click", () => {

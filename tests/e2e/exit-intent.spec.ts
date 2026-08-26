@@ -39,7 +39,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -54,7 +54,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(500);
 
     // Verify modal does NOT appear
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).not.toBeVisible();
@@ -72,7 +72,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(500);
 
     // Verify modal does NOT appear on mobile
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).not.toBeVisible();
@@ -87,7 +87,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -119,7 +119,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -141,7 +141,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -163,7 +163,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -184,12 +184,14 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal has proper role
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]');
+    const modal = page.getByRole("dialog");
     await expect(modal).toBeVisible();
 
-    // Verify modal has aria-modal attribute
-    const ariaModal = await modal.getAttribute("aria-modal");
-    expect(ariaModal).toBe("true");
+    // Verify modal is a native <dialog> shown modally (role="dialog" and
+    // modal semantics are implicit once rendered via showModal(), not
+    // literal attributes).
+    await expect(modal).toHaveJSProperty("tagName", "DIALOG");
+    await expect(modal).toHaveJSProperty("open", true);
 
     // Verify close button is accessible
     const closeButton = modal.getByRole("button", { name: /close|fechar|cerrar/i });
@@ -205,7 +207,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -228,7 +230,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(500);
 
     // Verify modal does NOT appear
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).not.toBeVisible();
@@ -241,7 +243,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.mouse.move(500, 0);
     await page.waitForTimeout(200);
 
-    const modalEn = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modalEn = page.getByRole("dialog").filter({
       hasText: /before you go/i,
     });
     await expect(modalEn).toBeVisible();
@@ -258,7 +260,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.mouse.move(500, 0);
     await page.waitForTimeout(200);
 
-    const modalEs = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modalEs = page.getByRole("dialog").filter({
       hasText: /antes de irte/i,
     });
     await expect(modalEs).toBeVisible();
@@ -273,7 +275,7 @@ test.describe.skip("Exit Intent Detection", () => {
     await page.waitForTimeout(200);
 
     // Verify modal appears
-    const modal = page.locator('[role="dialog"], [role="alertdialog"]').filter({
+    const modal = page.getByRole("dialog").filter({
       hasText: /before you go|antes de sair|antes de irte/i,
     });
     await expect(modal).toBeVisible();
@@ -289,7 +291,7 @@ test.describe.skip("Exit Intent Detection", () => {
     // The focused element should be within the modal
     const isFocusInModal = await page.evaluate(() => {
       const activeEl = document.activeElement;
-      const modalEl = document.querySelector('[role="dialog"], [role="alertdialog"]');
+      const modalEl = document.querySelector("dialog");
       return modalEl?.contains(activeEl) ?? false;
     });
     expect(isFocusInModal).toBe(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { ContactFormData } from "@/types/index";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
@@ -38,6 +38,15 @@ function isValidEmail(email: string): boolean {
   return emailRegex.test(email);
 }
 
+/**
+ * ARIA props for a form field. Spreading literal-valued props keeps `aria-invalid`
+ * a literal "true" (omitted when the field is valid) and ties the field to its
+ * error message — so static a11y linters don't flag a dynamic `aria-invalid={expr}`.
+ */
+function fieldErrorAria(errorId: string, hasError: boolean) {
+  return hasError ? ({ "aria-invalid": "true", "aria-describedby": errorId } as const) : {};
+}
+
 export default function ContactForm({ locale }: ContactFormProps) {
   const t = useTranslations("forms");
   const footer = useTranslations("footer");
@@ -53,7 +62,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
   );
   const [touched, setTouched] = useState<Partial<Record<keyof ContactFormData, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [_submissionStartTime, setSubmissionStartTime] = useState<number>(0);
+  const submissionStartTimeRef = useRef<number>(0);
   const [showNotificationPrompt, setShowNotificationPrompt] = useState<boolean>(false);
 
   function validateForm(
@@ -135,7 +144,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
     });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     // Validate all fields
     const errs = validateForm(formData);
@@ -145,7 +154,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
 
     setStatus("submitting");
     const startTime = Date.now();
-    setSubmissionStartTime(startTime);
+    submissionStartTimeRef.current = startTime;
     trackFormSubmissionStart({ form_name: "contact_form" });
 
     const formId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID;
@@ -218,7 +227,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="mt-0.5 flex-shrink-0 text-primary-600 dark:text-primary-400"
+            className="mt-0.5 shrink-0 text-primary-600 dark:text-primary-400"
             aria-hidden="true"
           >
             <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -234,7 +243,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             >
               {email}
             </a>
-            <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">{t("orUseForm")}</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{t("orUseForm")}</p>
           </div>
         </div>
       </div>
@@ -258,8 +267,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             type="text"
             autoComplete="name"
             aria-required="true"
-            aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
-            aria-invalid={!!fieldErrors.name}
+            {...fieldErrorAria("contact-name-error", !!fieldErrors.name)}
             value={formData.name ?? ""}
             onChange={(e) => handleChange("name", e.target.value)}
             onFocus={() => handleFocus("name")}
@@ -276,7 +284,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-name-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.name}
             </p>
@@ -296,8 +304,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             type="email"
             autoComplete="email"
             aria-required="true"
-            aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
-            aria-invalid={!!fieldErrors.email}
+            {...fieldErrorAria("contact-email-error", !!fieldErrors.email)}
             value={formData.email ?? ""}
             onChange={(e) => handleChange("email", e.target.value)}
             onFocus={() => handleFocus("email")}
@@ -314,7 +321,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-email-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.email}
             </p>
@@ -333,8 +340,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             id="contact-message"
             rows={5}
             aria-required="true"
-            aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
-            aria-invalid={!!fieldErrors.message}
+            {...fieldErrorAria("contact-message-error", !!fieldErrors.message)}
             value={formData.message ?? ""}
             onChange={(e) => handleChange("message", e.target.value)}
             onFocus={() => handleFocus("message")}
@@ -351,7 +357,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
             <p
               id="contact-message-error"
               role="alert"
-              className="mt-1 text-xs text-red-600 dark:text-red-400"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
             >
               {fieldErrors.message}
             </p>
@@ -382,8 +388,10 @@ export default function ContactForm({ locale }: ContactFormProps) {
         <button
           type="submit"
           disabled={status === "submitting"}
-          aria-busy={status === "submitting"}
-          className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-500 dark:hover:bg-primary-600"
+          {...(status === "submitting"
+            ? ({ "aria-busy": "true" } as const)
+            : ({ "aria-busy": "false" } as const))}
+          className="inline-flex items-center justify-center rounded-md bg-primary-600 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-primary-600 dark:hover:bg-primary-700"
         >
           {status === "submitting" ? (
             <>

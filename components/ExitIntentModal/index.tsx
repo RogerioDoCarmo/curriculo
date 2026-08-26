@@ -24,6 +24,7 @@ import Button from "@/components/Button";
 import EmailSubscribeForm from "@/components/EmailSubscribeForm";
 import { useExitIntent } from "@/hooks/useExitIntent";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+import { trackExitIntentShown, trackExitIntentAction } from "@/lib/analytics";
 
 interface ExitIntentModalProps {
   readonly enabled?: boolean;
@@ -40,8 +41,8 @@ interface ExitIntentModalProps {
  */
 function getResumeUrl(locale?: string, useLocaleSpecificPdfs?: boolean): string {
   if (!useLocaleSpecificPdfs) {
-    // Use single PDF for all locales
-    return "/resumes/resume.pdf";
+    // Default resume when locale-specific PDFs are disabled
+    return "/resumes/resume-pt-BR.pdf";
   }
 
   // Use locale-specific PDFs
@@ -51,7 +52,7 @@ function getResumeUrl(locale?: string, useLocaleSpecificPdfs?: boolean): string 
     es: "/resumes/resume-es.pdf",
   };
 
-  return localeMap[locale || "pt-BR"] || "/resumes/resume.pdf";
+  return localeMap[locale || "pt-BR"] || "/resumes/resume-pt-BR.pdf";
 }
 
 export default function ExitIntentModal({
@@ -62,8 +63,10 @@ export default function ExitIntentModal({
 }: ExitIntentModalProps) {
   const t = useTranslations("exitIntent");
 
-  // Get feature flag for locale-specific PDFs
-  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
+  // Get feature flag for locale-specific PDFs. Defaults to true to match the
+  // in-app Remote Config defaultConfig, so the feature works even when Remote
+  // Config can't initialize; a remote value of false still acts as a kill-switch.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
@@ -76,28 +79,24 @@ export default function ExitIntentModal({
   // Track analytics when modal is shown
   useEffect(() => {
     if (showModal && typeof window !== "undefined") {
-      // TODO: Integrate with analytics service (Firebase Analytics, etc.)
-      // trackEvent('exit_intent_modal_shown');
+      trackExitIntentShown();
     }
   }, [showModal]);
 
   const handleDownloadResume = () => {
-    // TODO: Track download event with analytics
-    // trackEvent('exit_intent_resume_download');
+    trackExitIntentAction({ action: "download_resume" });
     window.open(resumeUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleConnectLinkedIn = () => {
-    // TODO: Track LinkedIn click with analytics
-    // trackEvent('exit_intent_linkedin_click');
+    trackExitIntentAction({ action: "connect_linkedin" });
     window.open(linkedInUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
 
   const handleStarGitHub = () => {
-    // TODO: Track GitHub star click with analytics
-    // trackEvent('exit_intent_github_click');
+    trackExitIntentAction({ action: "star_github" });
     window.open(githubUrl, "_blank", "noopener,noreferrer");
     // Don't dismiss modal - user may want to explore other options
   };
@@ -179,7 +178,9 @@ export default function ExitIntentModal({
         </div>
 
         {/* Footer note */}
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400">{t("footerNote")}</p>
+        <p className="text-sm text-center font-bold text-gray-500 dark:text-gray-400">
+          {t("footerNote")}
+        </p>
 
         {/* Email capture */}
         <div className="border-t border-border pt-4">

@@ -33,6 +33,23 @@ jest.mock("@/hooks/useTheme", () => ({
   }),
 }));
 
+// Mock useFilterPulse hook
+jest.mock("@/hooks/useFilterPulse", () => ({
+  useFilterPulse: () => ({
+    phase: "idle",
+    origin: { x: 0, y: 0 },
+    maxRadius: 0,
+    activeFilterId: "sepia",
+    prefersReducedMotion: false,
+    durations: { expanding: 1050, holding: 500, contracting: 875 },
+    trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
+  }),
+}));
+
 // Mock useLanguage hook
 jest.mock("@/hooks/useLanguage", () => ({
   useLanguage: () => ({

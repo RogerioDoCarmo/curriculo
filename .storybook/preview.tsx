@@ -1,20 +1,28 @@
 import React from "react";
+import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "../hooks/useTheme";
+import { FilterPulseProvider } from "../hooks/useFilterPulse";
+import messages from "../messages/en.json";
 import "../app/globals.css";
 
 /**
- * Global decorator that wraps all stories with ThemeProvider.
- * Required for any component that uses the useTheme hook.
+ * Global decorator that wraps all stories with the i18n (next-intl) and theme
+ * providers, so components using `useTranslations` or `useTheme` render in
+ * Storybook. Stories default to the English message catalog.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const withThemeProvider = (Story: React.ComponentType<any>) => (
-  <ThemeProvider>
-    <Story />
-  </ThemeProvider>
+const withProviders = (Story: React.ComponentType<any>) => (
+  <NextIntlClientProvider locale="en" messages={messages}>
+    <ThemeProvider>
+      <FilterPulseProvider>
+        <Story />
+      </FilterPulseProvider>
+    </ThemeProvider>
+  </NextIntlClientProvider>
 );
 
 const preview = {
-  decorators: [withThemeProvider],
+  decorators: [withProviders],
   parameters: {
     // Provide a mock Next.js router for all stories.
     // @storybook/nextjs-vite intercepts next/navigation hooks using this config.

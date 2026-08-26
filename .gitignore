@@ -119,6 +119,10 @@ coverage
 # nyc test coverage
 .nyc_output
 
+# Stryker mutation testing (temp dir + generated HTML report)
+.stryker-tmp/
+reports/mutation/
+
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#working-with-files)
 .grunt
 
@@ -174,3 +178,9 @@ chromatic.config.*
 *.tar.gz
 *.zip
 *-checksums.txt
+
+# Local operational docs (non-code, never commit)
+docs/security-remediation/
+docs/personal-notes/*
+# ...except the career docs, which are tracked so they're never lost
+!docs/personal-notes/career/

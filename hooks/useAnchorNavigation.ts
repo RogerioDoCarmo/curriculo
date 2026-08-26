@@ -33,10 +33,13 @@ export function useAnchorNavigation(sections: string[]): {
         // Update URL hash
         window.history.pushState(null, "", "#" + sectionId);
 
-        // Scroll to the section
+        // Scroll to the section, then move focus there (element needs
+        // tabIndex={-1} to accept it) so keyboard/screen-reader users get
+        // the same "you're here now" cue sighted users get from the scroll.
         const element = document.getElementById(sectionId);
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "start" });
+          element.focus({ preventScroll: true });
         }
       }
     },
@@ -63,6 +66,7 @@ export function useAnchorNavigation(sections: string[]): {
           const element = document.getElementById(section);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "start" });
+            element.focus({ preventScroll: true });
           }
         }
       }

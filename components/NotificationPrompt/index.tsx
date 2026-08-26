@@ -67,10 +67,9 @@ export default function NotificationPrompt({
   if (state !== "visible") return null;
 
   return (
-    <div
-      role="dialog"
+    <dialog
+      open
       aria-label="Notification permission request"
-      aria-modal="false"
       className="fixed bottom-4 left-4 z-50 max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800"
     >
       <p className="mb-3 text-sm text-gray-700 dark:text-gray-300">
@@ -80,7 +79,7 @@ export default function NotificationPrompt({
         <button
           type="button"
           onClick={handleAllow}
-          className="rounded-md bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+          className="rounded-md bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
         >
           Allow
         </button>
@@ -88,11 +87,11 @@ export default function NotificationPrompt({
           type="button"
           onClick={handleDismiss}
           aria-label="Dismiss notification prompt"
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
         >
           No thanks
         </button>
       </div>
-    </div>
+    </dialog>
   );
 }

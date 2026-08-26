@@ -5,13 +5,67 @@
  * using Node.js file system APIs. They are NOT intended for browser use.
  */
 
-import * as fs from "fs";
-import * as path from "path";
-import matter from "gray-matter";
-import type { Project, Experience, SkillCategory } from "@/types/index";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { load as loadYaml } from "js-yaml";
+import type { Project, Experience, ExperienceImage, SkillCategory } from "@/types/index";
 
 /** Default content root directory (relative to project root). */
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content");
+
+/**
+ * Intrinsic pixel dimensions for experience gallery images, keyed by src. Kept
+ * here (not duplicated in each locale's frontmatter) so the lightbox can size
+ * to the real aspect ratio instead of letterboxing inside a fixed height.
+ */
+const EXPERIENCE_IMAGE_DIMENSIONS: Record<string, { width: number; height: number }> = {
+  "/images/inct-project/inct-app-collect.png": { width: 566, height: 1200 },
+  "/images/inct-project/inct-app-post-processing.png": { width: 1000, height: 685 },
+  "/images/inct-project/inct-app-post-analyzer.png": { width: 1416, height: 848 },
+};
+
+/** Result of splitting a markdown file into YAML frontmatter and body. */
+interface ParsedFrontmatter {
+  readonly data: Record<string, unknown>;
+  readonly content: string;
+}
+
+/**
+ * Parses YAML frontmatter delimited by `---` at the start of a markdown file,
+ * returning the parsed `data` object and the remaining `content` body.
+ *
+ * Replaces the (unmaintained) `gray-matter` dependency with a direct js-yaml
+ * call. Files without a leading `---` delimiter (or with an unterminated block)
+ * yield `data: {}` and the original string as `content`, matching gray-matter's
+ * behaviour. YAML is parsed with js-yaml's safe-by-default `load`.
+ *
+ * @param raw - Raw file contents.
+ * @returns The parsed frontmatter `data` and the `content` after the closing delimiter.
+ */
+function parseFrontmatter(raw: string): ParsedFrontmatter {
+  // Strip a leading UTF-8 BOM if present.
+  const input = raw.codePointAt(0) === 0xfeff ? raw.slice(1) : raw;
+
+  // Frontmatter must open with a `---` delimiter on its own line.
+  if (!input.startsWith("---") || !/^[\r\n]/.test(input.slice(3))) {
+    return { data: {}, content: input };
+  }
+
+  const afterOpen = input.slice(3);
+  // Closing `---` on its own line (optionally trailing spaces/tabs).
+  const close = /\n---[ \t]*(\r?\n|$)/.exec(afterOpen);
+  if (!close) {
+    return { data: {}, content: input };
+  }
+
+  const yamlBlock = afterOpen.slice(0, close.index);
+  const content = afterOpen.slice(close.index + close[0].length);
+  const parsed = loadYaml(yamlBlock);
+  const data =
+    typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
+
+  return { data, content };
+}
 
 // ─── Validation helpers ───────────────────────────────────────────────────────
 
@@ -31,6 +85,34 @@ function requireField(
   }
 }
 
+/**
+ * Validates that a required field is present and non-empty, returning it
+ * coerced to a string (frontmatter values come back as `unknown` from the
+ * YAML parser — e.g. an unquoted date becomes a `Date`, not a `string`).
+ */
+function requireString(value: unknown, fieldName: string, filePath: string): string {
+  requireField(value, fieldName, filePath);
+  if (typeof value === "object" && !(value instanceof Date)) {
+    throw new TypeError(
+      `Content validation error in "${filePath}": field "${fieldName}" must be a scalar value, not an object or array.`
+    );
+  }
+  return String(value);
+}
+
+/** Coerces an optional frontmatter field to a string, or `undefined` if absent or not a scalar. */
+function optionalString(value: unknown): string | undefined {
+  if (typeof value === "object" && !(value instanceof Date)) return undefined;
+  return value ? String(value) : undefined;
+}
+
+/** Descending comparator for ISO-ish "YYYY-MM-DD" date strings. */
+function compareDateDesc(a: string, b: string): number {
+  if (a < b) return 1;
+  if (a > b) return -1;
+  return 0;
+}
+
 // ─── Projects ────────────────────────────────────────────────────────────────
 
 /**
@@ -42,6 +124,26 @@ function requireField(
  * @returns Sorted array of {@link Project} objects.
  * @throws If a file has missing required fields.
  */
+/** Parses and validates a single project markdown file. */
+function parseProjectFile(filePath: string): Project {
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = parseFrontmatter(raw);
+
+  return {
+    id: requireString(data.id, "id", filePath),
+    title: requireString(data.title, "title", filePath),
+    description: requireString(data.description, "description", filePath),
+    longDescription: content.trim() || undefined,
+    technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : [],
+    images: Array.isArray(data.images) ? data.images.map(String) : [],
+    liveUrl: optionalString(data.liveUrl),
+    repoUrl: optionalString(data.repoUrl),
+    featured: Boolean(data.featured),
+    mockData: data.mockData === undefined ? undefined : Boolean(data.mockData),
+    date: requireString(data.date, "date", filePath),
+  };
+}
+
 export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Promise<Project[]> {
   const projectsDir = path.join(contentDir, "projects");
 
@@ -58,29 +160,7 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
   for (const file of files) {
     const filePath = path.join(projectsDir, file);
     try {
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(raw);
-
-      // Validate required fields
-      requireField(data.id, "id", filePath);
-      requireField(data.title, "title", filePath);
-      requireField(data.description, "description", filePath);
-      requireField(data.date, "date", filePath);
-
-      const project: Project = {
-        id: String(data.id),
-        title: String(data.title),
-        description: String(data.description),
-        longDescription: content.trim() || undefined,
-        technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : [],
-        images: Array.isArray(data.images) ? data.images.map(String) : [],
-        liveUrl: data.liveUrl ? String(data.liveUrl) : undefined,
-        repoUrl: data.repoUrl ? String(data.repoUrl) : undefined,
-        featured: Boolean(data.featured),
-        date: String(data.date),
-      };
-
-      projects.push(project);
+      projects.push(parseProjectFile(filePath));
     } catch (err) {
       if (err instanceof Error && err.message.startsWith("Content validation error")) {
         throw err;
@@ -93,7 +173,7 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
   }
 
   // Sort by date descending (newest first)
-  return projects.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  return projects.toSorted((a, b) => compareDateDesc(a.date, b.date));
 }
 
 // ─── Experiences ─────────────────────────────────────────────────────────────
@@ -108,6 +188,64 @@ export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Pro
  * @returns Array of {@link Experience} objects.
  * @throws If a file has missing required fields.
  */
+/** Parses a single experience gallery image entry (a bare src string, or an object with metadata). */
+function parseExperienceImage(img: unknown): ExperienceImage {
+  if (typeof img === "string") return { src: img };
+  const o = img as Record<string, unknown>;
+  const src = typeof o.src === "string" ? o.src : "";
+  const dims = EXPERIENCE_IMAGE_DIMENSIONS[src];
+  return {
+    src,
+    title: optionalString(o.title),
+    description: optionalString(o.description),
+    width: o.width ? Number(o.width) : dims?.width,
+    height: o.height ? Number(o.height) : dims?.height,
+  };
+}
+
+/** Parses and validates a single experience markdown file. */
+function parseExperienceFile(filePath: string): Experience {
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = parseFrontmatter(raw);
+
+  const id = requireString(data.id, "id", filePath);
+  const type = requireString(data.type, "type", filePath);
+  const organization = requireString(data.organization, "organization", filePath);
+  const role = requireString(data.role, "role", filePath);
+  const location = requireString(data.location, "location", filePath);
+  const startDate = requireString(data.startDate, "startDate", filePath);
+
+  if (type !== "professional" && type !== "academic") {
+    throw new Error(
+      `Content validation error in "${filePath}": field "type" must be "professional" or "academic", got "${type}".`
+    );
+  }
+
+  // Parse achievements from markdown body (lines starting with "- ")
+  const achievements = content
+    .split("\n")
+    .filter((line: string) => line.trim().startsWith("- "))
+    .map((line: string) => line.trim().slice(2).trim())
+    .filter(Boolean);
+
+  return {
+    id,
+    type,
+    organization,
+    role,
+    location,
+    startDate,
+    endDate: optionalString(data.endDate),
+    description: content.trim(),
+    achievements,
+    technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : undefined,
+    logo: optionalString(data.logo),
+    images: Array.isArray(data.images) ? data.images.map(parseExperienceImage) : undefined,
+    organizationUrl: optionalString(data.organizationUrl),
+    featured: Boolean(data.featured),
+  };
+}
+
 export async function getExperiences(
   type?: "professional" | "academic",
   locale: string = "pt-BR",
@@ -134,44 +272,7 @@ export async function getExperiences(
   for (const file of files) {
     const filePath = path.join(experienceDir, file);
     try {
-      const raw = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(raw);
-
-      // Validate required fields
-      requireField(data.id, "id", filePath);
-      requireField(data.type, "type", filePath);
-      requireField(data.organization, "organization", filePath);
-      requireField(data.role, "role", filePath);
-      requireField(data.location, "location", filePath);
-      requireField(data.startDate, "startDate", filePath);
-
-      if (data.type !== "professional" && data.type !== "academic") {
-        throw new Error(
-          `Content validation error in "${filePath}": field "type" must be "professional" or "academic", got "${data.type}".`
-        );
-      }
-
-      // Parse achievements from markdown body (lines starting with "- ")
-      const achievements = content
-        .split("\n")
-        .filter((line: string) => line.trim().startsWith("- "))
-        .map((line: string) => line.trim().slice(2).trim())
-        .filter(Boolean);
-
-      const experience: Experience = {
-        id: String(data.id),
-        type: data.type as "professional" | "academic",
-        organization: String(data.organization),
-        role: String(data.role),
-        location: String(data.location),
-        startDate: String(data.startDate),
-        endDate: data.endDate ? String(data.endDate) : undefined,
-        description: content.trim(),
-        achievements,
-        technologies: Array.isArray(data.technologies) ? data.technologies.map(String) : undefined,
-      };
-
-      experiences.push(experience);
+      experiences.push(parseExperienceFile(filePath));
     } catch (err) {
       if (err instanceof Error && err.message.startsWith("Content validation error")) {
         throw err;
@@ -183,9 +284,7 @@ export async function getExperiences(
   }
 
   // Sort by startDate descending (most recent first)
-  const sorted = experiences.sort((a, b) =>
-    a.startDate < b.startDate ? 1 : a.startDate > b.startDate ? -1 : 0
-  );
+  const sorted = experiences.toSorted((a, b) => compareDateDesc(a.startDate, b.startDate));
 
   if (type) {
     return sorted.filter((e) => e.type === type);
@@ -197,17 +296,32 @@ export async function getExperiences(
 // ─── Skills ──────────────────────────────────────────────────────────────────
 
 /**
- * Reads `<contentDir>/skills.md`, parses the `categories` frontmatter array,
- * and returns the skill categories.
+ * Reads the locale-specific skills file (`<contentDir>/skills/<locale>.md`),
+ * parses the `categories` frontmatter array, and returns the skill categories.
+ * Falls back to the default locale (`pt-BR`), then to the legacy single-file
+ * location (`<contentDir>/skills.md`).
  *
+ * @param locale - Locale code (e.g., 'pt-BR', 'en', 'es'). Defaults to 'pt-BR'.
  * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
  * @returns Array of {@link SkillCategory} objects.
- * @throws If the skills file is missing or malformed.
+ * @throws If the skills file is malformed.
  */
 export async function getSkills(
+  locale: string = "pt-BR",
   contentDir: string = DEFAULT_CONTENT_DIR
 ): Promise<SkillCategory[]> {
-  const skillsFile = path.join(contentDir, "skills.md");
+  const localeSkillsFile = path.join(contentDir, "skills", `${locale}.md`);
+  const defaultSkillsFile = path.join(contentDir, "skills", "pt-BR.md");
+  const legacySkillsFile = path.join(contentDir, "skills.md");
+
+  let skillsFile: string;
+  if (fs.existsSync(localeSkillsFile)) {
+    skillsFile = localeSkillsFile;
+  } else if (fs.existsSync(defaultSkillsFile)) {
+    skillsFile = defaultSkillsFile;
+  } else {
+    skillsFile = legacySkillsFile;
+  }
 
   if (!fs.existsSync(skillsFile)) {
     if (process.env.NODE_ENV === "development") {
@@ -217,10 +331,12 @@ export async function getSkills(
   }
 
   const raw = fs.readFileSync(skillsFile, "utf-8");
-  const { data } = matter(raw);
+  const { data } = parseFrontmatter(raw);
 
   if (!Array.isArray(data.categories)) {
-    throw new Error(`Content validation error in "${skillsFile}": "categories" must be an array.`);
+    throw new TypeError(
+      `Content validation error in "${skillsFile}": "categories" must be an array.`
+    );
   }
 
   return data.categories as SkillCategory[];

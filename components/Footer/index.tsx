@@ -7,6 +7,7 @@
  */
 
 import { useTranslations } from "next-intl";
+import Script from "next/script";
 import {
   trackFooterLinkClick,
   trackSocialLinkClick,
@@ -14,6 +15,11 @@ import {
 } from "@/lib/analytics";
 import { useFeatureFlag } from "@/hooks/useFeatureFlag";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
+
+const DMCA_STATUS_URL =
+  "https://www.dmca.com/Protection/Status.aspx?ID=79db3b92-8bad-4179-a596-0b5a5ff92364";
+const DMCA_BADGE_IMAGE_URL =
+  "https://images.dmca.com/Badges/dmca_protected_sml_120m.png?ID=79db3b92-8bad-4179-a596-0b5a5ff92364";
 
 interface FooterProps {
   readonly locale: string;
@@ -27,8 +33,8 @@ interface FooterProps {
  */
 function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
   if (!useLocaleSpecificPdfs) {
-    // Use single PDF for all locales
-    return "/resumes/resume.pdf";
+    // Default resume when locale-specific PDFs are disabled
+    return "/resumes/resume-pt-BR.pdf";
   }
 
   // Use locale-specific PDFs
@@ -38,7 +44,7 @@ function getResumeUrl(locale: string, useLocaleSpecificPdfs: boolean): string {
     es: "/resumes/resume-es.pdf",
   };
 
-  return localeMap[locale] || "/resumes/resume.pdf";
+  return localeMap[locale] || "/resumes/resume-pt-BR.pdf";
 }
 
 const SOCIAL_LINKS = [
@@ -118,8 +124,11 @@ export default function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
   const { openBanner } = useCookieConsent();
 
-  // Get feature flag for locale-specific PDFs
-  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", false);
+  // Get feature flag for locale-specific PDFs. Defaults to true to match the
+  // in-app Remote Config defaultConfig — so the feature works (and the SSG HTML
+  // emits locale-specific URLs) even when Remote Config can't initialize. A
+  // remote value of false still acts as a kill-switch.
+  const { value: useLocaleSpecificPdfs } = useFeatureFlag("use_locale_specific_pdfs", true);
 
   const resumeUrl = getResumeUrl(locale, useLocaleSpecificPdfs);
 
@@ -358,6 +367,7 @@ export default function Footer({ locale }: FooterProps) {
               {/* Print Button */}
               <li>
                 <button
+                  type="button"
                   onClick={() => window.print()}
                   aria-label={t("footer.printPageLabel")}
                   className="
@@ -393,11 +403,43 @@ export default function Footer({ locale }: FooterProps) {
 
         {/* Divider */}
         <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <p className="text-sm text-center text-gray-500 dark:text-gray-500">
-            © {year} Rogério do Carmo. {t("footer.copyright")}
+          <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+            © {year} Rogério do Carmo.{" "}
+            <span className="block sm:inline">{t("footer.copyright")}</span>
           </p>
+          <div className="mt-4 flex justify-center print:hidden">
+            <a
+              href={DMCA_STATUS_URL}
+              title="DMCA.com Protection Status"
+              className="dmca-badge"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackExternalLinkClick({
+                  url: DMCA_STATUS_URL,
+                  context: "footer_dmca_badge",
+                })
+              }
+            >
+              {/* Plain <img>, not next/image: DMCA.com serves this badge from
+                  their own CDN and may swap it server-side; hotlinking the
+                  vendor's exact URL is how their protection status stays
+                  accurate. */}
+              <img
+                src={DMCA_BADGE_IMAGE_URL}
+                alt="DMCA.com Protection Status"
+                width={121}
+                height={24}
+              />
+            </a>
+          </div>
         </div>
       </div>
+      {/* DMCA badge helper: rewrites the badge link with a `refurl` param on
+          load so DMCA.com knows which page a click originated from. Verified
+          it sets no cookies and makes no network calls of its own — safe to
+          load unconditionally, no cookie-consent gating needed. */}
+      <Script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js" strategy="lazyOnload" />
     </footer>
   );
 }

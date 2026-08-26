@@ -3,8 +3,22 @@
  * Tests the email capture form on the main page and in the exit intent modal.
  */
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+
+/**
+ * Triggers exit-intent detection by sweeping the cursor up to the top edge.
+ *
+ * The hook only fires when it sees a mousemove with `clientY <= threshold` whose
+ * previous Y was greater (upward velocity). Two discrete `mouse.move` calls don't
+ * reliably deliver that on WebKit, so move down first, then sweep up to y=1 in
+ * many steps — each intermediate mousemove has a strictly smaller Y, guaranteeing
+ * the upward-velocity condition is met as the cursor crosses the threshold.
+ */
+async function triggerExitIntent(page: Page): Promise<void> {
+  await page.mouse.move(400, 400);
+  await page.mouse.move(400, 1, { steps: 20 });
+}
 
 test.describe("EmailSubscribeForm - main page", () => {
   test.beforeEach(async ({ page, context }) => {
@@ -79,13 +93,12 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
   });
 
   test("email form is present in exit intent modal", async ({ page }) => {
-    // Trigger exit intent by moving mouse to top of viewport
+    // Trigger exit intent by sweeping the cursor up to the top of the viewport.
     await page.waitForTimeout(6000); // wait past minTimeOnPage (5s)
-    await page.mouse.move(400, 100);
-    await page.mouse.move(400, 5); // cross the threshold
+    await triggerExitIntent(page);
 
     const modal = page.getByRole("dialog", { name: "Hey, wait!" });
-    await expect(modal).toBeVisible({ timeout: 2000 });
+    await expect(modal).toBeVisible({ timeout: 5000 });
 
     await expect(modal.locator('input[type="email"]')).toBeVisible();
     await expect(modal.locator("text=Contact me")).toBeVisible();
@@ -97,11 +110,10 @@ test.describe("EmailSubscribeForm - exit intent modal", () => {
     });
 
     await page.waitForTimeout(6000);
-    await page.mouse.move(400, 100);
-    await page.mouse.move(400, 5);
+    await triggerExitIntent(page);
 
     const modal = page.getByRole("dialog", { name: "Hey, wait!" });
-    await expect(modal).toBeVisible({ timeout: 2000 });
+    await expect(modal).toBeVisible({ timeout: 5000 });
 
     await modal.locator('input[type="email"]').fill("modal@example.com");
     await modal.locator("text=Contact me").click();

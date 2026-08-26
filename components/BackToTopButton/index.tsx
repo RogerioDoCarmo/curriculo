@@ -40,6 +40,8 @@ export default function BackToTopButton({ className = "", threshold = 300 }: Bac
   }, [threshold]);
 
   const scrollToTop = () => {
+    // Close the mobile side menu if it's open (the Header listens for this).
+    window.dispatchEvent(new Event("app:close-sidebar"));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -72,7 +74,7 @@ export default function BackToTopButton({ className = "", threshold = 300 }: Bac
         ${className}
       `.trim()}
     >
-      <span aria-hidden="true" className="text-lg leading-none">
+      <span aria-hidden="true" className="text-2xl leading-none">
         ↑
       </span>
     </button>

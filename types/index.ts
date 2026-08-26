@@ -16,10 +16,23 @@ export interface Project {
   liveUrl?: string;
   repoUrl?: string;
   featured: boolean;
+  /** Explicitly mark (or unmark) the project as using placeholder/fictional
+   * data. When unset, a heuristic (no repo or no images) decides. */
+  mockData?: boolean;
   date: string; // ISO 8601 date string (e.g., "2024-01-15")
 }
 
 // ─── Experience ─────────────────────────────────────────────────────────────
+
+/** A gallery image for an experience, with an optional lightbox title/description. */
+export interface ExperienceImage {
+  src: string;
+  title?: string;
+  description?: string;
+  /** Intrinsic pixel dimensions, so the lightbox can size to the real aspect. */
+  width?: number;
+  height?: number;
+}
 
 export interface Experience {
   id: string;
@@ -32,6 +45,17 @@ export interface Experience {
   description: string;
   achievements: string[];
   technologies?: string[];
+  /** Public path to the organization's logo (e.g. "/images/logos/logo_inct.png"). */
+  logo?: string;
+  /** Gallery images shown as thumbnails and, full-size, in the lightbox. */
+  images?: ExperienceImage[];
+  /** Official organization URL; when set, the logo links out to it in a new tab. */
+  organizationUrl?: string;
+  /**
+   * When true, the experience renders as a dedicated, always-expanded card pinned
+   * to the top of the section in both the professional and academic views.
+   */
+  featured?: boolean;
 }
 
 // ─── Skills ─────────────────────────────────────────────────────────────────

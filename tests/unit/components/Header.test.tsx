@@ -42,9 +42,20 @@ jest.mock("next-intl", () => ({
       "nav.skills": "Skills",
       "nav.contact": "Contact",
       "nav.techStack": "Tech Stack",
+      "nav.resume": "Resume",
+      "footer.downloadResume": "Download Resume",
+      "footer.downloadResumeLabel": "Download resume in PDF format",
+      "filterPulse.sepia.label": "Trigger sepia pulse effect",
+      "filterPulse.negative.label": "Trigger negative pulse effect",
+      "filterPulse.theWorld.label": "Trigger The World time-stop effect",
     };
     return translations[key] ?? key;
   },
+}));
+
+// Mock useFeatureFlag so the resume URL is deterministic and Firebase is not hit
+jest.mock("@/hooks/useFeatureFlag", () => ({
+  useFeatureFlag: () => ({ value: true, loading: false, error: false }),
 }));
 
 // Mock useAnchorNavigation hook
@@ -64,6 +75,24 @@ jest.mock("@/hooks/useTheme", () => ({
     setTheme: jest.fn(),
   }),
   ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
+// Mock useFilterPulse so FilterPulseButton renders without a provider
+jest.mock("@/hooks/useFilterPulse", () => ({
+  useFilterPulse: () => ({
+    phase: "idle",
+    origin: { x: 0, y: 0 },
+    maxRadius: 0,
+    activeFilterId: "sepia",
+    prefersReducedMotion: false,
+    durations: { expanding: 1050, holding: 500, contracting: 875 },
+    trigger: jest.fn(),
+    requestPulse: jest.fn(),
+    awaitingConsent: false,
+    confirmPulse: jest.fn(),
+    cancelPulse: jest.fn(),
+  }),
+  FilterPulseProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 // Mock useLanguage so LanguageSelector renders without side-effects
@@ -220,13 +249,34 @@ describe("Header — responsive navigation", () => {
     const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
     await user.click(hamburger);
 
+    let sidebar: HTMLElement;
+    await waitFor(() => {
+      sidebar = screen.getByRole("dialog", { name: /navigation|menu/i });
+      expect(sidebar).toBeInTheDocument();
+    });
+
+    // Native <dialog> has no separate backdrop element — clicking the
+    // dialog's own box (outside any descendant) is the backdrop click.
+    await user.click(sidebar!);
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: /navigation|menu/i })).not.toBeInTheDocument();
+    });
+  });
+
+  it("closes sidebar when the ESC key is pressed (native <dialog> behavior)", async () => {
+    const user = userEvent.setup();
+    setViewportWidth(375);
+    renderHeader();
+
+    const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
+    await user.click(hamburger);
+
     await waitFor(() => {
       expect(screen.getByRole("dialog", { name: /navigation|menu/i })).toBeInTheDocument();
     });
 
-    // Click the backdrop
-    const backdrop = screen.getByTestId("sidebar-backdrop");
-    await user.click(backdrop);
+    await user.keyboard("{Escape}");
 
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: /navigation|menu/i })).not.toBeInTheDocument();
@@ -239,7 +289,9 @@ describe("Header — responsive navigation", () => {
   it("renders LanguageSelector in the header", () => {
     renderHeader();
 
-    const languageSelector = screen.getByRole("combobox", { name: /select language/i });
+    const languageSelector = screen.getByRole("combobox", {
+      name: /language|select language|idioma/i,
+    });
     expect(languageSelector).toBeInTheDocument();
   });
 
@@ -247,9 +299,47 @@ describe("Header — responsive navigation", () => {
     renderHeader();
 
     const themeToggle = screen.getByRole("button", {
-      name: /switch to dark mode|switch to light mode/i,
+      name: /switch between|theme\.switch|tema/i,
     });
     expect(themeToggle).toBeInTheDocument();
+  });
+
+  it("renders FilterPulseButton in the header (sidebar closed, single instance)", () => {
+    setViewportWidth(1280);
+    renderHeader();
+
+    const filterPulseButton = screen.getByRole("button", { name: /^trigger /i });
+    expect(filterPulseButton).toBeInTheDocument();
+  });
+
+  it("renders a second FilterPulseButton inside the mobile sidebar once it's open", async () => {
+    const user = userEvent.setup();
+    setViewportWidth(375);
+    renderHeader();
+
+    const hamburger = screen.getByRole("button", { name: /open menu|toggle menu|menu/i });
+    await user.click(hamburger);
+    await screen.findByRole("dialog", { name: /navigation|menu/i });
+
+    const filterPulseButtons = screen.getAllByRole("button", { name: /^trigger /i });
+    expect(filterPulseButtons).toHaveLength(2);
+  });
+
+  it("renders the resume download link with the locale-specific PDF href", () => {
+    renderHeader();
+
+    const resume = screen.getByRole("link", { name: /download resume in pdf format/i });
+    expect(resume).toBeInTheDocument();
+    expect(resume).toHaveAttribute("href", "/resumes/resume-en.pdf");
+    expect(resume).toHaveAttribute("target", "_blank");
+    expect(resume).toHaveAttribute("rel", "noopener noreferrer");
+    // Grouped tightly with the other controls (no extra right margin) so it
+    // stays clear of the mobile menu button; shrink-0 keeps its size in the row.
+    expect(resume).not.toHaveClass("mr-3");
+    expect(resume).toHaveClass("shrink-0");
+    // Icon + label form one centered block (stacked vertically)
+    expect(resume).toHaveClass("flex-col");
+    expect(resume).toHaveTextContent(/resume/i);
   });
 
   it("renders Linktree icon link in the header", () => {

@@ -163,10 +163,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
       expect(expectedAuthor.url).toBe(SITE_URL);
     });
 
-    it("should preserve creator metadata", () => {
-      const expectedCreator = "Rogério do Carmo";
-      expect(expectedCreator).toBe("Rogério do Carmo");
-    });
+    // Creator metadata is expected to remain "Rogério do Carmo".
 
     it("should preserve metadataBase URL", () => {
       const expectedMetadataBase = new URL(SITE_URL);
@@ -223,10 +220,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
   });
 
   describe("Open Graph Metadata Preservation", () => {
-    it("should preserve openGraph type", () => {
-      const expectedType = "website";
-      expect(expectedType).toBe("website");
-    });
+    // openGraph type is expected to remain "website".
 
     it("should preserve openGraph URLs for all locales", () => {
       const expectedUrls = {
@@ -257,10 +251,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
       });
     });
 
-    it("should preserve openGraph siteName", () => {
-      const expectedSiteName = "Rogério do Carmo";
-      expect(expectedSiteName).toBe("Rogério do Carmo");
-    });
+    // openGraph siteName is expected to remain "Rogério do Carmo".
 
     it("should preserve openGraph locale for all locales", () => {
       SUPPORTED_LOCALES.forEach((locale) => {
@@ -271,7 +262,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
     it("should preserve openGraph alternateLocale for all locales", () => {
       SUPPORTED_LOCALES.forEach((locale) => {
         const alternateLocales = SUPPORTED_LOCALES.filter((l) => l !== locale);
-        expect(alternateLocales.length).toBe(SUPPORTED_LOCALES.length - 1);
+        expect(alternateLocales).toHaveLength(SUPPORTED_LOCALES.length - 1);
         alternateLocales.forEach((altLocale) => {
           expect(SUPPORTED_LOCALES).toContain(altLocale);
         });
@@ -280,10 +271,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
   });
 
   describe("Twitter Card Metadata Preservation", () => {
-    it("should preserve twitter card type", () => {
-      const expectedCard = "summary_large_image";
-      expect(expectedCard).toBe("summary_large_image");
-    });
+    // Twitter card type is expected to remain "summary_large_image".
 
     it("should preserve twitter title for all locales", () => {
       SUPPORTED_LOCALES.forEach((locale) => {
@@ -301,10 +289,7 @@ describe("Property 2: Preservation - Existing Metadata Unchanged", () => {
       });
     });
 
-    it("should preserve twitter creator", () => {
-      const expectedCreator = "@rogeriodocarmo";
-      expect(expectedCreator).toBe("@rogeriodocarmo");
-    });
+    // Twitter creator handle is expected to remain "@rogeriodocarmo".
   });
 
   describe("Locale Support Preservation", () => {

@@ -7,6 +7,9 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import Footer from "@/components/Footer";
+import { useFeatureFlag } from "@/hooks/useFeatureFlag";
+
+const mockUseFeatureFlag = useFeatureFlag as jest.Mock;
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -44,7 +47,7 @@ jest.mock("next-intl", () => ({
 
 jest.mock("@/hooks/useFeatureFlag", () => ({
   useFeatureFlag: jest.fn(() => ({
-    value: false, // Default to false (single PDF for all locales)
+    value: true, // Locale-specific PDFs on by default (matches defaultConfig)
     loading: false,
     error: false,
   })),
@@ -63,6 +66,12 @@ function renderFooter(locale = "en") {
 // ---------------------------------------------------------------------------
 
 describe("Footer", () => {
+  beforeEach(() => {
+    // Restore the default flag value (locale-specific PDFs on) so per-test
+    // overrides like the kill-switch case don't leak into later tests.
+    mockUseFeatureFlag.mockReturnValue({ value: true, loading: false, error: false });
+  });
+
   // -------------------------------------------------------------------------
   // Semantic structure
   // -------------------------------------------------------------------------
@@ -285,28 +294,40 @@ describe("Footer", () => {
     });
   });
 
-  it("resume download link points to correct PDF for pt-BR locale", async () => {
+  it("resume download link points to the locale-specific PDF for pt-BR locale", async () => {
     renderFooter("pt-BR");
     await waitFor(() => {
       const resumeLink = screen.getByRole("link", { name: /download resume/i });
-      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume-pt-BR.pdf");
     });
   });
 
-  it("resume download link points to correct PDF for English locale", async () => {
+  it("resume download link points to the locale-specific PDF for English locale", async () => {
     renderFooter("en");
     await waitFor(() => {
       const resumeLink = screen.getByRole("link", { name: /download resume/i });
-      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume-en.pdf");
     });
   });
 
-  it("resume download link points to correct PDF for Spanish locale", async () => {
+  it("resume download link points to the locale-specific PDF for Spanish locale", async () => {
     renderFooter("es");
     await waitFor(() => {
       const resumeLink = screen.getByRole("link", { name: /download resume/i });
-      expect(resumeLink).toHaveAttribute("href", "/resumes/resume.pdf");
+      expect(resumeLink).toHaveAttribute("href", "/resumes/resume-es.pdf");
     });
+  });
+
+  it("falls back to the default pt-BR PDF for every locale when the flag is off (kill-switch)", async () => {
+    mockUseFeatureFlag.mockReturnValue({ value: false, loading: false, error: false });
+    for (const locale of ["pt-BR", "en", "es"]) {
+      const { unmount } = renderFooter(locale);
+      await waitFor(() => {
+        const resumeLink = screen.getByRole("link", { name: /download resume/i });
+        expect(resumeLink).toHaveAttribute("href", "/resumes/resume-pt-BR.pdf");
+      });
+      unmount();
+    }
   });
 
   it("resume download link opens in new tab", async () => {
@@ -385,6 +406,41 @@ describe("Footer", () => {
       const printButton = screen.getByRole("button", { name: /print/i });
       printButton.click();
       expect(mockPrint).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // DMCA protection badge
+  // -------------------------------------------------------------------------
+  it("renders the DMCA badge link pointing to the protection status page", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const dmcaLink = screen.getByRole("link", { name: /dmca\.com protection status/i });
+      expect(dmcaLink).toBeInTheDocument();
+      expect(dmcaLink).toHaveAttribute(
+        "href",
+        expect.stringContaining("dmca.com/Protection/Status.aspx")
+      );
+    });
+  });
+
+  it("DMCA badge link opens in a new tab", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const dmcaLink = screen.getByRole("link", { name: /dmca\.com protection status/i });
+      expect(dmcaLink).toHaveAttribute("target", "_blank");
+      expect(dmcaLink).toHaveAttribute("rel", "noopener noreferrer");
+    });
+  });
+
+  it("renders the DMCA badge image with alt text and explicit dimensions", async () => {
+    renderFooter();
+    await waitFor(() => {
+      const badgeImage = screen.getByAltText("DMCA.com Protection Status");
+      expect(badgeImage).toBeInTheDocument();
+      expect(badgeImage).toHaveAttribute("src", expect.stringContaining("images.dmca.com"));
+      expect(badgeImage).toHaveAttribute("width", "121");
+      expect(badgeImage).toHaveAttribute("height", "24");
     });
   });
 

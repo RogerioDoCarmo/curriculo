@@ -168,6 +168,6 @@ describe("Property 14: All Images Have Alt Text", () => {
 
     // No images should be present
     const images = container.querySelectorAll("img");
-    expect(images.length).toBe(0);
+    expect(images).toHaveLength(0);
   });
 });

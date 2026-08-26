@@ -4,7 +4,7 @@ import { SUPPORTED_LOCALES } from "@/types/index";
 import type { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
@@ -228,6 +228,12 @@ function CookiePolicyContent() {
           <p>{t("browserStorage.items.notifications.purpose")}</p>
         </div>
 
+        {/* Photosensitivity warning acknowledgement */}
+        <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <h4 className="text-lg font-medium mb-2">{t("browserStorage.items.filterPulse.name")}</h4>
+          <p>{t("browserStorage.items.filterPulse.purpose")}</p>
+        </div>
+
         <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
           {t("browserStorage.howToManage")}
         </p>
@@ -311,6 +317,31 @@ function CookiePolicyContent() {
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
               {t("thirdPartyCookies.firebaseAnalytics.privacyPolicyLink")}
+            </a>
+          </p>
+        </div>
+
+        {/* Vercel Speed Insights & Web Analytics (cookieless) */}
+        <div className="mb-4">
+          <h3 className="text-xl font-semibold mb-3">{t("thirdPartyCookies.vercel.title")}</h3>
+          <p className="mb-3">{t("thirdPartyCookies.vercel.description")}</p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.providerLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.vercel.provider")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.purposeLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.vercel.purpose")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.vercel.privacyPolicyLabel")}:</strong>{" "}
+            <a
+              href="https://vercel.com/legal/privacy-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              {t("thirdPartyCookies.vercel.privacyPolicyLink")}
             </a>
           </p>
         </div>

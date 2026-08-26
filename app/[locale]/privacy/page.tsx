@@ -4,7 +4,7 @@ import { SUPPORTED_LOCALES } from "@/types/index";
 import type { Metadata } from "next";
 
 type Props = {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
@@ -145,6 +145,7 @@ function PrivacyPolicyContent() {
             <li>{t("dataCollection.browserStorage.consent")}</li>
             <li>{t("dataCollection.browserStorage.session")}</li>
             <li>{t("dataCollection.browserStorage.notifications")}</li>
+            <li>{t("dataCollection.browserStorage.filterPulse")}</li>
           </ul>
         </div>
       </section>
@@ -187,6 +188,12 @@ function PrivacyPolicyContent() {
             {t("dataStorage.formspree.description")}
           </li>
           <li>
+            <strong>{t("dataStorage.sentry.title")}:</strong> {t("dataStorage.sentry.description")}
+          </li>
+          <li>
+            <strong>{t("dataStorage.vercel.title")}:</strong> {t("dataStorage.vercel.description")}
+          </li>
+          <li>
             <strong>{t("dataStorage.localStorage.title")}:</strong>{" "}
             {t("dataStorage.localStorage.description")}
           </li>
@@ -205,6 +212,12 @@ function PrivacyPolicyContent() {
           <li>
             <strong>{t("dataSharing.formspree.title")}:</strong>{" "}
             {t("dataSharing.formspree.description")}
+          </li>
+          <li>
+            <strong>{t("dataSharing.sentry.title")}:</strong> {t("dataSharing.sentry.description")}
+          </li>
+          <li>
+            <strong>{t("dataSharing.vercel.title")}:</strong> {t("dataSharing.vercel.description")}
           </li>
         </ul>
         <p className="mt-4">{t("dataSharing.noSale")}</p>

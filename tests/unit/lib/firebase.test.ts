@@ -280,22 +280,12 @@ describe("Firebase Analytics Consent", () => {
   });
 
   describe("Consent status edge cases", () => {
-    it("should handle empty string consent status", async () => {
-      localStorage.setItem("cookie-consent", "");
-
-      const analytics = await getFirebaseAnalytics();
-      expect(analytics).toBeNull();
-    });
-
-    it("should handle null consent status", async () => {
-      localStorage.setItem("cookie-consent", "null");
-
-      const analytics = await getFirebaseAnalytics();
-      expect(analytics).toBeNull();
-    });
-
-    it("should handle undefined consent status", async () => {
-      localStorage.setItem("cookie-consent", "undefined");
+    it.each([
+      ["empty string", ""],
+      ["null", "null"],
+      ["undefined", "undefined"],
+    ])("should handle %s consent status", async (_label, consentValue) => {
+      localStorage.setItem("cookie-consent", consentValue);
 
       const analytics = await getFirebaseAnalytics();
       expect(analytics).toBeNull();

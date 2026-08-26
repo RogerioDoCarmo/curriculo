@@ -19,6 +19,7 @@ npm run dev          # Start dev server
 npm run build        # Production build
 npm run test         # Run unit/integration tests
 npm run test:e2e     # Run Playwright E2E tests
+npm run test:mutation # Run Stryker mutation tests (scoped to lib/)
 npm run lint         # ESLint (max 300 warnings)
 npm run format       # Prettier
 ```
@@ -43,6 +44,10 @@ npm run format       # Prettier
 - Tailwind classes only — no inline styles (except dynamic values)
 - Dark mode via `dark:` variants
 - Group classes: layout → sizing → spacing → colors → misc
+- Prefer canonical scale classes over arbitrary px values when an exact
+  equivalent exists: the v4 spacing unit is `0.25rem` (4px), so `Npx` → `N/4`
+  (e.g. `w-[125px]` → `w-31.25`, `w-[200px]` → `w-50`, `min-w-[600px]` → `min-w-150`).
+  Only keep `[…px]` when there is no canonical match (e.g. `text-[10px]`).
 
 ### Testing
 
@@ -63,26 +68,74 @@ When asked to run the "post-merge workflow" or "update repo after merge":
 2. `git checkout main && git pull`
 3. Delete local feature branch: `git branch -d <branch-name>` (ask if not provided)
 4. Suggest semantic version bump based on changes (major/minor/patch), confirm with user
-5. Create annotated tag: `git tag -a <version> -m "<release-notes>"`
+5. Create annotated tag: `git tag -a <version> --cleanup=verbatim -m "<release-notes>"`
+   — **`--cleanup=verbatim` is required.** Without it, git's default `strip`
+   cleanup silently deletes every line starting with `#`, which eats every
+   `## Category` / `### Subsection` heading in the release-notes format below.
+   This bug affected every release from at least v1.10.0 through v1.14.6
+   before being caught and fixed.
 6. `git push --tags` — this triggers the GitHub Actions release workflow automatically
+
+### Release Artifacts (standard, automated)
+
+Every `v*.*.*` tag triggers `.github/workflows/release.yml`, which **must** attach
+to the GitHub Release, for prefix `<repo>-<tag>` (e.g. `curriculo-v1.7.3`):
+
+- **Dist** archives: `<prefix>-dist.tar.gz`, `<prefix>-dist.zip` (the built `out/` static export)
+- **Checksums**: one file per archive named `<archive-filename>_checksums.txt`
+  (same prefix as the compressed file + `_checksums.txt`), each containing `sha256` + `sha512`.
+
+So a release has 2 archives + 2 checksum files. **The dist build intentionally
+gets zero `NEXT_PUBLIC_*` secrets** — release archives are public, downloadable
+artifacts, and we never bake runtime credentials (Firebase, Sentry, etc.) into
+them, as a security precaution. Firebase/Sentry stay unconfigured in that
+artifact by design. The live site is deployed separately via Vercel, which
+injects the real production env vars at build time. The workflow appends a
+security-note disclaimer to every release body explaining this — never remove
+it, and never add `NEXT_PUBLIC_*` secrets back to `release.yml`'s build step.
+Never rename the checksum suffix or drop an archive variant — this is the
+project standard.
+
+Category emoji convention — pick the emoji matching the category's content
+(mirrors the PR title types above):
+
+- ✨ Features
+- 🐛 Fixes
+- ⚡ Performance
+- 🔒 Security
+- 📚 Documentation
+- 🧪 Testing
+- ♻️ Refactor
+- 🎨 Style / UI
+- 🔄 CI/CD
+- 🧹 Chore / Tooling
 
 Release notes format:
 
-```
-v<version> - <Title>
+```markdown
+🚀 v<version> - <Title>
 
-## <Category>
+## ✨ <Category>
+
 ### <Subsection>
+
 - <Change>
 - Metric: ✅ 22% faster (3.2s → 2.5s)
 
-## Files Changed
+## 📁 Files Changed
+
 - file.ts (created/updated/deleted)
 
-## Related
+## 🔗 Related
+
 - Commit: <hash>
 - Previous: <prev-tag>
+- Full Changelog: <prev-tag>...<version>
 ```
+
+The `Full Changelog` line is a GitHub compare link — render it as
+`Full Changelog: [<prev-tag>...<version>](https://github.com/RogerioDoCarmo/curriculo/compare/<prev-tag>...<version>)`
+so it's clickable in the rendered release body.
 
 ## PR & Release Descriptions
 
@@ -97,7 +150,7 @@ Types: `fix` `feat` `docs` `test` `chore` `refactor` `perf` `style` `ci`
 
 Use `✅` for improvements, `❌` for regressions, always with a semantic label:
 
-```
+```text
 Build Time: ✅ 22% faster (3.2s → 2.5s)
 Bundle Size: ✅ 1.6% smaller (185KB → 182KB)
 Lighthouse:  ✅ +1 point (92 → 93)
@@ -109,5 +162,6 @@ Detailed standards live in `.kiro/docs/`:
 
 - [`coding-standards.md`](.kiro/docs/coding-standards.md) — component templates, image handling, theme patterns
 - [`test-patterns.md`](.kiro/docs/test-patterns.md) — test patterns and examples
+- [`mutation-testing.md`](.kiro/docs/mutation-testing.md) — Stryker setup, scope, thresholds, killing mutants
 - [`nextjs-best-practices.md`](.kiro/docs/nextjs-best-practices.md) — Next.js-specific guidance
 - [`code-quality-fixes.md`](.kiro/docs/code-quality-fixes.md) — common ESLint/TS fixes

@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
@@ -19,6 +19,8 @@ const messages: AbstractIntlMessages = {
     all: "All",
     noMatch: "No projects match your filter",
     viewDetails: "View details for",
+    previousProject: "Previous project",
+    nextProject: "Next project",
     screenshot: "screenshot",
     featured: "Featured",
     mockData: "Mock Data",
@@ -239,6 +241,11 @@ describe("ProjectsSection Component", () => {
     expect(document.getElementById("projects")).toBeInTheDocument();
   });
 
+  it("is programmatically focusable so the scroll minimap can land focus here", () => {
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    expect(document.getElementById("projects")).toHaveAttribute("tabIndex", "-1");
+  });
+
   it("shows empty state message when no projects match filter", async () => {
     const user = userEvent.setup();
     renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
@@ -252,5 +259,44 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
     });
+  });
+
+  it("steps through projects via the detail modal Prev/Next buttons (wrapping)", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("heading", { name: "E-Commerce App" })).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole("button", { name: "Next project" }));
+    expect(within(dialog).getByRole("heading", { name: "Portfolio Website" })).toBeInTheDocument();
+
+    // Prev from the second wraps as expected back toward the first.
+    await user.click(within(dialog).getByRole("button", { name: "Previous project" }));
+    expect(within(dialog).getByRole("heading", { name: "E-Commerce App" })).toBeInTheDocument();
+  });
+
+  it("renders the swipe carousel instead of the grid on mobile", async () => {
+    const original = window.matchMedia;
+    window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+    try {
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      // The infinite carousel renders each card in three copies; the grid renders one.
+      await waitFor(() => {
+        expect(screen.getAllByText("E-Commerce App").length).toBeGreaterThan(1);
+      });
+    } finally {
+      window.matchMedia = original;
+    }
   });
 });

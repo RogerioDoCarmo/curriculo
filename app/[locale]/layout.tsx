@@ -5,12 +5,16 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { FilterPulseProvider } from "@/hooks/useFilterPulse";
 import { generateStructuredDataScript } from "@/lib/structured-data";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import CookieConsent from "@/components/CookieConsent";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import BackToTopButton from "@/components/BackToTopButton";
+import FilterPulseOverlay from "@/components/FilterPulseOverlay";
+import FilterPulseWarningDialog from "@/components/FilterPulseWarningDialog";
 import "../globals.css";
 import "../../styles/print.css";
 
@@ -18,6 +22,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  preload: false,
 });
 
 // ─── Locale-specific metadata config ─────────────────────────────────────────
@@ -167,6 +172,11 @@ export function generateStaticParams() {
   return SUPPORTED_LOCALES.map((locale) => ({ locale }));
 }
 
+// `output: "export"` can't render params outside generateStaticParams() at
+// request time, so disable the dynamic-render fallback — an unlisted locale
+// (e.g. /f/) 404s immediately instead of logging a "missing param" dev error.
+export const dynamicParams = false;
+
 interface LocaleLayoutProps {
   readonly children: React.ReactNode;
   readonly params: Promise<{ locale: string }>;
@@ -197,9 +207,8 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personSchema }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webSiteSchema }} />
         {/* FOUC prevention: async + src makes React 19 treat this as a hoistable resource,
-            avoiding the "script tag while rendering" warning. preload ensures the browser
-            fetches the tiny file during early head parsing so it runs before first paint. */}
-        <link rel="preload" as="script" href="/theme-init.js" />
+            avoiding the "script tag while rendering" warning. Next.js hoists this early
+            in <head> automatically, so no separate preload hint is needed. */}
         <script src="/theme-init.js" async />
       </head>
       <body
@@ -208,14 +217,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <AnalyticsProvider>
-              <ErrorBoundary component="RootLayout">
-                <Header locale={locale} />
-                <main className="min-h-screen">{children}</main>
-                <Footer locale={locale} />
-                <CookieConsent />
-              </ErrorBoundary>
-            </AnalyticsProvider>
+            <FilterPulseProvider>
+              <AnalyticsProvider>
+                <ErrorBoundary component="RootLayout">
+                  <Header locale={locale} />
+                  <main className="min-h-screen">{children}</main>
+                  <Footer locale={locale} />
+                  <BackToTopButton />
+                  <CookieConsent />
+                  <FilterPulseOverlay />
+                  <FilterPulseWarningDialog />
+                </ErrorBoundary>
+              </AnalyticsProvider>
+            </FilterPulseProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

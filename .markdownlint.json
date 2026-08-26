@@ -1,4 +1,26 @@
 {
   "MD013": false,
-  "MD041": false
+  "MD041": false,
+  "MD033": {
+    "allowed_elements": [
+      "video",
+      "details",
+      "summary",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "td",
+      "th",
+      "b",
+      "br",
+      "sub",
+      "sup",
+      "kbd",
+      "div",
+      "img",
+      "picture",
+      "source"
+    ]
+  }
 }

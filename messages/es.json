@@ -5,6 +5,7 @@
     "experience": "Experiencia",
     "skills": "Habilidades",
     "contact": "Contacto",
+    "resume": "Currículum",
     "techStack": "Usado en este sitio",
     "componentGallery": "Galería de Componentes"
   },
@@ -84,12 +85,18 @@
     "professionalExperience": "Experiencia Profesional",
     "academicBackground": "Formación Académica",
     "noExperiences": "No hay experiencias para mostrar.",
-    "present": "Presente",
+    "present": "Actual",
     "expandDetails": "Expandir detalles",
     "collapseDetails": "Contraer detalles",
     "achievements": "Logros",
     "details": "Detalles",
     "technologies": "Tecnologías",
+    "visitWebsite": "Visitar sitio web (se abre en una pestaña nueva)",
+    "images": "Proyecto INCT",
+    "viewImage": "Ver imagen en pantalla completa",
+    "previousImage": "Imagen anterior",
+    "nextImage": "Imagen siguiente",
+    "featured": "Destacado",
     "timeline": "Línea de Tiempo",
     "duration": {
       "lessThanMonth": "< 1 mes",
@@ -123,10 +130,32 @@
   "theme": {
     "toggle": "Cambiar tema",
     "light": "Modo claro",
-    "dark": "Modo oscuro"
+    "dark": "Modo oscuro",
+    "switchLabel": "Cambiar entre modo oscuro y claro",
+    "switchTooltip": "Cambiar entre modo oscuro y claro (actualmente {mode})",
+    "modeDark": "modo oscuro",
+    "modeLight": "modo claro"
   },
   "language": {
-    "selector": "Seleccionar idioma"
+    "selector": "Seleccionar idioma",
+    "selectTooltip": "Seleccionar idioma (actualmente {language})"
+  },
+  "filterPulse": {
+    "sepia": {
+      "label": "Activar efecto de pulso sepia"
+    },
+    "negative": {
+      "label": "Activar efecto de pulso negativo"
+    },
+    "theWorld": {
+      "label": "Activar el efecto de parada del tiempo The World"
+    },
+    "warning": {
+      "title": "Aviso: efecto visual con destellos",
+      "body": "Este efecto produce destellos breves e invierte los colores de toda la página. Puede resultar incómodo, o poco seguro, si tienes sensibilidad a las luces intermitentes. Solo tendrás que elegir una vez.",
+      "continue": "Reproducir el efecto",
+      "cancel": "Cancelar"
+    }
   },
   "footer": {
     "copyright": "Todos los derechos reservados.",
@@ -154,6 +183,11 @@
   },
   "backToTop": {
     "label": "Volver arriba"
+  },
+  "scrollMinimap": {
+    "ariaLabel": "Mapa de secciones de la página",
+    "jumpTo": "Ir a {section}",
+    "thumbLabel": "Posición actual de desplazamiento"
   },
   "exitIntent": {
     "title": "¡Oye, espera!",
@@ -184,6 +218,12 @@
     "noMatch": "Ninguna habilidad coincide con tu filtro.",
     "skillsLabel": "habilidades",
     "levelLabel": "Nivel",
+    "levels": {
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "expert": "Experto"
+    },
     "expandDetails": "Expandir habilidades",
     "collapseDetails": "Contraer habilidades"
   },
@@ -192,6 +232,8 @@
     "all": "Todos",
     "noMatch": "Ningún proyecto coincide con el filtro seleccionado.",
     "viewDetails": "Ver detalles de",
+    "previousProject": "Proyecto anterior",
+    "nextProject": "Proyecto siguiente",
     "screenshot": "captura de pantalla",
     "featured": "Destacado",
     "mockData": "Datos Ficticios",
@@ -370,7 +412,7 @@
     "metaDescription": "Aprende sobre las cookies que usamos, cómo gestionarlas y tus opciones. Información detallada sobre cookies de Firebase Analytics.",
     "title": "Política de Cookies",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Agosto de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Esta Política de Cookies explica qué son las cookies, cómo las usamos en nuestro sitio web y tus opciones con respecto a las cookies.",
@@ -470,6 +512,10 @@
         "notifications": {
           "name": "fcm_topic_subscriptions",
           "purpose": "Tus preferencias de suscripción de notificaciones"
+        },
+        "filterPulse": {
+          "name": "filter-pulse-photosensitivity-consent",
+          "purpose": "Tu confirmación del aviso sobre el efecto visual con destellos, para mostrarlo solo una vez"
         }
       },
       "howToManage": "Cómo gestionar localStorage: Puedes limpiar localStorage a través de las herramientas de desarrollador de tu navegador o limpiando todos los datos del sitio. Esto restablecerá tus preferencias pero no afectará las cookies."
@@ -518,6 +564,16 @@
         "purpose": "Análisis anónimo y seguimiento de uso",
         "privacyPolicyLabel": "Política de Privacidad",
         "privacyPolicyLink": "Política de Privacidad de Google"
+      },
+      "vercel": {
+        "title": "Vercel Speed Insights y Web Analytics",
+        "description": "Usamos Vercel Speed Insights y Web Analytics para medir el rendimiento real de los usuarios (Core Web Vitals) y el tráfico agregado de visitas a páginas. Estos servicios no utilizan cookies — NO establecen ninguna cookie y recopilan solo datos anónimos y agregados.",
+        "providerLabel": "Proveedor",
+        "provider": "Vercel Inc.",
+        "purposeLabel": "Finalidad",
+        "purpose": "Monitoreo anónimo del rendimiento y análisis de tráfico agregado (sin cookies)",
+        "privacyPolicyLabel": "Política de Privacidad",
+        "privacyPolicyLink": "Política de Privacidad de Vercel"
       }
     },
     "cookieConsent": {
@@ -567,7 +623,7 @@
     "metaDescription": "Aprende cómo recopilamos, usamos y protegemos tus datos. Política de privacidad conforme con GDPR y LGPD.",
     "title": "Política de Privacidad",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Agosto de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web.",
@@ -635,7 +691,8 @@
         "language": "Preferencia de idioma (pt-BR, en, es)",
         "consent": "Preferencias de consentimiento de cookies",
         "session": "Datos de sesión (estado del modal de intención de salida)",
-        "notifications": "Preferencias de suscripción de notificaciones"
+        "notifications": "Preferencias de suscripción de notificaciones",
+        "filterPulse": "Confirmación del aviso sobre el efecto visual con destellos"
       }
     },
     "dataUsage": {
@@ -663,15 +720,23 @@
       "intro": "Tus datos se almacenan en las siguientes ubicaciones:",
       "firebase": {
         "title": "Firebase (Google Cloud)",
-        "description": "Los datos de análisis y tokens de notificación se almacenan en la plataforma Firebase de Google"
+        "description": "Los datos de análisis, tokens de notificación y solicitudes de configuración de funciones (Firebase Remote Config) son gestionados por la plataforma Firebase de Google"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Los envíos de formularios de contacto y suscripciones de correo electrónico son procesados y almacenados por Formspree"
       },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Los datos de diagnóstico de errores y rendimiento se almacenan en la infraestructura de Sentry ubicada en la Unión Europea"
+      },
       "localStorage": {
         "title": "localStorage del Navegador",
         "description": "Las preferencias y datos de sesión se almacenan localmente en tu navegador"
+      },
+      "vercel": {
+        "title": "Vercel",
+        "description": "Las métricas de rendimiento real de los usuarios (Core Web Vitals mediante Speed Insights) y los análisis agregados de visitas a páginas (Web Analytics) son recopilados y almacenados por Vercel, nuestro proveedor de alojamiento. Estos datos son anónimos y no utilizan cookies."
       }
     },
     "dataSharing": {
@@ -679,13 +744,21 @@
       "intro": "Compartimos datos con los siguientes servicios de terceros:",
       "firebase": {
         "title": "Google Analytics/Firebase",
-        "description": "Los datos de análisis anónimos son procesados por el servicio Firebase Analytics de Google"
+        "description": "Los datos de análisis anónimos son procesados por el servicio Firebase Analytics de Google. También usamos Firebase Remote Config para entregar la configuración del sitio (como qué archivo de currículum servir); esto envía un identificador de instalación seudónimo a Google, no usa cookies y no recopila datos personales sobre ti"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Los datos de formularios de contacto son procesados por Formspree para entregar mensajes a nuestro correo electrónico"
       },
-      "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros."
+      "sentry": {
+        "title": "Sentry",
+        "description": "Los diagnósticos de errores y rendimiento son procesados por Sentry (Functional Software, Inc.) para detectar y corregir problemas; los informes se despojan de tu correo electrónico y dirección IP antes de enviarse"
+      },
+      "noSale": "No vendemos, alquilamos ni intercambiamos tu información personal con terceros.",
+      "vercel": {
+        "title": "Vercel",
+        "description": "Los datos anónimos de rendimiento y tráfico agregado son procesados por Vercel (Vercel Inc.) a través de Speed Insights y Web Analytics; estos servicios no establecen cookies ni recopilan datos personales sobre usted"
+      }
     },
     "userRights": {
       "title": "Tus Derechos (Cumplimiento GDPR/LGPD)",
@@ -755,7 +828,7 @@
     "metaDescription": "Lea los términos y condiciones de uso de nuestro sitio web. Comprenda sus derechos y responsabilidades al usar nuestro sitio de portafolio.",
     "title": "Términos de Uso",
     "lastUpdated": "Última Actualización",
-    "lastUpdatedDate": "Mayo de 2026",
+    "lastUpdatedDate": "Junio de 2026",
     "introduction": {
       "title": "Introducción",
       "paragraph1": "Bienvenido a mi sitio web de portafolio personal. Estos Términos de Uso rigen su acceso y uso de este sitio web.",
@@ -874,7 +947,8 @@
       "seeMore": "Para obtener información detallada sobre las prácticas de datos, consulte nuestra",
       "privacyPolicyLink": "Política de Privacidad",
       "and": "y",
-      "cookiePolicyLink": "Política de Cookies"
+      "cookiePolicyLink": "Política de Cookies",
+      "hosting": "Este sitio web está alojado en Vercel y utiliza Vercel Speed Insights y Web Analytics para monitorear el rendimiento real de los usuarios y el tráfico agregado. Estos servicios no utilizan cookies y recopilan solo datos anónimos, como se describe en nuestra Política de Privacidad."
     },
     "changes": {
       "title": "Cambios en los Términos",
@@ -900,6 +974,35 @@
     "acknowledgment": {
       "title": "Reconocimiento",
       "description": "Al usar este sitio web, usted reconoce que ha leído, comprendido y acepta estar sujeto a estos Términos de Uso."
+    }
+  },
+  "banks": {
+    "title": "Impacto en el Sector Bancario",
+    "subtitle": "Instituciones financieras cuyas aplicaciones móviles ayudé a construir y mantener.",
+    "opensInNewTab": "Abre el sitio oficial en una pestaña nueva",
+    "previous": "Desplazar el carrusel a los logos anteriores",
+    "next": "Desplazar el carrusel a los logos siguientes"
+  },
+  "aiStack": {
+    "title": "Construido con IA",
+    "subtitle": "Las herramientas de IA que usé para diseñar, construir y publicar este sitio.",
+    "tools": {
+      "kiro": {
+        "name": "Kiro IDE",
+        "role": "Estructuración guiada por especificaciones"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "role": "Desarrollo y refactorización de funciones"
+      },
+      "githubCopilot": {
+        "name": "GitHub Copilot",
+        "role": "Autocompletado de código en el editor"
+      },
+      "chatgpt": {
+        "name": "ChatGPT",
+        "role": "Investigación y resolución de problemas"
+      }
     }
   }
 }

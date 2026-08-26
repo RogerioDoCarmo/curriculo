@@ -43,10 +43,11 @@ describe("Static Generation Optimizations", () => {
       expect(fs.existsSync(notFoundPath)).toBe(true);
 
       const content = fs.readFileSync(notFoundPath, "utf-8");
-      // Next.js 404 page may not have DOCTYPE in static export
-      // but should contain the 404 error message
+      // Custom branded 404 page (see app/not-found.tsx). The build-time
+      // prerender always uses DEFAULT_LOCALE, since there's no window to
+      // read a stored/browser locale from, so this text is deterministic.
       expect(content).toContain("404");
-      expect(content).toContain("This page could not be found");
+      expect(content).toContain("Página não encontrada");
     });
   });
 

@@ -7,6 +7,8 @@ const config = {
       "ts-jest",
       {
         tsconfig: {
+          rootDir: ".",
+          ignoreDeprecations: "6.0",
           jsx: "react-jsx",
           module: "commonjs",
           moduleResolution: "node",
@@ -18,6 +20,8 @@ const config = {
       "ts-jest",
       {
         tsconfig: {
+          rootDir: ".",
+          ignoreDeprecations: "6.0",
           jsx: "react-jsx",
           module: "commonjs",
           moduleResolution: "node",
@@ -42,6 +46,9 @@ const config = {
     "tests/properties/tech-stack-links.test.tsx",
     "tests/integration/resume-download.test.tsx",
     "tests/integration/responsive-layout.test.tsx",
+    // Exclude tests requiring a running production server (use npm run test:lighthouse / test:properties)
+    "tests/lighthouse/performance.test.ts",
+    "tests/properties/lighthouse-ci-server-startup.test.ts",
   ],
   collectCoverageFrom: [
     "lib/**/*.{ts,tsx}",
@@ -71,13 +78,26 @@ const config = {
   ],
   coverageThreshold: {
     global: {
-      branches: 65,
-      functions: 71,
-      lines: 71,
-      statements: 71,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
-  coverageReporters: ["text", "lcov", "json-summary"],
+  coverageReporters: [
+    // Console: full per-file table ("text") followed by the totals box
+    // ("text-summary"). "text-lcov" is intentionally omitted — it streams the
+    // raw LCOV to stdout and buries the table.
+    "text",
+    "text-summary",
+    // File outputs for browsers and CI/SonarCloud ingestion
+    "html",
+    "lcov",
+    "clover",
+    "cobertura",
+    "json",
+    "json-summary",
+  ],
 };
 
 module.exports = config;

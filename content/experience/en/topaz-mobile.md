@@ -5,7 +5,6 @@ organization: Topaz
 role: Senior Mobile Front-End Developer
 location: Remote, Brazil
 startDate: 2023-03-01
-endDate: 2026-03-01
 technologies:
   - React Native
   - TypeScript
@@ -40,8 +39,8 @@ Working on the company's internal product for the banking sector. Development an
 - Created Loan module with complete request and approval flow
 - Provided maintenance and bug fixes for critical banking applications
 - Worked on projects for specific clients: **CrediSIS** (Brazil), **Bradescard** (Mexico), **Banco Macro** (Argentina), and **Banco do Nordeste - BNB** (Brazil)
-- Worked with Google Play Console, Apple Developer, and TestFlight for app distribution
+- Worked with **Google Play Console**, **Apple Developer**, and **TestFlight** for app distribution
 - Implemented unit tests with **Jest** to ensure code quality
-- Used monitoring tools (Elastic, Kibana, Grafana) for performance analysis
+- Used monitoring tools (**Elastic**, **Kibana**, **Grafana**) for performance analysis
 - Experience with agile methodologies and effective communication with stakeholders (POs, BAs, QAs, SMs)
 - Mentored junior developers in React Native development best practices

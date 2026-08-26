@@ -5,6 +5,7 @@
     "experience": "Experience",
     "skills": "Skills",
     "contact": "Contact",
+    "resume": "Resume",
     "techStack": "Used in this site",
     "componentGallery": "Component Gallery"
   },
@@ -84,12 +85,18 @@
     "professionalExperience": "Professional Experience",
     "academicBackground": "Academic Background",
     "noExperiences": "No experiences to display.",
-    "present": "Present",
+    "present": "Current",
     "expandDetails": "Expand details",
     "collapseDetails": "Collapse details",
     "achievements": "Achievements",
     "details": "Details",
     "technologies": "Technologies",
+    "visitWebsite": "Visit website (opens in new tab)",
+    "images": "INCT Project",
+    "viewImage": "View image in full screen",
+    "previousImage": "Previous image",
+    "nextImage": "Next image",
+    "featured": "Featured",
     "timeline": "Timeline",
     "duration": {
       "lessThanMonth": "< 1 month",
@@ -123,10 +130,32 @@
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light mode",
-    "dark": "Dark mode"
+    "dark": "Dark mode",
+    "switchLabel": "Switch between dark and light mode",
+    "switchTooltip": "Switch between dark and light mode (currently {mode})",
+    "modeDark": "dark mode",
+    "modeLight": "light mode"
   },
   "language": {
-    "selector": "Select language"
+    "selector": "Select language",
+    "selectTooltip": "Select language (currently {language})"
+  },
+  "filterPulse": {
+    "sepia": {
+      "label": "Trigger sepia pulse effect"
+    },
+    "negative": {
+      "label": "Trigger negative pulse effect"
+    },
+    "theWorld": {
+      "label": "Trigger The World time-stop effect"
+    },
+    "warning": {
+      "title": "Heads up: flashing visual effect",
+      "body": "This effect briefly flashes and inverts the colours of the whole page. It may be uncomfortable, or unsafe, if you are sensitive to flashing light. You only need to make this choice once.",
+      "continue": "Play the effect",
+      "cancel": "Cancel"
+    }
   },
   "footer": {
     "copyright": "All rights reserved.",
@@ -154,6 +183,11 @@
   },
   "backToTop": {
     "label": "Back to top"
+  },
+  "scrollMinimap": {
+    "ariaLabel": "Page section map",
+    "jumpTo": "Jump to {section}",
+    "thumbLabel": "Current scroll position"
   },
   "exitIntent": {
     "title": "Hey, wait!",
@@ -184,6 +218,12 @@
     "noMatch": "No skills match your filter.",
     "skillsLabel": "skills",
     "levelLabel": "Level",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    },
     "expandDetails": "Expand skills",
     "collapseDetails": "Collapse skills"
   },
@@ -192,6 +232,8 @@
     "all": "All",
     "noMatch": "No projects match the selected filter.",
     "viewDetails": "View details for",
+    "previousProject": "Previous project",
+    "nextProject": "Next project",
     "screenshot": "screenshot",
     "featured": "Featured",
     "mockData": "Mock Data",
@@ -370,7 +412,7 @@
     "metaDescription": "Learn about the cookies we use, how to manage them, and your choices. Detailed information about Firebase Analytics cookies.",
     "title": "Cookie Policy",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "May 2026",
+    "lastUpdatedDate": "August 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "This Cookie Policy explains what cookies are, how we use them on our website, and your choices regarding cookies.",
@@ -470,6 +512,10 @@
         "notifications": {
           "name": "fcm_topic_subscriptions",
           "purpose": "Your notification subscription preferences"
+        },
+        "filterPulse": {
+          "name": "filter-pulse-photosensitivity-consent",
+          "purpose": "Your acknowledgement of the flashing visual effect warning, so it is only shown to you once"
         }
       },
       "howToManage": "How to manage localStorage: You can clear localStorage through your browser's developer tools or by clearing all site data. This will reset your preferences but won't affect cookies."
@@ -518,6 +564,16 @@
         "purpose": "Anonymous analytics and usage tracking",
         "privacyPolicyLabel": "Privacy Policy",
         "privacyPolicyLink": "Google Privacy Policy"
+      },
+      "vercel": {
+        "title": "Vercel Speed Insights & Web Analytics",
+        "description": "We use Vercel Speed Insights and Web Analytics to measure real-user performance (Core Web Vitals) and aggregate page-view traffic. These services are cookieless — they set NO cookies and collect only anonymized, aggregated data.",
+        "providerLabel": "Provider",
+        "provider": "Vercel Inc.",
+        "purposeLabel": "Purpose",
+        "purpose": "Anonymous performance monitoring and aggregate traffic analytics (no cookies)",
+        "privacyPolicyLabel": "Privacy Policy",
+        "privacyPolicyLink": "Vercel Privacy Policy"
       }
     },
     "cookieConsent": {
@@ -567,7 +623,7 @@
     "metaDescription": "Learn how we collect, use, and protect your data. GDPR and LGPD compliant privacy policy.",
     "title": "Privacy Policy",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "May 2026",
+    "lastUpdatedDate": "August 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website.",
@@ -635,7 +691,8 @@
         "language": "Language preference (pt-BR, en, es)",
         "consent": "Cookie consent preferences",
         "session": "Session data (exit intent modal state)",
-        "notifications": "Notification subscription preferences"
+        "notifications": "Notification subscription preferences",
+        "filterPulse": "Acknowledgement of the flashing visual effect warning"
       }
     },
     "dataUsage": {
@@ -663,15 +720,23 @@
       "intro": "Your data is stored in the following locations:",
       "firebase": {
         "title": "Firebase (Google Cloud)",
-        "description": "Analytics data and notification tokens are stored on Google's Firebase platform"
+        "description": "Analytics data, notification tokens, and feature-configuration requests (Firebase Remote Config) are handled by Google's Firebase platform"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Contact form submissions and email subscriptions are processed and stored by Formspree"
       },
+      "sentry": {
+        "title": "Sentry",
+        "description": "Diagnostic error and performance data is stored on Sentry's EU-based infrastructure"
+      },
       "localStorage": {
         "title": "Browser localStorage",
         "description": "Preferences and session data are stored locally in your browser"
+      },
+      "vercel": {
+        "title": "Vercel",
+        "description": "Real-user performance metrics (Core Web Vitals via Speed Insights) and aggregate page-view analytics (Web Analytics) are collected and stored by Vercel, our hosting provider. This data is anonymized and cookieless."
       }
     },
     "dataSharing": {
@@ -679,13 +744,21 @@
       "intro": "We share data with the following third-party services:",
       "firebase": {
         "title": "Google Analytics/Firebase",
-        "description": "Anonymous analytics data is processed by Google's Firebase Analytics service"
+        "description": "Anonymous analytics data is processed by Google's Firebase Analytics service. We also use Firebase Remote Config to deliver site configuration (such as which resume file to serve); this sends a pseudonymous installation identifier to Google, sets no cookies, and collects no personal data about you"
       },
       "formspree": {
         "title": "Formspree",
         "description": "Contact form data is processed by Formspree to deliver messages to our email"
       },
-      "noSale": "We do not sell, rent, or trade your personal information to third parties."
+      "sentry": {
+        "title": "Sentry",
+        "description": "Error and performance diagnostics are processed by Sentry (Functional Software, Inc.) to detect and fix issues; reports are stripped of your email and IP address before being sent"
+      },
+      "noSale": "We do not sell, rent, or trade your personal information to third parties.",
+      "vercel": {
+        "title": "Vercel",
+        "description": "Anonymous performance and aggregate traffic data is processed by Vercel (Vercel Inc.) through Speed Insights and Web Analytics; these services set no cookies and collect no personal data about you"
+      }
     },
     "userRights": {
       "title": "Your Rights (GDPR/LGPD Compliance)",
@@ -755,7 +828,7 @@
     "metaDescription": "Read the terms and conditions for using our website. Understand your rights and responsibilities when using our portfolio site.",
     "title": "Terms of Use",
     "lastUpdated": "Last Updated",
-    "lastUpdatedDate": "May 2026",
+    "lastUpdatedDate": "June 2026",
     "introduction": {
       "title": "Introduction",
       "paragraph1": "Welcome to my personal portfolio website. These Terms of Use govern your access to and use of this website.",
@@ -874,7 +947,8 @@
       "seeMore": "For detailed information about data practices, please see our",
       "privacyPolicyLink": "Privacy Policy",
       "and": "and",
-      "cookiePolicyLink": "Cookie Policy"
+      "cookiePolicyLink": "Cookie Policy",
+      "hosting": "This website is hosted on Vercel and uses Vercel Speed Insights and Web Analytics to monitor real-user performance and aggregate traffic. These services are cookieless and collect only anonymized data, as described in our Privacy Policy."
     },
     "changes": {
       "title": "Changes to Terms",
@@ -900,6 +974,35 @@
     "acknowledgment": {
       "title": "Acknowledgment",
       "description": "By using this website, you acknowledge that you have read, understood, and agree to be bound by these Terms of Use."
+    }
+  },
+  "banks": {
+    "title": "Banking Sector Impact",
+    "subtitle": "Financial institutions whose mobile apps I helped build and maintain.",
+    "opensInNewTab": "Opens the official site in a new tab",
+    "previous": "Scroll the carousel to the previous logos",
+    "next": "Scroll the carousel to the next logos"
+  },
+  "aiStack": {
+    "title": "Built with AI",
+    "subtitle": "The AI tools I used to design, build, and ship this site.",
+    "tools": {
+      "kiro": {
+        "name": "Kiro IDE",
+        "role": "Spec-driven scaffolding"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "role": "Feature development & refactoring"
+      },
+      "githubCopilot": {
+        "name": "GitHub Copilot",
+        "role": "In-editor code completion"
+      },
+      "chatgpt": {
+        "name": "ChatGPT",
+        "role": "Research & problem-solving"
+      }
     }
   }
 }

@@ -7,6 +7,8 @@ import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import MarkdownText from "@/components/MarkdownText";
+import SwipeCarousel from "@/components/SwipeCarousel";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
 interface ProjectsSectionProps {
@@ -18,17 +20,68 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
   const t = useTranslations();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [techFilter, setTechFilter] = useState<string>("");
+  // Below the `sm` breakpoint, swap the grid for a one-card-per-swipe carousel.
+  const isMobile = useMediaQuery("(max-width: 639px)");
 
   // Collect all unique technologies
-  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort();
+  const allTechs = Array.from(new Set(projects.flatMap((p) => p.technologies))).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const filtered = techFilter
     ? projects.filter((p) => p.technologies.includes(techFilter))
     : projects;
 
+  // Step to the next/previous project within the open detail modal, wrapping.
+  const navProject = (delta: 1 | -1) => {
+    setSelectedProject((current) => {
+      if (!current || filtered.length < 2) return current;
+      const i = filtered.findIndex((p) => p.id === current.id);
+      if (i < 0) return current;
+      return filtered[(i + delta + filtered.length) % filtered.length];
+    });
+  };
+  const canNavProjects = !!selectedProject && filtered.length > 1;
+
+  let projectsContent: React.ReactNode;
+  if (filtered.length === 0) {
+    projectsContent = (
+      <output className="block text-gray-500 dark:text-gray-400">{t("projects.noMatch")}</output>
+    );
+  } else if (isMobile) {
+    projectsContent = (
+      /* Mobile: one card per swipe, looping infinitely. */
+      <SwipeCarousel
+        ariaLabel={t("sections.projects")}
+        itemClassName="w-[85%]"
+        showControls
+        prevLabel={t("projects.previousProject")}
+        nextLabel={t("projects.nextProject")}
+        items={filtered.map((project, index) => ({
+          key: `${project.id}-${index}`,
+          node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
+        }))}
+      />
+    );
+  } else {
+    projectsContent = (
+      /* Desktop: grid. */
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((project, index) => (
+          <ProjectCard
+            key={`${project.id}-${index}`}
+            project={project}
+            onClick={() => setSelectedProject(project)}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <section
       id="projects"
+      tabIndex={-1}
       aria-label={t("sections.projects")}
       className="py-8 px-4 sm:px-6 lg:px-8"
     >
@@ -39,70 +92,76 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
 
         {/* Technology filter */}
         {allTechs.length > 0 && (
-          <div
-            className="mb-8 flex flex-wrap gap-2"
-            role="group"
-            aria-label={t("projects.filterByTech")}
-          >
-            <button
-              type="button"
+          <fieldset className="mb-8 flex min-w-0 flex-wrap gap-2 border-0 p-0">
+            <legend className="sr-only">{t("projects.filterByTech")}</legend>
+            <FilterButton
+              label={t("projects.all")}
+              active={!techFilter}
               onClick={() => setTechFilter("")}
-              className={[
-                "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
-                !techFilter
-                  ? "bg-primary-600 text-white dark:bg-primary-500"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
-              ].join(" ")}
-              aria-pressed={!techFilter}
-            >
-              {t("projects.all")}
-            </button>
+            />
             {allTechs.map((tech) => (
-              <button
+              <FilterButton
                 key={tech}
-                type="button"
+                label={tech}
+                active={techFilter === tech}
                 onClick={() => setTechFilter(tech === techFilter ? "" : tech)}
-                className={[
-                  "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
-                  techFilter === tech
-                    ? "bg-primary-600 text-white dark:bg-primary-500"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
-                ].join(" ")}
-                aria-pressed={techFilter === tech}
-              >
-                {tech}
-              </button>
+              />
             ))}
-          </div>
+          </fieldset>
         )}
 
         {/* Projects grid */}
-        {filtered.length === 0 ? (
-          <p className="text-gray-500 dark:text-gray-400" role="status">
-            {t("projects.noMatch")}
-          </p>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((project, index) => (
-              <ProjectCard
-                key={`${project.id}-${index}`}
-                project={project}
-                onClick={() => setSelectedProject(project)}
-              />
-            ))}
-          </div>
-        )}
+        {projectsContent}
 
-        {/* Project detail modal */}
+        {/* Project detail modal — Prev/Next step through the (filtered) projects */}
         <Modal
           isOpen={!!selectedProject}
           onClose={() => setSelectedProject(null)}
           title={selectedProject?.title}
+          onPrev={canNavProjects ? () => navProject(-1) : undefined}
+          onNext={canNavProjects ? () => navProject(1) : undefined}
+          prevLabel={t("projects.previousProject")}
+          nextLabel={t("projects.nextProject")}
         >
           {selectedProject && <ProjectDetail project={selectedProject} />}
         </Modal>
       </div>
     </section>
+  );
+}
+
+// ─── FilterButton ────────────────────────────────────────────────────────────
+
+/**
+ * A technology filter chip. Rendered in two branches so `aria-pressed` is a
+ * literal "true"/"false" string — static a11y linters can't evaluate JSX
+ * expressions and would flag `aria-pressed={expr}` as an invalid value.
+ */
+function FilterButton({
+  label,
+  active,
+  onClick,
+}: {
+  readonly label: string;
+  readonly active: boolean;
+  readonly onClick: () => void;
+}) {
+  const className = [
+    "rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600",
+    active
+      ? "bg-primary-600 text-white dark:bg-primary-600"
+      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
+  ].join(" ");
+  const props = { onClick, className };
+
+  return active ? (
+    <button type="button" {...props} aria-pressed="true">
+      {label}
+    </button>
+  ) : (
+    <button type="button" {...props} aria-pressed="false">
+      {label}
+    </button>
   );
 }
 
@@ -118,29 +177,26 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
   const firstImage = project.images[0];
 
   // Determine if this is mock data (projects without real images or repos)
-  const isMockData = !project.repoUrl || project.images.length === 0;
+  // Explicit `mockData` wins; otherwise fall back to the heuristic (no repo or
+  // no images). Lets real projects without a public repo (e.g. INCT) opt out.
+  const isMockData = project.mockData ?? (!project.repoUrl || project.images.length === 0);
 
   return (
     <Card
       className={[
-        "group cursor-pointer transition-all duration-200",
+        "group h-full cursor-pointer transition-all duration-200",
         project.featured ? "ring-2 ring-primary-200 dark:ring-primary-800" : "",
       ].join(" ")}
     >
-      <article
+      <button
+        type="button"
         onClick={onClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onClick();
-          }
-        }}
-        role="button"
-        tabIndex={0}
         aria-label={`${t("projects.viewDetails")} ${project.title}`}
+        className="block w-full text-left"
       >
-        {/* Project image */}
-        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 -mx-6 -mt-6 mb-4">
+        {/* Project image — contained (aligned with the card content, not full
+            bleed) and centered, with breathing room around it. */}
+        <div className="relative h-48 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 mb-4">
           {firstImage ? (
             <Image
               src={firstImage}
@@ -148,10 +204,10 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               fill
               sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
               loading="lazy"
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-16 w-16 text-gray-400 dark:text-gray-600"
@@ -171,18 +227,18 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           )}
         </div>
 
-        <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
             {project.title}
           </h3>
-          <div className="flex shrink-0 gap-1">
+          <div className="flex flex-wrap gap-1">
             {project.featured && (
-              <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+              <span className="rounded-full bg-primary-100 px-2 py-0.5 text-sm font-medium text-primary-700 dark:bg-primary-900 dark:text-primary-300">
                 {t("projects.featured")}
               </span>
             )}
             {isMockData && (
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm font-medium text-amber-700 dark:bg-amber-900 dark:text-amber-300">
                 {t("projects.mockData")}
               </span>
             )}
@@ -195,18 +251,18 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           {project.technologies.slice(0, 4).map((tech, index) => (
             <span
               key={`${project.id}-tech-${index}`}
-              className={`rounded px-2 py-0.5 text-xs font-medium ${getTechColorClasses(tech)}`}
+              className={`rounded px-2 py-0.5 text-sm font-medium ${getTechColorClasses(tech)}`}
             >
               {tech}
             </span>
           ))}
           {project.technologies.length > 4 && (
-            <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500 dark:bg-gray-700 dark:text-gray-500">
+            <span className="rounded bg-gray-100 px-2 py-0.5 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-300">
               +{project.technologies.length - 4} {t("projects.more")}
             </span>
           )}
         </div>
-      </article>
+      </button>
     </Card>
   );
 }
@@ -242,7 +298,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           ))}
         </div>
       ) : (
-        <div className="flex h-40 w-full items-center justify-center rounded-md bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
+        <div className="flex h-40 w-full items-center justify-center rounded-md bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800">
           <div className="text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -280,7 +336,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           {project.technologies.map((tech, index) => (
             <span
               key={`${project.id}-tech-${index}`}
-              className={`rounded-full px-3 py-1 text-xs font-medium ${getTechColorClasses(tech)}`}
+              className={`rounded-full px-3 py-1 text-sm font-medium ${getTechColorClasses(tech)}`}
             >
               {tech}
             </span>
@@ -296,7 +352,7 @@ function ProjectDetail({ project }: ProjectDetailProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600"
+              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
               aria-label={`${t("projects.liveDemo")} ${project.title}`}
             >
               {t("projects.liveDemo")}

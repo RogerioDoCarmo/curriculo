@@ -16,13 +16,20 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -55,6 +62,44 @@ jobs:
           fi
           echo "✅ Coverage meets 71% threshold (goal: 90%)"
 
+  mutation:
+    name: Mutation Tests
+    runs-on: ubuntu-latest
+    # Non-blocking visibility check alongside the unit-test gate. Reports the
+    # mutation score on every production deploy but never blocks it (not in the
+    # deploy job's `needs`, and continue-on-error swallows a sub-threshold run).
+    continue-on-error: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run mutation tests
+        run: npm run test:mutation
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mutation-report
+          path: reports/mutation/
+
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
@@ -65,13 +110,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -106,13 +152,20 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
           cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Configure npm (resilient registry timeouts/retries)
+        run: |
+          npm config set fetch-timeout 120000
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -123,12 +176,13 @@ jobs:
         run: |
           # Create notification script
           cat > send-notification.js << 'EOF'
-          const admin = require('firebase-admin');
+          const { initializeApp, cert } = require('firebase-admin/app');
+          const { getMessaging } = require('firebase-admin/messaging');
 
           // Initialize Firebase Admin SDK
           const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-          admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount)
+          const app = initializeApp({
+            credential: cert(serviceAccount)
           });
 
           // Send notification to topic
@@ -140,7 +194,7 @@ jobs:
             topic: 'deployments'
           };
 
-          admin.messaging().send(message)
+          getMessaging(app).send(message)
             .then((response) => {
               console.log('✅ Notification sent successfully:', response);
               process.exit(0);

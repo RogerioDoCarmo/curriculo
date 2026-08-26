@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Timeline from "@/components/Timeline";
 import type { TimelineItem } from "@/types/index";
 
@@ -42,24 +42,42 @@ const sampleItems: TimelineItem[] = [
 ];
 
 describe("Timeline Component", () => {
-  it("renders all timeline items", () => {
+  it.each([
+    ["titles", ["Senior Developer", "MSc Computer Science", "Best App Award", "First Job"]],
+    ["subtitles", ["Acme Corp", "State University"]],
+    ["descriptions", ["Led mobile development team.", "Research in distributed systems."]],
+  ] as const)("renders item %s", (_label, texts) => {
     render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Senior Developer")).toBeInTheDocument();
-    expect(screen.getByText("MSc Computer Science")).toBeInTheDocument();
-    expect(screen.getByText("Best App Award")).toBeInTheDocument();
-    expect(screen.getByText("First Job")).toBeInTheDocument();
+    texts.forEach((text) => {
+      expect(screen.getByText(text)).toBeInTheDocument();
+    });
   });
 
-  it("renders item subtitles when provided", () => {
-    render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Acme Corp")).toBeInTheDocument();
-    expect(screen.getByText("State University")).toBeInTheDocument();
-  });
+  it("expands an entry by clicking its circular marker", () => {
+    const itemsWithDetails: TimelineItem[] = [
+      {
+        id: "d1",
+        date: "2022-01",
+        title: "Role",
+        description: "Intro paragraph.\n### Conquistas\nHidden detail line.",
+        type: "work",
+      },
+    ];
+    const { container } = render(
+      <Timeline
+        items={itemsWithDetails}
+        expandLabel="Expand details"
+        collapseLabel="Collapse details"
+      />
+    );
+    // Details are collapsed until the marker is clicked.
+    expect(screen.queryByText("Hidden detail line.")).not.toBeInTheDocument();
 
-  it("renders item descriptions", () => {
-    render(<Timeline items={sampleItems} />);
-    expect(screen.getByText("Led mobile development team.")).toBeInTheDocument();
-    expect(screen.getByText("Research in distributed systems.")).toBeInTheDocument();
+    // The circular marker (rounded-full button) toggles the entry.
+    const marker = container.querySelector("button.rounded-full");
+    expect(marker).not.toBeNull();
+    fireEvent.click(marker as HTMLElement);
+    expect(screen.getByText("Hidden detail line.")).toBeInTheDocument();
   });
 
   it("renders date labels for each item", () => {

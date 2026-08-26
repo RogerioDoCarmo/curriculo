@@ -3,6 +3,15 @@
   "buildCommand": "npm run build",
   "headers": [
     {
+      "source": "/((?!.*\\.).*)",
+      "headers": [
+        {
+          "key": "Accept-Ranges",
+          "value": "none"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -27,7 +36,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https://*.googleapis.com; connect-src 'self' https://*.googleapis.com https://*.firebaseapp.com https://formspree.io; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://images.dmca.com; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https://*.googleapis.com https://images.dmca.com; connect-src 'self' https://*.googleapis.com https://*.firebaseapp.com https://formspree.io https://www.google-analytics.com https://analytics.google.com; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io; upgrade-insecure-requests"
         }
       ]
     }

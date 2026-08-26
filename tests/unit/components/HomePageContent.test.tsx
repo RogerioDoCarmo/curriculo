@@ -3,7 +3,7 @@
  * Tests the client-side wrapper that renders all homepage sections
  */
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import HomePageContent from "@/app/[locale]/HomePageContent";
 import type { Experience, Project, SkillCategory } from "@/types/index";
@@ -26,12 +26,11 @@ jest.mock("@/lib/lazy-components", () => ({
 // Mock all child components
 jest.mock("@/components/Hero", () => ({
   __esModule: true,
-  default: ({ name, title, locale, greeting, ctaText, contactText }: any) => (
+  default: ({ name, title, greeting, ctaText, contactText }: any) => (
     <div
       data-testid="hero"
       data-name={name}
       data-title={title}
-      data-locale={locale}
       data-greeting={greeting}
       data-cta={ctaText}
       data-contact={contactText}
@@ -43,7 +42,17 @@ jest.mock("@/components/Hero", () => ({
 
 jest.mock("@/components/CareerPathSelector", () => ({
   __esModule: true,
-  default: () => <div data-testid="career-path-selector">Career Path Selector</div>,
+  default: ({ selected, onSelect }: any) => (
+    <div data-testid="career-path-selector" data-selected={selected}>
+      Career Path Selector
+      <button type="button" onClick={() => onSelect("academic")}>
+        Select Academic
+      </button>
+      <button type="button" onClick={() => onSelect("professional")}>
+        Select Professional
+      </button>
+    </div>
+  ),
 }));
 
 jest.mock("@/components/ExperienceSection", () => ({
@@ -78,14 +87,19 @@ jest.mock("@/components/ProjectsSection", () => ({
   ),
 }));
 
+jest.mock("@/components/BanksSection", () => ({
+  __esModule: true,
+  default: () => <div data-testid="banks-section">Banks Section</div>,
+}));
+
+jest.mock("@/components/AiStackSection", () => ({
+  __esModule: true,
+  default: () => <div data-testid="ai-stack-section">AI Stack Section</div>,
+}));
+
 jest.mock("@/components/ContactForm", () => ({
   __esModule: true,
   default: () => <div data-testid="contact-form">Contact Form</div>,
-}));
-
-jest.mock("@/components/BackToTopButton", () => ({
-  __esModule: true,
-  default: () => <button data-testid="back-to-top">Back to Top</button>,
 }));
 
 describe("HomePageContent Component", () => {
@@ -178,7 +192,6 @@ describe("HomePageContent Component", () => {
       // Tech Stack section moved to separate page
       expect(screen.queryByTestId("tech-stack-section")).not.toBeInTheDocument();
       expect(screen.getByTestId("contact-form")).toBeInTheDocument();
-      expect(screen.getByTestId("back-to-top")).toBeInTheDocument();
       expect(screen.getByTestId("exit-intent-modal")).toBeInTheDocument();
     });
 
@@ -188,6 +201,7 @@ describe("HomePageContent Component", () => {
       const contactSection = screen.getByRole("region", { name: "Get in Touch" });
       expect(contactSection).toBeInTheDocument();
       expect(contactSection).toHaveAttribute("id", "contact");
+      expect(contactSection).toHaveAttribute("tabIndex", "-1");
     });
 
     it("renders contact section heading", () => {
@@ -214,7 +228,6 @@ describe("HomePageContent Component", () => {
       const hero = screen.getByTestId("hero");
       expect(hero).toHaveAttribute("data-name", "Rogério do Carmo");
       expect(hero).toHaveAttribute("data-title", "Frontend Mobile React Native Developer");
-      expect(hero).toHaveAttribute("data-locale", "en");
       expect(hero).toHaveAttribute("data-greeting", "Hello, I'm");
       expect(hero).toHaveAttribute("data-cta", "View My Work");
       expect(hero).toHaveAttribute("data-contact", "Get in Touch");
@@ -227,6 +240,22 @@ describe("HomePageContent Component", () => {
       expect(experienceSection).toHaveAttribute("data-career-path", "professional");
       expect(experienceSection).toHaveAttribute("data-locale", "en");
       expect(experienceSection).toHaveAttribute("data-experiences-count", "1");
+    });
+
+    it("links the career panel to the active tab and updates on selection", () => {
+      renderWithIntl(<HomePageContent {...defaultProps} />);
+
+      // The panel referenced by the tabs' aria-controls must exist and point back
+      // at the active tab (the accessibility fix); it flips when the path changes.
+      const panel = screen.getByRole("tabpanel");
+      expect(panel).toHaveAttribute("id", "career-panel");
+      expect(panel).toHaveAttribute("aria-labelledby", "tab-professional");
+
+      fireEvent.click(screen.getByText("Select Academic"));
+      expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "tab-academic");
+
+      fireEvent.click(screen.getByText("Select Professional"));
+      expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "tab-professional");
     });
 
     it("passes correct props to SkillsSection", () => {
@@ -271,7 +300,6 @@ describe("HomePageContent Component", () => {
       renderWithIntl(<HomePageContent {...ptProps} />, "pt-BR");
 
       const hero = screen.getByTestId("hero");
-      expect(hero).toHaveAttribute("data-locale", "pt-BR");
       expect(hero).toHaveAttribute("data-greeting", "Olá, eu sou");
       expect(hero).toHaveAttribute("data-cta", "Ver Meu Trabalho");
       expect(hero).toHaveAttribute("data-contact", "Entre em Contato");
@@ -297,7 +325,6 @@ describe("HomePageContent Component", () => {
       renderWithIntl(<HomePageContent {...esProps} />, "es");
 
       const hero = screen.getByTestId("hero");
-      expect(hero).toHaveAttribute("data-locale", "es");
       expect(hero).toHaveAttribute("data-greeting", "Hola, soy");
       expect(hero).toHaveAttribute("data-cta", "Ver Mi Trabajo");
       expect(hero).toHaveAttribute("data-contact", "Ponte en Contacto");
@@ -401,12 +428,13 @@ describe("HomePageContent Component", () => {
       // Tech Stack section moved to separate page
       expect(sectionOrder).toEqual([
         "hero",
+        "banks-section",
         "career-path-selector",
         "experience-section",
         "projects-section",
         "skills-section",
+        "ai-stack-section",
         "contact-form",
-        "back-to-top",
         "exit-intent-modal",
       ]);
     });

@@ -81,7 +81,7 @@ describe("EmailSubscribeForm", () => {
 
       // Trigger error
       await user.click(screen.getByRole("button", { name: /send/i }));
-      await waitFor(() => expect(screen.getByText(/email is required/i)).toBeInTheDocument());
+      await screen.findByText(/email is required/i);
 
       // Fix the error
       await user.type(screen.getByRole("textbox", { name: /email/i }), "valid@example.com");
