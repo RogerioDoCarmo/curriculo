@@ -18,6 +18,20 @@ updates:
 
     # Group dependency updates to reduce PR noise
     groups:
+      # Stryker's packages declare exact-version peer dependencies on each
+      # other (jest-runner@X requires core@X exactly), so they can only be
+      # bumped together. Listed first because a dependency joins the first
+      # group whose patterns match, and majors are included because an
+      # ungrouped major split this pair into two unresolvable PRs (#296/#297)
+      # that shipped package.json without a lockfile and broke `npm ci`.
+      stryker:
+        patterns:
+          - "@stryker-mutator/*"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+
       # Group all non-security updates together
       development-dependencies:
         dependency-type: "development"
