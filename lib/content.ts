@@ -106,6 +106,14 @@ function optionalString(value: unknown): string | undefined {
   return value ? String(value) : undefined;
 }
 
+/**
+ * Returns the first candidate directory that exists, or `fallback` when none
+ * do — so the caller still has a concrete path to report as missing.
+ */
+function firstExistingDir(candidates: readonly string[], fallback: string): string {
+  return candidates.find((dir) => fs.existsSync(dir)) ?? fallback;
+}
+
 /** Descending comparator for ISO-ish "YYYY-MM-DD" date strings. */
 function compareDateDesc(a: string, b: string): number {
   if (a < b) return 1;
@@ -155,18 +163,10 @@ export async function getProjects(
 ): Promise<Project[]> {
   // Try the locale directory first, then the default locale, then the legacy
   // flat layout that predates localized project content.
-  const localeProjectsDir = path.join(contentDir, "projects", locale);
-  const defaultProjectsDir = path.join(contentDir, "projects", "pt-BR");
-  const legacyProjectsDir = path.join(contentDir, "projects");
-
-  let projectsDir: string;
-  if (fs.existsSync(localeProjectsDir)) {
-    projectsDir = localeProjectsDir;
-  } else if (fs.existsSync(defaultProjectsDir)) {
-    projectsDir = defaultProjectsDir;
-  } else {
-    projectsDir = legacyProjectsDir;
-  }
+  const projectsDir = firstExistingDir(
+    [path.join(contentDir, "projects", locale), path.join(contentDir, "projects", "pt-BR")],
+    path.join(contentDir, "projects")
+  );
 
   if (!fs.existsSync(projectsDir)) {
     if (process.env.NODE_ENV === "development") {
