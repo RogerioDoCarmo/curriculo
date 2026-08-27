@@ -11,12 +11,19 @@ import SwipeCarousel from "@/components/SwipeCarousel";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getTechColorClasses } from "@/lib/tag-colors";
 
+/**
+ * Locales with localized store-badge artwork under `public/images/badges/`.
+ * Any other locale falls back to the English badge.
+ */
+const STORE_BADGE_LOCALES: readonly string[] = ["pt-BR", "en", "es"];
+const FALLBACK_BADGE_LOCALE = "en";
+
 interface ProjectsSectionProps {
   readonly projects: Project[];
   readonly locale: string;
 }
 
-export default function ProjectsSection({ projects, locale: _locale }: ProjectsSectionProps) {
+export default function ProjectsSection({ projects, locale }: ProjectsSectionProps) {
   const t = useTranslations();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [techFilter, setTechFilter] = useState<string>("");
@@ -123,7 +130,7 @@ export default function ProjectsSection({ projects, locale: _locale }: ProjectsS
           prevLabel={t("projects.previousProject")}
           nextLabel={t("projects.nextProject")}
         >
-          {selectedProject && <ProjectDetail project={selectedProject} />}
+          {selectedProject && <ProjectDetail project={selectedProject} locale={locale} />}
         </Modal>
       </div>
     </section>
@@ -271,10 +278,12 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
 
 interface ProjectDetailProps {
   readonly project: Project;
+  readonly locale: string;
 }
 
-function ProjectDetail({ project }: ProjectDetailProps) {
+function ProjectDetail({ project, locale }: ProjectDetailProps) {
   const t = useTranslations();
+  const badgeLocale = STORE_BADGE_LOCALES.includes(locale) ? locale : FALLBACK_BADGE_LOCALE;
 
   return (
     <div className="space-y-4">
@@ -343,6 +352,44 @@ function ProjectDetail({ project }: ProjectDetailProps) {
           ))}
         </div>
       </div>
+
+      {/* Store badges */}
+      {(project.appStoreUrl || project.fdroidUrl) && (
+        <div className="flex flex-wrap items-center gap-3 pt-2">
+          {project.appStoreUrl && (
+            <a
+              href={project.appStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            >
+              <Image
+                src={`/images/badges/app-store-${badgeLocale}.svg`}
+                alt={`${t("projects.appStore")} — ${project.title}`}
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
+            </a>
+          )}
+          {project.fdroidUrl && (
+            <a
+              href={project.fdroidUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            >
+              <Image
+                src={`/images/badges/f-droid-${badgeLocale}.svg`}
+                alt={`${t("projects.fdroid")} — ${project.title}`}
+                width={646}
+                height={250}
+                className="h-12 w-auto"
+              />
+            </a>
+          )}
+        </div>
+      )}
 
       {/* Links */}
       {(project.liveUrl || project.repoUrl) && (

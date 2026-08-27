@@ -129,9 +129,10 @@ export async function generateJsonResume(contentDir?: string): Promise<JsonResum
   // _projects: fetched for future use, not consumed yet.
   const [_projects, professionalExperiences, academicExperiences, skillCategories] =
     await Promise.all([
-      getProjects(contentDir),
-      // `locale` (2nd param) explicitly passed through as undefined so contentDir
-      // lands in its actual 3rd parameter slot, not misinterpreted as a locale.
+      // `locale` (1st param) explicitly passed through as undefined so contentDir
+      // lands in its actual 2nd parameter slot, not misinterpreted as a locale.
+      getProjects(undefined, contentDir),
+      // Same here: contentDir belongs in the 3rd parameter slot.
       getExperiences("professional", undefined, contentDir),
       getExperiences("academic", undefined, contentDir),
       getSkills(undefined, contentDir),
