@@ -9,11 +9,19 @@ import Modal from "@/components/Modal";
 import HighlightedText from "@/components/HighlightedText";
 import LanguageSelector from "@/components/LanguageSelector";
 import ThemeToggle from "@/components/ThemeToggle";
+import Select from "@/components/Select";
+import AnimatedCounter from "@/components/AnimatedCounter";
+import PulseAnimation from "@/components/PulseAnimation";
 import ComponentShowcase from "@/components/ComponentShowcase";
 import type { SupportedLocale } from "@/types/index";
 
 interface ComponentGalleryClientProps {
   readonly locale: SupportedLocale;
+}
+
+interface Framework {
+  readonly id: string;
+  readonly name: string;
 }
 
 export default function ComponentGalleryClient({ locale }: ComponentGalleryClientProps) {
@@ -22,6 +30,13 @@ export default function ComponentGalleryClient({ locale }: ComponentGalleryClien
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
+  const frameworks: readonly Framework[] = [
+    { id: "react", name: t("select.options.react") },
+    { id: "reactNative", name: t("select.options.reactNative") },
+    { id: "nextjs", name: t("select.options.nextjs") },
+  ];
+  const [selectedFramework, setSelectedFramework] = useState<Framework>(frameworks[0]);
 
   return (
     <main className="min-h-screen bg-background py-20">
@@ -225,6 +240,44 @@ export default function ComponentGalleryClient({ locale }: ComponentGalleryClien
           >
             <div className="p-4">
               <ThemeToggle />
+            </div>
+          </ComponentShowcase>
+
+          {/* Select Component (generic) */}
+          <ComponentShowcase title={t("select.title")} description={t("select.description")}>
+            <div className="flex flex-wrap items-center gap-4 p-4">
+              <Select<Framework>
+                value={selectedFramework}
+                options={frameworks}
+                onChange={setSelectedFramework}
+                getLabel={(framework) => framework.name}
+                getKey={(framework) => framework.id}
+                label={t("select.label")}
+              />
+              <p className="text-sm text-muted-foreground">
+                {t("select.resultLabel")}: <strong>{selectedFramework.name}</strong>
+              </p>
+            </div>
+          </ComponentShowcase>
+
+          {/* AnimatedCounter Component */}
+          <ComponentShowcase
+            title={t("animatedCounter.title")}
+            description={t("animatedCounter.description")}
+          >
+            <div className="flex flex-wrap justify-center gap-12 p-4">
+              <AnimatedCounter value={5} suffix="+" label={t("animatedCounter.yearsLabel")} />
+              <AnimatedCounter value={6} label={t("animatedCounter.banksLabel")} />
+            </div>
+          </ComponentShowcase>
+
+          {/* PulseAnimation Component (Lottie) */}
+          <ComponentShowcase
+            title={t("pulseAnimation.title")}
+            description={t("pulseAnimation.description")}
+          >
+            <div className="flex justify-center p-4">
+              <PulseAnimation label={t("pulseAnimation.label")} />
             </div>
           </ComponentShowcase>
         </div>

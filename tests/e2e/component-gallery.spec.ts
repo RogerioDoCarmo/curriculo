@@ -52,7 +52,7 @@ test.describe("Component Gallery Page", () => {
       await page.goto(`${BASE_URL}/pt-BR/components/`);
     });
 
-    test("should display all 6 component showcases", async ({ page }) => {
+    test("should display all 9 component showcases", async ({ page }) => {
       // Check for all component sections (locale-aware: pt-BR, en, es)
       // Using .first() to avoid strict mode violations when text appears multiple times
       const componentTitles = [
@@ -62,6 +62,9 @@ test.describe("Component Gallery Page", () => {
         { name: /Modal/i },
         { name: /Language Selector|Seletor de Idioma|Selector de Idioma/i },
         { name: /Theme Toggle|Alternar Tema/i },
+        { name: /Select/i },
+        { name: /Animated Counter|Contador Animado/i },
+        { name: /Pulse Animation|Animação de Pulso|Animación de Pulso/i },
       ];
 
       for (const { name } of componentTitles) {
@@ -144,6 +147,51 @@ test.describe("Component Gallery Page", () => {
       // Theme toggle button should be present
       const toggle = themeSection.locator("button");
       await expect(toggle).toBeVisible();
+    });
+
+    test("should display and interact with the generic Select component", async ({ page }) => {
+      const selectSection = page.locator("section").filter({ hasText: /^Select/ });
+      await expect(selectSection).toBeVisible();
+
+      const select = selectSection.locator("select");
+      await expect(select).toBeVisible();
+      await expect(select).toHaveValue("react");
+
+      await select.selectOption("nextjs");
+      await expect(selectSection.getByText("Next.js").last()).toBeVisible();
+    });
+
+    test("should display the AnimatedCounter component reaching its final values", async ({
+      page,
+    }) => {
+      const counterSection = page
+        .locator("section")
+        .filter({ hasText: /Animated Counter|Contador Animado/i });
+      await expect(counterSection).toBeVisible();
+
+      // The count-up animation settles quickly; poll for the final accessible values.
+      await expect(counterSection.getByLabel(/5\+.*Years|Anos|Años/i)).toBeAttached();
+      await expect(counterSection.getByLabel(/6.*Banking|Bancárias|Bancarias/i)).toBeAttached();
+    });
+
+    test("should display the Lottie PulseAnimation component with real rendered geometry", async ({
+      page,
+    }) => {
+      const pulseSection = page
+        .locator("section")
+        .filter({ hasText: /Pulse Animation|Animação de Pulso|Animación de Pulso/i });
+      await expect(pulseSection).toBeVisible();
+      await expect(pulseSection.getByRole("img")).toBeVisible();
+
+      // A malformed Lottie JSON (e.g. animated keyframes missing bezier easing
+      // handles) still renders the outer wrapper — lottie-web hides the shape
+      // group instead (`display: none`, an empty `<path>`). Assert the actual
+      // rendered path so a broken animation asset fails this test, not just a
+      // missing wrapper.
+      const path = pulseSection.locator("svg path").first();
+      await expect(path).toBeVisible();
+      const d = await path.getAttribute("d");
+      expect(d).toBeTruthy();
     });
   });
 

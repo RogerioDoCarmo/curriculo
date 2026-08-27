@@ -77,6 +77,62 @@ jest.mock("@/components/ThemeToggle", () => {
   };
 });
 
+jest.mock("@/components/Select", () => {
+  return function MockSelect<T extends { readonly id: string; readonly name: string }>({
+    value,
+    options,
+    onChange,
+    label,
+  }: {
+    value: T;
+    options: readonly T[];
+    onChange: (option: T) => void;
+    label: string;
+  }) {
+    return (
+      <select
+        aria-label={label}
+        value={value.id}
+        onChange={(event) => {
+          const next = options.find((option) => option.id === event.target.value);
+          if (next) onChange(next);
+        }}
+      >
+        {options.map((option) => (
+          <option key={option.id} value={option.id}>
+            {option.name}
+          </option>
+        ))}
+      </select>
+    );
+  };
+});
+
+jest.mock("@/components/AnimatedCounter", () => {
+  return function MockAnimatedCounter({
+    value,
+    suffix,
+    label,
+  }: {
+    value: number;
+    suffix?: string;
+    label: string;
+  }) {
+    return (
+      <div aria-label={`${value}${suffix ?? ""} ${label}`}>
+        {value}
+        {suffix}
+      </div>
+    );
+  };
+});
+
+jest.mock("@/components/PulseAnimation", () => {
+  return function MockPulseAnimation({ label }: { label: string }) {
+    return <div role="img" aria-label={label} data-testid="pulse-animation" />;
+  };
+});
+
 jest.mock("@/components/ComponentShowcase", () => {
   return function MockComponentShowcase({
     title,
@@ -142,6 +198,28 @@ const messages = {
       title: "Theme Toggle",
       description: "Dark/light mode toggle",
     },
+    select: {
+      title: "Select Component",
+      description: "Generic typed dropdown component",
+      label: "Framework",
+      resultLabel: "You picked",
+      options: {
+        react: "React",
+        reactNative: "React Native",
+        nextjs: "Next.js",
+      },
+    },
+    animatedCounter: {
+      title: "Animated Counter",
+      description: "Count-up statistic component",
+      yearsLabel: "Years of Experience",
+      banksLabel: "Banking Institutions",
+    },
+    pulseAnimation: {
+      title: "Pulse Animation",
+      description: "Looping Lottie animation component",
+      label: "Decorative pulsing animation",
+    },
   },
 };
 
@@ -168,6 +246,9 @@ describe("ComponentGalleryClient", () => {
     expect(screen.getByText("Modal Component")).toBeInTheDocument();
     expect(screen.getByTestId("language-selector")).toBeInTheDocument();
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
+    expect(screen.getByText("Select Component")).toBeInTheDocument();
+    expect(screen.getByText("Animated Counter")).toBeInTheDocument();
+    expect(screen.getByText("Pulse Animation")).toBeInTheDocument();
   });
 
   it.each([
@@ -254,6 +335,27 @@ describe("ComponentGalleryClient", () => {
   it("renders theme toggle", () => {
     renderWithIntl();
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
+  });
+
+  it("updates the picked framework when a new Select option is chosen", async () => {
+    const user = userEvent.setup();
+    renderWithIntl();
+
+    expect(screen.getByText("React", { selector: "strong" })).toBeInTheDocument();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Framework" }), "nextjs");
+
+    expect(screen.getByText("Next.js", { selector: "strong" })).toBeInTheDocument();
+  });
+
+  it("renders the animated counter stats", () => {
+    renderWithIntl();
+    expect(screen.getByLabelText("5+ Years of Experience")).toBeInTheDocument();
+    expect(screen.getByLabelText("6 Banking Institutions")).toBeInTheDocument();
+  });
+
+  it("renders the pulse animation", () => {
+    renderWithIntl();
+    expect(screen.getByRole("img", { name: "Decorative pulsing animation" })).toBeInTheDocument();
   });
 
   it("renders with different locales", () => {
