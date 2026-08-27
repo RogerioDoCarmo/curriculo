@@ -69,6 +69,8 @@ const projectFrontmatterArb = fc.record({
   date: isoDateArb,
   liveUrl: optionalUrlArb,
   repoUrl: optionalUrlArb,
+  appStoreUrl: optionalUrlArb,
+  fdroidUrl: optionalUrlArb,
 });
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -86,11 +88,17 @@ function buildMarkdownFile(frontmatter: {
   date: string;
   liveUrl?: string;
   repoUrl?: string;
+  appStoreUrl?: string;
+  fdroidUrl?: string;
 }): string {
   const techLines = frontmatter.technologies.map((t) => `  - ${JSON.stringify(t)}`).join("\n");
   const imageLines = frontmatter.images.map((i) => `  - ${JSON.stringify(i)}`).join("\n");
   const liveUrlLine = frontmatter.liveUrl ? `liveUrl: "${frontmatter.liveUrl}"` : "";
   const repoUrlLine = frontmatter.repoUrl ? `repoUrl: "${frontmatter.repoUrl}"` : "";
+  const appStoreUrlLine = frontmatter.appStoreUrl
+    ? `appStoreUrl: "${frontmatter.appStoreUrl}"`
+    : "";
+  const fdroidUrlLine = frontmatter.fdroidUrl ? `fdroidUrl: "${frontmatter.fdroidUrl}"` : "";
 
   return [
     "---",
@@ -103,6 +111,8 @@ function buildMarkdownFile(frontmatter: {
     frontmatter.images.length > 0 ? `images:\n${imageLines}` : "images: []",
     liveUrlLine,
     repoUrlLine,
+    appStoreUrlLine,
+    fdroidUrlLine,
     "---",
     "",
     "Project body content.",
@@ -115,17 +125,17 @@ function buildMarkdownFile(frontmatter: {
 
 describe("Property 45: Content-Driven Project Addition", () => {
   /**
-   * For any new project markdown file added to /content/projects/,
+   * For any new project markdown file added to /content/projects/<locale>/,
    * getProjects() returns it without requiring code changes.
    *
    * Validates: Requirements 21.5
    */
-  it("returns any valid project markdown file added to content/projects/", async () => {
+  it("returns any valid project markdown file added to content/projects/<locale>/", async () => {
     await fc.assert(
       fc.asyncProperty(projectFrontmatterArb, async (frontmatter) => {
-        // Create a temporary content/projects directory
+        // Create a temporary content/projects/<locale> directory
         const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "resume-test-"));
-        const projectsDir = path.join(tmpDir, "content", "projects");
+        const projectsDir = path.join(tmpDir, "content", "projects", "pt-BR");
         fs.mkdirSync(projectsDir, { recursive: true });
 
         const filename = `${frontmatter.id}.md`;
@@ -134,7 +144,7 @@ describe("Property 45: Content-Driven Project Addition", () => {
 
         try {
           // getProjects should accept a custom content directory for testability
-          const projects = await getProjects(path.join(tmpDir, "content"));
+          const projects = await getProjects(undefined, path.join(tmpDir, "content"));
 
           // The project we added must appear in the results
           const found = projects.find((p) => p.id === frontmatter.id);
@@ -164,14 +174,14 @@ describe("Property 46: Content Field Support", () => {
     await fc.assert(
       fc.asyncProperty(projectFrontmatterArb, async (frontmatter) => {
         const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "resume-test-"));
-        const projectsDir = path.join(tmpDir, "content", "projects");
+        const projectsDir = path.join(tmpDir, "content", "projects", "pt-BR");
         fs.mkdirSync(projectsDir, { recursive: true });
 
         const filepath = path.join(projectsDir, `${frontmatter.id}.md`);
         fs.writeFileSync(filepath, buildMarkdownFile(frontmatter));
 
         try {
-          const projects = await getProjects(path.join(tmpDir, "content"));
+          const projects = await getProjects(undefined, path.join(tmpDir, "content"));
           const project = projects.find((p) => p.id === frontmatter.id);
 
           expect(project).toBeDefined();
@@ -199,6 +209,14 @@ describe("Property 46: Content Field Support", () => {
             }
             if (frontmatter.repoUrl !== undefined) {
               expect(project.repoUrl).toBe(frontmatter.repoUrl);
+            }
+
+            // Optional store badge fields
+            if (frontmatter.appStoreUrl !== undefined) {
+              expect(project.appStoreUrl).toBe(frontmatter.appStoreUrl);
+            }
+            if (frontmatter.fdroidUrl !== undefined) {
+              expect(project.fdroidUrl).toBe(frontmatter.fdroidUrl);
             }
           }
         } finally {
@@ -232,7 +250,7 @@ describe("Property 46: Content Field Support", () => {
           }),
         async (projectList) => {
           const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "resume-test-"));
-          const projectsDir = path.join(tmpDir, "content", "projects");
+          const projectsDir = path.join(tmpDir, "content", "projects", "pt-BR");
           fs.mkdirSync(projectsDir, { recursive: true });
 
           for (const proj of projectList) {
@@ -241,7 +259,7 @@ describe("Property 46: Content Field Support", () => {
           }
 
           try {
-            const projects = await getProjects(path.join(tmpDir, "content"));
+            const projects = await getProjects(undefined, path.join(tmpDir, "content"));
 
             // Verify sorted descending by date
             for (let i = 0; i < projects.length - 1; i++) {

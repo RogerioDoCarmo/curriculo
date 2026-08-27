@@ -28,6 +28,8 @@ const messages: AbstractIntlMessages = {
     technologies: "Technologies",
     liveDemo: "Live Demo",
     repository: "Repository",
+    appStore: "Download on the App Store",
+    fdroid: "Get it on F-Droid",
     noImages: "No images available",
   },
 };
@@ -62,6 +64,8 @@ const sampleProjects: Project[] = [
     images: ["/images/ecommerce-1.jpg", "/images/ecommerce-2.jpg"],
     liveUrl: "https://example.com",
     repoUrl: "https://github.com/user/ecommerce",
+    appStoreUrl: "https://apps.apple.com/us/app/miroji/id6774924907",
+    fdroidUrl: "https://f-droid.org/en/packages/com.rogeriodocarmo.miroji",
     featured: true,
     date: "2024-01-15",
   },
@@ -208,6 +212,75 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       const repoLink = screen.getByRole("link", { name: /repository/i });
       expect(repoLink).toHaveAttribute("href", "https://github.com/user/ecommerce");
+    });
+  });
+
+  it("shows store badge links in modal when store URLs are present", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      const appStoreLink = screen.getByRole("link", { name: /download on the app store/i });
+      expect(appStoreLink).toHaveAttribute(
+        "href",
+        "https://apps.apple.com/us/app/miroji/id6774924907"
+      );
+      expect(appStoreLink).toHaveAttribute("target", "_blank");
+      expect(appStoreLink).toHaveAttribute("rel", "noopener noreferrer");
+
+      const fdroidLink = screen.getByRole("link", { name: /get it on f-droid/i });
+      expect(fdroidLink).toHaveAttribute(
+        "href",
+        "https://f-droid.org/en/packages/com.rogeriodocarmo.miroji"
+      );
+    });
+  });
+
+  it("uses the locale-specific badge artwork", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="pt-BR" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("img", { name: /download on the app store/i })).toHaveAttribute(
+        "src",
+        "/images/badges/app-store-pt-BR.svg"
+      );
+      expect(screen.getByRole("img", { name: /get it on f-droid/i })).toHaveAttribute(
+        "src",
+        "/images/badges/f-droid-pt-BR.svg"
+      );
+    });
+  });
+
+  it("falls back to the English badge artwork for an unsupported locale", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="fr-FR" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("img", { name: /download on the app store/i })).toHaveAttribute(
+        "src",
+        "/images/badges/app-store-en.svg"
+      );
+      expect(screen.getByRole("img", { name: /get it on f-droid/i })).toHaveAttribute(
+        "src",
+        "/images/badges/f-droid-en.svg"
+      );
+    });
+  });
+
+  it("does not show store badges when the project has no store URLs", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    await user.click(screen.getByRole("button", { name: /view details for portfolio website/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("link", { name: /download on the app store/i })
+      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: /get it on f-droid/i })).not.toBeInTheDocument();
     });
   });
 

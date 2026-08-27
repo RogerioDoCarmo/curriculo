@@ -263,6 +263,8 @@
     "technologies": "Technologies",
     "liveDemo": "Live Demo",
     "repository": "Repository",
+    "appStore": "Download on the App Store",
+    "fdroid": "Get it on F-Droid",
     "noImages": "No images available"
   },
   "homepage": {

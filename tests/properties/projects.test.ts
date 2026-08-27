@@ -53,6 +53,8 @@ const projectArb: fc.Arbitrary<Project> = fc.record({
   images: imagesArb,
   liveUrl: optionalUrlArb,
   repoUrl: optionalUrlArb,
+  appStoreUrl: optionalUrlArb,
+  fdroidUrl: optionalUrlArb,
   featured: fc.boolean(),
   date: fc.constant("2024-01-15"),
 });
@@ -66,8 +68,12 @@ interface RenderedProject {
   images: Array<{ src: string; alt: string; loading: "lazy" | "eager" }>;
   liveUrl?: string;
   repoUrl?: string;
+  appStoreUrl?: string;
+  fdroidUrl?: string;
   hasLiveLink: boolean;
   hasRepoLink: boolean;
+  hasAppStoreBadge: boolean;
+  hasFdroidBadge: boolean;
   isExpanded: boolean;
 }
 
@@ -87,8 +93,12 @@ function renderProject(project: Project, expanded = false): RenderedProject {
     })),
     liveUrl: project.liveUrl,
     repoUrl: project.repoUrl,
+    appStoreUrl: project.appStoreUrl,
+    fdroidUrl: project.fdroidUrl,
     hasLiveLink: Boolean(project.liveUrl),
     hasRepoLink: Boolean(project.repoUrl),
+    hasAppStoreBadge: Boolean(project.appStoreUrl),
+    hasFdroidBadge: Boolean(project.fdroidUrl),
     isExpanded: expanded,
   };
 }
@@ -211,6 +221,50 @@ describe("Property 5: Project Links Rendered When Present", () => {
           if (rendered.repoUrl) {
             expect(rendered.repoUrl.length).toBeGreaterThan(0);
           }
+        }
+      ),
+      { numRuns: 50 }
+    );
+  });
+
+  it("projects with appStoreUrl always have an App Store badge link", () => {
+    fc.assert(
+      fc.property(
+        projectArb.filter((p) => p.appStoreUrl !== undefined),
+        (project) => {
+          const rendered = renderProject(project);
+          expect(rendered.hasAppStoreBadge).toBe(true);
+          expect(rendered.appStoreUrl).toBe(project.appStoreUrl);
+        }
+      ),
+      { numRuns: 50 }
+    );
+  });
+
+  it("projects with fdroidUrl always have an F-Droid badge link", () => {
+    fc.assert(
+      fc.property(
+        projectArb.filter((p) => p.fdroidUrl !== undefined),
+        (project) => {
+          const rendered = renderProject(project);
+          expect(rendered.hasFdroidBadge).toBe(true);
+          expect(rendered.fdroidUrl).toBe(project.fdroidUrl);
+        }
+      ),
+      { numRuns: 50 }
+    );
+  });
+
+  it("projects without store URLs render no store badges", () => {
+    fc.assert(
+      fc.property(
+        projectArb.filter((p) => p.appStoreUrl === undefined && p.fdroidUrl === undefined),
+        (project) => {
+          const rendered = renderProject(project);
+          expect(rendered.hasAppStoreBadge).toBe(false);
+          expect(rendered.hasFdroidBadge).toBe(false);
+          expect(rendered.appStoreUrl).toBeUndefined();
+          expect(rendered.fdroidUrl).toBeUndefined();
         }
       ),
       { numRuns: 50 }
