@@ -1,15 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Check, Link2 } from "lucide-react";
 import type { Project } from "@/types/index";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import MarkdownText from "@/components/MarkdownText";
 import SwipeCarousel from "@/components/SwipeCarousel";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { trackProjectShare } from "@/lib/analytics";
 import { getTechColorClasses } from "@/lib/tag-colors";
+import {
+  PROJECTS_SECTION_ID,
+  buildProjectHistoryUrl,
+  buildProjectShareUrl,
+  readProjectParam,
+} from "@/lib/project-deep-link";
 
 /**
  * Locales with localized store-badge artwork under `public/images/badges/`.
@@ -39,14 +48,87 @@ export default function ProjectsSection({ projects, locale }: ProjectsSectionPro
     ? projects.filter((p) => p.technologies.includes(techFilter))
     : projects;
 
-  // Step to the next/previous project within the open detail modal, wrapping.
-  const navProject = (delta: 1 | -1) => {
-    setSelectedProject((current) => {
-      if (!current || filtered.length < 2) return current;
-      const i = filtered.findIndex((p) => p.id === current.id);
-      if (i < 0) return current;
-      return filtered[(i + delta + filtered.length) % filtered.length];
+  /**
+   * Mirrors the open project into the URL without navigating.
+   *
+   * The no-op guard compares against the live URL rather than a remembered
+   * value, so it can never drift out of step with history. That matters twice:
+   * clearing `selectedProject` makes `useDialogElement` call `dialog.close()`,
+   * whose native "close" event fires `onClose` a second time; and a back
+   * navigation closes the dialog when the URL has *already* dropped the param —
+   * pushing there would truncate the forward entry the reader just came from.
+   */
+  const syncUrl = useCallback((projectId: string | null, mode: "push" | "replace") => {
+    if (readProjectParam(window.location.search) === projectId) return;
+
+    const url = buildProjectHistoryUrl({
+      pathname: window.location.pathname,
+      search: window.location.search,
+      projectId,
     });
+    if (mode === "push") {
+      window.history.pushState(null, "", url);
+    } else {
+      window.history.replaceState(null, "", url);
+    }
+  }, []);
+
+  const openProject = useCallback(
+    (project: Project) => {
+      setSelectedProject(project);
+      syncUrl(project.id, "push");
+    },
+    [syncUrl]
+  );
+
+  const closeProject = useCallback(() => {
+    setSelectedProject(null);
+    syncUrl(null, "push");
+  }, [syncUrl]);
+
+  // Deep link: `?project=<id>` opens that project's dialog on arrival. Runs
+  // once — later param changes come through popstate instead.
+  const deepLinkHandledRef = useRef(false);
+  useEffect(() => {
+    if (deepLinkHandledRef.current) return;
+    deepLinkHandledRef.current = true;
+
+    const id = readProjectParam(window.location.search);
+    if (id === null) return;
+    const project = projects.find((p) => p.id === id);
+    // An unknown id is ignored: the page renders normally, dialog stays closed.
+    if (!project) return;
+
+    // Scroll first, and instantly: the page has `scroll-behavior: smooth`, and
+    // the modal's body scroll lock would cancel an animated scroll partway
+    // through, leaving the reader parked at the top of the page instead.
+    document.getElementById(PROJECTS_SECTION_ID)?.scrollIntoView({
+      block: "start",
+      behavior: "instant",
+    });
+    setSelectedProject(project);
+  }, [projects]);
+
+  // Back/forward moves through the opened projects; state follows the URL here,
+  // never the other way around (pushing from this handler would fight history).
+  useEffect(() => {
+    const handlePopstate = () => {
+      const id = readProjectParam(window.location.search);
+      setSelectedProject(id === null ? null : (projects.find((p) => p.id === id) ?? null));
+    };
+    window.addEventListener("popstate", handlePopstate);
+    return () => window.removeEventListener("popstate", handlePopstate);
+  }, [projects]);
+
+  // Step to the next/previous project within the open detail modal, wrapping.
+  // Replaces rather than pushes so stepping doesn't flood the history stack.
+  const navProject = (delta: 1 | -1) => {
+    if (!selectedProject || filtered.length < 2) return;
+    const i = filtered.findIndex((p) => p.id === selectedProject.id);
+    if (i < 0) return;
+    const next = filtered[(i + delta + filtered.length) % filtered.length];
+    setSelectedProject(next);
+    syncUrl(next.id, "replace");
   };
   const canNavProjects = !!selectedProject && filtered.length > 1;
 
@@ -66,7 +148,7 @@ export default function ProjectsSection({ projects, locale }: ProjectsSectionPro
         nextLabel={t("projects.nextProject")}
         items={filtered.map((project, index) => ({
           key: `${project.id}-${index}`,
-          node: <ProjectCard project={project} onClick={() => setSelectedProject(project)} />,
+          node: <ProjectCard project={project} onClick={() => openProject(project)} />,
         }))}
       />
     );
@@ -78,7 +160,7 @@ export default function ProjectsSection({ projects, locale }: ProjectsSectionPro
           <ProjectCard
             key={`${project.id}-${index}`}
             project={project}
-            onClick={() => setSelectedProject(project)}
+            onClick={() => openProject(project)}
           />
         ))}
       </div>
@@ -87,7 +169,7 @@ export default function ProjectsSection({ projects, locale }: ProjectsSectionPro
 
   return (
     <section
-      id="projects"
+      id={PROJECTS_SECTION_ID}
       tabIndex={-1}
       aria-label={t("sections.projects")}
       className="py-8 px-4 sm:px-6 lg:px-8"
@@ -123,7 +205,7 @@ export default function ProjectsSection({ projects, locale }: ProjectsSectionPro
         {/* Project detail modal — Prev/Next step through the (filtered) projects */}
         <Modal
           isOpen={!!selectedProject}
-          onClose={() => setSelectedProject(null)}
+          onClose={closeProject}
           title={selectedProject?.title}
           onPrev={canNavProjects ? () => navProject(-1) : undefined}
           onNext={canNavProjects ? () => navProject(1) : undefined}
@@ -284,6 +366,31 @@ interface ProjectDetailProps {
 function ProjectDetail({ project, locale }: ProjectDetailProps) {
   const t = useTranslations();
   const badgeLocale = STORE_BADGE_LOCALES.includes(locale) ? locale : FALLBACK_BADGE_LOCALE;
+  const { copied, failed, copy } = useCopyToClipboard();
+
+  // The share URL is built on click, never during render: `window.location`
+  // doesn't exist on the server and would desync the markup on hydration.
+  const handleCopyLink = async () => {
+    const shareUrl = buildProjectShareUrl({
+      origin: window.location.origin,
+      locale,
+      projectId: project.id,
+    });
+    const succeeded = await copy(shareUrl);
+    if (succeeded) {
+      trackProjectShare({ project_id: project.id, project_title: project.title });
+    }
+  };
+
+  let copyStatusMessage = "";
+  let copyStatusClasses = "";
+  if (copied) {
+    copyStatusMessage = t("projects.linkCopied");
+    copyStatusClasses = "text-green-600 dark:text-green-400";
+  } else if (failed) {
+    copyStatusMessage = t("projects.copyLinkFailed");
+    copyStatusClasses = "text-red-600 dark:text-red-400";
+  }
 
   return (
     <div className="space-y-4">
@@ -391,33 +498,48 @@ function ProjectDetail({ project, locale }: ProjectDetailProps) {
         </div>
       )}
 
-      {/* Links */}
-      {(project.liveUrl || project.repoUrl) && (
-        <div className="flex gap-3 pt-2">
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
-              aria-label={`${t("projects.liveDemo")} ${project.title}`}
-            >
-              {t("projects.liveDemo")}
-            </a>
+      {/* Links — the share button always renders, so every project is linkable */}
+      <div className="flex flex-wrap items-center gap-3 pt-2">
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700"
+            aria-label={`${t("projects.liveDemo")} ${project.title}`}
+          >
+            {t("projects.liveDemo")}
+          </a>
+        )}
+        {project.repoUrl && (
+          <a
+            href={project.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+            aria-label={`${t("projects.repository")} ${project.title}`}
+          >
+            {t("projects.repository")}
+          </a>
+        )}
+        <button
+          type="button"
+          onClick={handleCopyLink}
+          aria-label={`${t("projects.copyLink")} — ${project.title}`}
+          className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+        >
+          {copied ? (
+            <Check className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <Link2 className="h-4 w-4" aria-hidden="true" />
           )}
-          {project.repoUrl && (
-            <a
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-              aria-label={`${t("projects.repository")} ${project.title}`}
-            >
-              {t("projects.repository")}
-            </a>
-          )}
-        </div>
-      )}
+          {t("projects.copyLink")}
+        </button>
+        {/* Always mounted so assistive tech is watching before the text lands. */}
+        <span role="status" aria-live="polite" className={`text-sm ${copyStatusClasses}`}>
+          {copyStatusMessage}
+        </span>
+      </div>
     </div>
   );
 }

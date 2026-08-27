@@ -265,7 +265,10 @@
     "repository": "Repositorio",
     "appStore": "Consíguelo en la App Store",
     "fdroid": "Disponible en F-Droid",
-    "noImages": "No hay imágenes disponibles"
+    "noImages": "No hay imágenes disponibles",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "¡Enlace copiado!",
+    "copyLinkFailed": "No se pudo copiar el enlace"
   },
   "homepage": {
     "title": "Sitio Web de Currículum Personal",

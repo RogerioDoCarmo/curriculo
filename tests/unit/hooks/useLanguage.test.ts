@@ -204,6 +204,31 @@ describe("useLanguage - Hook", () => {
     expect(mockPush).toHaveBeenCalled();
   });
 
+  it("carries the query string and hash across a locale switch", () => {
+    // A shared project deep link (?project=<id>#projects) must survive the
+    // switch, or changing language would silently close the open dialog.
+    window.history.replaceState(null, "", "/?project=miroji#projects");
+    const { result } = renderHook(() => useLanguage("pt-BR"));
+
+    act(() => {
+      result.current.setLocale("en");
+    });
+
+    expect(mockPush).toHaveBeenCalledWith("/en/?project=miroji#projects");
+    window.history.replaceState(null, "", "/");
+  });
+
+  it("navigates cleanly when there is no query string or hash", () => {
+    window.history.replaceState(null, "", "/");
+    const { result } = renderHook(() => useLanguage("pt-BR"));
+
+    act(() => {
+      result.current.setLocale("es");
+    });
+
+    expect(mockPush).toHaveBeenCalledWith("/es/");
+  });
+
   it("should reflect currentLocale even when a different locale is saved", () => {
     localStorage.setItem("preferred-locale", "es");
 

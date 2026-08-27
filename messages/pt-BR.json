@@ -265,7 +265,10 @@
     "repository": "Repositório",
     "appStore": "Baixe na App Store",
     "fdroid": "Disponível no F-Droid",
-    "noImages": "Nenhuma imagem disponível"
+    "noImages": "Nenhuma imagem disponível",
+    "copyLink": "Copiar link",
+    "linkCopied": "Link copiado!",
+    "copyLinkFailed": "Não foi possível copiar o link"
   },
   "homepage": {
     "title": "Site de Currículo Pessoal",

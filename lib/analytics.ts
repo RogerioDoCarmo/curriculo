@@ -16,6 +16,7 @@ export const ANALYTICS_EVENTS = {
   PAGE_VIEW: "page_view",
   CONTACT_FORM_SUBMISSION: "contact_form_submission",
   PROJECT_CLICK: "project_click",
+  PROJECT_SHARE: "project_share",
   LANGUAGE_CHANGE: "language_change",
   THEME_TOGGLE: "theme_toggle",
   CAREER_PATH_SELECTION: "career_path_selection",
@@ -124,6 +125,13 @@ export function trackContactFormSubmission(params: { success: boolean }): void {
  */
 export function trackProjectClick(params: { project_id: string; project_title: string }): void {
   trackEvent(ANALYTICS_EVENTS.PROJECT_CLICK, params);
+}
+
+/**
+ * Tracks a project deep link being copied to the clipboard for sharing.
+ */
+export function trackProjectShare(params: { project_id: string; project_title: string }): void {
+  trackEvent(ANALYTICS_EVENTS.PROJECT_SHARE, params);
 }
 
 /**
