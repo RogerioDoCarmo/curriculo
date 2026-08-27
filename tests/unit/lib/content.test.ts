@@ -42,6 +42,41 @@ describe("Content Management System", () => {
         expect(project).toHaveProperty("date");
       }
     });
+
+    it("exposes the same project ids in every supported locale", async () => {
+      const [ptBR, en, es] = await Promise.all([
+        getProjects("pt-BR"),
+        getProjects("en"),
+        getProjects("es"),
+      ]);
+
+      const ids = (list: Awaited<ReturnType<typeof getProjects>>) =>
+        list.map((project) => project.id).toSorted((a, b) => a.localeCompare(b));
+
+      expect(ptBR.length).toBeGreaterThan(0);
+      expect(ids(en)).toEqual(ids(ptBR));
+      expect(ids(es)).toEqual(ids(ptBR));
+    });
+
+    it("returns locale-specific project copy for each supported locale", async () => {
+      const [ptBR, en, es] = await Promise.all([
+        getProjects("pt-BR"),
+        getProjects("en"),
+        getProjects("es"),
+      ]);
+
+      const descriptionFor = (list: Awaited<ReturnType<typeof getProjects>>, id: string): string =>
+        list.find((project) => project.id === id)?.description ?? "";
+
+      // Same project, three distinct translations of the same field.
+      const translations = [
+        descriptionFor(ptBR, "miroji"),
+        descriptionFor(en, "miroji"),
+        descriptionFor(es, "miroji"),
+      ];
+      translations.forEach((description) => expect(description).not.toBe(""));
+      expect(new Set(translations).size).toBe(3);
+    });
   });
 
   describe("getExperiences", () => {
@@ -166,7 +201,7 @@ describe("Content Management System", () => {
   describe("Error handling", () => {
     it("should handle missing content directory gracefully", async () => {
       // This should not throw - it should return empty arrays
-      await expect(getProjects("nonexistent-dir")).resolves.toEqual([]);
+      await expect(getProjects(undefined, "nonexistent-dir")).resolves.toEqual([]);
     });
 
     it("should handle invalid markdown files gracefully", async () => {
@@ -215,15 +250,15 @@ describe("Content Management System", () => {
       const dir = makeContentDir();
       write(
         dir,
-        "projects/old.md",
+        "projects/pt-BR/old.md",
         `---\nid: old\ntitle: Old\ndescription: d\ndate: "2020-01-01"\ntechnologies: [React]\nfeatured: false\n---\nBody`
       );
       write(
         dir,
-        "projects/new.md",
+        "projects/pt-BR/new.md",
         `---\nid: new\ntitle: New\ndescription: d\ndate: "2024-01-01"\ntechnologies: [Next.js]\nimages: [a.png]\nfeatured: true\nliveUrl: https://x.dev\nrepoUrl: https://github.com/x\n---\nBody`
       );
-      const projects = await getProjects(dir);
+      const projects = await getProjects(undefined, dir);
       expect(projects.map((p) => p.id)).toEqual(["new", "old"]);
       expect(projects[0].technologies).toEqual(["Next.js"]);
       expect(projects[0].featured).toBe(true);
@@ -233,18 +268,22 @@ describe("Content Management System", () => {
       const dir = makeContentDir();
       write(
         dir,
-        "projects/p.md",
+        "projects/pt-BR/p.md",
         `---\nid: p\ntitle: T\ndescription: d\ndate: 2024-01-01\ntechnologies: notalist\n---\nBody`
       );
-      const [project] = await getProjects(dir);
+      const [project] = await getProjects(undefined, dir);
       expect(project.technologies).toEqual([]);
       expect(project.images).toEqual([]);
     });
 
     it("rethrows validation errors for projects missing a required field", async () => {
       const dir = makeContentDir();
-      write(dir, "projects/bad.md", `---\nid: x\ndescription: no title\ndate: 2024-01-01\n---\n`);
-      await expect(getProjects(dir)).rejects.toThrow(/Content validation error/);
+      write(
+        dir,
+        "projects/pt-BR/bad.md",
+        `---\nid: x\ndescription: no title\ndate: 2024-01-01\n---\n`
+      );
+      await expect(getProjects(undefined, dir)).rejects.toThrow(/Content validation error/);
     });
 
     it("skips malformed project files and warns in development", async () => {
@@ -252,8 +291,8 @@ describe("Content Management System", () => {
       const dir = makeContentDir();
       // A directory named "*.md" is listed but readFileSync throws EISDIR — a
       // non-validation error, exercising the skip-and-warn branch.
-      fs.mkdirSync(path.join(dir, "projects", "broken.md"), { recursive: true });
-      const projects = await getProjects(dir);
+      fs.mkdirSync(path.join(dir, "projects", "pt-BR", "broken.md"), { recursive: true });
+      const projects = await getProjects(undefined, dir);
       expect(projects).toEqual([]);
       expect(warnSpy).toHaveBeenCalled();
     });
@@ -261,7 +300,7 @@ describe("Content Management System", () => {
     it("warns when the projects directory is missing in development", async () => {
       setNodeEnv("development");
       const dir = makeContentDir(); // exists, but has no projects/ subdir
-      await expect(getProjects(dir)).resolves.toEqual([]);
+      await expect(getProjects(undefined, dir)).resolves.toEqual([]);
       expect(warnSpy).toHaveBeenCalled();
     });
 
@@ -319,10 +358,10 @@ describe("Content Management System", () => {
       const dir = makeContentDir();
       write(
         dir,
-        "projects/empty.md",
+        "projects/pt-BR/empty.md",
         `---\nid: e\ntitle: T\ndescription: d\ndate: "2024-01-01"\n---\n`
       );
-      const [project] = await getProjects(dir);
+      const [project] = await getProjects(undefined, dir);
       expect(project.longDescription).toBeUndefined();
     });
 
@@ -365,16 +404,105 @@ describe("Content Management System", () => {
       const dir = makeContentDir();
       // No leading `---`, so parseFrontmatter returns data: {} and the whole
       // file as content; the missing `id` then trips required-field validation.
-      write(dir, "projects/plain.md", `Just a plain body with no frontmatter.\n`);
-      await expect(getProjects(dir)).rejects.toThrow(/Content validation error/);
+      write(dir, "projects/pt-BR/plain.md", `Just a plain body with no frontmatter.\n`);
+      await expect(getProjects(undefined, dir)).rejects.toThrow(/Content validation error/);
+    });
+
+    it("reads projects from the requested locale directory", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/app.md",
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+      );
+      write(
+        dir,
+        "projects/en/app.md",
+        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\n---\nBody`
+      );
+
+      const [english] = await getProjects("en", dir);
+      expect(english.title).toBe("Application");
+      expect(english.longDescription).toBe("Body");
+    });
+
+    it("defaults to the pt-BR locale directory when no locale is given", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/app.md",
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+      );
+      write(
+        dir,
+        "projects/en/app.md",
+        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\n---\nBody`
+      );
+
+      const [defaulted] = await getProjects(undefined, dir);
+      expect(defaulted.title).toBe("Aplicativo");
+    });
+
+    it("falls back to the pt-BR directory when the requested locale is absent", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/app.md",
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+      );
+
+      const [fallback] = await getProjects("fr-FR", dir);
+      expect(fallback.title).toBe("Aplicativo");
+    });
+
+    it("falls back to the legacy flat projects directory when no locale folder exists", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/legacy.md",
+        `---\nid: legacy\ntitle: Legacy\ndescription: d\ndate: "2024-01-01"\n---\nBody`
+      );
+
+      const [legacy] = await getProjects("en", dir);
+      expect(legacy.title).toBe("Legacy");
+    });
+
+    it("parses the optional store URLs of a project", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/stores.md",
+        `---\nid: stores\ntitle: T\ndescription: d\ndate: "2024-01-01"\nappStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907\nfdroidUrl: https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji\n---\nBody`
+      );
+      const [withStores] = await getProjects(undefined, dir);
+      expect(withStores.appStoreUrl).toBe("https://apps.apple.com/us/app/miroji/id6774924907");
+      expect(withStores.fdroidUrl).toBe(
+        "https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji"
+      );
+    });
+
+    it("leaves the store URLs undefined when a project omits them", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/nostores.md",
+        `---\nid: nostores\ntitle: T\ndescription: d\ndate: "2024-01-01"\n---\nBody`
+      );
+      const [withoutStores] = await getProjects(undefined, dir);
+      expect(withoutStores.appStoreUrl).toBeUndefined();
+      expect(withoutStores.fdroidUrl).toBeUndefined();
     });
 
     it("treats an unterminated frontmatter block as empty data (validation error)", async () => {
       const dir = makeContentDir();
       // Opening `---` but no closing delimiter → parseFrontmatter returns
       // data: {} and the original string as content.
-      write(dir, "projects/unterminated.md", `---\nid: x\ntitle: T\nno closing delimiter here`);
-      await expect(getProjects(dir)).rejects.toThrow(/Content validation error/);
+      write(
+        dir,
+        "projects/pt-BR/unterminated.md",
+        `---\nid: x\ntitle: T\nno closing delimiter here`
+      );
+      await expect(getProjects(undefined, dir)).rejects.toThrow(/Content validation error/);
     });
   });
 });

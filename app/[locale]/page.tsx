@@ -29,7 +29,7 @@ export default async function HomePage({ params }: HomePageProps) {
   // Load all content
   const [experiences, projects, skills] = await Promise.all([
     getExperiences(undefined, locale),
-    getProjects(),
+    getProjects(locale),
     getSkills(locale),
   ]);
 
