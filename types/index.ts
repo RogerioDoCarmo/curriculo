@@ -15,6 +15,10 @@ export interface Project {
   images: string[];
   liveUrl?: string;
   repoUrl?: string;
+  /** App Store listing URL — rendered as an official download badge. */
+  appStoreUrl?: string;
+  /** F-Droid listing URL — rendered as an official download badge. */
+  fdroidUrl?: string;
   featured: boolean;
   /** Explicitly mark (or unmark) the project as using placeholder/fictional
    * data. When unset, a heuristic (no repo or no images) decides. */

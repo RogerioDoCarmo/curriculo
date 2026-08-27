@@ -241,6 +241,8 @@
     "technologies": "Tecnologías",
     "liveDemo": "Demo en Vivo",
     "repository": "Repositorio",
+    "appStore": "Consíguelo en la App Store",
+    "fdroid": "Disponible en F-Droid",
     "noImages": "No hay imágenes disponibles"
   },
   "homepage": {

@@ -115,15 +115,6 @@ function compareDateDesc(a: string, b: string): number {
 
 // ─── Projects ────────────────────────────────────────────────────────────────
 
-/**
- * Reads all `.md` files from `<contentDir>/projects/`, parses their frontmatter,
- * validates required fields, and returns the list sorted by date (newest first).
- *
- * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
- *   Accepts a custom path to support testing with temporary directories.
- * @returns Sorted array of {@link Project} objects.
- * @throws If a file has missing required fields.
- */
 /** Parses and validates a single project markdown file. */
 function parseProjectFile(filePath: string): Project {
   const raw = fs.readFileSync(filePath, "utf-8");
@@ -138,14 +129,44 @@ function parseProjectFile(filePath: string): Project {
     images: Array.isArray(data.images) ? data.images.map(String) : [],
     liveUrl: optionalString(data.liveUrl),
     repoUrl: optionalString(data.repoUrl),
+    appStoreUrl: optionalString(data.appStoreUrl),
+    fdroidUrl: optionalString(data.fdroidUrl),
     featured: Boolean(data.featured),
     mockData: data.mockData === undefined ? undefined : Boolean(data.mockData),
     date: requireString(data.date, "date", filePath),
   };
 }
 
-export async function getProjects(contentDir: string = DEFAULT_CONTENT_DIR): Promise<Project[]> {
-  const projectsDir = path.join(contentDir, "projects");
+/**
+ * Reads all `.md` files from `<contentDir>/projects/<locale>/`, parses their
+ * frontmatter, validates required fields, and returns the list sorted by date
+ * (newest first). Falls back to the default locale (`pt-BR`), then to the
+ * legacy flat layout (`<contentDir>/projects/`).
+ *
+ * @param locale - Locale code (e.g., 'pt-BR', 'en', 'es'). Defaults to 'pt-BR'.
+ * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
+ *   Accepts a custom path to support testing with temporary directories.
+ * @returns Sorted array of {@link Project} objects.
+ * @throws If a file has missing required fields.
+ */
+export async function getProjects(
+  locale: string = "pt-BR",
+  contentDir: string = DEFAULT_CONTENT_DIR
+): Promise<Project[]> {
+  // Try the locale directory first, then the default locale, then the legacy
+  // flat layout that predates localized project content.
+  const localeProjectsDir = path.join(contentDir, "projects", locale);
+  const defaultProjectsDir = path.join(contentDir, "projects", "pt-BR");
+  const legacyProjectsDir = path.join(contentDir, "projects");
+
+  let projectsDir: string;
+  if (fs.existsSync(localeProjectsDir)) {
+    projectsDir = localeProjectsDir;
+  } else if (fs.existsSync(defaultProjectsDir)) {
+    projectsDir = defaultProjectsDir;
+  } else {
+    projectsDir = legacyProjectsDir;
+  }
 
   if (!fs.existsSync(projectsDir)) {
     if (process.env.NODE_ENV === "development") {
