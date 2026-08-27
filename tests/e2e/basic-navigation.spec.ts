@@ -26,14 +26,18 @@ test.describe("Basic Navigation", () => {
     // es: "Rogério do Carmo | Desarrollador React Native Mobile"
     await expect(page).toHaveTitle(/Rogério do Carmo/i, { timeout: 10000 });
 
-    // Verify main heading is visible (varies by locale)
-    // pt-BR: "Site de Currículo Pessoal"
-    // en: "Personal Resume Website"
-    // es: "Sitio Web de Currículum Personal"
-    const heading = page.getByRole("heading", {
-      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
-    });
-    await expect(heading).toBeVisible();
+    // Verify the projects section rendered. Anchored on the section's own
+    // heading (pt-BR "Projetos" / en "Projects" / es "Proyectos") rather than
+    // on any individual project's title, so adding or removing a project entry
+    // does not break these smoke tests.
+    const projectsSection = page.locator('section[id="projects"]');
+    await expect(
+      projectsSection.getByRole("heading", { name: /^(projetos|projects|proyectos)$/i })
+    ).toBeVisible();
+
+    // Content-driven cards must render too, so a broken content pipeline fails
+    // here instead of passing on the static section chrome alone.
+    await expect(projectsSection.locator("h3").first()).toBeVisible();
   });
 
   test("should have accessible navigation", async ({ page }) => {
@@ -78,11 +82,11 @@ test.describe("Basic Navigation", () => {
     // WebKit on mobile is slower to settle — wait for network idle before asserting.
     await page.waitForLoadState("networkidle");
 
-    // Verify page loads on mobile (text varies by locale)
-    const heading = page.getByRole("heading", {
-      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
-    });
-    await expect(heading).toBeVisible({ timeout: 10000 });
+    // Verify page loads on mobile (label varies by locale)
+    const projectsHeading = page
+      .locator('section[id="projects"]')
+      .getByRole("heading", { name: /^(projetos|projects|proyectos)$/i });
+    await expect(projectsHeading).toBeVisible({ timeout: 10000 });
   });
 
   test("should be responsive on tablet", async ({ page }) => {
@@ -90,11 +94,11 @@ test.describe("Basic Navigation", () => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto("/");
 
-    // Verify page loads on tablet (text varies by locale)
-    const heading = page.getByRole("heading", {
-      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
-    });
-    await expect(heading).toBeVisible();
+    // Verify page loads on tablet (label varies by locale)
+    const projectsHeading = page
+      .locator('section[id="projects"]')
+      .getByRole("heading", { name: /^(projetos|projects|proyectos)$/i });
+    await expect(projectsHeading).toBeVisible();
   });
 
   test("should be responsive on desktop", async ({ page }) => {
@@ -102,11 +106,11 @@ test.describe("Basic Navigation", () => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto("/");
 
-    // Verify page loads on desktop (text varies by locale)
-    const heading = page.getByRole("heading", {
-      name: /site de currículo pessoal|personal resume website|sitio web de currículum personal/i,
-    });
-    await expect(heading).toBeVisible();
+    // Verify page loads on desktop (label varies by locale)
+    const projectsHeading = page
+      .locator('section[id="projects"]')
+      .getByRole("heading", { name: /^(projetos|projects|proyectos)$/i });
+    await expect(projectsHeading).toBeVisible();
   });
 
   test("should have proper HTML structure", async ({ page }) => {
