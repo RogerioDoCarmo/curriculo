@@ -52,6 +52,13 @@ function buildProjectClickEvent(project_id: string, project_title: string): Anal
   };
 }
 
+function buildProjectShareEvent(project_id: string, project_title: string): AnalyticsEvent {
+  return {
+    name: ANALYTICS_EVENTS.PROJECT_SHARE,
+    params: { project_id, project_title },
+  };
+}
+
 function buildLanguageChangeEvent(
   from_locale: SupportedLocale,
   to_locale: SupportedLocale
@@ -173,6 +180,38 @@ describe("Property 18: Analytics Events for User Actions", () => {
         }),
         { numRuns: 50 }
       );
+    });
+  });
+
+  describe("Project share events", () => {
+    const nonEmptyString = fc
+      .string({ minLength: 1, maxLength: 50 })
+      .filter((s) => s.trim().length > 0);
+
+    it("project share event always has correct event name", () => {
+      fc.assert(
+        fc.property(nonEmptyString, nonEmptyString, (id, title) => {
+          const event = buildProjectShareEvent(id, title);
+          expect(event.name).toBe(ANALYTICS_EVENTS.PROJECT_SHARE);
+        }),
+        { numRuns: 50 }
+      );
+    });
+
+    it("project share event always includes project_id and project_title", () => {
+      fc.assert(
+        fc.property(nonEmptyString, nonEmptyString, (id, title) => {
+          const event = buildProjectShareEvent(id, title);
+          expect(event.params!.project_id).toBe(id);
+          expect(event.params!.project_title).toBe(title);
+        }),
+        { numRuns: 50 }
+      );
+    });
+
+    it("share is a distinct event from a project click", () => {
+      expect(ANALYTICS_EVENTS.PROJECT_SHARE).toBe("project_share");
+      expect(ANALYTICS_EVENTS.PROJECT_SHARE).not.toBe(ANALYTICS_EVENTS.PROJECT_CLICK);
     });
   });
 

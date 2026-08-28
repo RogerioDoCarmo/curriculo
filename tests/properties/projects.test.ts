@@ -10,12 +10,21 @@
  * Property 6: Project Details Expansion
  * **Validates: Requirements 2.4**
  *
+ * Property 7: Project Deep Links
+ * **Validates: Requirements 2.4**
+ *
  * Property 12: Lazy Loading for Below-Fold Images
  * **Validates: Requirements 6.3**
  */
 
 import * as fc from "fast-check";
 import type { Project } from "@/types/index";
+import {
+  buildProjectHistoryUrl,
+  buildProjectShareUrl,
+  readProjectParam,
+  withProjectParam,
+} from "@/lib/project-deep-link";
 
 // ─── Arbitraries ─────────────────────────────────────────────────────────────
 
@@ -475,6 +484,100 @@ describe("Property 12: Lazy Loading for Below-Fold Images", () => {
         for (const image of rendered.images) {
           expect(["lazy", "eager", "auto"]).toContain(image.loading);
         }
+      }),
+      { numRuns: 100 }
+    );
+  });
+});
+
+// ─── Property 7: Project Deep Links ──────────────────────────────────────────
+
+describe("Property 7: Project Deep Links", () => {
+  const localeArb = fc.constantFrom("pt-BR", "en", "es");
+  const originArb = fc.constantFrom(
+    "https://rogeriodocarmo.dev",
+    "http://localhost:3000",
+    "https://example.dev"
+  );
+
+  it("any project id survives a write/read round-trip through the query string", () => {
+    fc.assert(
+      fc.property(slugArb, (id) => {
+        expect(readProjectParam(withProjectParam("", id))).toBe(id);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("round-trips even when unrelated params are present", () => {
+    fc.assert(
+      fc.property(slugArb, slugArb, (id, other) => {
+        expect(readProjectParam(withProjectParam(`?utm=${other}`, id))).toBe(id);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("writing a project id never loses an unrelated param", () => {
+    fc.assert(
+      fc.property(slugArb, slugArb, (id, other) => {
+        const search = withProjectParam(`?utm=${other}`, id);
+        expect(new URLSearchParams(search).get("utm")).toBe(other);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("clearing the project always removes the param", () => {
+    fc.assert(
+      fc.property(slugArb, (id) => {
+        expect(readProjectParam(withProjectParam(withProjectParam("", id), null))).toBeNull();
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("history URLs always end on the projects hash, open or closed", () => {
+    fc.assert(
+      fc.property(slugArb, localeArb, fc.option(slugArb, { nil: null }), (path, locale, id) => {
+        const url = buildProjectHistoryUrl({
+          pathname: `/${locale}/${path}`,
+          search: "",
+          projectId: id,
+        });
+        expect(url.endsWith("#projects")).toBe(true);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("a share URL always parses back to the same project id", () => {
+    fc.assert(
+      fc.property(originArb, localeArb, slugArb, (origin, locale, id) => {
+        const parsed = new URL(buildProjectShareUrl({ origin, locale, projectId: id }));
+        expect(readProjectParam(parsed.search)).toBe(id);
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("a share URL always points at the given locale and the projects hash", () => {
+    fc.assert(
+      fc.property(originArb, localeArb, slugArb, (origin, locale, id) => {
+        const parsed = new URL(buildProjectShareUrl({ origin, locale, projectId: id }));
+        expect(parsed.pathname).toBe(`/${locale}/`);
+        expect(parsed.hash).toBe("#projects");
+      }),
+      { numRuns: 100 }
+    );
+  });
+
+  it("a share URL is always absolute against the given origin", () => {
+    fc.assert(
+      fc.property(originArb, localeArb, slugArb, (origin, locale, id) => {
+        const url = buildProjectShareUrl({ origin, locale, projectId: id });
+        expect(url.startsWith(`${origin}/`)).toBe(true);
+        expect(url).not.toContain("//" + locale);
       }),
       { numRuns: 100 }
     );

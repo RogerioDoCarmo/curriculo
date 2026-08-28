@@ -3,10 +3,11 @@
  */
 
 import React from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
+import { trackProjectShare } from "@/lib/analytics";
 import type { Project } from "@/types/index";
 
 // Mock messages for next-intl
@@ -31,8 +32,15 @@ const messages: AbstractIntlMessages = {
     appStore: "Download on the App Store",
     fdroid: "Get it on F-Droid",
     noImages: "No images available",
+    copyLink: "Copy link",
+    linkCopied: "Link copied!",
+    copyLinkFailed: "Couldn't copy the link",
   },
 };
+
+jest.mock("@/lib/analytics", () => ({
+  trackProjectShare: jest.fn(),
+}));
 
 // Mock next/image
 jest.mock("next/image", () => ({
@@ -99,6 +107,10 @@ const renderWithIntl = (component: React.ReactElement) => {
 };
 
 describe("ProjectsSection Component", () => {
+  // The URL is reset between tests globally (see jest.setup.js) — this component
+  // writes the open project into it, which would otherwise leak into the next
+  // test and deep-link-open the dialog on mount.
+
   it("renders all projects in a grid", () => {
     renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
     expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
@@ -179,6 +191,9 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
+    // The open project becomes shareable: it lands in the URL.
+    expect(window.location.search).toBe("?project=project-1");
+    expect(window.location.hash).toBe("#projects");
   });
 
   it("shows full description in modal", async () => {
@@ -307,6 +322,26 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
+    expect(window.location.search).toBe("");
+    expect(window.location.hash).toBe("#projects");
+  });
+
+  it("pushes exactly one history entry when the dialog closes", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+    await screen.findByRole("dialog");
+
+    const pushSpy = jest.spyOn(window.history, "pushState");
+    await user.click(screen.getByRole("button", { name: /close/i }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    // The native <dialog> "close" event fires onClose a second time; the URL
+    // must not gain a duplicate entry because of it.
+    expect(pushSpy).toHaveBeenCalledTimes(1);
+    pushSpy.mockRestore();
   });
 
   it("renders section with correct id", () => {
@@ -350,6 +385,74 @@ describe("ProjectsSection Component", () => {
     expect(within(dialog).getByRole("heading", { name: "E-Commerce App" })).toBeInTheDocument();
   });
 
+  it("keeps the URL on the project shown by Prev/Next without stacking history", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+    const dialog = await screen.findByRole("dialog");
+
+    const pushSpy = jest.spyOn(window.history, "pushState");
+    await user.click(within(dialog).getByRole("button", { name: "Next project" }));
+
+    expect(window.location.search).toBe("?project=project-2");
+    // Stepping replaces the entry rather than pushing a new one each time.
+    expect(pushSpy).not.toHaveBeenCalled();
+    pushSpy.mockRestore();
+  });
+
+  it("opens the deep-linked project on mount and scrolls to the section", async () => {
+    window.history.replaceState(null, "", "/en/?project=project-2#projects");
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("heading", { name: "Portfolio Website" })).toBeInTheDocument();
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({
+      block: "start",
+      behavior: "instant",
+    });
+  });
+
+  it("ignores an unknown project id in the URL", async () => {
+    window.history.replaceState(null, "", "/en/?project=does-not-exist#projects");
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+
+    await waitFor(() => {
+      expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
+    });
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("follows the URL on browser back/forward", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+    await screen.findByRole("dialog");
+
+    // Simulate going back: the URL loses the param, then popstate fires.
+    window.history.replaceState(null, "", "/#projects");
+    act(() => {
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+  });
+
+  it("reopens the project when forward navigation restores the param", async () => {
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    window.history.replaceState(null, "", "/?project=project-3#projects");
+    act(() => {
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("heading", { name: "Chat App" })).toBeInTheDocument();
+  });
+
   it("renders the swipe carousel instead of the grid on mobile", async () => {
     const original = window.matchMedia;
     window.matchMedia = jest.fn().mockImplementation((query: string) => ({
@@ -371,5 +474,105 @@ describe("ProjectsSection Component", () => {
     } finally {
       window.matchMedia = original;
     }
+  });
+
+  describe("copy link", () => {
+    /**
+     * Installs a clipboard double. Must run *after* `userEvent.setup()`, which
+     * installs a working stub of its own that would otherwise win.
+     */
+    const setClipboard = (value: unknown) => {
+      Object.defineProperty(navigator, "clipboard", {
+        value,
+        configurable: true,
+        writable: true,
+      });
+    };
+
+    afterEach(() => {
+      setClipboard(undefined);
+      jest.clearAllMocks();
+    });
+
+    it("copies the project's absolute deep link and confirms it", async () => {
+      const user = userEvent.setup();
+      const writeText = jest.fn().mockResolvedValue(undefined);
+      setClipboard({ writeText });
+
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      expect(writeText).toHaveBeenCalledWith("http://localhost/en/?project=project-1#projects");
+      expect(await within(dialog).findByText("Link copied!")).toBeInTheDocument();
+    });
+
+    it("uses the active locale in the copied link", async () => {
+      const user = userEvent.setup();
+      const writeText = jest.fn().mockResolvedValue(undefined);
+      setClipboard({ writeText });
+
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="pt-BR" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      expect(writeText).toHaveBeenCalledWith("http://localhost/pt-BR/?project=project-1#projects");
+    });
+
+    it("announces the confirmation in a polite live region", async () => {
+      const user = userEvent.setup();
+      setClipboard({ writeText: jest.fn().mockResolvedValue(undefined) });
+
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      const status = await within(dialog).findByRole("status");
+      expect(status).toHaveAttribute("aria-live", "polite");
+      expect(status).toHaveTextContent("Link copied!");
+    });
+
+    it("tracks a successful share", async () => {
+      const user = userEvent.setup();
+      setClipboard({ writeText: jest.fn().mockResolvedValue(undefined) });
+
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      await waitFor(() => {
+        expect(trackProjectShare).toHaveBeenCalledWith({
+          project_id: "project-1",
+          project_title: "E-Commerce App",
+        });
+      });
+    });
+
+    it("shows an error message and tracks nothing when copying fails", async () => {
+      const user = userEvent.setup();
+      setClipboard({ writeText: jest.fn().mockRejectedValue(new Error("denied")) });
+
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      expect(await within(dialog).findByText("Couldn't copy the link")).toBeInTheDocument();
+      expect(trackProjectShare).not.toHaveBeenCalled();
+    });
+
+    it("offers the copy button even for a project with no external links", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for chat app/i }));
+      const dialog = await screen.findByRole("dialog");
+
+      expect(within(dialog).getByRole("button", { name: /copy link/i })).toBeInTheDocument();
+      expect(within(dialog).queryByRole("link", { name: /live demo/i })).not.toBeInTheDocument();
+    });
   });
 });

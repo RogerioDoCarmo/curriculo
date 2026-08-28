@@ -265,7 +265,10 @@
     "repository": "Repository",
     "appStore": "Download on the App Store",
     "fdroid": "Get it on F-Droid",
-    "noImages": "No images available"
+    "noImages": "No images available",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "copyLinkFailed": "Couldn't copy the link"
   },
   "homepage": {
     "title": "Personal Resume Website",

@@ -53,17 +53,43 @@ export default function Modal({
   nextLabel = "Next",
 }: ModalProps) {
   const titleId = useId();
-  const dialogRef = useDialogElement(isOpen, onClose);
-
-  // Body scroll lock
+  // Body scroll lock.
+  //
+  // `overflow: hidden` on the body propagates to the viewport, which collapses
+  // the scrollable area and clamps the page to the top — reopening at scroll 0
+  // once the modal closes. Pinning the body at its current offset keeps the
+  // page visually where it was, and the position is restored on close.
   useEffect(() => {
     if (!isOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const previous = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      width: body.style.width,
+    };
+
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = prev;
+      body.style.overflow = previous.overflow;
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.width = previous.width;
+      // Instant, not smooth: `html { scroll-behavior: smooth }` would otherwise
+      // animate the restore and let the reader watch the page fly back.
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     };
   }, [isOpen]);
+
+  // Declared after the scroll lock on purpose: effects run in hook order,
+  // and `showModal()` can itself move the page scroll — the lock has to
+  // snapshot the reader's position before that happens.
+  const dialogRef = useDialogElement(isOpen, onClose);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     if (e.target === dialogRef.current) onClose();

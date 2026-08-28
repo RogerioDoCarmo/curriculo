@@ -112,6 +112,21 @@ if (!HTMLDialogElement.prototype.showModal) {
   };
 }
 
+// Mock Element.scrollIntoView (jsdom has no layout, so it is unimplemented).
+Element.prototype.scrollIntoView = jest.fn();
+
+// Reset the URL between tests. jsdom shares one window — and therefore one
+// location — across every test in a file, so a component that writes to the URL
+// (e.g. ProjectsSection pushing `?project=<id>` when a dialog opens) would leak
+// that state into the next test and change how it renders on mount.
+// Guarded because some suites (e.g. useAnchorNavigation) swap window.history
+// for a partial stub of their own.
+beforeEach(() => {
+  if (typeof window.history?.replaceState === "function") {
+    window.history.replaceState(null, "", "/");
+  }
+});
+
 // Mock window.matchMedia for tests
 Object.defineProperty(window, "matchMedia", {
   writable: true,
