@@ -57,6 +57,28 @@
       "description": "Un componente de botón para cambiar entre temas claro y oscuro",
       "label": "Cambiar Tema"
     },
+    "select": {
+      "title": "Select (componente genérico)",
+      "description": "Un menú desplegable totalmente tipado con genéricos de TypeScript: el mismo componente funciona con cualquier forma de opción, no solo cadenas de texto",
+      "label": "Framework",
+      "resultLabel": "Elegiste",
+      "options": {
+        "react": "React",
+        "reactNative": "React Native",
+        "nextjs": "Next.js"
+      }
+    },
+    "animatedCounter": {
+      "title": "Contador Animado",
+      "description": "Estadísticas de conteo animadas con requestAnimationFrame, con alternativa para movimiento reducido",
+      "yearsLabel": "Años de Experiencia",
+      "banksLabel": "Instituciones Bancarias"
+    },
+    "pulseAnimation": {
+      "title": "Animación de Pulso (Lottie)",
+      "description": "Una pequeña animación Lottie en bucle exportada desde Adobe After Effects, con una alternativa estática para movimiento reducido",
+      "label": "Animación decorativa de pulso"
+    },
     "storybookButton": "Ver en Chromatic"
   },
   "hero": {
@@ -243,7 +265,10 @@
     "repository": "Repositorio",
     "appStore": "Consíguelo en la App Store",
     "fdroid": "Disponible en F-Droid",
-    "noImages": "No hay imágenes disponibles"
+    "noImages": "No hay imágenes disponibles",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "¡Enlace copiado!",
+    "copyLinkFailed": "No se pudo copiar el enlace"
   },
   "homepage": {
     "title": "Sitio Web de Currículum Personal",

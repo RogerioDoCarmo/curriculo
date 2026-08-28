@@ -20,7 +20,14 @@ export function useDialogElement(isOpen: boolean, onClose: () => void) {
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    const handleClose = () => onClose();
+    const handleClose = () => {
+      // The "close" event is dispatched asynchronously, so it can arrive after
+      // a rapid close-then-open sequence (browser back/forward, for instance)
+      // has already reopened the dialog. Reporting that stale close would tell
+      // the consumer the dialog is shut while it is plainly on screen.
+      if (dialog.open) return;
+      onClose();
+    };
     dialog.addEventListener("close", handleClose);
     return () => dialog.removeEventListener("close", handleClose);
   }, [onClose]);

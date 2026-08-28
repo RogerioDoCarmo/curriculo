@@ -147,6 +147,63 @@ describe("Modal Component", () => {
     });
   });
 
+  // --- Body scroll lock ---
+  describe("body scroll lock", () => {
+    afterEach(() => {
+      document.body.removeAttribute("style");
+    });
+
+    it("pins the body at the current scroll offset while open", () => {
+      Object.defineProperty(window, "scrollY", { value: 4007, configurable: true });
+
+      render(
+        <Modal {...defaultProps} isOpen={true}>
+          <p>Content</p>
+        </Modal>
+      );
+
+      // `overflow: hidden` alone propagates to the viewport and clamps the page
+      // to the top, so the offset has to be held explicitly.
+      expect(document.body.style.overflow).toBe("hidden");
+      expect(document.body.style.position).toBe("fixed");
+      expect(document.body.style.top).toBe("-4007px");
+      expect(document.body.style.width).toBe("100%");
+    });
+
+    it("restores the scroll position when it closes", () => {
+      Object.defineProperty(window, "scrollY", { value: 4007, configurable: true });
+      const scrollTo = jest.fn();
+      Object.defineProperty(window, "scrollTo", { value: scrollTo, configurable: true });
+
+      const { rerender } = render(
+        <Modal {...defaultProps} isOpen={true}>
+          <p>Content</p>
+        </Modal>
+      );
+      rerender(
+        <Modal {...defaultProps} isOpen={false}>
+          <p>Content</p>
+        </Modal>
+      );
+
+      expect(document.body.style.position).toBe("");
+      expect(document.body.style.top).toBe("");
+      expect(document.body.style.overflow).toBe("");
+      expect(scrollTo).toHaveBeenCalledWith({ top: 4007, behavior: "instant" });
+    });
+
+    it("leaves the body alone while closed", () => {
+      render(
+        <Modal {...defaultProps} isOpen={false}>
+          <p>Content</p>
+        </Modal>
+      );
+
+      expect(document.body.style.overflow).toBe("");
+      expect(document.body.style.position).toBe("");
+    });
+  });
+
   // --- Focus trap ---
   describe("focus trap", () => {
     it("should move focus inside the modal when it opens", async () => {

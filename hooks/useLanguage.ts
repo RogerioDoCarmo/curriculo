@@ -109,6 +109,12 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
       setLocale(newLocale);
       setStoredLocale(newLocale);
 
+      // Carry the query string and hash across the switch, so state that lives
+      // in the URL survives — e.g. an open project dialog (`?project=<id>`)
+      // and the section the reader was on (`#projects`).
+      const suffix =
+        typeof window === "undefined" ? "" : window.location.search + window.location.hash;
+
       // Navigate to the new locale using next-intl router
       // Replace the current locale segment in the pathname
       const segments = pathname.split("/");
@@ -118,11 +124,11 @@ export function useLanguage(currentLocale: SupportedLocale): UseLanguageReturn {
         // Always include locale in URL for static export
         segments[1] = newLocale;
         const newPath = segments.join("/");
-        router.push(newPath);
+        router.push(`${newPath}${suffix}`);
       } else {
         // Always include locale prefix for static export
         const pathWithoutLeadingSlash = pathname.startsWith("/") ? pathname.slice(1) : pathname;
-        router.push(`/${newLocale}/${pathWithoutLeadingSlash}`);
+        router.push(`/${newLocale}/${pathWithoutLeadingSlash}${suffix}`);
       }
     },
     [pathname, router]

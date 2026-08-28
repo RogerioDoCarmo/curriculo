@@ -57,6 +57,28 @@
       "description": "A button component for switching between light and dark themes",
       "label": "Toggle Theme"
     },
+    "select": {
+      "title": "Select (generic component)",
+      "description": "A fully-typed dropdown built with TypeScript generics — the same component works with any option shape, not just strings",
+      "label": "Framework",
+      "resultLabel": "You picked",
+      "options": {
+        "react": "React",
+        "reactNative": "React Native",
+        "nextjs": "Next.js"
+      }
+    },
+    "animatedCounter": {
+      "title": "Animated Counter",
+      "description": "Count-up statistics driven by requestAnimationFrame, with a reduced-motion fallback",
+      "yearsLabel": "Years of Experience",
+      "banksLabel": "Banking Institutions"
+    },
+    "pulseAnimation": {
+      "title": "Pulse Animation (Lottie)",
+      "description": "A small, looping Lottie animation exported from Adobe After Effects, with a static fallback for reduced motion",
+      "label": "Decorative pulsing animation"
+    },
     "storybookButton": "View on Chromatic"
   },
   "hero": {
@@ -243,7 +265,10 @@
     "repository": "Repository",
     "appStore": "Download on the App Store",
     "fdroid": "Get it on F-Droid",
-    "noImages": "No images available"
+    "noImages": "No images available",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "copyLinkFailed": "Couldn't copy the link"
   },
   "homepage": {
     "title": "Personal Resume Website",
