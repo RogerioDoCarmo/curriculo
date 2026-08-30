@@ -155,25 +155,26 @@ export function FilterPulseProvider({ children }: FilterPulseProviderProps) {
     setActiveFilterId(resolvedId);
     setDurations(durations);
 
+    // Each phase is scheduled once, at its cumulative offset from the start of
+    // the pulse, rather than every timeout nesting the one after it. Same
+    // timing, but the callbacks stay shallow (Sonar S2004) and all three
+    // timers land in `timeoutsRef` together, so an unmount mid-pulse cancels
+    // the rest of the sequence instead of only the timer currently pending.
+    const schedulePhase = (next: FilterPulsePhase, delay: number) => {
+      timeoutsRef.current.push(setTimeout(() => setPhase(next), delay));
+    };
+
     const raf1 = requestAnimationFrame(() => {
       const raf2 = requestAnimationFrame(() => {
         setPhase("expanding");
 
-        timeoutsRef.current.push(
-          setTimeout(() => {
-            setPhase("holding");
-            timeoutsRef.current.push(
-              setTimeout(() => {
-                setPhase("contracting");
-                timeoutsRef.current.push(
-                  setTimeout(() => {
-                    setPhase("idle");
-                  }, durations.contracting)
-                );
-              }, durations.holding)
-            );
-          }, durations.expanding)
-        );
+        const holdingAt = durations.expanding;
+        const contractingAt = holdingAt + durations.holding;
+        const idleAt = contractingAt + durations.contracting;
+
+        schedulePhase("holding", holdingAt);
+        schedulePhase("contracting", contractingAt);
+        schedulePhase("idle", idleAt);
       });
       rafIdsRef.current.push(raf2);
     });
