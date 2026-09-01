@@ -22,10 +22,17 @@ test.describe("Print and PDF Output", () => {
   test.beforeEach(async ({ page, context }) => {
     await setCookieConsentBeforeLoad(context);
     await page.goto("/");
-    // WebKit re-layouts when emulateMedia switches to print and sections become
-    // unqueryable if the DOM has not settled first. Wait for network idle here so
-    // every test starts from a stable DOM before emulating print media.
-    await page.waitForLoadState("networkidle");
+    // WebKit re-layouts when emulateMedia switches to print, and sections are
+    // unqueryable until the DOM has settled — so every test needs a stable DOM
+    // before it emulates print media.
+    //
+    // Deliberately NOT waitForLoadState("networkidle"): Playwright discourages
+    // it, and this page never reliably goes quiet (analytics, Firebase and font
+    // requests keep trickling), so under load it either times out outright or
+    // resolves while the sections are still absent — the two ways this file has
+    // flaked. Anchoring on real content polls for the thing the tests actually
+    // depend on, and is immune to background chatter.
+    await expect(page.locator("section#home")).toBeAttached();
   });
 
   test.skip("should hide non-essential elements in print media", async ({ page }) => {
@@ -35,9 +42,6 @@ test.describe("Print and PDF Output", () => {
      * non-essential UI elements including navigation menus, Theme_Toggle, and
      * interactive controls
      */
-
-    // Wait for page to fully load before emulating print media
-    await page.waitForLoadState("networkidle");
 
     // Emulate print media
     await page.emulateMedia({ media: "print" });
@@ -116,16 +120,14 @@ test.describe("Print and PDF Output", () => {
   });
 
   test("should expand collapsed content for print", async ({ page }) => {
-    // Wait for page to fully load before switching media — WebKit re-layouts on
-    // emulateMedia and sections become unqueryable if the DOM isn't settled first.
-    await page.waitForLoadState("networkidle");
-
     // Emulate print media
     await page.emulateMedia({ media: "print" });
     await page.waitForTimeout(1000);
 
-    // Verify all sections are visible (not collapsed)
+    // Verify all sections are visible (not collapsed). Settle the re-layout with
+    // a retrying assertion before the non-retrying count(), as above.
     const sections = page.locator("section");
+    await expect(sections.first()).toBeAttached();
     const sectionCount = await sections.count();
 
     expect(sectionCount).toBeGreaterThanOrEqual(1);
@@ -169,10 +171,13 @@ test.describe("Print and PDF Output", () => {
     await page.emulateMedia({ media: "print" });
     await page.waitForTimeout(500);
 
-    // Check that sections exist
+    // Check that sections exist. `locator.count()` is a non-retrying snapshot,
+    // so on WebKit it can land inside the print-media re-layout — during which
+    // sections are briefly unqueryable — and report 0 (this failed on
+    // mobile-safari in CI). A web-first assertion polls until the re-layout
+    // settles instead of racing it.
     const sections = page.locator("section");
-    const sectionCount = await sections.count();
-    expect(sectionCount).toBeGreaterThanOrEqual(1);
+    await expect(sections.first()).toBeAttached();
 
     // Verify first section has page-break styles
     const firstSection = sections.first();
@@ -187,7 +192,6 @@ test.describe("Print and PDF Output", () => {
   test("should display all project information in print", async ({ page }) => {
     // Emulate print media
     await page.emulateMedia({ media: "print" });
-    await page.waitForLoadState("networkidle");
     await page.waitForTimeout(500);
 
     // Verify hero section content is visible
@@ -222,6 +226,7 @@ test.describe("Print and PDF Output", () => {
     await expect(heroSection).toBeVisible();
 
     const sections = page.locator("section");
+    await expect(sections.first()).toBeAttached();
     const sectionCount = await sections.count();
     expect(sectionCount).toBeGreaterThanOrEqual(1);
 
