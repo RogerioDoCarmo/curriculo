@@ -64,6 +64,23 @@ export function buildProjectHistoryUrl(params: {
 }
 
 /**
+ * Strips any trailing slashes off an origin.
+ *
+ * Walks an index backwards instead of using `/\/+$/`: that pattern backtracks
+ * quadratically over a long run of slashes that *isn't* at the end of the
+ * string (Sonar S8786), retrying every shorter run from every start position.
+ * `charAt` yields `""` for a negative index, so an all-slashes string
+ * terminates the loop without needing a separate bounds guard.
+ */
+function stripTrailingSlashes(value: string): string {
+  let end = value.length;
+  while (value.charAt(end - 1) === "/") {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
+/**
  * Builds the absolute URL to hand to someone else, e.g.
  * `https://site.dev/en/?project=miroji#projects`. The trailing slash after the
  * locale matches `trailingSlash: true` in next.config.js, so recipients don't
@@ -75,7 +92,7 @@ export function buildProjectShareUrl(params: {
   readonly projectId: string;
 }): string {
   const { origin, locale, projectId } = params;
-  const base = origin.replace(/\/+$/, "");
+  const base = stripTrailingSlashes(origin);
   const query = `${PROJECT_QUERY_PARAM}=${encodeURIComponent(projectId)}`;
   return `${base}/${locale}/?${query}#${PROJECTS_SECTION_ID}`;
 }

@@ -106,23 +106,28 @@ export default function CinematicLayers({
         }`}
         style={layerStyle}
       >
-        {Array.from({ length: spec.rings }, (_, i) => (
-          <span
-            key={i}
-            data-testid="pulse-ring"
-            className={`fp-ring${i > 0 ? ` fp-ring--${i + 1}` : ""}`}
-            style={
-              {
-                left: `${origin.x}px`,
-                top: `${origin.y}px`,
-                width: `${diameter}px`,
-                height: `${diameter}px`,
-                marginLeft: `${-maxRadius}px`,
-                marginTop: `${-maxRadius}px`,
-              } as CSSProperties
-            }
-          />
-        ))}
+        {Array.from({ length: spec.rings }, (_, i) => {
+          // Extracted rather than inlined: a template literal nested inside
+          // another one is hard to read (Sonar S4624).
+          const ringVariant = i > 0 ? ` fp-ring--${i + 1}` : "";
+          return (
+            <span
+              key={i}
+              data-testid="pulse-ring"
+              className={`fp-ring${ringVariant}`}
+              style={
+                {
+                  left: `${origin.x}px`,
+                  top: `${origin.y}px`,
+                  width: `${diameter}px`,
+                  height: `${diameter}px`,
+                  marginLeft: `${-maxRadius}px`,
+                  marginTop: `${-maxRadius}px`,
+                } as CSSProperties
+              }
+            />
+          );
+        })}
       </div>
     </>
   );

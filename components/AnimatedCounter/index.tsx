@@ -29,8 +29,15 @@ export default function AnimatedCounter({
   const displayValue = Math.round(current);
 
   return (
+    // role="img" rather than "group": ARIA's `group` is for a set of related
+    // widgets, while this is one atomic piece of information whose parts are
+    // all aria-hidden -- so it should reach assistive tech as a single named
+    // object. It also keeps the aria-label valid (a bare <div> is `generic`,
+    // which cannot be named) without the native `group` element that Sonar
+    // S6819 would otherwise want, none of which -- <details>, <fieldset>,
+    // <optgroup>, <address> -- describes a statistic.
     <div
-      role="group"
+      role="img"
       className="flex flex-col items-center text-center"
       aria-label={`${value}${suffix} ${label}`}
     >

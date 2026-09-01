@@ -24,7 +24,7 @@ import {
  * Locales with localized store-badge artwork under `public/images/badges/`.
  * Any other locale falls back to the English badge.
  */
-const STORE_BADGE_LOCALES: readonly string[] = ["pt-BR", "en", "es"];
+const STORE_BADGE_LOCALES: ReadonlySet<string> = new Set(["pt-BR", "en", "es"]);
 const FALLBACK_BADGE_LOCALE = "en";
 
 interface ProjectsSectionProps {
@@ -365,7 +365,7 @@ interface ProjectDetailProps {
 
 function ProjectDetail({ project, locale }: ProjectDetailProps) {
   const t = useTranslations();
-  const badgeLocale = STORE_BADGE_LOCALES.includes(locale) ? locale : FALLBACK_BADGE_LOCALE;
+  const badgeLocale = STORE_BADGE_LOCALES.has(locale) ? locale : FALLBACK_BADGE_LOCALE;
   const { copied, failed, copy } = useCopyToClipboard();
 
   // The share URL is built on click, never during render: `window.location`

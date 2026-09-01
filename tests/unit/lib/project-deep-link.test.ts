@@ -166,5 +166,27 @@ describe("project-deep-link", () => {
         buildProjectShareUrl({ origin: "https://example.dev", locale: "en", projectId: "a b" })
       ).toBe("https://example.dev/en/?project=a%20b#projects");
     });
+
+    it("strips only the trailing run of slashes, leaving the path intact", () => {
+      expect(
+        buildProjectShareUrl({
+          origin: "https://example.dev/app///",
+          locale: "en",
+          projectId: "miroji",
+        })
+      ).toBe("https://example.dev/app/en/?project=miroji#projects");
+    });
+
+    it("reduces an origin that is nothing but slashes to an empty base", () => {
+      expect(buildProjectShareUrl({ origin: "///", locale: "en", projectId: "miroji" })).toBe(
+        "/en/?project=miroji#projects"
+      );
+    });
+
+    it("leaves an empty origin empty", () => {
+      expect(buildProjectShareUrl({ origin: "", locale: "en", projectId: "miroji" })).toBe(
+        "/en/?project=miroji#projects"
+      );
+    });
   });
 });
