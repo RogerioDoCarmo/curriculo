@@ -20,7 +20,7 @@ interface VercelConfig {
   headers: VercelHeaderRule[];
 }
 
-function getConnectSrc(): string {
+function getCspHeaderValue(): string {
   const raw = fs.readFileSync(path.join(process.cwd(), "vercel.json"), "utf-8");
   const config = JSON.parse(raw) as VercelConfig;
   const catchAllRule = config.headers.find((rule) => rule.source === "/(.*)");
@@ -31,11 +31,23 @@ function getConnectSrc(): string {
   if (!cspHeader) {
     throw new Error("vercel.json: no Content-Security-Policy header found");
   }
-  const match = /connect-src ([^;]+);/.exec(cspHeader.value);
+  return cspHeader.value;
+}
+
+function getDirective(name: string): string {
+  const match = new RegExp(`${name} ([^;]+);`).exec(getCspHeaderValue());
   if (!match) {
-    throw new Error("vercel.json: connect-src directive not found in CSP header");
+    throw new Error(`vercel.json: ${name} directive not found in CSP header`);
   }
   return match[1];
+}
+
+function getConnectSrc(): string {
+  return getDirective("connect-src");
+}
+
+function getFontSrc(): string {
+  return getDirective("font-src");
 }
 
 describe("vercel.json Content-Security-Policy connect-src", () => {
@@ -48,5 +60,9 @@ describe("vercel.json Content-Security-Policy connect-src", () => {
     expect(connectSrc).toContain("formspree.io");
     expect(connectSrc).toContain("firebaseio.com");
     expect(connectSrc).toContain("google-analytics.com");
+  });
+
+  it("allows Google's font host for third-party embeds (e.g. Vercel's preview toolbar)", () => {
+    expect(getFontSrc()).toContain("fonts.gstatic.com");
   });
 });
