@@ -14,6 +14,9 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
+import { getSentryEnvironment, isSentryEnabled } from "@/lib/sentry-environment";
+
+const environment = getSentryEnvironment();
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -21,11 +24,13 @@ Sentry.init({
   // Capture 10% of transactions for performance monitoring
   tracesSampleRate: 0.1,
 
-  // Enable in development for testing (change to production-only later)
-  enabled: process.env.NODE_ENV === "production" || process.env.NODE_ENV === "development",
+  // Only real deployments (production/preview) report to Sentry — local
+  // machine builds and `next dev` are excluded, regardless of NODE_ENV.
+  enabled: isSentryEnabled(environment),
 
-  // Set environment
-  environment: process.env.NODE_ENV,
+  // "production" | "preview" | "local" — derived from VERCEL_ENV, not
+  // NODE_ENV, so a local `next build && next start` isn't mistaken for prod.
+  environment,
 
   // Ignore common non-actionable errors
   ignoreErrors: [

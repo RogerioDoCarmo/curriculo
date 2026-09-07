@@ -8,6 +8,12 @@ const withNextIntl = createNextIntlPlugin("./i18n.ts");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export", // Static export for Vercel
+  env: {
+    // Bake Vercel's build-time environment into the client bundle so
+    // lib/sentry-environment.ts can tell a real deploy (production/preview)
+    // apart from a local machine build, where VERCEL_ENV is unset.
+    NEXT_PUBLIC_VERCEL_ENV: process.env.VERCEL_ENV || "",
+  },
   images: {
     unoptimized: true, // Required for static export
     // Define device sizes for responsive images
