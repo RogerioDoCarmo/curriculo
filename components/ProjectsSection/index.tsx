@@ -27,6 +27,13 @@ import {
 const STORE_BADGE_LOCALES: ReadonlySet<string> = new Set(["pt-BR", "en", "es"]);
 const FALLBACK_BADGE_LOCALE = "en";
 
+/**
+ * Locales with a sourced Google Play badge, separate from `STORE_BADGE_LOCALES`
+ * because Google's official badge asset (unlike Apple's and F-Droid's) isn't
+ * available in pt-BR at the same source — falls back to `en` until sourced.
+ */
+const PLAY_BADGE_LOCALES: ReadonlySet<string> = new Set(["en", "es"]);
+
 interface ProjectsSectionProps {
   readonly projects: Project[];
   readonly locale: string;
@@ -366,6 +373,7 @@ interface ProjectDetailProps {
 function ProjectDetail({ project, locale }: ProjectDetailProps) {
   const t = useTranslations();
   const badgeLocale = STORE_BADGE_LOCALES.has(locale) ? locale : FALLBACK_BADGE_LOCALE;
+  const playBadgeLocale = PLAY_BADGE_LOCALES.has(locale) ? locale : FALLBACK_BADGE_LOCALE;
   const { copied, failed, copy } = useCopyToClipboard();
 
   // The share URL is built on click, never during render: `window.location`
@@ -461,7 +469,7 @@ function ProjectDetail({ project, locale }: ProjectDetailProps) {
       </div>
 
       {/* Store badges */}
-      {(project.appStoreUrl || project.fdroidUrl) && (
+      {(project.appStoreUrl || project.playStoreUrl || project.fdroidUrl) && (
         <div className="flex flex-wrap items-center gap-3 pt-2">
           {project.appStoreUrl && (
             <a
@@ -476,6 +484,22 @@ function ProjectDetail({ project, locale }: ProjectDetailProps) {
                 width={120}
                 height={40}
                 className="h-10 w-auto"
+              />
+            </a>
+          )}
+          {project.playStoreUrl && (
+            <a
+              href={project.playStoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            >
+              <Image
+                src={`/images/badges/google-play-${playBadgeLocale}.png`}
+                alt={`${t("projects.playStore")} — ${project.title}`}
+                width={646}
+                height={250}
+                className="h-12 w-auto"
               />
             </a>
           )}

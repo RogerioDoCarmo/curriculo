@@ -138,6 +138,7 @@ function parseProjectFile(filePath: string): Project {
     liveUrl: optionalString(data.liveUrl),
     repoUrl: optionalString(data.repoUrl),
     appStoreUrl: optionalString(data.appStoreUrl),
+    playStoreUrl: optionalString(data.playStoreUrl),
     fdroidUrl: optionalString(data.fdroidUrl),
     featured: Boolean(data.featured),
     mockData: data.mockData === undefined ? undefined : Boolean(data.mockData),

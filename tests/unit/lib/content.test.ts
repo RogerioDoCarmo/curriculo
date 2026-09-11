@@ -472,10 +472,13 @@ describe("Content Management System", () => {
       write(
         dir,
         "projects/pt-BR/stores.md",
-        `---\nid: stores\ntitle: T\ndescription: d\ndate: "2024-01-01"\nappStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907\nfdroidUrl: https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji\n---\nBody`
+        `---\nid: stores\ntitle: T\ndescription: d\ndate: "2024-01-01"\nappStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907\nplayStoreUrl: https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji\nfdroidUrl: https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji\n---\nBody`
       );
       const [withStores] = await getProjects(undefined, dir);
       expect(withStores.appStoreUrl).toBe("https://apps.apple.com/us/app/miroji/id6774924907");
+      expect(withStores.playStoreUrl).toBe(
+        "https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji"
+      );
       expect(withStores.fdroidUrl).toBe(
         "https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji"
       );
@@ -490,6 +493,7 @@ describe("Content Management System", () => {
       );
       const [withoutStores] = await getProjects(undefined, dir);
       expect(withoutStores.appStoreUrl).toBeUndefined();
+      expect(withoutStores.playStoreUrl).toBeUndefined();
       expect(withoutStores.fdroidUrl).toBeUndefined();
     });
 
