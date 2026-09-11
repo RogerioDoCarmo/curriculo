@@ -31,6 +31,7 @@ const messages: AbstractIntlMessages = {
     repository: "Repository",
     appStore: "Download on the App Store",
     fdroid: "Get it on F-Droid",
+    playStore: "Get it on Google Play",
     noImages: "No images available",
     copyLink: "Copy link",
     linkCopied: "Link copied!",
@@ -73,6 +74,7 @@ const sampleProjects: Project[] = [
     liveUrl: "https://example.com",
     repoUrl: "https://github.com/user/ecommerce",
     appStoreUrl: "https://apps.apple.com/us/app/miroji/id6774924907",
+    playStoreUrl: "https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji",
     fdroidUrl: "https://f-droid.org/en/packages/com.rogeriodocarmo.miroji",
     featured: true,
     date: "2024-01-15",
@@ -249,6 +251,14 @@ describe("ProjectsSection Component", () => {
         "href",
         "https://f-droid.org/en/packages/com.rogeriodocarmo.miroji"
       );
+
+      const playStoreLink = screen.getByRole("link", { name: /get it on google play/i });
+      expect(playStoreLink).toHaveAttribute(
+        "href",
+        "https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji"
+      );
+      expect(playStoreLink).toHaveAttribute("target", "_blank");
+      expect(playStoreLink).toHaveAttribute("rel", "noopener noreferrer");
     });
   });
 
@@ -269,6 +279,32 @@ describe("ProjectsSection Component", () => {
     });
   });
 
+  it("falls back to the English Google Play badge for pt-BR (not yet sourced)", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="pt-BR" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "src",
+        "/images/badges/google-play-en.png"
+      );
+    });
+  });
+
+  it("uses the localized Google Play badge for an available locale (es)", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="es" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "src",
+        "/images/badges/google-play-es.png"
+      );
+    });
+  });
+
   it("falls back to the English badge artwork for an unsupported locale", async () => {
     const user = userEvent.setup();
     renderWithIntl(<ProjectsSection projects={sampleProjects} locale="fr-FR" />);
@@ -283,6 +319,10 @@ describe("ProjectsSection Component", () => {
         "src",
         "/images/badges/f-droid-en.svg"
       );
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "src",
+        "/images/badges/google-play-en.png"
+      );
     });
   });
 
@@ -296,6 +336,9 @@ describe("ProjectsSection Component", () => {
         screen.queryByRole("link", { name: /download on the app store/i })
       ).not.toBeInTheDocument();
       expect(screen.queryByRole("link", { name: /get it on f-droid/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: /get it on google play/i })
+      ).not.toBeInTheDocument();
     });
   });
 
