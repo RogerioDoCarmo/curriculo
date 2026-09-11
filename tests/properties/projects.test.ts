@@ -63,6 +63,7 @@ const projectArb: fc.Arbitrary<Project> = fc.record({
   liveUrl: optionalUrlArb,
   repoUrl: optionalUrlArb,
   appStoreUrl: optionalUrlArb,
+  playStoreUrl: optionalUrlArb,
   fdroidUrl: optionalUrlArb,
   featured: fc.boolean(),
   date: fc.constant("2024-01-15"),
@@ -78,10 +79,12 @@ interface RenderedProject {
   liveUrl?: string;
   repoUrl?: string;
   appStoreUrl?: string;
+  playStoreUrl?: string;
   fdroidUrl?: string;
   hasLiveLink: boolean;
   hasRepoLink: boolean;
   hasAppStoreBadge: boolean;
+  hasPlayStoreBadge: boolean;
   hasFdroidBadge: boolean;
   isExpanded: boolean;
 }
@@ -103,10 +106,12 @@ function renderProject(project: Project, expanded = false): RenderedProject {
     liveUrl: project.liveUrl,
     repoUrl: project.repoUrl,
     appStoreUrl: project.appStoreUrl,
+    playStoreUrl: project.playStoreUrl,
     fdroidUrl: project.fdroidUrl,
     hasLiveLink: Boolean(project.liveUrl),
     hasRepoLink: Boolean(project.repoUrl),
     hasAppStoreBadge: Boolean(project.appStoreUrl),
+    hasPlayStoreBadge: Boolean(project.playStoreUrl),
     hasFdroidBadge: Boolean(project.fdroidUrl),
     isExpanded: expanded,
   };
@@ -250,6 +255,20 @@ describe("Property 5: Project Links Rendered When Present", () => {
     );
   });
 
+  it("projects with playStoreUrl always have a Google Play badge link", () => {
+    fc.assert(
+      fc.property(
+        projectArb.filter((p) => p.playStoreUrl !== undefined),
+        (project) => {
+          const rendered = renderProject(project);
+          expect(rendered.hasPlayStoreBadge).toBe(true);
+          expect(rendered.playStoreUrl).toBe(project.playStoreUrl);
+        }
+      ),
+      { numRuns: 50 }
+    );
+  });
+
   it("projects with fdroidUrl always have an F-Droid badge link", () => {
     fc.assert(
       fc.property(
@@ -267,12 +286,17 @@ describe("Property 5: Project Links Rendered When Present", () => {
   it("projects without store URLs render no store badges", () => {
     fc.assert(
       fc.property(
-        projectArb.filter((p) => p.appStoreUrl === undefined && p.fdroidUrl === undefined),
+        projectArb.filter(
+          (p) =>
+            p.appStoreUrl === undefined && p.playStoreUrl === undefined && p.fdroidUrl === undefined
+        ),
         (project) => {
           const rendered = renderProject(project);
           expect(rendered.hasAppStoreBadge).toBe(false);
+          expect(rendered.hasPlayStoreBadge).toBe(false);
           expect(rendered.hasFdroidBadge).toBe(false);
           expect(rendered.appStoreUrl).toBeUndefined();
+          expect(rendered.playStoreUrl).toBeUndefined();
           expect(rendered.fdroidUrl).toBeUndefined();
         }
       ),

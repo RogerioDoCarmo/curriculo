@@ -7,8 +7,8 @@
  *
  * 1. Every locale renders the same projects (no missing translation file)
  * 2. The copy shown actually changes with the locale
- * 3. Store badges in the detail modal link to the App Store / F-Droid and use
- *    the locale's badge artwork
+ * 3. Store badges in the detail modal link to the App Store / Google Play /
+ *    F-Droid and use the locale's badge artwork
  */
 
 import { test, expect, type Page } from "@playwright/test";
@@ -83,7 +83,7 @@ test.describe("Localized project content", () => {
     });
   }
 
-  test("store badges link to the App Store and F-Droid listings", async ({ page }) => {
+  test("store badges link to the App Store, Google Play and F-Droid listings", async ({ page }) => {
     await page.goto("/en");
     const detail = await openMirojiDetail(page);
 
@@ -93,6 +93,13 @@ test.describe("Localized project content", () => {
       "https://apps.apple.com/us/app/miroji/id6774924907"
     );
     await expect(appStoreLink).toHaveAttribute("rel", /noopener/);
+
+    const playStoreLink = detail.getByRole("link", { name: /get it on google play/i });
+    await expect(playStoreLink).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji"
+    );
+    await expect(playStoreLink).toHaveAttribute("rel", /noopener/);
 
     const fdroidLink = detail.getByRole("link", { name: /get it on f-droid/i });
     await expect(fdroidLink).toHaveAttribute(
@@ -104,6 +111,10 @@ test.describe("Localized project content", () => {
     await expect(detail.getByRole("img", { name: /download on the app store/i })).toHaveAttribute(
       "src",
       /\/images\/badges\/app-store-en\.svg/
+    );
+    await expect(detail.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+      "src",
+      /\/images\/badges\/google-play-en\.png/
     );
     await expect(detail.getByRole("img", { name: /get it on f-droid/i })).toHaveAttribute(
       "src",
@@ -126,6 +137,16 @@ test.describe("Localized project content", () => {
     await expect(detail.getByRole("link", { name: /disponível no f-droid/i })).toHaveAttribute(
       "href",
       "https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji"
+    );
+
+    // Google's badge isn't sourced for pt-BR yet — falls back to the English asset.
+    await expect(detail.getByRole("img", { name: /disponível no google play/i })).toHaveAttribute(
+      "src",
+      /\/images\/badges\/google-play-en\.png/
+    );
+    await expect(detail.getByRole("link", { name: /disponível no google play/i })).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji"
     );
   });
 });

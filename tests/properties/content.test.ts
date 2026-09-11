@@ -70,6 +70,7 @@ const projectFrontmatterArb = fc.record({
   liveUrl: optionalUrlArb,
   repoUrl: optionalUrlArb,
   appStoreUrl: optionalUrlArb,
+  playStoreUrl: optionalUrlArb,
   fdroidUrl: optionalUrlArb,
 });
 
@@ -89,6 +90,7 @@ function buildMarkdownFile(frontmatter: {
   liveUrl?: string;
   repoUrl?: string;
   appStoreUrl?: string;
+  playStoreUrl?: string;
   fdroidUrl?: string;
 }): string {
   const techLines = frontmatter.technologies.map((t) => `  - ${JSON.stringify(t)}`).join("\n");
@@ -97,6 +99,9 @@ function buildMarkdownFile(frontmatter: {
   const repoUrlLine = frontmatter.repoUrl ? `repoUrl: "${frontmatter.repoUrl}"` : "";
   const appStoreUrlLine = frontmatter.appStoreUrl
     ? `appStoreUrl: "${frontmatter.appStoreUrl}"`
+    : "";
+  const playStoreUrlLine = frontmatter.playStoreUrl
+    ? `playStoreUrl: "${frontmatter.playStoreUrl}"`
     : "";
   const fdroidUrlLine = frontmatter.fdroidUrl ? `fdroidUrl: "${frontmatter.fdroidUrl}"` : "";
 
@@ -112,6 +117,7 @@ function buildMarkdownFile(frontmatter: {
     liveUrlLine,
     repoUrlLine,
     appStoreUrlLine,
+    playStoreUrlLine,
     fdroidUrlLine,
     "---",
     "",
@@ -214,6 +220,9 @@ describe("Property 46: Content Field Support", () => {
             // Optional store badge fields
             if (frontmatter.appStoreUrl !== undefined) {
               expect(project.appStoreUrl).toBe(frontmatter.appStoreUrl);
+            }
+            if (frontmatter.playStoreUrl !== undefined) {
+              expect(project.playStoreUrl).toBe(frontmatter.playStoreUrl);
             }
             if (frontmatter.fdroidUrl !== undefined) {
               expect(project.fdroidUrl).toBe(frontmatter.fdroidUrl);

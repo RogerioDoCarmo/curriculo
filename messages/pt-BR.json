@@ -265,6 +265,7 @@
     "repository": "Repositório",
     "appStore": "Baixe na App Store",
     "fdroid": "Disponível no F-Droid",
+    "playStore": "Disponível no Google Play",
     "noImages": "Nenhuma imagem disponível",
     "copyLink": "Copiar link",
     "linkCopied": "Link copiado!",

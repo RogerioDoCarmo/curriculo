@@ -1,7 +1,7 @@
 ---
 id: miroji
 title: Miroji
-description: App de espejo con cámara frontal publicada en la App Store y en F-Droid, usada como caso de estudio de arquitectura hexagonal, pruebas automatizadas y CI/CD
+description: App de espejo con cámara frontal publicada en la App Store, Google Play y F-Droid, usada como caso de estudio de arquitectura hexagonal, pruebas automatizadas y CI/CD
 featured: true
 date: 2026-08-18
 technologies:
@@ -20,6 +20,7 @@ technologies:
 repoUrl: https://github.com/RogerioDoCarmo/mirror_app
 liveUrl: https://rogeriodocarmo.github.io/mirror_app/
 appStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907
+playStoreUrl: https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji
 fdroidUrl: https://f-droid.org/es/packages/com.rogeriodocarmo.miroji
 images:
   - /images/projects/miroji.png
@@ -29,11 +30,12 @@ images:
 
 Miroji es una app de espejo que usa la cámara frontal del dispositivo. La funcionalidad es deliberadamente simple, y esa elección es el punto del proyecto: con el alcance de producto reducido al mínimo, el desafío pasa a ser enteramente de ingeniería — arquitectura, pruebas, automatización y el proceso de publicación en tiendas.
 
-Está disponible en la App Store y en F-Droid, con todo el código abierto bajo licencia MIT.
+Está disponible en la App Store, en Google Play y en F-Droid, con todo el código abierto bajo licencia MIT.
 
 ## Dónde Descargar
 
 - [App Store](https://apps.apple.com/us/app/miroji/id6774924907) — iPhone, iPad y Macs con Apple Silicon
+- [Google Play](https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji) — Android, distribución oficial revisada por Google
 - [F-Droid](https://f-droid.org/es/packages/com.rogeriodocarmo.miroji) — Android, compilado a partir del código fuente por el propio catálogo
 - [Código fuente en GitHub](https://github.com/RogerioDoCarmo/mirror_app) — licencia MIT
 
@@ -91,6 +93,7 @@ Está disponible en la App Store y en F-Droid, con todo el código abierto bajo 
 ## Impacto
 
 - Publicada en la App Store, con compatibilidad verificada también en Macs con Apple Silicon
+- Publicada en producción en Google Play, tras pruebas cerradas con testers reales
 - Publicada en F-Droid, compilada por el propio catálogo y listada sin ninguna anti-feature
 - 14 releases a lo largo de tres meses de desarrollo
 - Base de código abierta y documentada, que sirve como referencia práctica de las prácticas descritas arriba
