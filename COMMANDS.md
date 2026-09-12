@@ -253,6 +253,28 @@ Follow conventional commit format:
 - `perf:` - Performance improvements
 - `chore:` - Maintenance tasks
 
+## Claude Code Skills
+
+Reusable, invokable workflows for Claude Code live in [`.claude/skills/`](./.claude/skills/).
+Each skill is a `SKILL.md` file with YAML frontmatter (`name`, `description`) and is
+tracked in git, so it's available on any machine that has this repo cloned — no
+per-machine setup beyond the usual `.env.local` secrets a skill's steps may need.
+
+Invoke a skill from a Claude Code session with `/<skill-name>`.
+
+| Skill               | Command                | What it does                                                                                                                                                                                                                      |
+| ------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sentry weekly check | `/sentry-weekly-check` | Queries the Sentry API (credentials from `.env.local`) for issues seen in the last 7 days, summarizes them, and flags Playwright-verification noise (e.g. `playwright-verify-sentry-fix-*`) separately from real actionable bugs. |
+
+### Adding a new skill
+
+1. Create `.claude/skills/<skill-name>/SKILL.md` with `name` and `description`
+   frontmatter — the description is what Claude uses to decide when the skill
+   is relevant, so make it specific.
+2. Document the steps as plain instructions (and copy-pasteable commands where
+   applicable), the way a teammate would explain the workflow.
+3. Add a row to the table above and commit the skill file alongside it.
+
 ## Package Management
 
 ```bash

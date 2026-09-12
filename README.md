@@ -51,7 +51,7 @@ A modern, responsive personal resume website built with Next.js 16.2.6, TypeScri
 
 [![Personal Resume Website — hero section preview](public/images/projects/resume.png)](https://rogeriodocarmo.com)
 
-> **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md).
+> **🤖 AI-Assisted Development**: This project was created and evolved with [Kiro IDE](https://kiro.dev) and [Claude Code](https://claude.ai/code). Kiro was used for initial project scaffolding, spec-driven feature development, and establishing coding standards. Claude Code took over for ongoing feature development, bug fixes, and refactoring — its project instructions live in [`CLAUDE.md`](./CLAUDE.md), and its reusable slash-command skills live in [`.claude/skills/`](./.claude/skills/) (see the [Skills section in COMMANDS.md](./COMMANDS.md#claude-code-skills)).
 
 <!-- -->
 
@@ -431,6 +431,7 @@ MIT
 ## Documentation
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Design patterns, layer responsibilities, and testing architecture
+- [COMMANDS.md](./COMMANDS.md) - CLI command reference, Git Flow, and Claude Code skills
 - [TESTING.md](./docs/testing/TESTING.md) - Comprehensive testing guide and best practices
 - [CONTRIBUTING.md](./docs/development/CONTRIBUTING.md) - Code style guidelines and development workflow
 - [PWA-MANIFEST-IMPLEMENTATION.md](./docs/fixes/PWA-MANIFEST-IMPLEMENTATION.md) - **Progressive Web App setup and features** 📱
