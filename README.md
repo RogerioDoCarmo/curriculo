@@ -93,10 +93,12 @@ A guided walkthrough of the live site, captured at two viewport sizes. It covers
 
 Announcements about this site's launch and new features, kept here for reference and cross-linking between posts.
 
-| Date       | Topic                    | Link                                                                                                                              |
-| ---------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-06-28 | Site launch              | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_desenvolvimentoweb-nextjs-pix-ugcPost-7477162179394465792-dB1H/)    |
-| 2026-08-01 | Scroll minimap navigator | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_nextjs-typescript-acessibilidade-ugcPost-7489457588682743808-vOrL/) |
+| Date       | Topic                                    | Link                                                                                                                              |
+| ---------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-28 | Site launch                              | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_desenvolvimentoweb-nextjs-pix-ugcPost-7477162179394465792-dB1H/)    |
+| 2026-08-01 | Scroll minimap navigator                 | [LinkedIn post](https://www.linkedin.com/posts/rogeriodocarmo_nextjs-typescript-acessibilidade-ugcPost-7489457588682743808-vOrL/) |
+| 2026-09-13 | Project deep links                       | [LinkedIn post](https://www.linkedin.com/feed/update/urn:li:ugcPost:7505004384020529152/)                                         |
+| 2026-09-13 | Project deep links (technical deep dive) | [LinkedIn article](https://www.linkedin.com/pulse/implementando-deep-link-em-um-site-nextjs-ramos-rodrigues-do-carmo-qa7yf/)      |
 
 ## Development Progress
 
