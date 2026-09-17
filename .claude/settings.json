@@ -2,9 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(npx eslint *)",
-      "Bash(git commit -m ' *)",
+      "Bash(npx --yes tsc --noEmit -p .)",
+      "Bash(git commit *)",
+      "Bash(git worktree *)",
       "Bash(gh auth *)",
-      "Read(//Users/user/Library/Caches/ms-playwright/**)"
+      "Bash(gh issue *)",
+      "Bash(npm info *)",
+      "Bash(node docs/personal-notes/career/build-pdfs.mjs)"
     ]
   }
 }
