@@ -184,3 +184,8 @@ docs/security-remediation/
 docs/personal-notes/*
 # ...except the career docs, which are tracked so they're never lost
 !docs/personal-notes/career/
+
+# Claude Code per-machine settings. The shared layer (.claude/settings.json,
+# launch.json, skills/) stays tracked; only the local overlay is ignored,
+# since it holds machine-specific paths and one-off approvals.
+.claude/settings.local.json
