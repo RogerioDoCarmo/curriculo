@@ -631,8 +631,21 @@ jobs:
     name: Chromatic (Playwright)
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' ||
-      github.ref == 'refs/heads/develop'
+    # Pull requests only — the same restriction the Storybook job above has
+    # carried, and for the same reason it gives: a push to main or develop
+    # re-snapshots commits their own PR had already snapshotted. That job's
+    # comment counted the cost as "four Chromatic builds per change instead of
+    # two while telling us nothing new"; this one was left on pushes, so it has
+    # been paying exactly that on every merge and every promotion since.
+    #
+    # ⚠️ Chromatic bills per SNAPSHOT — one per story per build, multiplied by
+    # viewports and modes — so "one more build" is not one more anything.
+    #
+    # ⚠️ And unlike the Storybook job this one has no TurboSnap: there is no
+    # `onlyChanged`, because Playwright snapshots whole pages rather than
+    # stories traced through a dependency graph. Every run of this job is a
+    # full one.
+    if: github.event_name == 'pull_request'
     continue-on-error: true # Non-blocking full-page visual snapshots from E2E
 
     steps:
