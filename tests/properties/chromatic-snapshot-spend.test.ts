@@ -34,10 +34,10 @@ const job = (name: string): string => {
 describe("Chromatic jobs only run where they buy something", () => {
   const CHROMATIC_JOBS = ["chromatic", "chromatic-playwright"];
 
-  it.each(CHROMATIC_JOBS)("%s runs on pull requests only", (name) => {
+  it.each(CHROMATIC_JOBS)("%s runs only when dispatched", (name) => {
     const block = job(name);
 
-    expect(block).toContain("if: github.event_name == 'pull_request'");
+    expect(block).toContain("if: github.event_name == 'workflow_dispatch'");
   });
 
   /**
@@ -46,11 +46,29 @@ describe("Chromatic jobs only run where they buy something", () => {
    * is exactly what the Playwright job had: the branch refs are the expensive
    * half, so their absence is the property worth holding.
    */
-  it.each(CHROMATIC_JOBS)("%s does not also run on branch pushes", (name) => {
+  it.each(CHROMATIC_JOBS)("%s reacts to no branch event at all", (name) => {
     const block = job(name);
 
     expect(block).not.toContain("refs/heads/main");
     expect(block).not.toContain("refs/heads/develop");
+    // ⚠️ And not to a pull request either. Asserting only the dispatch clause
+    // is present would pass on `pull_request || workflow_dispatch`, which is a
+    // snapshot bought by opening a branch.
+    expect(block).not.toContain("'pull_request'");
+  });
+
+  /**
+   * ⚠️ THE REST OF CI MUST NOT BE GATED. `workflow_dispatch` was added to this
+   * workflow so the two Chromatic jobs have something to be dispatched by — not
+   * so that lint, tests, build and E2E stop running on every push. A condition
+   * copied onto those by mistake would be silent: the checks would simply go
+   * green without having run.
+   */
+  it("leaves every other job running on push and pull request", () => {
+    for (const name of ["build", "lint", "test"]) {
+      const block = job(name);
+      expect(block).not.toContain("workflow_dispatch");
+    }
   });
 
   /**

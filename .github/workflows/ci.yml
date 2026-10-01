@@ -9,6 +9,10 @@ on:
     branches:
       - develop
       - main
+  # ⚠️ Here so the Chromatic jobs below have something to be dispatched BY.
+  # Everything else in this workflow still runs on every push and pull request;
+  # only the two jobs that spend Chromatic snapshots wait to be asked.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -589,10 +593,17 @@ jobs:
     name: Chromatic
     runs-on: ubuntu-latest
     needs: build
-    # Pull requests only. The push runs on main/develop re-snapshotted commits
-    # that had already been snapshotted by their own PR, costing four Chromatic
-    # builds per change instead of two while telling us nothing new.
-    if: github.event_name == 'pull_request'
+    # ⚠️ DISPATCH ONLY. This was already restricted to pull requests,
+    # because the push runs on main/develop re-snapshotted commits their own
+    # PR had covered — four Chromatic builds per change instead of two, while
+    # telling us nothing new. That was the right narrowing and it was not
+    # enough: every remaining run still came from a branch event rather than
+    # from anyone deciding a visual check was worth buying.
+    #
+    # ⚠️ WHAT THIS COSTS: a visual regression is no longer caught on the pull
+    # request that introduces it. It is caught when somebody dispatches this,
+    # which means it can reach main first.
+    if: github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout code
@@ -631,21 +642,22 @@ jobs:
     name: Chromatic (Playwright)
     runs-on: ubuntu-latest
     needs: build
-    # Pull requests only — the same restriction the Storybook job above has
-    # carried, and for the same reason it gives: a push to main or develop
-    # re-snapshots commits their own PR had already snapshotted. That job's
-    # comment counted the cost as "four Chromatic builds per change instead of
-    # two while telling us nothing new"; this one was left on pushes, so it has
-    # been paying exactly that on every merge and every promotion since.
+    # ⚠️ DISPATCH ONLY, like the Storybook job above.
     #
-    # ⚠️ Chromatic bills per SNAPSHOT — one per story per build, multiplied by
-    # viewports and modes — so "one more build" is not one more anything.
+    # This one was left on pushes long after that job was narrowed to pull
+    # requests, paying "four Chromatic builds per change instead of two" on
+    # every merge and every promotion. Restricting it to pull requests fixed
+    # that; this goes further, because a pull request is still not somebody
+    # asking.
+    #
+    # ⚠️ Chromatic bills per SNAPSHOT — one per story per build, multiplied
+    # by viewports and modes — so "one more build" is not one more anything.
     #
     # ⚠️ And unlike the Storybook job this one has no TurboSnap: there is no
     # `onlyChanged`, because Playwright snapshots whole pages rather than
-    # stories traced through a dependency graph. Every run of this job is a
-    # full one.
-    if: github.event_name == 'pull_request'
+    # stories traced through a dependency graph. EVERY run of it is a full
+    # one, which is why it was the more expensive of the two all along.
+    if: github.event_name == 'workflow_dispatch'
     continue-on-error: true # Non-blocking full-page visual snapshots from E2E
 
     steps:
