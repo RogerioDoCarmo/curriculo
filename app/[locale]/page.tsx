@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { notFound } from "next/navigation";
-import { getExperiences, getProjects, getSkills } from "@/lib/content";
+import { getExperiences, getPosts, getProjects, getSkills } from "@/lib/content";
 import HomePageContent from "./HomePageContent";
 
 interface HomePageProps {
@@ -27,9 +27,10 @@ export default async function HomePage({ params }: HomePageProps) {
   const heroT = await getTranslations("hero");
 
   // Load all content
-  const [experiences, projects, skills] = await Promise.all([
+  const [experiences, projects, posts, skills] = await Promise.all([
     getExperiences(undefined, locale),
     getProjects(locale),
+    getPosts(locale),
     getSkills(locale),
   ]);
 
@@ -44,6 +45,7 @@ export default async function HomePage({ params }: HomePageProps) {
       contactSubtitle={t("contact.subtitle")}
       experiences={experiences}
       projects={projects}
+      posts={posts}
       skills={skills}
       now={Date.now()}
     />

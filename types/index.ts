@@ -28,6 +28,32 @@ export interface Project {
   date: string; // ISO 8601 date string (e.g., "2024-01-15")
 }
 
+// ─── Post ───────────────────────────────────────────────────────────────────
+
+/** Where a post was published. Each platform gets its own icon, colors and filter chip. */
+export type PostPlatform = "linkedin" | "youtube";
+
+/** What kind of publication it is on that platform. */
+export type PostKind = "post" | "article" | "video";
+
+export interface Post {
+  id: string;
+  platform: PostPlatform;
+  kind: PostKind;
+  title: string;
+  description: string;
+  /** Optional longer markdown body, shown in the detail dialog. */
+  longDescription?: string;
+  /** Canonical URL of the publication on its platform. */
+  url: string;
+  /** Cover image under public/. YouTube videos fall back to the video's own thumbnail. */
+  image?: string;
+  /** Language the publication itself is written in (e.g. "pt-BR"), which may differ from the site's. */
+  language: string;
+  featured: boolean;
+  date: string; // ISO 8601 date string (e.g., "2024-01-15")
+}
+
 // ─── Experience ─────────────────────────────────────────────────────────────
 
 /** A gallery image for an experience, with an optional lightbox title/description. */
@@ -149,11 +175,19 @@ export type Theme = "light" | "dark";
 
 // ─── Navigation ──────────────────────────────────────────────────────────────
 
-export type SectionId = "home" | "projects" | "experience" | "skills" | "contact" | "tech-stack";
+export type SectionId =
+  | "home"
+  | "projects"
+  | "posts"
+  | "experience"
+  | "skills"
+  | "contact"
+  | "tech-stack";
 
 export const SECTION_IDS: SectionId[] = [
   "home",
   "projects",
+  "posts",
   "experience",
   "skills",
   "contact",

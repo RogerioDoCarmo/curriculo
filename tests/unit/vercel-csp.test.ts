@@ -66,3 +66,19 @@ describe("vercel.json Content-Security-Policy connect-src", () => {
     expect(getFontSrc()).toContain("fonts.gstatic.com");
   });
 });
+
+describe("vercel.json Content-Security-Policy for the posts section's YouTube videos", () => {
+  // Hosts lib/posts.ts builds URLs for. Without them, default-src 'self' blocks
+  // the card thumbnails and the dialog's player — only on the live deploy.
+  it("allows YouTube's thumbnail host in img-src", () => {
+    expect(getDirective("img-src")).toContain("https://i.ytimg.com");
+  });
+
+  it("allows only the privacy-enhanced player host in frame-src", () => {
+    expect(getDirective("frame-src")).toBe("https://www.youtube-nocookie.com");
+  });
+
+  it("still forbids the site itself from being framed", () => {
+    expect(getDirective("frame-ancestors")).toBe("'none'");
+  });
+});

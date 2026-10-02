@@ -27,6 +27,7 @@ const messages = {
   nav: {
     home: "Home",
     projects: "Projects",
+    posts: "Posts",
     experience: "Experience",
     skills: "Skills",
     contact: "Contact",
