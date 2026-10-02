@@ -169,8 +169,12 @@ test.describe("Posts section", () => {
   test("opens a deep-linked post on arrival", async ({ page }) => {
     await page.goto("/en/?post=ai-agents-git-worktrees#posts");
 
+    // The dialog opens after hydration, which WebKit is slow to reach on CI —
+    // the same margin the project deep-link spec allows.
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("opens a deep-linked post older than the latest three, without Prev/Next", async ({
@@ -179,7 +183,9 @@ test.describe("Posts section", () => {
     await page.goto("/en/?post=web-dev-tools-article#posts");
 
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: OLDEST_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: OLDEST_EN })).toBeVisible({
+      timeout: 10000,
+    });
     await expect(dialog.getByRole("button", { name: "Next post" })).toHaveCount(0);
     await expect(dialog.getByRole("button", { name: "Previous post" })).toHaveCount(0);
   });
