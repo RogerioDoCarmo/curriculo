@@ -59,6 +59,13 @@ function buildProjectShareEvent(project_id: string, project_title: string): Anal
   };
 }
 
+function buildPostShareEvent(post_id: string, post_title: string): AnalyticsEvent {
+  return {
+    name: ANALYTICS_EVENTS.POST_SHARE,
+    params: { post_id, post_title },
+  };
+}
+
 function buildLanguageChangeEvent(
   from_locale: SupportedLocale,
   to_locale: SupportedLocale
@@ -212,6 +219,27 @@ describe("Property 18: Analytics Events for User Actions", () => {
     it("share is a distinct event from a project click", () => {
       expect(ANALYTICS_EVENTS.PROJECT_SHARE).toBe("project_share");
       expect(ANALYTICS_EVENTS.PROJECT_SHARE).not.toBe(ANALYTICS_EVENTS.PROJECT_CLICK);
+    });
+  });
+
+  describe("Post share events", () => {
+    const nonEmptyString = fc
+      .string({ minLength: 1, maxLength: 50 })
+      .filter((s) => s.trim().length > 0);
+
+    it("post share event always has correct event name and params", () => {
+      fc.assert(
+        fc.property(nonEmptyString, nonEmptyString, (id, title) => {
+          const event = buildPostShareEvent(id, title);
+          expect(event.name).toBe("post_share");
+          expect(event.params).toEqual({ post_id: id, post_title: title });
+        }),
+        { numRuns: 50 }
+      );
+    });
+
+    it("post share is distinct from a project share", () => {
+      expect(ANALYTICS_EVENTS.POST_SHARE).not.toBe(ANALYTICS_EVENTS.PROJECT_SHARE);
     });
   });
 

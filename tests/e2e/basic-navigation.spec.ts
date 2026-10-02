@@ -101,6 +101,31 @@ test.describe("Basic Navigation", () => {
     await expect(projectsHeading).toBeVisible();
   });
 
+  // The header used to switch to its inline nav at 768px, where the links plus
+  // the controls overflowed the bar by up to ~400px (worst in es/pt-BR) and
+  // dragged the whole page into horizontal scroll.
+  for (const locale of ["pt-BR", "en", "es"]) {
+    for (const width of [768, 1024, 1280]) {
+      test(`header fits without horizontal scroll at ${width}px (${locale})`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`/${locale}/`);
+        await expect(page.getByRole("banner")).toBeVisible();
+
+        const overflow = await page.evaluate(() => {
+          const header = document.querySelector("header");
+          return {
+            header: header ? header.scrollWidth - header.clientWidth : -1,
+            page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          };
+        });
+        expect(overflow.header).toBe(0);
+        // The old bug pushed the page out by hundreds of px. Allow a pixel or
+        // two: CI's Linux fonts round some other section's width up at 768px.
+        expect(overflow.page).toBeLessThanOrEqual(2);
+      });
+    }
+  }
+
   test("should be responsive on desktop", async ({ page }) => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });

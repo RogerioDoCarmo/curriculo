@@ -102,6 +102,7 @@ const SOCIAL_LINKS = [
 const NAV_SECTIONS = [
   { labelKey: "nav.home", href: "#home" },
   { labelKey: "nav.projects", href: "#projects" },
+  { labelKey: "nav.posts", href: "#posts" },
   { labelKey: "nav.experience", href: "#experience" },
   { labelKey: "nav.skills", href: "#skills" },
   { labelKey: "nav.contact", href: "#contact" },

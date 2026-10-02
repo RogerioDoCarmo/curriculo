@@ -6,7 +6,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import HomePageContent from "@/app/[locale]/HomePageContent";
-import type { Experience, Project, SkillCategory } from "@/types/index";
+import type { Experience, Post, Project, SkillCategory } from "@/types/index";
 
 // Mock lazy-loaded components
 jest.mock("@/lib/lazy-components", () => ({
@@ -87,6 +87,15 @@ jest.mock("@/components/ProjectsSection", () => ({
   ),
 }));
 
+jest.mock("@/components/PostsSection", () => ({
+  __esModule: true,
+  default: ({ posts, locale }: any) => (
+    <div data-testid="posts-section" data-locale={locale} data-posts-count={posts.length}>
+      Posts Section
+    </div>
+  ),
+}));
+
 jest.mock("@/components/BanksSection", () => ({
   __esModule: true,
   default: () => <div data-testid="banks-section">Banks Section</div>,
@@ -132,6 +141,31 @@ describe("HomePageContent Component", () => {
     },
   ];
 
+  const mockPosts: Post[] = [
+    {
+      id: "post-1",
+      platform: "linkedin",
+      kind: "article",
+      title: "Implementing Deep Links",
+      description: "A technical deep dive",
+      url: "https://www.linkedin.com/pulse/example",
+      language: "pt-BR",
+      featured: false,
+      date: "2026-09-13",
+    },
+    {
+      id: "post-2",
+      platform: "youtube",
+      kind: "video",
+      title: "A video",
+      description: "A video description",
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      language: "en",
+      featured: false,
+      date: "2026-09-20",
+    },
+  ];
+
   const mockSkills: SkillCategory[] = [
     {
       category: "Frontend",
@@ -152,6 +186,7 @@ describe("HomePageContent Component", () => {
     contactSubtitle: "Have a project in mind or want to chat? Send me a message!",
     experiences: mockExperiences,
     projects: mockProjects,
+    posts: mockPosts,
     skills: mockSkills,
     now: 1748563200000,
   };
@@ -189,6 +224,7 @@ describe("HomePageContent Component", () => {
       expect(screen.getByTestId("experience-section")).toBeInTheDocument();
       expect(screen.getByTestId("skills-section")).toBeInTheDocument();
       expect(screen.getByTestId("projects-section")).toBeInTheDocument();
+      expect(screen.getByTestId("posts-section")).toBeInTheDocument();
       // Tech Stack section moved to separate page
       expect(screen.queryByTestId("tech-stack-section")).not.toBeInTheDocument();
       expect(screen.getByTestId("contact-form")).toBeInTheDocument();
@@ -272,6 +308,14 @@ describe("HomePageContent Component", () => {
       const projectsSection = screen.getByTestId("projects-section");
       expect(projectsSection).toHaveAttribute("data-locale", "en");
       expect(projectsSection).toHaveAttribute("data-projects-count", "1");
+    });
+
+    it("passes correct props to PostsSection", () => {
+      renderWithIntl(<HomePageContent {...defaultProps} />);
+
+      const postsSection = screen.getByTestId("posts-section");
+      expect(postsSection).toHaveAttribute("data-locale", "en");
+      expect(postsSection).toHaveAttribute("data-posts-count", "2");
     });
 
     it("passes correct props to ExitIntentModal", () => {
@@ -361,6 +405,13 @@ describe("HomePageContent Component", () => {
       expect(projectsSection).toHaveAttribute("data-projects-count", "0");
     });
 
+    it("handles empty posts array", () => {
+      renderWithIntl(<HomePageContent {...defaultProps} posts={[]} />);
+
+      const postsSection = screen.getByTestId("posts-section");
+      expect(postsSection).toHaveAttribute("data-posts-count", "0");
+    });
+
     it("handles empty skills array", () => {
       const propsWithNoSkills = {
         ...defaultProps,
@@ -432,6 +483,7 @@ describe("HomePageContent Component", () => {
         "career-path-selector",
         "experience-section",
         "projects-section",
+        "posts-section",
         "skills-section",
         "ai-stack-section",
         "contact-form",

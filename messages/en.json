@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "projects": "Projects",
+    "posts": "Posts",
     "experience": "Experience",
     "skills": "Skills",
     "contact": "Contact",
@@ -97,6 +98,7 @@
   "sections": {
     "experience": "Experience",
     "projects": "Projects",
+    "posts": "Posts",
     "skills": "Skills",
     "contact": "Contact",
     "techStack": "Used in this site",
@@ -270,6 +272,37 @@
     "copyLink": "Copy link",
     "linkCopied": "Link copied!",
     "copyLinkFailed": "Couldn't copy the link"
+  },
+  "posts": {
+    "subtitle": "Articles, posts and videos I've published about what I build and learn.",
+    "filterByPlatform": "Filter by platform",
+    "all": "All",
+    "platform": {
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    },
+    "kind": {
+      "post": "Post",
+      "article": "Article",
+      "video": "Video"
+    },
+    "viewDetails": "View details for",
+    "previousPost": "Previous post",
+    "nextPost": "Next post",
+    "featured": "Featured",
+    "inLanguage": "In {language}",
+    "readOn": "Read on {platform}",
+    "watchOn": "Watch on {platform}",
+    "opensInNewTab": "(opens in a new tab)",
+    "videoTitle": "Video: {title}",
+    "viewAll": "View all posts",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!",
+    "copyLinkFailed": "Couldn't copy the link",
+    "pageTitle": "Posts | Rogério do Carmo",
+    "pageHeading": "All posts",
+    "pageSubtitle": "Every article, post and video I've published, grouped by platform.",
+    "emptyPlatform": "No {platform} posts yet."
   },
   "homepage": {
     "title": "Personal Resume Website",

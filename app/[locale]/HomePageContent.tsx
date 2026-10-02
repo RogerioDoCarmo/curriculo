@@ -12,8 +12,9 @@ import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "@/components/SkillsSection";
 import AiStackSection from "@/components/AiStackSection";
 import ProjectsSection from "@/components/ProjectsSection";
+import PostsSection from "@/components/PostsSection";
 import ContactForm from "@/components/ContactForm";
-import type { Experience, Project, SkillCategory, CareerPath } from "@/types/index";
+import type { Experience, Post, Project, SkillCategory, CareerPath } from "@/types/index";
 
 interface HomePageContentProps {
   readonly locale: string;
@@ -25,6 +26,7 @@ interface HomePageContentProps {
   readonly contactSubtitle: string;
   readonly experiences: Experience[];
   readonly projects: Project[];
+  readonly posts: Post[];
   readonly skills: SkillCategory[];
   /** Unix timestamp (ms) captured server-side, used to stabilise duration calculations. */
   readonly now: number;
@@ -40,6 +42,7 @@ export default function HomePageContent({
   contactSubtitle,
   experiences,
   projects,
+  posts,
   skills,
   now,
 }: HomePageContentProps) {
@@ -102,13 +105,18 @@ export default function HomePageContent({
         <ProjectsSection projects={projects} locale={locale} />
       </div>
 
-      {/* Skills Section */}
+      {/* Posts Section — LinkedIn posts/articles and YouTube videos */}
       <div className="bg-gray-50 dark:bg-gray-800/50">
+        <PostsSection posts={posts} locale={locale} />
+      </div>
+
+      {/* Skills Section */}
+      <div className="bg-white dark:bg-gray-900">
         <SkillsSection skills={skills} locale={locale} />
       </div>
 
       {/* AI Stack Section — tools used to build the site */}
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-gray-50 dark:bg-gray-800/50">
         <AiStackSection />
       </div>
 
@@ -117,7 +125,7 @@ export default function HomePageContent({
         id="contact"
         tabIndex={-1}
         aria-labelledby="contact-title"
-        className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50"
+        className="py-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900"
       >
         <div className="mx-auto max-w-3xl">
           <h2 id="contact-title" className="text-3xl font-bold text-center mb-8">

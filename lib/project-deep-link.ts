@@ -72,7 +72,7 @@ export function buildProjectHistoryUrl(params: {
  * `charAt` yields `""` for a negative index, so an all-slashes string
  * terminates the loop without needing a separate bounds guard.
  */
-function stripTrailingSlashes(value: string): string {
+export function stripTrailingSlashes(value: string): string {
   let end = value.length;
   while (value.charAt(end - 1) === "/") {
     end -= 1;
