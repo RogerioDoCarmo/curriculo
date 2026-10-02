@@ -95,9 +95,15 @@ test.describe("Posts section", () => {
 
     // The trailing slash comes from `trailingSlash: true`, which Jest doesn't load.
     await expect(link).toHaveAttribute("href", "/en/posts/");
-    await link.click();
 
-    await expect(page).toHaveURL(/\/en\/posts\/$/);
+    // Retried as a whole: the page is still scrolling to #posts and hydrating
+    // when this runs, and slow WebKit never saw the link as "stable" within a
+    // single click's timeout.
+    await expect(async () => {
+      await link.click({ timeout: 4000 });
+      await expect(page).toHaveURL(/\/en\/posts\/$/, { timeout: 4000 });
+    }).toPass({ timeout: 20000 });
+
     await expect(page.getByRole("heading", { level: 1, name: "All posts" })).toBeVisible();
   });
 
