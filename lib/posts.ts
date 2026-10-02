@@ -28,7 +28,7 @@ export const POST_KINDS: readonly PostKind[] = ["post", "article", "video"];
 const YOUTUBE_ID_PATTERN = /^[\w-]{11}$/;
 
 /** Path prefixes under youtube.com that are followed directly by a video id. */
-const YOUTUBE_ID_PATH_PREFIXES = ["embed", "shorts", "live"];
+const YOUTUBE_ID_PATH_PREFIXES: ReadonlySet<string> = new Set(["embed", "shorts", "live"]);
 
 // `includes` compares with SameValueZero, so non-string values are rejected
 // without a separate typeof guard.
@@ -71,7 +71,7 @@ export function getYouTubeVideoId(url: string): string | null {
   if (segments[0] === "watch") {
     return asVideoId(parsed.searchParams.get("v"));
   }
-  if (YOUTUBE_ID_PATH_PREFIXES.includes(segments[0])) {
+  if (YOUTUBE_ID_PATH_PREFIXES.has(segments[0])) {
     return asVideoId(segments[1]);
   }
   return null;

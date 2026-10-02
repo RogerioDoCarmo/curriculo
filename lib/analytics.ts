@@ -139,7 +139,8 @@ export function trackProjectShare(params: { project_id: string; project_title: s
  * Tracks a post deep link being copied to the clipboard for sharing.
  */
 export function trackPostShare(params: { post_id: string; post_title: string }): void {
-  trackEvent(ANALYTICS_EVENTS.POST_SHARE, params);
+  // Fire and forget: `trackEvent` handles its own errors, so there's nothing to await or catch.
+  void trackEvent(ANALYTICS_EVENTS.POST_SHARE, params);
 }
 
 /**
