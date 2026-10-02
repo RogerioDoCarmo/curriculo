@@ -8,20 +8,21 @@
  * the PATH. Serve a production build first (`npm run build && npx serve out`).
  *
  * How it works
- * - A mobile (430x932) and a desktop (1440x880) page run the SAME scene script
- *   in lockstep: every scene starts together and the next one waits for the
- *   slower page. That keeps one caption timeline valid for both panels of the
- *   combined video.
+ * - A mobile (430x932), a tablet (820x1180) and a desktop (1440x880) page run
+ *   the SAME scene script in lockstep: every scene starts together and the next
+ *   one waits for the slowest page. That keeps one caption timeline valid for
+ *   all three panels of the combined video.
  * - Frames come from Chrome's screencast (CDP), not Playwright's video
  *   recorder, which needs a separately downloaded ffmpeg. The résumé PDF scene
  *   needs a headed browser, so this always runs headed.
  * - ffmpeg burns the captions in (the videos are silent on purpose, so they
- *   work muted in a feed) and builds the combined video: mobile and desktop
- *   side by side, both scaled to 900px high.
+ *   work muted in a feed) and builds the combined video: mobile, tablet and
+ *   desktop side by side, all scaled to 900px high.
  *
  * Output (PT-BR keeps the original file names; other locales get a suffix):
- *   walkthrough-mobile[-en].mp4, walkthrough-desktop[-en].mp4,
- *   walkthrough-combined[-en].mp4, walkthrough-video-image-thumbnail[-en].png
+ *   walkthrough-mobile[-en].mp4, walkthrough-tablet[-en].mp4,
+ *   walkthrough-desktop[-en].mp4, walkthrough-combined[-en].mp4,
+ *   walkthrough-video-image-thumbnail[-en].png
  */
 
 import { chromium } from "playwright";
@@ -49,7 +50,17 @@ const FONT_SRC = args.font ?? "C:/Windows/Fonts/arialbd.ttf";
 
 const SIZES = {
   mobile: { width: 430, height: 932 },
+  tablet: { width: 820, height: 1180 },
   desktop: { width: 1440, height: 880 },
+};
+/** Left to right, as they appear in the combined video. */
+const KINDS = ["mobile", "tablet", "desktop"];
+const LABELS = { mobile: "Mobile", tablet: "Tablet", desktop: "Desktop" };
+/** Caption type per panel: bigger viewports get bigger text and longer lines. */
+const CAPTION_STYLE = {
+  mobile: { sizes: { title: 26, subtitle: 18 }, wrapAt: { title: 26, subtitle: 38 } },
+  tablet: { sizes: { title: 32, subtitle: 22 }, wrapAt: { title: 40, subtitle: 62 } },
+  desktop: { sizes: { title: 36, subtitle: 26 }, wrapAt: { title: 60, subtitle: 90 } },
 };
 const COMBINED_HEIGHT = 900;
 const DIVIDER = 6;
@@ -272,10 +283,10 @@ function run(cmd, cmdArgs, cwd) {
 const homeUrl = `${BASE}/${LOCALE}/`;
 const cardPrefix = (key) => new RegExp(`^${msg(key).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s`);
 
-/** Clicks a header nav link; on mobile it lives inside the hamburger menu. */
+/** Clicks a header nav link; below 1280px (mobile and tablet) it lives inside the hamburger menu. */
 async function pressHeaderLink(page, kind, name, pauseMs = 1500) {
   let scope = page.locator("header");
-  if (kind === "mobile") {
+  if (kind !== "desktop") {
     await press(page.getByRole("button", { name: /^(open menu|abrir menu|abrir menú)/i }), 800);
     scope = page.getByRole("dialog");
   }
@@ -411,7 +422,7 @@ const SCENES = [
     key: "resume",
     async run({ page, kind }) {
       // Mobile Chrome downloads a PDF instead of showing it, which would record
-      // a blank panel; mobile holds on the page while desktop shows the viewer.
+      // a blank panel; mobile holds on the page while tablet and desktop show the viewer.
       if (kind === "mobile") {
         await sleep(4200);
         return;
@@ -447,14 +458,14 @@ async function launchPage(kind, workDir) {
       "--disable-background-timer-throttling",
       "--disable-features=CalculateNativeWinOcclusion",
       `--window-size=${size.width + 40},${size.height + 140}`,
-      `--window-position=${kind === "mobile" ? 20 : 520},20`,
+      `--window-position=${{ mobile: 20, tablet: 300, desktop: 520 }[kind]},20`,
     ],
   });
   const context = await browser.newContext({
     viewport: size,
     deviceScaleFactor: 1,
     isMobile: kind === "mobile",
-    hasTouch: kind === "mobile",
+    hasTouch: kind !== "desktop",
     colorScheme: "light",
     locale: LOCALE,
   });
@@ -481,7 +492,8 @@ async function launchPage(kind, workDir) {
 }
 
 async function record(workDir) {
-  const viewers = [await launchPage("mobile", workDir), await launchPage("desktop", workDir)];
+  const viewers = [];
+  for (const kind of KINDS) viewers.push(await launchPage(kind, workDir));
   const marks = [];
   const t0 = now() + 0.5;
   await sleep(600);
@@ -581,8 +593,8 @@ function compose({ workDir, marks, t0 }) {
   const out = (name, ext = "mp4") => path.join(OUT, `walkthrough-${name}${SUFFIX}.${ext}`);
   fs.mkdirSync(OUT, { recursive: true });
 
-  // Individual videos: captions only (the Mobile/Desktop label is for the combined view).
-  for (const kind of ["mobile", "desktop"]) {
+  // Individual videos: captions only (the panel labels are for the combined view).
+  for (const kind of KINDS) {
     const { width: w, height: h } = SIZES[kind];
     const filters = captionFilters({
       dir: workDir,
@@ -591,8 +603,7 @@ function compose({ workDir, marks, t0 }) {
       h,
       marks,
       t0,
-      sizes: kind === "mobile" ? { title: 26, subtitle: 18 } : { title: 36, subtitle: 26 },
-      wrapAt: kind === "mobile" ? { title: 26, subtitle: 38 } : { title: 60, subtitle: 90 },
+      ...CAPTION_STYLE[kind],
     });
     run(
       "ffmpeg",
@@ -621,15 +632,19 @@ function compose({ workDir, marks, t0 }) {
     log(`wrote ${path.basename(out(kind))}`);
   }
 
-  // Combined: mobile and desktop side by side, both 900px high.
-  const mobileW = Math.round((SIZES.mobile.width * COMBINED_HEIGHT) / SIZES.mobile.height / 2) * 2;
-  const desktopW =
-    Math.round((SIZES.desktop.width * COMBINED_HEIGHT) / SIZES.desktop.height / 2) * 2;
-  const W = mobileW + DIVIDER + desktopW;
+  // Combined: every panel side by side, all 900px high, separated by a thin divider.
   const H = COMBINED_HEIGHT;
+  const panelW = Object.fromEntries(
+    KINDS.map((k) => [k, Math.round((SIZES[k].width * H) / SIZES[k].height / 2) * 2])
+  );
+  const xOf = {};
+  let W = 0;
+  KINDS.forEach((k, i) => {
+    xOf[k] = W;
+    W += panelW[k] + (i < KINDS.length - 1 ? DIVIDER : 0);
+  });
   const overlay = [
-    labelFilter(workDir, "mobile", "Mobile", 12, 30),
-    labelFilter(workDir, "desktop", "Desktop", mobileW + DIVIDER + 12, 30),
+    ...KINDS.map((k) => labelFilter(workDir, k, LABELS[k], xOf[k] + 12, 30)),
     ...captionFilters({
       dir: workDir,
       prefix: "combined",
@@ -641,19 +656,24 @@ function compose({ workDir, marks, t0 }) {
       wrapAt: { title: 80, subtitle: 110 },
     }),
   ];
+  const scaled = KINDS.map((k, i) => `[${i}:v]scale=${panelW[k]}:${H}[p${i}]`);
+  // Dividers sit between panels; `hstack` takes the panels and dividers in order.
+  const inputs = [];
+  KINDS.forEach((_, i) => {
+    inputs.push(`[p${i}]`);
+    if (i < KINDS.length - 1) inputs.push(`[g${i}]`);
+  });
+  const dividers = KINDS.slice(1).map((_, i) => `color=c=black:s=${DIVIDER}x${H}:r=${FPS}[g${i}]`);
   const graph =
-    `[0:v]scale=${mobileW}:${H}[m];[1:v]scale=${desktopW}:${H}[d];` +
-    `color=c=black:s=${DIVIDER}x${H}:r=${FPS}[g];[m][g][d]hstack=inputs=3:shortest=1,${overlay.join(",")}[v]`;
+    [...scaled, ...dividers].join(";") +
+    `;${inputs.join("")}hstack=inputs=${inputs.length}:shortest=1,${overlay.join(",")}[v]`;
   run(
     "ffmpeg",
     [
       "-v",
       "error",
       "-y",
-      "-i",
-      path.join(workDir, "raw-mobile.mp4"),
-      "-i",
-      path.join(workDir, "raw-desktop.mp4"),
+      ...KINDS.flatMap((k) => ["-i", path.join(workDir, `raw-${k}.mp4`)]),
       "-filter_complex",
       graph,
       "-map",
