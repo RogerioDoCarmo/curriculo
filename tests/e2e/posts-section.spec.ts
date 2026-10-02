@@ -36,8 +36,9 @@ const OLDEST_EN = "Useful tools for beginners in web development";
  */
 async function openPost(page: Page, title: string) {
   const section = page.locator('section[id="posts"]');
-  await section.scrollIntoViewIfNeeded();
 
+  // No separate scroll step: clicking a card scrolls it into view, and keeping
+  // everything inside the retry below means a slow page can't fail it early.
   const dialog = page.getByRole("dialog");
   await expect(async () => {
     // Guarded so a retry never clicks a card again behind an open dialog.
@@ -54,7 +55,9 @@ async function openPost(page: Page, title: string) {
 }
 
 test.describe("Posts section", () => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, browserName }) => {
+    // CI's WebKit is slow to load and hydrate; give it the room it needs.
+    test.slow(browserName === "webkit");
     await setCookieConsentBeforeLoad(context);
   });
 
