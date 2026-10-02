@@ -10,7 +10,7 @@
  * - Sidebar close on nav link click
  * - Sidebar close on backdrop click
  * - Presence of LanguageSelector and ThemeToggle
- * - Navigation links: Home, Projects, Experience, Skills, Contact, Tech Stack
+ * - Navigation links: Home, Projects, Posts, Experience, Skills, Contact, Tech Stack
  */
 
 import React from "react";
@@ -38,6 +38,7 @@ jest.mock("next-intl", () => ({
     const translations: Record<string, string> = {
       "nav.home": "Home",
       "nav.projects": "Projects",
+      "nav.posts": "Posts",
       "nav.experience": "Experience",
       "nav.skills": "Skills",
       "nav.contact": "Contact",
@@ -165,14 +166,25 @@ describe("Header — responsive navigation", () => {
     expect(nav).toBeInTheDocument();
   });
 
-  it("does not show hamburger button at viewport >= 1024px", () => {
+  it("does not show hamburger button at viewport >= 1280px", () => {
     setViewportWidth(1280);
     renderHeader();
 
     const hamburger = screen.queryByRole("button", { name: /open menu|toggle menu|menu/i });
-    // Button is in DOM but hidden with md:hidden class on desktop
+    // Button is in DOM but hidden with xl:hidden class on desktop. The inline
+    // nav only fits from xl: below it the bar overflowed on tablets.
     expect(hamburger).toBeInTheDocument();
-    expect(hamburger).toHaveClass("md:hidden");
+    expect(hamburger).toHaveClass("xl:hidden");
+    expect(hamburger).not.toHaveClass("md:hidden");
+  });
+
+  it("shows the inline nav only from the xl breakpoint", () => {
+    setViewportWidth(1280);
+    renderHeader();
+
+    const nav = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(nav).toHaveClass("hidden", "xl:flex");
+    expect(nav).not.toHaveClass("md:flex");
   });
 
   // -------------------------------------------------------------------------
@@ -353,7 +365,7 @@ describe("Header — responsive navigation", () => {
   });
 
   // -------------------------------------------------------------------------
-  // 7. Navigation links: Home, Projects, Experience, Skills, Contact, Tech Stack
+  // 7. Navigation links: Home, Projects, Posts, Experience, Skills, Contact, Tech Stack
   // -------------------------------------------------------------------------
   it("renders all navigation links on desktop", () => {
     setViewportWidth(1280);
@@ -361,6 +373,7 @@ describe("Header — responsive navigation", () => {
 
     expect(screen.getByRole("link", { name: /home/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /projects/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /^posts$/i })).toHaveAttribute("href", "#posts");
     expect(screen.getByRole("link", { name: /experience/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /skills/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /contact/i })).toBeInTheDocument();
@@ -386,6 +399,7 @@ describe("Header — responsive navigation", () => {
     // Check that sidebar contains the navigation links
     expect(sidebar).toHaveTextContent(/home/i);
     expect(sidebar).toHaveTextContent(/projects/i);
+    expect(sidebar).toHaveTextContent(/posts/i);
     expect(sidebar).toHaveTextContent(/experience/i);
     expect(sidebar).toHaveTextContent(/skills/i);
     expect(sidebar).toHaveTextContent(/contact/i);

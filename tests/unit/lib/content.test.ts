@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { getProjects, getExperiences, getSkills } from "@/lib/content";
+import { getProjects, getPosts, getExperiences, getSkills } from "@/lib/content";
 
 describe("Content Management System", () => {
   describe("getProjects", () => {
@@ -507,6 +507,214 @@ describe("Content Management System", () => {
         `---\nid: x\ntitle: T\nno closing delimiter here`
       );
       await expect(getProjects(undefined, dir)).rejects.toThrow(/Content validation error/);
+    });
+
+    describe("getPosts", () => {
+      const POST_FRONTMATTER = [
+        "id: deep-links",
+        "platform: linkedin",
+        "kind: article",
+        "title: Deep links",
+        "description: A deep dive",
+        'url: "https://www.linkedin.com/pulse/deep-links"',
+        "language: pt-BR",
+        'date: "2026-09-13"',
+      ];
+
+      /** A valid post file, with `overrides` replacing or (when null) removing lines by key. */
+      const postFile = (overrides: Record<string, string | null> = {}, body = "Body"): string => {
+        const lines = POST_FRONTMATTER.filter((line) => !(line.split(":")[0] in overrides));
+        for (const [key, value] of Object.entries(overrides)) {
+          if (value !== null) lines.push(`${key}: ${value}`);
+        }
+        return `---\n${lines.join("\n")}\n---\n${body}`;
+      };
+
+      it("parses every field of a valid post", async () => {
+        const dir = makeContentDir();
+        write(
+          dir,
+          "posts/en/deep-links.md",
+          postFile({ image: "/images/posts/cover.webp", featured: "true" }, "\n  Long body  \n")
+        );
+
+        await expect(getPosts("en", dir)).resolves.toEqual([
+          {
+            id: "deep-links",
+            platform: "linkedin",
+            kind: "article",
+            title: "Deep links",
+            description: "A deep dive",
+            longDescription: "Long body",
+            url: "https://www.linkedin.com/pulse/deep-links",
+            image: "/images/posts/cover.webp",
+            language: "pt-BR",
+            featured: true,
+            date: "2026-09-13",
+          },
+        ]);
+      });
+
+      it("defaults the optional fields", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/p.md", postFile({}, "   "));
+
+        const [post] = await getPosts(undefined, dir);
+        expect(post.image).toBeUndefined();
+        expect(post.longDescription).toBeUndefined();
+        expect(post.featured).toBe(false);
+      });
+
+      it("sorts posts newest first", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/a.md", postFile({ id: "old", date: '"2024-06-27"' }));
+        write(dir, "posts/pt-BR/b.md", postFile({ id: "new", date: '"2026-09-13"' }));
+        write(dir, "posts/pt-BR/c.md", postFile({ id: "mid", date: '"2026-06-28"' }));
+
+        const posts = await getPosts(undefined, dir);
+        expect(posts.map((p) => p.id)).toEqual(["new", "mid", "old"]);
+      });
+
+      it("reads the requested locale, falling back to pt-BR", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/p.md", postFile({ title: "Em português" }));
+        write(dir, "posts/en/p.md", postFile({ title: "In English" }));
+
+        expect((await getPosts("en", dir))[0].title).toBe("In English");
+        expect((await getPosts("fr-FR", dir))[0].title).toBe("Em português");
+      });
+
+      it("returns an empty list, silently, when there is no posts directory outside development", async () => {
+        setNodeEnv("production");
+        const dir = makeContentDir();
+
+        await expect(getPosts("en", dir)).resolves.toEqual([]);
+        expect(warnSpy).not.toHaveBeenCalled();
+      });
+
+      it("labels the missing-directory warning with the content type", async () => {
+        setNodeEnv("development");
+        const dir = makeContentDir();
+
+        await getProjects("en", dir);
+
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining("[content] Projects directory not found:")
+        );
+      });
+
+      it("skips a malformed file silently outside development", async () => {
+        setNodeEnv("production");
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/good.md", postFile());
+        write(dir, "posts/pt-BR/bad.md", "---\nid: [unclosed\n---\nBody");
+
+        expect((await getPosts(undefined, dir)).map((p) => p.id)).toEqual(["deep-links"]);
+        expect(warnSpy).not.toHaveBeenCalled();
+      });
+
+      it("warns about a missing posts directory in development", async () => {
+        setNodeEnv("development");
+        const dir = makeContentDir();
+
+        await getPosts("en", dir);
+
+        expect(warnSpy).toHaveBeenCalledWith(
+          expect.stringContaining("[content] Posts directory not found:")
+        );
+      });
+
+      it("ignores files that aren't markdown", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/p.md", postFile());
+        write(dir, "posts/pt-BR/notes.txt", postFile({ id: "txt" }));
+
+        expect((await getPosts(undefined, dir)).map((p) => p.id)).toEqual(["deep-links"]);
+      });
+
+      it.each(["id", "platform", "kind", "title", "description", "url", "language", "date"])(
+        "rejects a post missing the required %s field",
+        async (field) => {
+          const dir = makeContentDir();
+          write(dir, "posts/pt-BR/p.md", postFile({ [field]: null }));
+
+          await expect(getPosts(undefined, dir)).rejects.toThrow(
+            `required field "${field}" is missing or empty`
+          );
+        }
+      );
+
+      it("rejects an unknown platform, naming the allowed ones", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/p.md", postFile({ platform: "twitter" }));
+
+        await expect(getPosts(undefined, dir)).rejects.toThrow(
+          'field "platform" must be one of linkedin, youtube, got "twitter".'
+        );
+      });
+
+      it("rejects an unknown kind, naming the allowed ones", async () => {
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/p.md", postFile({ kind: "short" }));
+
+        await expect(getPosts(undefined, dir)).rejects.toThrow(
+          'field "kind" must be one of post, article, video, got "short".'
+        );
+      });
+
+      it("skips a file whose YAML can't be parsed", async () => {
+        setNodeEnv("development");
+        const dir = makeContentDir();
+        write(dir, "posts/pt-BR/good.md", postFile());
+        write(dir, "posts/pt-BR/bad.md", "---\nid: [unclosed\n---\nBody");
+
+        expect((await getPosts(undefined, dir)).map((p) => p.id)).toEqual(["deep-links"]);
+        expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Skipping malformed file"));
+      });
+    });
+  });
+
+  describe("getPosts (real content)", () => {
+    it("ships the same post ids, platforms and URLs in every supported locale", async () => {
+      const [ptBR, en, es] = await Promise.all([getPosts("pt-BR"), getPosts("en"), getPosts("es")]);
+      const shape = (list: Awaited<ReturnType<typeof getPosts>>) =>
+        list.map(({ id, platform, kind, url, image, language, date }) => ({
+          id,
+          platform,
+          kind,
+          url,
+          image,
+          language,
+          date,
+        }));
+
+      expect(ptBR.length).toBeGreaterThan(0);
+      expect(shape(en)).toEqual(shape(ptBR));
+      expect(shape(es)).toEqual(shape(ptBR));
+    });
+
+    it("translates the titles rather than copying the pt-BR ones", async () => {
+      const [ptBR, en] = await Promise.all([getPosts("pt-BR"), getPosts("en")]);
+      const titleFor = (list: typeof ptBR, id: string) => list.find((p) => p.id === id)?.title;
+
+      expect(titleFor(en, "deep-links-article")).toBe("Implementing Deep Links in a Next.js Site");
+      expect(titleFor(ptBR, "deep-links-article")).toBe(
+        "Implementando Deep Link em um site Next.js"
+      );
+    });
+
+    it("stores every date as an ISO yyyy-mm-dd string", async () => {
+      for (const post of await getPosts("en")) {
+        expect(post.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      }
+    });
+
+    it("points every cover image at a file that exists under public/", async () => {
+      for (const post of await getPosts("en")) {
+        if (post.image) {
+          expect(fs.existsSync(path.join(process.cwd(), "public", post.image))).toBe(true);
+        }
+      }
     });
   });
 });
