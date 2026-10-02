@@ -47,7 +47,9 @@ async function openProjectDetail(page: Page, name: RegExp) {
 }
 
 test.describe("Project deep links", () => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, browserName }) => {
+    // CI's WebKit is slow to load and hydrate; give it the room it needs.
+    test.slow(browserName === "webkit");
     await setCookieConsentBeforeLoad(context);
   });
 

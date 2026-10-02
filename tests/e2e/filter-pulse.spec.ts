@@ -28,6 +28,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
+import { waitForHydrated } from "./helpers/stability";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -46,7 +47,9 @@ async function getOverlayRadius(page: Page): Promise<number> {
 
 const pulseButton = (page: Page) => page.getByRole("button", { name: /^trigger /i });
 
-test.beforeEach(async ({ context, page }) => {
+test.beforeEach(async ({ context, page, browserName }) => {
+  // CI's WebKit is slow to load and hydrate; give it the room it needs.
+  test.slow(browserName === "webkit");
   await setCookieConsentBeforeLoad(context);
   // These specs exercise the pulse itself; the photosensitivity warning that
   // normally gates it has its own coverage in the-world-pulse.spec.ts.
@@ -60,12 +63,14 @@ test.beforeEach(async ({ context, page }) => {
 test.describe("Filter Pulse button", () => {
   test("is present in the navbar", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
     await expect(pulseButton(page)).toBeVisible();
   });
 
   test("grows the overlay to full coverage then shrinks it back on click", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
 
     // expect.poll retries the callback until the assertion holds (or times
     // out), instead of comparing two fixed-instant samples -- point-in-time
@@ -92,6 +97,7 @@ test.describe("Filter Pulse button", () => {
   test("disables itself during the pulse and re-enables once idle", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
     const button = pulseButton(page);
 
     await button.click();
@@ -105,6 +111,7 @@ test.describe("Filter Pulse button", () => {
     // button on some engines (observed on Firefox/WebKit), which is why
     // theme-switching.spec.ts's use of the same pattern is skipped entirely.
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
     const urlBefore = page.url();
 
     await pulseButton(page).click();
@@ -115,6 +122,7 @@ test.describe("Filter Pulse button", () => {
 
   test("is still present after navigating to another section", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
     await expect(pulseButton(page)).toBeVisible();
 
     await page
@@ -129,6 +137,7 @@ test.describe("Filter Pulse button", () => {
   test("still plays under reduced motion, without spatial growth", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
 
     const button = pulseButton(page);
     await button.click();
@@ -154,6 +163,7 @@ test.describe("Filter Pulse button — mobile sidebar", () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
 
     const hamburger = page.getByRole("button", { name: /open menu|toggle menu|menu/i });
     await hamburger.click();
