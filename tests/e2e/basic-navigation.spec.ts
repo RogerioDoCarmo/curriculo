@@ -126,6 +126,26 @@ test.describe("Basic Navigation", () => {
     }
   }
 
+  // The button's accessible name used to be English on every page.
+  for (const [locale, name] of [
+    ["pt-BR", "Voltar ao topo"],
+    ["en", "Back to top"],
+    ["es", "Volver arriba"],
+  ]) {
+    test(`back-to-top button is named in the page language (${locale})`, async ({ page }) => {
+      await page.goto(`/${locale}/`);
+      await expect(page.getByRole("banner")).toBeVisible();
+
+      // It only renders once the page has scrolled past its threshold.
+      await expect(async () => {
+        await page.evaluate(() => window.scrollTo(0, 800));
+        await expect(page.getByRole("button", { name, exact: true })).toBeVisible({
+          timeout: 1500,
+        });
+      }).toPass({ timeout: 15000 });
+    });
+  }
+
   test("should be responsive on desktop", async ({ page }) => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });

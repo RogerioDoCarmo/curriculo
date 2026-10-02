@@ -388,10 +388,9 @@ const SCENES = [
   {
     key: "backToTop",
     async run({ page }) {
-      // The button label is hard-coded English in the site, whatever the locale.
       await scrollToSelector(page, "#contact", 40);
       await sleep(1700);
-      await press(page.getByRole("button", { name: "Back to top" }), 1200);
+      await press(page.getByRole("button", { name: msg("backToTop.label"), exact: true }), 1200);
       await page.waitForFunction(() => window.scrollY < 40, null, { timeout: 8000 });
       await sleep(900);
     },
