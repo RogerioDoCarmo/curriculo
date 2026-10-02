@@ -88,7 +88,7 @@ export const ANALYTICS_EVENTS = {
  * Logs an analytics event. Silently no-ops if Analytics is unavailable.
  * Dynamically imports logEvent to reduce initial bundle size.
  */
-async function trackEvent(
+async function sendEvent(
   eventName: string,
   params?: Record<string, string | number | boolean>
 ): Promise<void> {
@@ -101,6 +101,14 @@ async function trackEvent(
   } catch (error) {
     console.warn(`[Analytics] Failed to track event "${eventName}":`, error);
   }
+}
+
+/**
+ * Fire and forget: `sendEvent` handles its own errors, so there is nothing for
+ * callers to await or catch.
+ */
+function trackEvent(eventName: string, params?: Record<string, string | number | boolean>): void {
+  void sendEvent(eventName, params);
 }
 
 // ─── Public Tracking Functions ────────────────────────────────────────────────
