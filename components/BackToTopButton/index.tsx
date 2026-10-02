@@ -18,9 +18,15 @@ import { useState, useEffect } from "react";
 interface BackToTopButtonProps {
   readonly className?: string;
   readonly threshold?: number;
+  /** Accessible name; the layout passes the localized text. Defaults to English. */
+  readonly label?: string;
 }
 
-export default function BackToTopButton({ className = "", threshold = 300 }: BackToTopButtonProps) {
+export default function BackToTopButton({
+  className = "",
+  threshold = 300,
+  label = "Back to top",
+}: BackToTopButtonProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -58,7 +64,7 @@ export default function BackToTopButton({ className = "", threshold = 300 }: Bac
       type="button"
       onClick={scrollToTop}
       onKeyDown={handleKeyDown}
-      aria-label="Back to top"
+      aria-label={label}
       tabIndex={0}
       className={`
         fixed bottom-8 right-8 z-50

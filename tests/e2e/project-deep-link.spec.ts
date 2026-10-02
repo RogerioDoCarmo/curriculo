@@ -47,7 +47,9 @@ async function openProjectDetail(page: Page, name: RegExp) {
 }
 
 test.describe("Project deep links", () => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, browserName }) => {
+    // CI's WebKit is slow to load and hydrate; give it the room it needs.
+    test.slow(browserName === "webkit");
     await setCookieConsentBeforeLoad(context);
   });
 
@@ -55,7 +57,7 @@ test.describe("Project deep links", () => {
   // navigation timeout when the whole browser matrix runs in parallel.
 
   test("opens the linked project's dialog on arrival", async ({ page }) => {
-    await page.goto("/en/?project=miroji#projects");
+    await page.goto("/en/?project=miroji#projects", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 10000 });
@@ -66,7 +68,7 @@ test.describe("Project deep links", () => {
   });
 
   test("honours a deep link in another locale", async ({ page }) => {
-    await page.goto("/pt-BR/?project=inct-gnss-app#projects");
+    await page.goto("/pt-BR/?project=inct-gnss-app#projects", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 10000 });
@@ -74,7 +76,7 @@ test.describe("Project deep links", () => {
   });
 
   test("ignores an unknown project id", async ({ page }) => {
-    await page.goto("/en/?project=not-a-real-project#projects");
+    await page.goto("/en/?project=not-a-real-project#projects", { waitUntil: "domcontentloaded" });
 
     const section = page.locator('section[id="projects"]');
     await expect(section.getByRole("heading", { name: PROJECTS_HEADING })).toBeVisible();
@@ -83,18 +85,26 @@ test.describe("Project deep links", () => {
   });
 
   test("writes the open project into the URL and clears it on close", async ({ page }) => {
-    await page.goto("/en");
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
 
     const dialog = await openProjectDetail(page, /^view details for miroji$/i);
     await expect(page).toHaveURL(/\?project=miroji/);
 
-    await dialog.getByRole("button", { name: /close/i }).click();
-    await expect(dialog).toBeHidden();
+    // Close writes to history and shuts a native <dialog>. On slow WebKit the
+    // click was dispatched but its action never returned (waiting on the
+    // resulting same-document navigation), so don't wait for that, and retry the
+    // whole close-and-check as one step.
+    await expect(async () => {
+      await dialog
+        .getByRole("button", { name: /close/i })
+        .click({ timeout: 4000, noWaitAfter: true });
+      await expect(dialog).toBeHidden({ timeout: 4000 });
+    }).toPass({ timeout: 20000 });
     await expect(page).not.toHaveURL(/\?project=/);
   });
 
   test("back and forward step through the opened project", async ({ page }) => {
-    await page.goto("/en");
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
 
     await openProjectDetail(page, /^view details for miroji$/i);
     await expect(page).toHaveURL(/\?project=miroji/);
@@ -113,7 +123,7 @@ test.describe("Project deep links", () => {
     test.skip(browserName !== "chromium", "clipboard permissions are Chromium-only");
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
 
-    await page.goto("/en");
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
 
     const dialog = await openProjectDetail(page, /^view details for miroji$/i);
     await dialog.getByRole("button", { name: COPY_LINK }).click();
@@ -129,13 +139,13 @@ test.describe("Project deep links", () => {
   test("a copied link reopens the same project", async ({ page }) => {
     // Rather than round-tripping through the clipboard (permission-gated), open
     // the project, read the URL the app produced, and navigate to it fresh.
-    await page.goto("/en");
+    await page.goto("/en", { waitUntil: "domcontentloaded" });
     await openProjectDetail(page, /^view details for android native crud$/i);
 
     const url = page.url();
     expect(url).toContain("?project=android-study-app");
 
-    await page.goto(url);
+    await page.goto(url, { waitUntil: "domcontentloaded" });
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 10000 });
     await expect(dialog.getByRole("heading", { name: /android native crud/i })).toBeVisible();

@@ -20,6 +20,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
+import { reloadWithRetry } from "./helpers/stability";
 
 /**
  * Reads the persisted cookie-consent state from localStorage, retrying while an
@@ -62,7 +63,9 @@ async function readConsentState(page: Page): Promise<{
 }
 
 test.describe("Cookie Consent Banner", () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ page, context, browserName }) => {
+    // CI's WebKit is slow to load and hydrate; give it the room it needs.
+    test.slow(browserName === "webkit");
     // Clear localStorage by navigating to about:blank first
     await page.goto("about:blank");
     await page.evaluate(() => {
@@ -164,7 +167,7 @@ test.describe("Cookie Consent Banner", () => {
       expect(preferences.functional).toBe(true);
 
       // Reload page manually
-      await page.reload();
+      await reloadWithRetry(page);
 
       // Banner should still not be visible
       await expect(banner).not.toBeVisible();
@@ -230,7 +233,7 @@ test.describe("Cookie Consent Banner", () => {
       expect(preferences.functional).toBe(false);
 
       // Reload page
-      await page.reload();
+      await reloadWithRetry(page);
 
       // Banner should not be visible after reload
       await expect(banner).not.toBeVisible();
@@ -378,7 +381,7 @@ test.describe("Cookie Consent Banner", () => {
       await page.waitForLoadState("networkidle");
 
       // Reload page manually
-      await page.reload();
+      await reloadWithRetry(page);
 
       // Banner should not be visible
       await expect(banner).not.toBeVisible();
