@@ -84,14 +84,13 @@ export const ANALYTICS_EVENTS = {
 
 // ─── Core Tracking Helper ─────────────────────────────────────────────────────
 
+type EventParams = Record<string, string | number | boolean>;
+
 /**
  * Logs an analytics event. Silently no-ops if Analytics is unavailable.
  * Dynamically imports logEvent to reduce initial bundle size.
  */
-async function sendEvent(
-  eventName: string,
-  params?: Record<string, string | number | boolean>
-): Promise<void> {
+async function sendEvent(eventName: string, params?: EventParams): Promise<void> {
   try {
     const analyticsInstance = await getFirebaseAnalytics();
     if (!analyticsInstance) return;
@@ -107,7 +106,7 @@ async function sendEvent(
  * Fire and forget: `sendEvent` handles its own errors, so there is nothing for
  * callers to await or catch.
  */
-function trackEvent(eventName: string, params?: Record<string, string | number | boolean>): void {
+function trackEvent(eventName: string, params?: EventParams): void {
   void sendEvent(eventName, params);
 }
 
@@ -147,8 +146,7 @@ export function trackProjectShare(params: { project_id: string; project_title: s
  * Tracks a post deep link being copied to the clipboard for sharing.
  */
 export function trackPostShare(params: { post_id: string; post_title: string }): void {
-  // Fire and forget: `trackEvent` handles its own errors, so there's nothing to await or catch.
-  void trackEvent(ANALYTICS_EVENTS.POST_SHARE, params);
+  trackEvent(ANALYTICS_EVENTS.POST_SHARE, params);
 }
 
 /**
