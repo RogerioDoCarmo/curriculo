@@ -5,6 +5,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+import { waitForHydrated } from "./helpers/stability";
 
 /**
  * Triggers exit-intent detection by sweeping the cursor up to the top edge.
@@ -27,6 +28,8 @@ test.describe("EmailSubscribeForm - main page", () => {
     await page.goto("/en");
     // Scroll to the contact section
     await page.locator("#contact").scrollIntoViewIfNeeded();
+    // Submitting before hydration falls through to the browser's own form handling.
+    await waitForHydrated(page.locator('#contact button[type="submit"]'));
   });
 
   test("renders email input and submit button", async ({ page }) => {
