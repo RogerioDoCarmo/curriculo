@@ -98,7 +98,7 @@ export function useFeatureFlag<T extends FeatureFlagValue>(
       }
     }
 
-    fetchFlag();
+    void fetchFlag();
 
     return () => {
       isMounted = false;
