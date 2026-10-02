@@ -80,13 +80,18 @@ test.describe("Filter Pulse button", () => {
     const startRadius = await getOverlayRadius(page);
     await pulseButton(page).click();
 
-    // Grows: radius moves well past its starting value.
+    // Grows: radius moves well past its starting value. These two polls get the
+    // full-cycle allowance rather than 5s: on CI's WebKit under load the pulse
+    // sometimes started late (the radius read 0 for the whole 5s), and a poll
+    // that succeeds early costs nothing extra.
     await expect
-      .poll(() => getOverlayRadius(page), { timeout: 5000 })
+      .poll(() => getOverlayRadius(page), { timeout: FULL_CYCLE_TIMEOUT })
       .toBeGreaterThan(startRadius + 100);
 
     // Reaches (and holds at) a large, viewport-covering radius.
-    await expect.poll(() => getOverlayRadius(page), { timeout: 5000 }).toBeGreaterThan(400);
+    await expect
+      .poll(() => getOverlayRadius(page), { timeout: FULL_CYCLE_TIMEOUT })
+      .toBeGreaterThan(400);
 
     // Shrinks back down to (near) zero once the full cycle completes.
     await expect
