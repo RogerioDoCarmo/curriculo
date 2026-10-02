@@ -43,13 +43,14 @@
     "@sentry/nextjs": "^10.50.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "@vitest/mocker": "^4.1.11",
+    "@vitest/mocker": "^5.0.3",
     "autoprefixer": "^10.x",
     "firebase": "^12.12.1",
-    "js-yaml": "^5.2.2",
+    "js-yaml": "^5.4.2",
+    "fast-uri": "^3.1.8",
     "lottie-react": "^3.1.0",
     "lucide-react": "^1.8.0",
-    "next": "^16.3.3",
+    "next": "^16.3.8",
     "next-intl": "^4.9.2",
     "react": "^19",
     "react-dom": "^19",
@@ -64,11 +65,11 @@
     "@next/bundle-analyzer": "^16.2.4",
     "@playwright/test": "^1",
     "@storybook/addon-a11y": "^10.5.9",
-    "@storybook/addon-docs": "^10.5.9",
-    "@storybook/addon-onboarding": "^10.5.9",
-    "@storybook/addon-vitest": "^10.5.9",
-    "@storybook/nextjs-vite": "^10.5.9",
-    "@storybook/react": "^10.5.9",
+    "@storybook/addon-docs": "^10.6.1",
+    "@storybook/addon-onboarding": "^10.6.1",
+    "@storybook/addon-vitest": "^10.6.1",
+    "@storybook/nextjs-vite": "^10.6.1",
+    "@storybook/react": "^10.6.1",
     "@stryker-mutator/core": "^10.0.0",
     "@stryker-mutator/jest-runner": "^10.0.0",
     "@tailwindcss/postcss": "^4.3.0",
@@ -83,11 +84,11 @@
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
-    "@vitest/browser-playwright": "^4.1.11",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/browser-playwright": "^5.0.3",
+    "@vitest/coverage-v8": "^5.0.3",
     "eslint": "^10.4.0",
-    "eslint-config-next": "^16.2.4",
-    "eslint-plugin-storybook": "^10.5.9",
+    "eslint-config-next": "^16.3.8",
+    "eslint-plugin-storybook": "^10.6.1",
     "fast-check": "^4.8.0",
     "firebase-admin": "^14.1.0",
     "husky": "^9",
@@ -96,13 +97,13 @@
     "lint-staged": "^17",
     "playwright": "^1.59.1",
     "prettier": "^3",
-    "storybook": "^10.5.9",
+    "storybook": "^10.6.1",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
     "typescript": "^6",
     "typescript-eslint": "^8.60.0",
     "vite": "^8.0.8",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.3"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -123,15 +124,16 @@
     "uuid": ">=11.1.1",
     "qs": ">=6.15.2",
     "esbuild": "~0.28.1",
-    "@vitest/browser": "~4.1.11",
-    "js-yaml": "^5.2.2",
+    "@vitest/browser": "~5.0.3",
+    "js-yaml": "^5.4.2",
+    "fast-uri": "^3.1.8",
     "sharp": ">=0.35.4",
-    "brace-expansion": ">=5.0.8",
+    "brace-expansion": ">=5.0.12",
     "@firebase/firestore": {
-      "@grpc/grpc-js": "~1.9.16"
+      "@grpc/grpc-js": "~1.14.5"
     },
     "google-gax": {
-      "@grpc/grpc-js": "~1.14.4"
+      "@grpc/grpc-js": "~1.14.5"
     }
   }
 }
