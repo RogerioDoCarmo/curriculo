@@ -8,7 +8,8 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { load as loadYaml } from "js-yaml";
-import type { Project, Experience, ExperienceImage, SkillCategory } from "@/types/index";
+import type { Project, Post, Experience, ExperienceImage, SkillCategory } from "@/types/index";
+import { POST_KINDS, POST_PLATFORMS, isPostKind, isPostPlatform } from "@/lib/posts";
 
 /** Default content root directory (relative to project root). */
 const DEFAULT_CONTENT_DIR = path.join(process.cwd(), "content");
@@ -162,27 +163,44 @@ export async function getProjects(
   locale: string = "pt-BR",
   contentDir: string = DEFAULT_CONTENT_DIR
 ): Promise<Project[]> {
-  // Try the locale directory first, then the default locale, then the legacy
-  // flat layout that predates localized project content.
-  const projectsDir = firstExistingDir(
-    [path.join(contentDir, "projects", locale), path.join(contentDir, "projects", "pt-BR")],
-    path.join(contentDir, "projects")
+  return readLocalizedEntries("projects", "Projects", locale, contentDir, parseProjectFile);
+}
+
+/**
+ * Shared loader for dated, one-file-per-entry content (projects, posts).
+ *
+ * Reads every `.md` file from `<contentDir>/<section>/<locale>/`, falling back
+ * to the default locale (`pt-BR`), then to the legacy flat layout
+ * (`<contentDir>/<section>/`) that predates localized content. Validation
+ * errors propagate; any other parse failure skips that file. Returns entries
+ * sorted by date, newest first.
+ */
+function readLocalizedEntries<T extends { readonly date: string }>(
+  section: string,
+  label: string,
+  locale: string,
+  contentDir: string,
+  parseFile: (filePath: string) => T
+): T[] {
+  const dir = firstExistingDir(
+    [path.join(contentDir, section, locale), path.join(contentDir, section, "pt-BR")],
+    path.join(contentDir, section)
   );
 
-  if (!fs.existsSync(projectsDir)) {
+  if (!fs.existsSync(dir)) {
     if (process.env.NODE_ENV === "development") {
-      console.warn(`[content] Projects directory not found: ${projectsDir}`);
+      console.warn(`[content] ${label} directory not found: ${dir}`);
     }
     return [];
   }
 
-  const files = fs.readdirSync(projectsDir).filter((f) => f.endsWith(".md"));
-  const projects: Project[] = [];
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
+  const entries: T[] = [];
 
   for (const file of files) {
-    const filePath = path.join(projectsDir, file);
+    const filePath = path.join(dir, file);
     try {
-      projects.push(parseProjectFile(filePath));
+      entries.push(parseFile(filePath));
     } catch (err) {
       if (err instanceof Error && err.message.startsWith("Content validation error")) {
         throw err;
@@ -195,7 +213,60 @@ export async function getProjects(
   }
 
   // Sort by date descending (newest first)
-  return projects.toSorted((a, b) => compareDateDesc(a.date, b.date));
+  return entries.toSorted((a, b) => compareDateDesc(a.date, b.date));
+}
+
+// ─── Posts ───────────────────────────────────────────────────────────────────
+
+/** Parses and validates a single post markdown file. */
+function parsePostFile(filePath: string): Post {
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = parseFrontmatter(raw);
+
+  const platform = requireString(data.platform, "platform", filePath);
+  const kind = requireString(data.kind, "kind", filePath);
+
+  if (!isPostPlatform(platform)) {
+    throw new Error(
+      `Content validation error in "${filePath}": field "platform" must be one of ${POST_PLATFORMS.join(", ")}, got "${platform}".`
+    );
+  }
+  if (!isPostKind(kind)) {
+    throw new Error(
+      `Content validation error in "${filePath}": field "kind" must be one of ${POST_KINDS.join(", ")}, got "${kind}".`
+    );
+  }
+
+  return {
+    id: requireString(data.id, "id", filePath),
+    platform,
+    kind,
+    title: requireString(data.title, "title", filePath),
+    description: requireString(data.description, "description", filePath),
+    longDescription: content.trim() || undefined,
+    url: requireString(data.url, "url", filePath),
+    image: optionalString(data.image),
+    language: requireString(data.language, "language", filePath),
+    featured: Boolean(data.featured),
+    date: requireString(data.date, "date", filePath),
+  };
+}
+
+/**
+ * Reads all `.md` files from `<contentDir>/posts/<locale>/` (LinkedIn posts and
+ * articles, YouTube videos), validates them, and returns them newest first.
+ * Falls back to the default locale (`pt-BR`) like {@link getProjects}.
+ *
+ * @param locale - Locale code (e.g., 'pt-BR', 'en', 'es'). Defaults to 'pt-BR'.
+ * @param contentDir - Root content directory. Defaults to `<cwd>/content`.
+ * @returns Sorted array of {@link Post} objects.
+ * @throws If a file has missing required fields or an unknown platform/kind.
+ */
+export async function getPosts(
+  locale: string = "pt-BR",
+  contentDir: string = DEFAULT_CONTENT_DIR
+): Promise<Post[]> {
+  return readLocalizedEntries("posts", "Posts", locale, contentDir, parsePostFile);
 }
 
 // ─── Experiences ─────────────────────────────────────────────────────────────

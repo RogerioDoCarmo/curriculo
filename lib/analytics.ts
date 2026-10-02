@@ -17,6 +17,7 @@ export const ANALYTICS_EVENTS = {
   CONTACT_FORM_SUBMISSION: "contact_form_submission",
   PROJECT_CLICK: "project_click",
   PROJECT_SHARE: "project_share",
+  POST_SHARE: "post_share",
   LANGUAGE_CHANGE: "language_change",
   THEME_TOGGLE: "theme_toggle",
   CAREER_PATH_SELECTION: "career_path_selection",
@@ -83,14 +84,13 @@ export const ANALYTICS_EVENTS = {
 
 // ─── Core Tracking Helper ─────────────────────────────────────────────────────
 
+type EventParams = Record<string, string | number | boolean>;
+
 /**
  * Logs an analytics event. Silently no-ops if Analytics is unavailable.
  * Dynamically imports logEvent to reduce initial bundle size.
  */
-async function trackEvent(
-  eventName: string,
-  params?: Record<string, string | number | boolean>
-): Promise<void> {
+async function sendEvent(eventName: string, params?: EventParams): Promise<void> {
   try {
     const analyticsInstance = await getFirebaseAnalytics();
     if (!analyticsInstance) return;
@@ -100,6 +100,14 @@ async function trackEvent(
   } catch (error) {
     console.warn(`[Analytics] Failed to track event "${eventName}":`, error);
   }
+}
+
+/**
+ * Fire and forget: `sendEvent` handles its own errors, so there is nothing for
+ * callers to await or catch.
+ */
+function trackEvent(eventName: string, params?: EventParams): void {
+  void sendEvent(eventName, params);
 }
 
 // ─── Public Tracking Functions ────────────────────────────────────────────────
@@ -132,6 +140,13 @@ export function trackProjectClick(params: { project_id: string; project_title: s
  */
 export function trackProjectShare(params: { project_id: string; project_title: string }): void {
   trackEvent(ANALYTICS_EVENTS.PROJECT_SHARE, params);
+}
+
+/**
+ * Tracks a post deep link being copied to the clipboard for sharing.
+ */
+export function trackPostShare(params: { post_id: string; post_title: string }): void {
+  trackEvent(ANALYTICS_EVENTS.POST_SHARE, params);
 }
 
 /**

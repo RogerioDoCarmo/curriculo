@@ -36,6 +36,7 @@ jest.mock("next-intl", () => ({
       "footer.languages.spanish": "Español (es)",
       "nav.home": "Home",
       "nav.projects": "Projects",
+      "nav.posts": "Posts",
       "nav.experience": "Experience",
       "nav.skills": "Skills",
       "nav.contact": "Contact",
@@ -91,6 +92,7 @@ describe("Footer", () => {
     await waitFor(() => {
       expect(screen.getByRole("link", { name: /home/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /projects/i })).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: /^posts$/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /experience/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /skills/i })).toBeInTheDocument();
       expect(screen.getByRole("link", { name: /contact/i })).toBeInTheDocument();
@@ -103,6 +105,7 @@ describe("Footer", () => {
     await waitFor(() => {
       expect(screen.getByRole("link", { name: /home/i })).toHaveAttribute("href", "#home");
       expect(screen.getByRole("link", { name: /projects/i })).toHaveAttribute("href", "#projects");
+      expect(screen.getByRole("link", { name: /^posts$/i })).toHaveAttribute("href", "#posts");
       expect(screen.getByRole("link", { name: /experience/i })).toHaveAttribute(
         "href",
         "#experience"

@@ -48,7 +48,7 @@ export function logError(error: unknown, context?: ErrorContext): void {
   }
 
   // Log to Firebase Analytics (async, fire-and-forget)
-  (async () => {
+  void (async () => {
     try {
       const analyticsInstance = await getFirebaseAnalytics();
       if (analyticsInstance) {

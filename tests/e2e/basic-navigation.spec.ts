@@ -101,6 +101,51 @@ test.describe("Basic Navigation", () => {
     await expect(projectsHeading).toBeVisible();
   });
 
+  // The header used to switch to its inline nav at 768px, where the links plus
+  // the controls overflowed the bar by up to ~400px (worst in es/pt-BR) and
+  // dragged the whole page into horizontal scroll.
+  for (const locale of ["pt-BR", "en", "es"]) {
+    for (const width of [768, 1024, 1280]) {
+      test(`header fits without horizontal scroll at ${width}px (${locale})`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`/${locale}/`);
+        await expect(page.getByRole("banner")).toBeVisible();
+
+        const overflow = await page.evaluate(() => {
+          const header = document.querySelector("header");
+          return {
+            header: header ? header.scrollWidth - header.clientWidth : -1,
+            page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          };
+        });
+        expect(overflow.header).toBe(0);
+        // The old bug pushed the page out by hundreds of px. Allow a pixel or
+        // two: CI's Linux fonts round some other section's width up at 768px.
+        expect(overflow.page).toBeLessThanOrEqual(2);
+      });
+    }
+  }
+
+  // The button's accessible name used to be English on every page.
+  for (const [locale, name] of [
+    ["pt-BR", "Voltar ao topo"],
+    ["en", "Back to top"],
+    ["es", "Volver arriba"],
+  ]) {
+    test(`back-to-top button is named in the page language (${locale})`, async ({ page }) => {
+      await page.goto(`/${locale}/`);
+      await expect(page.getByRole("banner")).toBeVisible();
+
+      // It only renders once the page has scrolled past its threshold.
+      await expect(async () => {
+        await page.evaluate(() => window.scrollTo(0, 800));
+        await expect(page.getByRole("button", { name, exact: true })).toBeVisible({
+          timeout: 1500,
+        });
+      }).toPass({ timeout: 15000 });
+    });
+  }
+
   test("should be responsive on desktop", async ({ page }) => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });

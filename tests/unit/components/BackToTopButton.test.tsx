@@ -125,6 +125,23 @@ describe("BackToTopButton Component", () => {
     expect(button.getAttribute("aria-label")).toMatch(/back to top/i);
   });
 
+  // 6b. The accessible name is localizable through the label prop
+  it("should use the label prop as its accessible name", async () => {
+    render(<BackToTopButton label="Voltar ao topo" />);
+
+    simulateScroll(400);
+    const button = await screen.findByRole("button", { name: "Voltar ao topo" });
+    expect(button).toHaveAttribute("aria-label", "Voltar ao topo");
+    expect(screen.queryByRole("button", { name: /back to top/i })).not.toBeInTheDocument();
+  });
+
+  it("should fall back to the English name when no label is given", async () => {
+    render(<BackToTopButton />);
+
+    simulateScroll(400);
+    expect(await screen.findByRole("button", { name: "Back to top" })).toBeInTheDocument();
+  });
+
   // 7. Button accepts custom threshold prop
   it("should accept a custom threshold prop and appear only after that threshold", async () => {
     render(<BackToTopButton threshold={500} />);

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { FilterPulseProvider } from "@/hooks/useFilterPulse";
@@ -195,6 +195,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   // Load messages for the current locale
   const messages = await getMessages();
+  const backToTopLabel = (await getTranslations({ locale, namespace: "backToTop" }))("label");
 
   // Generate structured data for SEO
   const { personSchema, webSiteSchema } = generateStructuredDataScript(locale);
@@ -223,7 +224,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
                   <Header locale={locale} />
                   <main className="min-h-screen">{children}</main>
                   <Footer locale={locale} />
-                  <BackToTopButton />
+                  <BackToTopButton label={backToTopLabel} />
                   <CookieConsent />
                   <FilterPulseOverlay />
                   <FilterPulseWarningDialog />

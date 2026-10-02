@@ -61,23 +61,27 @@ A modern, responsive personal resume website built with Next.js 16.2.6, TypeScri
 
 [![Walkthrough demo — rogeriodocarmo.com](showcase-media/walkthrough-video-image-thumbnail.png)](https://rogeriodocarmo.com)
 
-A guided walkthrough of the live site, captured at two viewport sizes. It covers dark mode, the three languages (PT / EN / ES), the project and INCT (master's research) image galleries, the interactive experience timeline, the **Used in this site** tech‑stack page, the **Storybook published on Chromatic**, and the downloadable résumé (PDF).
+A guided walkthrough of the site, captured at three viewport sizes (mobile, tablet and desktop) with burned-in captions (the videos are silent). It covers dark mode, the three languages (PT / EN / ES), the professional and academic career tabs with the experience timeline, the project details, the **Posts** section and the all-posts page grouped by platform, the skills search, the back-to-top button, the **Used in this site** tech‑stack page, and the downloadable résumé (PDF).
 
-**Responsive — mobile & desktop, side by side:**
+**Responsive — mobile, tablet & desktop, side by side:**
 
 <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-combined.mp4" controls muted width="100%"></video>
 
 <details>
-<summary>Individual recordings (mobile · desktop)</summary>
+<summary>Individual recordings (mobile · tablet · desktop)</summary>
 
 <table>
   <tr>
     <td align="center"><b>📱 Mobile</b></td>
+    <td align="center"><b>📟 Tablet</b></td>
     <td align="center"><b>🖥️ Desktop</b></td>
   </tr>
   <tr>
-    <td width="50%">
+    <td width="20%">
       <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-mobile.mp4" controls muted width="100%"></video>
+    </td>
+    <td width="30%">
+      <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-tablet.mp4" controls muted width="100%"></video>
     </td>
     <td width="50%">
       <video src="https://github.com/RogerioDoCarmo/curriculo/raw/main/showcase-media/walkthrough-desktop.mp4" controls muted width="100%"></video>
@@ -87,7 +91,11 @@ A guided walkthrough of the live site, captured at two viewport sizes. It covers
 
 </details>
 
-> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
+> If the players don't load, open the files directly: [combined](showcase-media/walkthrough-combined.mp4) · [mobile](showcase-media/walkthrough-mobile.mp4) · [tablet](showcase-media/walkthrough-tablet.mp4) · [desktop](showcase-media/walkthrough-desktop.mp4). All showcase media (videos + screenshots) lives in [`showcase-media/`](showcase-media/).
+
+**Captions in other languages** — the videos above are captioned in Portuguese. The same walkthrough is also available in English ([combined](showcase-media/walkthrough-combined-en.mp4) · [mobile](showcase-media/walkthrough-mobile-en.mp4) · [tablet](showcase-media/walkthrough-tablet-en.mp4) · [desktop](showcase-media/walkthrough-desktop-en.mp4)) and Spanish ([combined](showcase-media/walkthrough-combined-es.mp4) · [mobile](showcase-media/walkthrough-mobile-es.mp4) · [tablet](showcase-media/walkthrough-tablet-es.mp4) · [desktop](showcase-media/walkthrough-desktop-es.mp4)).
+
+**Re-recording:** serve a production build (`npm run build && npx serve out`) and run `node scripts/record-walkthrough.mjs --locale=pt-BR --out=showcase-media` (also `en` and `es`). It needs a system Chrome and ffmpeg; see the header of [`scripts/record-walkthrough.mjs`](scripts/record-walkthrough.mjs).
 
 ## 📢 LinkedIn Posts
 

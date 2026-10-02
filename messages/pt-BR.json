@@ -2,6 +2,7 @@
   "nav": {
     "home": "Início",
     "projects": "Projetos",
+    "posts": "Publicações",
     "experience": "Experiência",
     "skills": "Habilidades",
     "contact": "Contato",
@@ -97,6 +98,7 @@
   "sections": {
     "experience": "Experiência",
     "projects": "Projetos",
+    "posts": "Publicações",
     "skills": "Habilidades",
     "contact": "Contato",
     "techStack": "Usado neste site",
@@ -270,6 +272,37 @@
     "copyLink": "Copiar link",
     "linkCopied": "Link copiado!",
     "copyLinkFailed": "Não foi possível copiar o link"
+  },
+  "posts": {
+    "subtitle": "Artigos, posts e vídeos que publiquei sobre o que construo e aprendo.",
+    "filterByPlatform": "Filtrar por plataforma",
+    "all": "Todas",
+    "platform": {
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube"
+    },
+    "kind": {
+      "post": "Post",
+      "article": "Artigo",
+      "video": "Vídeo"
+    },
+    "viewDetails": "Ver detalhes de",
+    "previousPost": "Publicação anterior",
+    "nextPost": "Próxima publicação",
+    "featured": "Destaque",
+    "inLanguage": "Em {language}",
+    "readOn": "Ler no {platform}",
+    "watchOn": "Assistir no {platform}",
+    "opensInNewTab": "(abre em nova aba)",
+    "videoTitle": "Vídeo: {title}",
+    "viewAll": "Ver todas as publicações",
+    "copyLink": "Copiar link",
+    "linkCopied": "Link copiado!",
+    "copyLinkFailed": "Não foi possível copiar o link",
+    "pageTitle": "Publicações | Rogério do Carmo",
+    "pageHeading": "Todas as publicações",
+    "pageSubtitle": "Todos os artigos, posts e vídeos que publiquei, agrupados por plataforma.",
+    "emptyPlatform": "Ainda não há publicações no {platform}."
   },
   "homepage": {
     "title": "Site de Currículo Pessoal",

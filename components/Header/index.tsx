@@ -3,8 +3,12 @@
 /**
  * Header component — responsive navigation with anchor support.
  *
- * - Desktop (≥768px): Horizontal navbar at top of page
- * - Mobile (<768px): Hamburger button + left sidebar that slides in
+ * - Desktop (≥1280px): Horizontal navbar at top of page
+ * - Below 1280px: Hamburger button + left sidebar that slides in
+ *
+ * The inline nav needs the full `xl` width: the links plus the controls
+ * (resume, GitHub, Linktree, language, theme) overflow the bar on tablets and
+ * small laptops, worst in the longer pt-BR and es labels.
  *
  * Requirements: 4.1, 4.2, 4.3, 17.5, 24.1-24.10
  */
@@ -123,6 +127,7 @@ export default function Header({ locale }: HeaderProps) {
   const navLinks = [
     { key: "home", label: t("nav.home"), href: "#home", isExternal: false },
     { key: "projects", label: t("nav.projects"), href: "#projects", isExternal: false },
+    { key: "posts", label: t("nav.posts"), href: "#posts", isExternal: false },
     { key: "experience", label: t("nav.experience"), href: "#experience", isExternal: false },
     { key: "skills", label: t("nav.skills"), href: "#skills", isExternal: false },
     { key: "contact", label: t("nav.contact"), href: "#contact", isExternal: false },
@@ -151,7 +156,7 @@ export default function Header({ locale }: HeaderProps) {
               transition-colors duration-200
               hover:bg-accent hover:text-accent-foreground
               focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
-              md:hidden
+              xl:hidden
             "
           >
             {/* Hamburger icon */}
@@ -166,7 +171,7 @@ export default function Header({ locale }: HeaderProps) {
           <nav
             role="navigation"
             aria-label="Main navigation"
-            className="hidden md:flex items-center gap-6"
+            className="hidden xl:flex items-center gap-6"
           >
             {navLinks.map(({ key, label, href, isExternal }) =>
               isExternal ? (
