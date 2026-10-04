@@ -61,10 +61,16 @@ updates:
       prefix-development: "chore(deps-dev)"
       include: "scope"
 
-    # Ignore specific dependencies (if needed)
-    # ignore:
-    #   - dependency-name: "package-name"
-    #     versions: ["1.x", "2.x"]
+    # Ignore specific dependencies
+    ignore:
+      # Playwright 1.63's WebKit hangs the exit-intent modal specs
+      # (email-subscribe) and fails "the world pulse stays inert" -- develop
+      # passes them on 1.61 (#366, #368). Skip 1.63.x; 1.64 is still proposed.
+      # Remove once those specs pass on a newer Playwright.
+      - dependency-name: "@playwright/test"
+        versions: ["1.63.x"]
+      - dependency-name: "playwright"
+        versions: ["1.63.x"]
 
     # Allow both direct and indirect dependencies
     allow:
