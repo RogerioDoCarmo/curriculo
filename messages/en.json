@@ -275,7 +275,9 @@
     "viewAll": "View all projects",
     "pageTitle": "Projects | Rogério do Carmo",
     "pageHeading": "All projects",
-    "pageSubtitle": "Everything I've built, from the apps in the stores to the studies behind them. Filter by technology."
+    "pageSubtitle": "Everything I've built, from the apps in the stores to the studies behind them. Filter by technology.",
+    "watchVideo": "Watch video",
+    "opensInNewTab": "(opens in a new tab)"
   },
   "posts": {
     "subtitle": "Articles, posts and videos I've published about what I build and learn.",

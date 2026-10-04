@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { getProjects, getPosts, getExperiences, getSkills } from "@/lib/content";
+import { getYouTubeVideoId } from "@/lib/posts";
 
 describe("Content Management System", () => {
   describe("getProjects", () => {
@@ -262,6 +263,38 @@ describe("Content Management System", () => {
       expect(projects.map((p) => p.id)).toEqual(["new", "old"]);
       expect(projects[0].technologies).toEqual(["Next.js"]);
       expect(projects[0].featured).toBe(true);
+    });
+
+    it("parses the optional videoUrl and leaves it undefined when absent", async () => {
+      const dir = makeContentDir();
+      write(
+        dir,
+        "projects/pt-BR/with.md",
+        `---
+id: with
+title: T
+description: d
+date: "2024-02-01"
+videoUrl: https://youtu.be/CcyTyHB7n_M
+---
+Body`
+      );
+      write(
+        dir,
+        "projects/pt-BR/without.md",
+        `---
+id: without
+title: T
+description: d
+date: "2024-01-01"
+---
+Body`
+      );
+      const projects = await getProjects(undefined, dir);
+      expect(projects.map((p) => [p.id, p.videoUrl])).toEqual([
+        ["with", "https://youtu.be/CcyTyHB7n_M"],
+        ["without", undefined],
+      ]);
     });
 
     it("falls back to empty array when project frontmatter fields are not arrays", async () => {
@@ -671,6 +704,24 @@ describe("Content Management System", () => {
         expect((await getPosts(undefined, dir)).map((p) => p.id)).toEqual(["deep-links"]);
         expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Skipping malformed file"));
       });
+    });
+  });
+
+  describe("getProjects (real content)", () => {
+    it("gives OmniMorse the same YouTube video in every locale, and it is a real video link", async () => {
+      for (const locale of ["pt-BR", "en", "es"]) {
+        const omnimorse = (await getProjects(locale)).find((p) => p.id === "omnimorse");
+        expect(omnimorse?.videoUrl).toBe("https://youtu.be/CcyTyHB7n_M");
+        expect(getYouTubeVideoId(omnimorse?.videoUrl ?? "")).toBe("CcyTyHB7n_M");
+      }
+    });
+
+    it("only uses video URLs that point at YouTube", async () => {
+      for (const project of await getProjects("en")) {
+        if (project.videoUrl) {
+          expect(getYouTubeVideoId(project.videoUrl)).not.toBeNull();
+        }
+      }
     });
   });
 
