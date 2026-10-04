@@ -17,12 +17,14 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-// Newest first. The two 2026-09-13 posts tie on date and are ordered by id.
-const NEWEST_EN = "Two AI agents, one Git repository";
+// Newest first: the OmniMorse video, the AI agents post, then the deep-links
+// article. The two 2026-09-13 posts tie on date and are ordered by id.
+const NEWEST_EN = "OmniMorse App — encode, decode and learn Morse code";
+const AGENTS_EN = "Two AI agents, one Git repository";
 const ARTICLE_EN = "Implementing Deep Links in a Next.js Site";
 const ARTICLE_PT = "Implementando Deep Link em um site Next.js";
-const THIRD_EN = "Deep links in the portfolio";
 // Older than the latest three: on the posts page only.
+const DEEP_POST_EN = "Deep links in the portfolio";
 const FOURTH_EN = "An accessible scroll minimap";
 const OLDEST_EN = "Useful tools for beginners in web development";
 
@@ -77,12 +79,12 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    for (const title of [NEWEST_EN, ARTICLE_EN, THIRD_EN]) {
+    for (const title of [NEWEST_EN, AGENTS_EN, ARTICLE_EN]) {
       await expect(
         section.getByRole("button", { name: `View details for ${title}` }).first()
       ).toBeVisible();
     }
-    for (const title of [FOURTH_EN, OLDEST_EN]) {
+    for (const title of [DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
       await expect(section.getByRole("button", { name: `View details for ${title}` })).toHaveCount(
         0
       );
@@ -158,7 +160,7 @@ test.describe("Posts section", () => {
     const dialog = await openPost(page, NEWEST_EN);
     // Previous from the first wraps to the last of the three — not to the oldest post.
     await dialog.getByRole("button", { name: "Previous post" }).click();
-    await expect(dialog.getByRole("heading", { name: THIRD_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: ARTICLE_EN })).toBeVisible();
 
     await dialog.getByRole("button", { name: "Next post" }).click();
     await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
@@ -170,7 +172,7 @@ test.describe("Posts section", () => {
   test("writes the open post into the URL, keeping the section hash", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    await openPost(page, NEWEST_EN);
+    await openPost(page, AGENTS_EN);
 
     await expect(page).toHaveURL(/\?post=ai-agents-git-worktrees#posts$/);
   });
@@ -181,9 +183,25 @@ test.describe("Posts section", () => {
     // The dialog opens after hydration, which WebKit is slow to reach on CI —
     // the same margin the project deep-link spec allows.
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible({
+    await expect(dialog.getByRole("heading", { name: AGENTS_EN })).toBeVisible({
       timeout: 10000,
     });
+  });
+
+  test("plays the OmniMorse video in its dialog, in the privacy-enhanced player", async ({
+    page,
+  }) => {
+    await page.goto("/en/?post=omnimorse-video#posts", { waitUntil: "domcontentloaded" });
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible({ timeout: 10000 });
+    await expect(dialog.locator("iframe")).toHaveAttribute(
+      "src",
+      "https://www.youtube-nocookie.com/embed/CcyTyHB7n_M"
+    );
+    await expect(
+      dialog.getByRole("link", { name: "Watch on YouTube (opens in a new tab)" })
+    ).toHaveAttribute("href", "https://youtu.be/CcyTyHB7n_M");
   });
 
   test("opens a deep-linked post older than the latest three, without Prev/Next", async ({
@@ -234,7 +252,7 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const card = section.getByRole("button", { name: `View details for ${THIRD_EN}` }).first();
+    const card = section.getByRole("button", { name: `View details for ${AGENTS_EN}` }).first();
     await expect(card).toBeVisible();
     await expect(card.locator("img")).toHaveCount(0);
   });
