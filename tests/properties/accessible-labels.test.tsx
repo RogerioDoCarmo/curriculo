@@ -35,6 +35,7 @@ const messages: AbstractIntlMessages = {
     filterByTech: "Filter by technology",
     all: "All",
     noMatch: "No projects match your filter",
+    viewAll: "View all projects",
     viewDetails: "View details for",
     screenshot: "screenshot",
     featured: "Featured",
@@ -322,9 +323,11 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
           expect(section).toBeTruthy();
           expect(section?.getAttribute("aria-label")).toBeTruthy();
 
-          // Filter buttons should have aria-pressed
-          const filterButtons = container.querySelectorAll("button[aria-pressed]");
-          expect(filterButtons.length).toBeGreaterThan(0);
+          // The technology filter lives on the projects page, not here; the
+          // section instead links to that page, with a real accessible name.
+          expect(container.querySelectorAll("button[aria-pressed]")).toHaveLength(0);
+          const viewAll = container.querySelector("a[href]");
+          expect(viewAll?.textContent).toContain("View all projects");
 
           // Project cards should have aria-label
           const projectCards = container.querySelectorAll('[role="button"][aria-label]');

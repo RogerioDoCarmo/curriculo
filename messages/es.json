@@ -271,7 +271,11 @@
     "noImages": "No hay imágenes disponibles",
     "copyLink": "Copiar enlace",
     "linkCopied": "¡Enlace copiado!",
-    "copyLinkFailed": "No se pudo copiar el enlace"
+    "copyLinkFailed": "No se pudo copiar el enlace",
+    "viewAll": "Ver todos los proyectos",
+    "pageTitle": "Proyectos | Rogério do Carmo",
+    "pageHeading": "Todos los proyectos",
+    "pageSubtitle": "Todo lo que he construido, desde las apps en las tiendas hasta los estudios detrás de ellas. Filtra por tecnología."
   },
   "posts": {
     "subtitle": "Artículos, posts y videos que he publicado sobre lo que construyo y aprendo.",

@@ -10,7 +10,7 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://rogeriodocarmo.com";
   const locales = ["pt-BR", "en", "es"];
-  const pages = ["", "/tech-stack", "/posts"];
+  const pages = ["", "/tech-stack", "/posts", "/projects"];
 
   const sitemap: MetadataRoute.Sitemap = [];
 

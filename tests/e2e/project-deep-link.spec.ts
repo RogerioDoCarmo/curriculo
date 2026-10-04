@@ -140,14 +140,15 @@ test.describe("Project deep links", () => {
     // Rather than round-tripping through the clipboard (permission-gated), open
     // the project, read the URL the app produced, and navigate to it fresh.
     await page.goto("/en", { waitUntil: "domcontentloaded" });
-    await openProjectDetail(page, /^view details for android native crud$/i);
+    // INCT, not the oldest project: the home page shows only the first three.
+    await openProjectDetail(page, /^view details for inct gnss app$/i);
 
     const url = page.url();
-    expect(url).toContain("?project=android-study-app");
+    expect(url).toContain("?project=inct-gnss-app");
 
     await page.goto(url, { waitUntil: "domcontentloaded" });
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 10000 });
-    await expect(dialog.getByRole("heading", { name: /android native crud/i })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: /inct gnss app/i })).toBeVisible();
   });
 });
