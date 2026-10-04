@@ -51,16 +51,49 @@ export function withProjectParam(search: string, projectId: string | null): stri
 
 /**
  * Builds the same-page URL to write into history when a project opens or closes.
- * Keeps the current path and any unrelated params, and always ends on the
- * projects hash so back/forward still land on the section.
+ * Keeps the current path and any unrelated params (such as the posts page's
+ * technology filter). It ends on the projects hash by default so back/forward
+ * still land on the home page section; the projects page has no section to land
+ * on and passes `hash: null`.
  */
 export function buildProjectHistoryUrl(params: {
   readonly pathname: string;
   readonly search: string;
   readonly projectId: string | null;
+  readonly hash?: string | null;
 }): string {
-  const { pathname, search, projectId } = params;
-  return `${pathname}${withProjectParam(search, projectId)}#${PROJECTS_SECTION_ID}`;
+  const { pathname, search, projectId, hash = PROJECTS_SECTION_ID } = params;
+  const suffix = hash === null ? "" : `#${hash}`;
+  return `${pathname}${withProjectParam(search, projectId)}${suffix}`;
+}
+
+/** Query-string key naming the technology the projects page is filtered to. */
+export const TECH_QUERY_PARAM = "tech";
+
+/** The technology out of a location search string, or null when absent or empty. */
+export function readTechParam(search: string): string | null {
+  const value = new URLSearchParams(search).get(TECH_QUERY_PARAM);
+  return value === "" ? null : value;
+}
+
+/** `search` with the technology param set, or removed when null or empty. Other params are kept. */
+export function withTechParam(search: string, tech: string | null): string {
+  const params = new URLSearchParams(search);
+  if (tech === null || tech === "") {
+    params.delete(TECH_QUERY_PARAM);
+  } else {
+    params.set(TECH_QUERY_PARAM, tech);
+  }
+  const query = params.toString();
+  return query === "" ? "" : `?${query}`;
+}
+
+/**
+ * Path of the projects page. The trailing slash matches `trailingSlash: true`
+ * in next.config.js, so visitors don't eat a redirect.
+ */
+export function getProjectsPagePath(locale: string): string {
+  return `/${locale}/projects/`;
 }
 
 /**
@@ -95,4 +128,19 @@ export function buildProjectShareUrl(params: {
   const base = stripTrailingSlashes(origin);
   const query = `${PROJECT_QUERY_PARAM}=${encodeURIComponent(projectId)}`;
   return `${base}/${locale}/?${query}#${PROJECTS_SECTION_ID}`;
+}
+
+/**
+ * The absolute URL for sharing a project from the projects page, e.g.
+ * `https://site.dev/en/projects/?project=miroji`. The home page keeps its own
+ * link (`buildProjectShareUrl`), which older shared links already use.
+ */
+export function buildProjectsPageShareUrl(params: {
+  readonly origin: string;
+  readonly locale: string;
+  readonly projectId: string;
+}): string {
+  const { origin, locale, projectId } = params;
+  const base = stripTrailingSlashes(origin);
+  return `${base}${getProjectsPagePath(locale)}?${PROJECT_QUERY_PARAM}=${encodeURIComponent(projectId)}`;
 }

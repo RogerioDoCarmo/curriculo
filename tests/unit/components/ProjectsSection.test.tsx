@@ -19,6 +19,7 @@ const messages: AbstractIntlMessages = {
     filterByTech: "Filter by technology",
     all: "All",
     noMatch: "No projects match your filter",
+    viewAll: "View all projects",
     viewDetails: "View details for",
     previousProject: "Previous project",
     nextProject: "Next project",
@@ -149,39 +150,6 @@ describe("ProjectsSection Component", () => {
     images.forEach((img) => {
       expect(img).toHaveAttribute("alt");
       expect(img.getAttribute("alt")).not.toBe("");
-    });
-  });
-
-  it("renders technology filter buttons", () => {
-    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
-    const filterGroup = screen.getByRole("group", { name: /filter by technology/i });
-    expect(filterGroup).toBeInTheDocument();
-  });
-
-  it("filters projects by technology when filter button is clicked", async () => {
-    const user = userEvent.setup();
-    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
-    // Find the Next.js filter button (in the filter group)
-    const filterButtons = screen.getAllByRole("button", { name: "Next.js" });
-    await user.click(filterButtons[0]);
-    await waitFor(() => {
-      expect(screen.getByText("Portfolio Website")).toBeInTheDocument();
-      expect(screen.queryByText("E-Commerce App")).not.toBeInTheDocument();
-    });
-  });
-
-  it("shows all projects when 'All' filter is selected", async () => {
-    const user = userEvent.setup();
-    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
-    // Filter by Next.js first
-    const nextjsButtons = screen.getAllByRole("button", { name: "Next.js" });
-    await user.click(nextjsButtons[0]);
-    // Then click All
-    const allButton = screen.getByRole("button", { name: "All" });
-    await user.click(allButton);
-    await waitFor(() => {
-      expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
-      expect(screen.getByText("Portfolio Website")).toBeInTheDocument();
     });
   });
 
@@ -397,18 +365,119 @@ describe("ProjectsSection Component", () => {
     expect(document.getElementById("projects")).toHaveAttribute("tabIndex", "-1");
   });
 
-  it("shows empty state message when no projects match filter", async () => {
-    const user = userEvent.setup();
-    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
-    // Filter by a tech that only matches one project, then filter by something else
-    // to trigger the "no match" state — click TypeScript filter then Firebase filter
-    const typescriptBtn = screen.getByRole("button", { name: "TypeScript" });
-    await user.click(typescriptBtn);
-    // Now click TypeScript again to deselect (shows all), then click Firebase
-    await user.click(typescriptBtn);
-    // All projects visible again
-    await waitFor(() => {
-      expect(screen.getByText("E-Commerce App")).toBeInTheDocument();
+  describe("the first three projects and the projects page", () => {
+    const project = (id: string, title: string, featured: boolean, date: string): Project => ({
+      id,
+      title,
+      description: `${title} description.`,
+      technologies: ["TypeScript"],
+      images: [],
+      featured,
+      date,
+    });
+
+    // Deliberately not in display order. Display order is featured first, then
+    // newest: Featured New, Featured Old, Recent | Middle, Oldest.
+    const manyProjects: Project[] = [
+      project("middle", "Middle", false, "2023-01-01"),
+      project("featured-old", "Featured Old", true, "2021-06-01"),
+      project("oldest", "Oldest", false, "2017-09-01"),
+      project("recent", "Recent", false, "2026-10-04"),
+      project("featured-new", "Featured New", true, "2026-08-18"),
+    ];
+
+    const cardTitles = () => screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
+
+    it("shows only the first three, featured first and then newest", () => {
+      renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+
+      expect(cardTitles()).toEqual(["Featured New", "Featured Old", "Recent"]);
+      expect(screen.queryByText("Middle")).not.toBeInTheDocument();
+      expect(screen.queryByText("Oldest")).not.toBeInTheDocument();
+    });
+
+    it("shows every project when there are three or fewer", () => {
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      expect(cardTitles()).toHaveLength(3);
+    });
+
+    it("leaves the technology filter to the projects page", () => {
+      renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+
+      expect(
+        screen.queryByRole("group", { name: /filter by technology/i })
+      ).not.toBeInTheDocument();
+      expect(document.querySelectorAll("button[aria-pressed]")).toHaveLength(0);
+    });
+
+    it("links to the projects page with the active locale", () => {
+      // next/link drops the trailing slash under Jest (next.config.js isn't
+      // loaded); the built page keeps it, which the E2E spec checks.
+      const { unmount } = renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+      expect(screen.getByRole("link", { name: "View all projects" }).getAttribute("href")).toMatch(
+        /^\/en\/projects\/?$/
+      );
+      unmount();
+
+      render(
+        <NextIntlClientProvider locale="pt-BR" messages={messages}>
+          <ProjectsSection projects={manyProjects} locale="pt-BR" />
+        </NextIntlClientProvider>
+      );
+      expect(screen.getByRole("link", { name: "View all projects" }).getAttribute("href")).toMatch(
+        /^\/pt-BR\/projects\/?$/
+      );
+    });
+
+    it("steps through the three on screen, wrapping within them", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for recent/i }));
+      const dialog = await screen.findByRole("dialog");
+
+      // Next from the last one shown wraps to the first, not on to "Middle".
+      await user.click(within(dialog).getByRole("button", { name: "Next project" }));
+      expect(within(dialog).getByRole("heading", { name: "Featured New" })).toBeInTheDocument();
+
+      // Previous from the first wraps to the last one shown, not to "Oldest".
+      await user.click(within(dialog).getByRole("button", { name: "Previous project" }));
+      expect(within(dialog).getByRole("heading", { name: "Recent" })).toBeInTheDocument();
+    });
+
+    it("opens a deep link to a project that isn't shown, without Prev/Next", async () => {
+      window.history.replaceState(null, "", "/en/?project=oldest#projects");
+      renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+
+      const dialog = await screen.findByRole("dialog");
+      expect(within(dialog).getByRole("heading", { name: "Oldest" })).toBeInTheDocument();
+      expect(
+        within(dialog).queryByRole("button", { name: "Next project" })
+      ).not.toBeInTheDocument();
+      expect(
+        within(dialog).queryByRole("button", { name: "Previous project" })
+      ).not.toBeInTheDocument();
+    });
+
+    it("keeps the home page share link, which older shared links already use", async () => {
+      const user = userEvent.setup();
+      const writeText = jest.fn().mockResolvedValue(undefined);
+      renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText },
+        configurable: true,
+        writable: true,
+      });
+
+      await user.click(screen.getByRole("button", { name: /view details for featured new/i }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: /copy link/i }));
+
+      expect(writeText).toHaveBeenCalledWith("http://localhost/en/?project=featured-new#projects");
+      Object.defineProperty(navigator, "clipboard", {
+        value: undefined,
+        configurable: true,
+        writable: true,
+      });
     });
   });
 

@@ -9,10 +9,15 @@
 import {
   PROJECT_QUERY_PARAM,
   PROJECTS_SECTION_ID,
+  TECH_QUERY_PARAM,
   buildProjectHistoryUrl,
   buildProjectShareUrl,
+  buildProjectsPageShareUrl,
+  getProjectsPagePath,
   readProjectParam,
+  readTechParam,
   withProjectParam,
+  withTechParam,
 } from "@/lib/project-deep-link";
 
 describe("project-deep-link", () => {
@@ -187,6 +192,143 @@ describe("project-deep-link", () => {
       expect(buildProjectShareUrl({ origin: "", locale: "en", projectId: "miroji" })).toBe(
         "/en/?project=miroji#projects"
       );
+    });
+  });
+});
+
+describe("project-deep-link — the projects page", () => {
+  describe("buildProjectHistoryUrl hash option", () => {
+    it("ends on the projects hash by default (the home page section)", () => {
+      expect(buildProjectHistoryUrl({ pathname: "/en/", search: "", projectId: "miroji" })).toBe(
+        "/en/?project=miroji#projects"
+      );
+    });
+
+    it("uses a hash that is given", () => {
+      expect(
+        buildProjectHistoryUrl({ pathname: "/en/", search: "", projectId: "miroji", hash: "x" })
+      ).toBe("/en/?project=miroji#x");
+    });
+
+    it("adds no hash at all for null (the projects page has no section)", () => {
+      expect(
+        buildProjectHistoryUrl({
+          pathname: "/en/projects/",
+          search: "",
+          projectId: "miroji",
+          hash: null,
+        })
+      ).toBe("/en/projects/?project=miroji");
+    });
+
+    it("closes cleanly on the page: no dangling question mark, no hash", () => {
+      expect(
+        buildProjectHistoryUrl({
+          pathname: "/en/projects/",
+          search: "?project=miroji",
+          projectId: null,
+          hash: null,
+        })
+      ).toBe("/en/projects/");
+    });
+
+    it("keeps the technology filter while a project opens or closes", () => {
+      expect(
+        buildProjectHistoryUrl({
+          pathname: "/en/projects/",
+          search: "?tech=Kotlin",
+          projectId: "miroji",
+          hash: null,
+        })
+      ).toBe("/en/projects/?tech=Kotlin&project=miroji");
+      expect(
+        buildProjectHistoryUrl({
+          pathname: "/en/projects/",
+          search: "?tech=Kotlin&project=miroji",
+          projectId: null,
+          hash: null,
+        })
+      ).toBe("/en/projects/?tech=Kotlin");
+    });
+  });
+
+  describe("technology param", () => {
+    it("is named 'tech'", () => {
+      expect(TECH_QUERY_PARAM).toBe("tech");
+    });
+
+    it.each([
+      ["?tech=Kotlin", "Kotlin"],
+      ["?project=miroji&tech=Expo%20SDK%2057", "Expo SDK 57"],
+      ["?tech=GNSS%2FGPS", "GNSS/GPS"],
+    ])("reads %s as %p", (search, expected) => {
+      expect(readTechParam(search)).toBe(expected);
+    });
+
+    it.each(["", "?", "?tech=", "?project=miroji"])("reads %p as null", (search) => {
+      expect(readTechParam(search)).toBeNull();
+    });
+
+    it("writes a technology, encoding spaces and slashes", () => {
+      expect(withTechParam("", "Kotlin")).toBe("?tech=Kotlin");
+      expect(withTechParam("", "Expo SDK 57")).toBe("?tech=Expo+SDK+57");
+      expect(withTechParam("", "GNSS/GPS")).toBe("?tech=GNSS%2FGPS");
+    });
+
+    it("replaces an existing value and keeps other params", () => {
+      expect(withTechParam("?tech=Java&project=miroji", "Kotlin")).toBe(
+        "?tech=Kotlin&project=miroji"
+      );
+    });
+
+    it("removes the param for null or an empty string, leaving the rest", () => {
+      expect(withTechParam("?tech=Java", null)).toBe("");
+      expect(withTechParam("?tech=Java&project=miroji", "")).toBe("?project=miroji");
+    });
+
+    it("round-trips through readTechParam", () => {
+      expect(readTechParam(withTechParam("", "Expo SDK 57"))).toBe("Expo SDK 57");
+    });
+  });
+
+  describe("getProjectsPagePath", () => {
+    it.each([
+      ["en", "/en/projects/"],
+      ["pt-BR", "/pt-BR/projects/"],
+      ["es", "/es/projects/"],
+    ])("builds the path for %s, with a trailing slash", (locale, expected) => {
+      expect(getProjectsPagePath(locale)).toBe(expected);
+    });
+  });
+
+  describe("buildProjectsPageShareUrl", () => {
+    it("builds an absolute link to the project on the projects page", () => {
+      expect(
+        buildProjectsPageShareUrl({
+          origin: "https://rogeriodocarmo.com",
+          locale: "en",
+          projectId: "omnimorse",
+        })
+      ).toBe("https://rogeriodocarmo.com/en/projects/?project=omnimorse");
+    });
+
+    it("uses the locale, tolerates trailing slashes and percent-encodes the id", () => {
+      expect(
+        buildProjectsPageShareUrl({
+          origin: "http://localhost:3000///",
+          locale: "pt-BR",
+          projectId: "a b",
+        })
+      ).toBe("http://localhost:3000/pt-BR/projects/?project=a%20b");
+    });
+
+    it("round-trips through readProjectParam", () => {
+      const url = buildProjectsPageShareUrl({
+        origin: "https://x.dev",
+        locale: "en",
+        projectId: "a b&c/é",
+      });
+      expect(readProjectParam(new URL(url).search)).toBe("a b&c/é");
     });
   });
 });
