@@ -14,9 +14,11 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-const NEWEST_EN = "Two AI agents, one Git repository";
+const VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
+const NEWEST_EN = "Two AI agents, one Git repository"; // newest LinkedIn post
 const OLDEST_EN = "Useful tools for beginners in web development";
-const TOTAL_POSTS = 6;
+const TOTAL_POSTS = 7;
+const LINKEDIN_POSTS = 6;
 
 /** The card buttons on the page (each card is one button named "View details for …", per locale). */
 const cards = (page: Page) =>
@@ -48,7 +50,7 @@ test.describe("Posts page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names[0]).toBe(`View details for ${NEWEST_EN}`);
+    expect(names[0]).toBe(`View details for ${VIDEO_EN}`);
     expect(names.at(-1)).toBe(`View details for ${OLDEST_EN}`);
   });
 
@@ -60,17 +62,17 @@ test.describe("Posts page", () => {
 
     await expect(chip(page, "LinkedIn")).toHaveAttribute("aria-pressed", "true");
     await expect(chip(page, "All")).toHaveAttribute("aria-pressed", "false");
-    // Every post so far is on LinkedIn.
-    await expect(cards(page)).toHaveCount(TOTAL_POSTS);
+    // Everything except the YouTube video.
+    await expect(cards(page)).toHaveCount(LINKEDIN_POSTS);
   });
 
-  test("says so when a platform has no posts yet", async ({ page }) => {
+  test("filters to the YouTube video, and clears the filter again", async ({ page }) => {
     await page.goto("/en/posts/");
 
     await chip(page, "YouTube").click();
 
-    await expect(page.getByRole("status")).toHaveText("No YouTube posts yet.");
-    await expect(cards(page)).toHaveCount(0);
+    await expect(cards(page)).toHaveCount(1);
+    await expect(page.getByRole("button", { name: `View details for ${VIDEO_EN}` })).toBeVisible();
 
     // Clicking the active chip again clears the filter.
     await chip(page, "YouTube").click();
@@ -91,7 +93,7 @@ test.describe("Posts page", () => {
     await page.goto("/en/posts/?platform=youtube");
 
     await expect(chip(page, "YouTube")).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("status")).toHaveText("No YouTube posts yet.");
+    await expect(cards(page)).toHaveCount(1);
   });
 
   test("shows everything for an unknown platform in the URL", async ({ page }) => {
@@ -125,7 +127,7 @@ test.describe("Posts page", () => {
   test("steps through every post with Prev/Next, wrapping", async ({ page }) => {
     await page.goto("/en/posts/");
 
-    await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
+    await page.getByRole("button", { name: `View details for ${VIDEO_EN}` }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByRole("button", { name: "Previous post" }).click();
 
@@ -167,7 +169,10 @@ test.describe("Posts page", () => {
     await expect(chip(page, "Todas")).toHaveAttribute("aria-pressed", "true");
 
     await chip(page, "YouTube").click();
-    await expect(page.getByRole("status")).toHaveText("Ainda não há publicações no YouTube.");
+    // The video is in English, so on the Portuguese page it says so (WebKit
+    // capitalises the language name, Chrome does not).
+    await expect(cards(page)).toHaveCount(1);
+    await expect(cards(page).first()).toContainText(/em inglês/i);
   });
 
   test("is localized in Spanish", async ({ page }) => {
