@@ -138,6 +138,7 @@ function parseProjectFile(filePath: string): Project {
     images: Array.isArray(data.images) ? data.images.map(String) : [],
     liveUrl: optionalString(data.liveUrl),
     repoUrl: optionalString(data.repoUrl),
+    videoUrl: optionalString(data.videoUrl),
     appStoreUrl: optionalString(data.appStoreUrl),
     playStoreUrl: optionalString(data.playStoreUrl),
     fdroidUrl: optionalString(data.fdroidUrl),

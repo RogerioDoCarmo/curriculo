@@ -7,7 +7,7 @@ import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 import ProjectsSection from "@/components/ProjectsSection";
-import { trackProjectShare } from "@/lib/analytics";
+import { trackExternalLinkClick, trackProjectShare } from "@/lib/analytics";
 import type { Project } from "@/types/index";
 
 // Mock messages for next-intl
@@ -37,11 +37,14 @@ const messages: AbstractIntlMessages = {
     copyLink: "Copy link",
     linkCopied: "Link copied!",
     copyLinkFailed: "Couldn't copy the link",
+    watchVideo: "Watch video",
+    opensInNewTab: "(opens in a new tab)",
   },
 };
 
 jest.mock("@/lib/analytics", () => ({
   trackProjectShare: jest.fn(),
+  trackExternalLinkClick: jest.fn(),
 }));
 
 // Mock next/image
@@ -186,6 +189,68 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       const liveLink = screen.getByRole("link", { name: /live demo/i });
       expect(liveLink).toHaveAttribute("href", "https://example.com");
+    });
+  });
+
+  describe("video button", () => {
+    const withVideo: Project = {
+      ...sampleProjects[1],
+      id: "with-video",
+      title: "Video Project",
+      videoUrl: "https://youtu.be/CcyTyHB7n_M",
+    };
+
+    it("links to the project's YouTube video in a new tab", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={[withVideo]} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for video project/i }));
+
+      const link = await screen.findByRole("link", { name: /watch video/i });
+      expect(link).toHaveAttribute("href", "https://youtu.be/CcyTyHB7n_M");
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    });
+
+    it("names the link for screen readers, including that it opens a new tab", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={[withVideo]} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for video project/i }));
+
+      expect(
+        await screen.findByRole("link", {
+          name: "Watch video — Video Project (opens in a new tab)",
+        })
+      ).toBeInTheDocument();
+    });
+
+    it("hides the YouTube icon from assistive tech", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={[withVideo]} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for video project/i }));
+
+      const link = await screen.findByRole("link", { name: /watch video/i });
+      expect(link.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    });
+
+    it("tracks the outbound click", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={[withVideo]} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for video project/i }));
+      await user.click(await screen.findByRole("link", { name: /watch video/i }));
+
+      expect(trackExternalLinkClick).toHaveBeenCalledWith({
+        url: "https://youtu.be/CcyTyHB7n_M",
+        context: "projects",
+      });
+    });
+
+    it("shows no video button for a project without a video", async () => {
+      const user = userEvent.setup();
+      renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+      await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+      await screen.findByRole("dialog");
+      expect(screen.queryByRole("link", { name: /watch video/i })).not.toBeInTheDocument();
     });
   });
 

@@ -275,7 +275,9 @@
     "viewAll": "Ver todos os projetos",
     "pageTitle": "Projetos | Rogério do Carmo",
     "pageHeading": "Todos os projetos",
-    "pageSubtitle": "Tudo o que construí, dos apps nas lojas aos estudos por trás deles. Filtre por tecnologia."
+    "pageSubtitle": "Tudo o que construí, dos apps nas lojas aos estudos por trás deles. Filtre por tecnologia.",
+    "watchVideo": "Assistir ao vídeo",
+    "opensInNewTab": "(abre em nova aba)"
   },
   "posts": {
     "subtitle": "Artigos, posts e vídeos que publiquei sobre o que construo e aprendo.",

@@ -17,6 +17,7 @@ technologies:
   - EAS Build
   - Firebase Crashlytics
 repoUrl: https://github.com/RogerioDoCarmo/morse_app
+videoUrl: https://youtu.be/CcyTyHB7n_M
 images:
   - /images/projects/omnimorse-pt-BR.png
 ---

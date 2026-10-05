@@ -15,6 +15,8 @@ export interface Project {
   images: string[];
   liveUrl?: string;
   repoUrl?: string;
+  /** A YouTube video about the project — rendered as a "Watch video" button. */
+  videoUrl?: string;
   /** App Store listing URL — rendered as an official download badge. */
   appStoreUrl?: string;
   /** F-Droid listing URL — rendered as an official download badge. */
@@ -176,13 +178,7 @@ export type Theme = "light" | "dark";
 // ─── Navigation ──────────────────────────────────────────────────────────────
 
 export type SectionId =
-  | "home"
-  | "projects"
-  | "posts"
-  | "experience"
-  | "skills"
-  | "contact"
-  | "tech-stack";
+  "home" | "projects" | "posts" | "experience" | "skills" | "contact" | "tech-stack";
 
 export const SECTION_IDS: SectionId[] = [
   "home",
