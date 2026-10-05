@@ -86,8 +86,24 @@ for (let i = 1; i <= COPIES; i++) {
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
 
+    // Hypothesis under test: wait until the page actually produces frames
+    // before clicking. Records how long that took, for every copy.
+    const waitStart = Date.now();
+    let firstTicks = await rafTicks(page, 300);
+    let waitedForFrames = 0;
+    while (firstTicks === 0 && Date.now() - waitStart < 20_000) {
+      waitedForFrames = Date.now() - waitStart;
+      await page.waitForTimeout(250);
+      firstTicks = await rafTicks(page, 300);
+    }
+    console.log(
+      `PROBE-RAF copy=${i} initialDead=${waitedForFrames > 0} msUntilFramesFlow=${
+        firstTicks === 0 ? "NEVER" : Date.now() - waitStart
+      }`
+    );
     const before = {
-      rafTicksIn300ms: await rafTicks(page, 300),
+      rafTicksIn300ms: firstTicks,
+      msWaitedForFrames: waitedForFrames,
       state: await snapshot(page),
     };
     await pulseButton(page).click();
