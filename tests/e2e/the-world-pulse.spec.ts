@@ -11,6 +11,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
+import { waitForFrames, waitForHydrated } from "./helpers/stability";
 import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
 import { FilterPulseId, getFilterPulse } from "@/lib/filterPulses";
 
@@ -105,6 +106,8 @@ test.describe("The World pulse", () => {
 
   test("is the effect the navbar button triggers", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await expect(pulseButton(page)).toHaveAttribute("aria-label", /the world/i);
   });
 
@@ -121,6 +124,8 @@ test.describe("The World pulse", () => {
     // that stray animation and passed.
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).waitFor({ state: "visible" });
     await page.waitForTimeout(5000);
 
@@ -154,6 +159,8 @@ test.describe("The World pulse", () => {
   test("activates the grade layers and rings for the pulse, then goes quiet", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     // The layers are always mounted -- the clip-path transition needs a
     // previous value to animate from -- so what changes is the active class
@@ -201,6 +208,8 @@ test.describe("The World pulse", () => {
 
   test("grades through distinct beats — the layer colours actually change", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     // One sample per beat of the sequence.
     const beats = [0, 0.05, 0.18, 0.33, 0.43, 0.55];
@@ -215,6 +224,8 @@ test.describe("The World pulse", () => {
 
   test("settles into a dark tinted 'stopped time' state and then releases", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     // The held beat (46%-66% of the sequence) is the dark "stopped time" wash
     // the luminance layer carries.
@@ -234,6 +245,8 @@ test.describe("The World pulse", () => {
 
   test("opts into the ripple only when the registry enables it", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).click();
     await expect(page.locator("[data-testid='cinematic-layers']")).toHaveCount(1);
 
@@ -246,6 +259,8 @@ test.describe("The World pulse", () => {
   test("skips rings and grade layers entirely under reduced motion", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     await pulseButton(page).click();
 
@@ -266,6 +281,8 @@ test.describe("The World pulse", () => {
 test.describe("The World pulse — photosensitivity warning", () => {
   test("asks before playing anything on a first visit", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).click();
 
     const dialog = page.getByTestId("filter-pulse-warning");
@@ -278,6 +295,8 @@ test.describe("The World pulse — photosensitivity warning", () => {
 
   test("plays nothing when cancelled, and asks again next time", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).click();
 
     const dialog = page.getByTestId("filter-pulse-warning");
@@ -294,6 +313,8 @@ test.describe("The World pulse — photosensitivity warning", () => {
   test("plays the effect on continue, and stops asking afterwards", async ({ page }) => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).click();
 
     const dialog = page.getByTestId("filter-pulse-warning");
@@ -316,6 +337,8 @@ test.describe("The World pulse — photosensitivity warning", () => {
 
   test("is dismissible with ESC without playing", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
+    await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await pulseButton(page).click();
 
     const dialog = page.getByTestId("filter-pulse-warning");

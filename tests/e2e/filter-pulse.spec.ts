@@ -28,7 +28,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { acceptPulseWarningBeforeLoad } from "./helpers/filterPulseConsent";
-import { waitForHydrated } from "./helpers/stability";
+import { waitForFrames, waitForHydrated } from "./helpers/stability";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -64,6 +64,7 @@ test.describe("Filter Pulse button", () => {
   test("is present in the navbar", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await expect(pulseButton(page)).toBeVisible();
   });
 
@@ -71,6 +72,7 @@ test.describe("Filter Pulse button", () => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     // expect.poll retries the callback until the assertion holds (or times
     // out), instead of comparing two fixed-instant samples -- point-in-time
@@ -103,6 +105,7 @@ test.describe("Filter Pulse button", () => {
     test.setTimeout(45_000);
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     const button = pulseButton(page);
 
     await button.click();
@@ -117,6 +120,7 @@ test.describe("Filter Pulse button", () => {
     // theme-switching.spec.ts's use of the same pattern is skipped entirely.
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     const urlBefore = page.url();
 
     await pulseButton(page).click();
@@ -128,6 +132,7 @@ test.describe("Filter Pulse button", () => {
   test("is still present after navigating to another section", async ({ page }) => {
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
     await expect(pulseButton(page)).toBeVisible();
 
     await page
@@ -143,6 +148,7 @@ test.describe("Filter Pulse button", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     const button = pulseButton(page);
     await button.click();
@@ -169,6 +175,7 @@ test.describe("Filter Pulse button — mobile sidebar", () => {
   }) => {
     await page.goto(`${BASE_URL}/en`);
     await waitForHydrated(pulseButton(page));
+    await waitForFrames(page);
 
     const hamburger = page.getByRole("button", { name: /open menu|toggle menu|menu/i });
     await hamburger.click();

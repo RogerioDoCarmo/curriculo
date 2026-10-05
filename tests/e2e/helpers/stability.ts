@@ -54,3 +54,34 @@ export async function reloadWithRetry(page: Page, attempts = 3): Promise<void> {
     }
   }
 }
+
+/**
+ * Waits until the page is actually producing frames, i.e. `requestAnimationFrame`
+ * callbacks run.
+ *
+ * On CI's Linux WebKit and mobile-Safari roughly one page in five starts with
+ * rAF not firing at all although it reports visible and focused (measured: 19
+ * of 96 fresh pages; frames then began within 10s, always). Anything that is
+ * sequenced by rAF, like the filter pulse's double-rAF start, simply never
+ * begins until then, which reads as an animation that "does not start" and
+ * fails any fixed-length poll. Waiting here turns that into a short, bounded
+ * wait before the interaction.
+ */
+export async function waitForFrames(page: Page, timeout = 30_000): Promise<void> {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          () =>
+            new Promise<boolean>((resolve) => {
+              const timer = setTimeout(() => resolve(false), 300);
+              requestAnimationFrame(() => {
+                clearTimeout(timer);
+                resolve(true);
+              });
+            })
+        ),
+      { timeout, intervals: [100, 250, 500], message: "the page never produced an animation frame" }
+    )
+    .toBe(true);
+}
