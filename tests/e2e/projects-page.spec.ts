@@ -178,6 +178,34 @@ test.describe("Projects page", () => {
     });
   });
 
+  test("OmniMorse's dialog has a button to its YouTube video, in every language", async ({
+    page,
+  }) => {
+    for (const [locale, label] of [
+      ["en", "Watch video"],
+      ["pt-BR", "Assistir ao vídeo"],
+      ["es", "Ver el video"],
+    ]) {
+      await page.goto(`/${locale}/projects/?project=omnimorse`, {
+        waitUntil: "domcontentloaded",
+      });
+
+      const dialog = page.getByRole("dialog");
+      const link = dialog.getByRole("link", { name: new RegExp(`^${label}`) });
+      await expect(link).toBeVisible({ timeout: 10000 });
+      await expect(link).toHaveAttribute("href", "https://youtu.be/CcyTyHB7n_M");
+      await expect(link).toHaveAttribute("target", "_blank");
+    }
+  });
+
+  test("a project without a video has no video button", async ({ page }) => {
+    await page.goto("/en/projects/?project=miroji", { waitUntil: "domcontentloaded" });
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("heading", { name: "Miroji" })).toBeVisible({ timeout: 10000 });
+    await expect(dialog.getByRole("link", { name: /watch video/i })).toHaveCount(0);
+  });
+
   test("is localized in Portuguese", async ({ page }) => {
     await page.goto("/pt-BR/projects/", { waitUntil: "domcontentloaded" });
 

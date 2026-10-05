@@ -9,8 +9,9 @@ import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import MarkdownText from "@/components/MarkdownText";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { trackProjectShare } from "@/lib/analytics";
+import { trackExternalLinkClick, trackProjectShare } from "@/lib/analytics";
 import { getTechColorClasses } from "@/lib/tag-colors";
+import { PlatformIcon } from "@/components/PostsSection/PostParts";
 
 /**
  * Pieces shared by the home page section (the first three projects) and the
@@ -357,6 +358,21 @@ function ProjectDetail({ project, locale, shareUrl }: ProjectDetailProps) {
             aria-label={`${t("projects.repository")} ${project.title}`}
           >
             {t("projects.repository")}
+          </a>
+        )}
+        {project.videoUrl && (
+          <a
+            href={project.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackExternalLinkClick({ url: project.videoUrl ?? "", context: "projects" })
+            }
+            className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+            aria-label={`${t("projects.watchVideo")} — ${project.title} ${t("projects.opensInNewTab")}`}
+          >
+            <PlatformIcon platform="youtube" className="h-4 w-4 text-red-600 dark:text-red-400" />
+            {t("projects.watchVideo")}
           </a>
         )}
         <button
