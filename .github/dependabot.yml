@@ -63,14 +63,17 @@ updates:
 
     # Ignore specific dependencies
     ignore:
-      # Playwright 1.63's WebKit hangs the exit-intent modal specs
-      # (email-subscribe) and fails "the world pulse stays inert" -- develop
-      # passes them on 1.61 (#366, #368). Skip 1.63.x; 1.64 is still proposed.
-      # Remove once those specs pass on a newer Playwright.
+      # Playwright 1.62 and 1.63 regress WebKit on this suite. 1.63 hangs the
+      # exit-intent modal specs (email-subscribe) and fails "the world pulse
+      # stays inert" (#366, #368). 1.62.1 fails mobile-safari cookie-consent
+      # "Change preferences" specs (437/477) and develop went red after #380;
+      # an A/B on the E2E matrix was green twice on 1.61.0 and red on 1.62.1.
+      # develop passes everything on 1.61.0, which is pinned exactly in
+      # package.json. Remove once those specs pass on a newer Playwright.
       - dependency-name: "@playwright/test"
-        versions: ["1.63.x"]
+        versions: ["1.62.x", "1.63.x"]
       - dependency-name: "playwright"
-        versions: ["1.63.x"]
+        versions: ["1.62.x", "1.63.x"]
 
     # Allow both direct and indirect dependencies
     allow:
