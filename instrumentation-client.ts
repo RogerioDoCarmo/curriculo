@@ -39,6 +39,25 @@ Sentry.init({
     "Non-Error promise rejection captured",
   ],
 
+  // v11 replaced `sendDefaultPii` with `dataCollection`, and leaving it unset
+  // now collects cookies, user info and request headers/bodies. Pin the v10
+  // restrictive baseline so the upgrade doesn't widen what a consent-gated
+  // site sends.
+  dataCollection: {
+    userInfo: false,
+    cookies: false,
+    httpHeaders: {
+      request: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+      response: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+    },
+    httpBodies: [],
+    urlQueryParams: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+    genAI: { inputs: false, outputs: false },
+    databaseQueryData: false,
+    queues: false,
+    graphQL: { document: false, variables: false },
+  },
+
   beforeSend(event) {
     // Strip PII from error events
     if (event.user) {

@@ -40,7 +40,7 @@
     "resume-editor": "node docs/personal-notes/career/editor-server.mjs"
   },
   "dependencies": {
-    "@sentry/nextjs": "^10.50.0",
+    "@sentry/nextjs": "^11.6.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "@vitest/mocker": "^5.0.3",
