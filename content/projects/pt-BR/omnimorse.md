@@ -1,7 +1,7 @@
 ---
 id: omnimorse
 title: OmniMorse
-description: Tradutor de código Morse para Android e iOS (digite, fale ou toque o código; reproduza como som, flash, tela ou vibração), construído como estudo de caso de arquitetura hexagonal e testes. Atualmente em teste, ainda fora das lojas
+description: Tradutor de código Morse para Android e iOS (digite, fale ou toque o código; reproduza como som, flash, tela ou vibração), construído como estudo de caso de arquitetura hexagonal e testes. Já disponível na App Store
 featured: false
 date: 2026-10-04
 technologies:
@@ -17,6 +17,7 @@ technologies:
   - EAS Build
   - Firebase Crashlytics
 repoUrl: https://github.com/RogerioDoCarmo/morse_app
+appStoreUrl: https://apps.apple.com/us/app/omni-morse/id6805992452
 videoUrl: https://youtu.be/CcyTyHB7n_M
 images:
   - /images/projects/omnimorse-pt-BR.png
@@ -30,7 +31,7 @@ Uma mensagem pode sair como som, como flash da câmera, como tela piscando ou co
 
 ## Status
 
-O OmniMorse está em fase de testes e ainda não está nas lojas de aplicativos. O código-fonte é aberto sob a licença MIT, e a [política de privacidade](https://rogeriodocarmo.github.io/morse_app/privacy-policy.html) do projeto já está publicada.
+O OmniMorse já está disponível na App Store para iOS. A versão para Android ainda está em fase de testes via Firebase App Distribution e ainda não foi publicada na Google Play. O código-fonte é aberto sob a licença MIT, e a [política de privacidade](https://rogeriodocarmo.github.io/morse_app/privacy-policy.html) do projeto já está publicada.
 
 ## Engenharia
 
@@ -42,5 +43,6 @@ O OmniMorse está em fase de testes e ainda não está nas lojas de aplicativos.
 
 ## Links
 
+- [App Store](https://apps.apple.com/us/app/omni-morse/id6805992452) — iPhone e iPad
 - [Código-fonte no GitHub](https://github.com/RogerioDoCarmo/morse_app) — licença MIT
 - [Política de privacidade](https://rogeriodocarmo.github.io/morse_app/privacy-policy.html)
