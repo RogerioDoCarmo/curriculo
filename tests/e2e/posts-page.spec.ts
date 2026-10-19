@@ -15,10 +15,10 @@ import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 const VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
-const NEWEST_EN = "Two AI agents, one Git repository"; // newest LinkedIn post
+const NEWEST_EN = "Launching OmniMorse"; // newest post overall, and newest LinkedIn post
 const OLDEST_EN = "Useful tools for beginners in web development";
-const TOTAL_POSTS = 7;
-const LINKEDIN_POSTS = 6;
+const TOTAL_POSTS = 8;
+const LINKEDIN_POSTS = 7;
 
 /** The card buttons on the page (each card is one button named "View details for …", per locale). */
 const cards = (page: Page) =>
@@ -50,7 +50,7 @@ test.describe("Posts page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names[0]).toBe(`View details for ${VIDEO_EN}`);
+    expect(names[0]).toBe(`View details for ${NEWEST_EN}`);
     expect(names.at(-1)).toBe(`View details for ${OLDEST_EN}`);
   });
 
@@ -117,7 +117,7 @@ test.describe("Posts page", () => {
     await page.goto("/en/posts/");
 
     await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
-    await expect(page).toHaveURL(/\?post=ai-agents-git-worktrees$/);
+    await expect(page).toHaveURL(/\?post=omnimorse-release-post$/);
 
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toBeHidden();
@@ -127,7 +127,7 @@ test.describe("Posts page", () => {
   test("steps through every post with Prev/Next, wrapping", async ({ page }) => {
     await page.goto("/en/posts/");
 
-    await page.getByRole("button", { name: `View details for ${VIDEO_EN}` }).click();
+    await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByRole("button", { name: "Previous post" }).click();
 
@@ -153,7 +153,7 @@ test.describe("Posts page", () => {
     await expect(page.getByRole("dialog").getByRole("status")).toHaveText("Link copied!");
 
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toBe(`${baseURL}/en/posts/?post=ai-agents-git-worktrees`);
+    expect(copied).toBe(`${baseURL}/en/posts/?post=omnimorse-release-post`);
 
     // And the link itself works: it reopens the same post.
     await page.goto(copied);
