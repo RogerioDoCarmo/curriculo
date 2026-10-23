@@ -125,6 +125,17 @@ function PrivacyPolicyContent() {
           </ul>
         </div>
 
+        {/* Connectivity Check */}
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-3">{t("dataCollection.connectivity.title")}</h3>
+          <p className="mb-3">{t("dataCollection.connectivity.description")}</p>
+          <ul className="list-disc list-inside mb-4 ml-4 space-y-1">
+            <li>{t("dataCollection.connectivity.request")}</li>
+            <li>{t("dataCollection.connectivity.noData")}</li>
+            <li>{t("dataCollection.connectivity.frequency")}</li>
+          </ul>
+        </div>
+
         {/* Browser Storage */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-3">{t("dataCollection.browserStorage.title")}</h3>

@@ -641,6 +641,16 @@
         "purpose": "Anonymous performance monitoring and aggregate traffic analytics (no cookies)",
         "privacyPolicyLabel": "Privacy Policy",
         "privacyPolicyLink": "Vercel Privacy Policy"
+      },
+      "connectivityCheck": {
+        "title": "Connectivity Check (Cloudflare & Google)",
+        "description": "To tell a real internet outage apart from the browser's own offline flag, a small widget periodically sends a no-cors reachability check. It sets no cookies.",
+        "providerLabel": "Providers",
+        "provider": "Cloudflare, Inc. and Google LLC",
+        "purposeLabel": "Purpose",
+        "purpose": "Reachability check only — not used for tracking or analytics",
+        "requestLabel": "Request",
+        "request": "A HEAD request to cp.cloudflare.com, then to www.gstatic.com if needed, on page load and then about every 30 seconds while offline"
       }
     },
     "cookieConsent": {
@@ -748,6 +758,13 @@
         "optIn": "We collect Firebase Cloud Messaging (FCM) tokens",
         "tokens": "Tokens are used only to send you notifications about new content",
         "revoke": "You can revoke notification permission at any time in your browser settings"
+      },
+      "connectivity": {
+        "title": "Connectivity Check",
+        "description": "To tell a real internet outage apart from your browser's own offline flag, the site periodically sends a network reachability check:",
+        "request": "A no-cors HEAD request to Cloudflare (cp.cloudflare.com) and, if needed, Google (www.gstatic.com) connectivity-check endpoints",
+        "noData": "The request carries no cookies, no Referer header, and no personal data — only that a response arrived counts as reachable",
+        "frequency": "Checked on page load, then about every 30 seconds while the connection appears to be down"
       },
       "browserStorage": {
         "title": "Browser Storage (localStorage) - NOT Cookies",

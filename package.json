@@ -40,6 +40,7 @@
     "resume-editor": "node docs/personal-notes/career/editor-server.mjs"
   },
   "dependencies": {
+    "@rogeriodocarmo/offline-detector-web": "^0.1.1",
     "@sentry/nextjs": "^11.6.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
@@ -60,6 +61,7 @@
     "zod": "^4.x"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@chromatic-com/playwright": "^1.0.0",
     "@chromatic-com/storybook": "^5.4.0",
     "@next/bundle-analyzer": "^16.3.8",

@@ -345,6 +345,26 @@ function CookiePolicyContent() {
             </a>
           </p>
         </div>
+
+        {/* Connectivity Check (offline detector reachability probe, cookieless) */}
+        <div className="mb-4">
+          <h3 className="text-xl font-semibold mb-3">
+            {t("thirdPartyCookies.connectivityCheck.title")}
+          </h3>
+          <p className="mb-3">{t("thirdPartyCookies.connectivityCheck.description")}</p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.connectivityCheck.providerLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.connectivityCheck.provider")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.connectivityCheck.purposeLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.connectivityCheck.purpose")}
+          </p>
+          <p className="mb-2">
+            <strong>{t("thirdPartyCookies.connectivityCheck.requestLabel")}:</strong>{" "}
+            {t("thirdPartyCookies.connectivityCheck.request")}
+          </p>
+        </div>
       </section>
 
       {/* Cookie Consent */}
