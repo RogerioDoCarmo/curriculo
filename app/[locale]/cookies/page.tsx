@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { SUPPORTED_LOCALES } from "@/types/index";
@@ -26,6 +27,43 @@ export default async function CookiePolicyPage({ params }: Props) {
   setRequestLocale(locale);
 
   return <CookiePolicyContent />;
+}
+
+/** Shared shape for a third-party service entry: title, description, then provider/purpose/extra rows. */
+function ThirdPartyServiceEntry({
+  title,
+  description,
+  providerLabel,
+  provider,
+  purposeLabel,
+  purpose,
+  extraLabel,
+  extra,
+}: {
+  readonly title: string;
+  readonly description: string;
+  readonly providerLabel: string;
+  readonly provider: ReactNode;
+  readonly purposeLabel: string;
+  readonly purpose: ReactNode;
+  readonly extraLabel: string;
+  readonly extra: ReactNode;
+}) {
+  return (
+    <div className="mb-4">
+      <h3 className="text-xl font-semibold mb-3">{title}</h3>
+      <p className="mb-3">{description}</p>
+      <p className="mb-2">
+        <strong>{providerLabel}:</strong> {provider}
+      </p>
+      <p className="mb-2">
+        <strong>{purposeLabel}:</strong> {purpose}
+      </p>
+      <p className="mb-2">
+        <strong>{extraLabel}:</strong> {extra}
+      </p>
+    </div>
+  );
 }
 
 function CookiePolicyContent() {
@@ -295,21 +333,15 @@ function CookiePolicyContent() {
         <p className="mb-4">{t("thirdPartyCookies.intro")}</p>
 
         {/* Firebase Analytics */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-3">
-            {t("thirdPartyCookies.firebaseAnalytics.title")}
-          </h3>
-          <p className="mb-3">{t("thirdPartyCookies.firebaseAnalytics.description")}</p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.firebaseAnalytics.providerLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.firebaseAnalytics.provider")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.firebaseAnalytics.purposeLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.firebaseAnalytics.purpose")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.firebaseAnalytics.privacyPolicyLabel")}:</strong>{" "}
+        <ThirdPartyServiceEntry
+          title={t("thirdPartyCookies.firebaseAnalytics.title")}
+          description={t("thirdPartyCookies.firebaseAnalytics.description")}
+          providerLabel={t("thirdPartyCookies.firebaseAnalytics.providerLabel")}
+          provider={t("thirdPartyCookies.firebaseAnalytics.provider")}
+          purposeLabel={t("thirdPartyCookies.firebaseAnalytics.purposeLabel")}
+          purpose={t("thirdPartyCookies.firebaseAnalytics.purpose")}
+          extraLabel={t("thirdPartyCookies.firebaseAnalytics.privacyPolicyLabel")}
+          extra={
             <a
               href="https://policies.google.com/privacy"
               target="_blank"
@@ -318,23 +350,19 @@ function CookiePolicyContent() {
             >
               {t("thirdPartyCookies.firebaseAnalytics.privacyPolicyLink")}
             </a>
-          </p>
-        </div>
+          }
+        />
 
         {/* Vercel Speed Insights & Web Analytics (cookieless) */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-3">{t("thirdPartyCookies.vercel.title")}</h3>
-          <p className="mb-3">{t("thirdPartyCookies.vercel.description")}</p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.vercel.providerLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.vercel.provider")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.vercel.purposeLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.vercel.purpose")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.vercel.privacyPolicyLabel")}:</strong>{" "}
+        <ThirdPartyServiceEntry
+          title={t("thirdPartyCookies.vercel.title")}
+          description={t("thirdPartyCookies.vercel.description")}
+          providerLabel={t("thirdPartyCookies.vercel.providerLabel")}
+          provider={t("thirdPartyCookies.vercel.provider")}
+          purposeLabel={t("thirdPartyCookies.vercel.purposeLabel")}
+          purpose={t("thirdPartyCookies.vercel.purpose")}
+          extraLabel={t("thirdPartyCookies.vercel.privacyPolicyLabel")}
+          extra={
             <a
               href="https://vercel.com/legal/privacy-policy"
               target="_blank"
@@ -343,28 +371,20 @@ function CookiePolicyContent() {
             >
               {t("thirdPartyCookies.vercel.privacyPolicyLink")}
             </a>
-          </p>
-        </div>
+          }
+        />
 
         {/* Connectivity Check (offline detector reachability probe, cookieless) */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-3">
-            {t("thirdPartyCookies.connectivityCheck.title")}
-          </h3>
-          <p className="mb-3">{t("thirdPartyCookies.connectivityCheck.description")}</p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.connectivityCheck.providerLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.connectivityCheck.provider")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.connectivityCheck.purposeLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.connectivityCheck.purpose")}
-          </p>
-          <p className="mb-2">
-            <strong>{t("thirdPartyCookies.connectivityCheck.requestLabel")}:</strong>{" "}
-            {t("thirdPartyCookies.connectivityCheck.request")}
-          </p>
-        </div>
+        <ThirdPartyServiceEntry
+          title={t("thirdPartyCookies.connectivityCheck.title")}
+          description={t("thirdPartyCookies.connectivityCheck.description")}
+          providerLabel={t("thirdPartyCookies.connectivityCheck.providerLabel")}
+          provider={t("thirdPartyCookies.connectivityCheck.provider")}
+          purposeLabel={t("thirdPartyCookies.connectivityCheck.purposeLabel")}
+          purpose={t("thirdPartyCookies.connectivityCheck.purpose")}
+          extraLabel={t("thirdPartyCookies.connectivityCheck.requestLabel")}
+          extra={t("thirdPartyCookies.connectivityCheck.request")}
+        />
       </section>
 
       {/* Cookie Consent */}

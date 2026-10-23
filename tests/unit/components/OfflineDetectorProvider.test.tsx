@@ -8,6 +8,7 @@
  * responsibility: passing children and locale through correctly.
  */
 
+import type { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import OfflineDetectorProvider from "@/components/OfflineDetectorProvider";
 
@@ -31,20 +32,19 @@ jest.mock("@rogeriodocarmo/offline-detector-web", () => ({
   OfflineDetector: (props: { readonly children: React.ReactNode }) => mockOfflineDetector(props),
 }));
 
+function renderProvider(children: ReactNode = <div data-testid="app-content">App</div>) {
+  return render(<OfflineDetectorProvider>{children}</OfflineDetectorProvider>);
+}
+
 describe("OfflineDetectorProvider", () => {
   beforeEach(() => {
     mockOfflineDetector.mockClear();
+    mockUseLocale.mockReturnValue("en");
     mockUseTheme.mockReturnValue({ theme: "light" });
   });
 
   it("renders its children", () => {
-    mockUseLocale.mockReturnValue("en");
-
-    render(
-      <OfflineDetectorProvider>
-        <div data-testid="app-content">App</div>
-      </OfflineDetectorProvider>
-    );
+    renderProvider();
 
     expect(screen.getByTestId("app-content")).toBeInTheDocument();
   });
@@ -54,25 +54,16 @@ describe("OfflineDetectorProvider", () => {
     (locale) => {
       mockUseLocale.mockReturnValue(locale);
 
-      render(
-        <OfflineDetectorProvider>
-          <div>App</div>
-        </OfflineDetectorProvider>
-      );
+      renderProvider();
 
       expect(mockOfflineDetector).toHaveBeenCalledWith(expect.objectContaining({ locale }));
     }
   );
 
   it("passes the site's own theme through as colorScheme", () => {
-    mockUseLocale.mockReturnValue("en");
     mockUseTheme.mockReturnValue({ theme: "dark" });
 
-    render(
-      <OfflineDetectorProvider>
-        <div>App</div>
-      </OfflineDetectorProvider>
-    );
+    renderProvider();
 
     expect(mockOfflineDetector).toHaveBeenCalledWith(
       expect.objectContaining({ colorScheme: "dark" })
@@ -80,13 +71,7 @@ describe("OfflineDetectorProvider", () => {
   });
 
   it("shows no piece while online (the mocked detector renders only children)", () => {
-    mockUseLocale.mockReturnValue("en");
-
-    render(
-      <OfflineDetectorProvider>
-        <div data-testid="app-content">App</div>
-      </OfflineDetectorProvider>
-    );
+    renderProvider();
 
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });

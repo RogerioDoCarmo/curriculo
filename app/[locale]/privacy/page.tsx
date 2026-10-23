@@ -28,6 +28,29 @@ export default async function PrivacyPolicyPage({ params }: Props) {
   return <PrivacyPolicyContent />;
 }
 
+/** Shared shape for a title + description + bullet list used by several Data Collection entries. */
+function DataCollectionSection({
+  title,
+  description,
+  items,
+}: {
+  readonly title: string;
+  readonly description: string;
+  readonly items: readonly string[];
+}) {
+  return (
+    <div className="mb-6">
+      <h3 className="text-xl font-semibold mb-3">{title}</h3>
+      <p className="mb-3">{description}</p>
+      <ul className="list-disc list-inside mb-4 ml-4 space-y-1">
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function PrivacyPolicyContent() {
   const t = useTranslations("privacy");
 
@@ -104,37 +127,37 @@ function PrivacyPolicyContent() {
         </div>
 
         {/* Email Addresses */}
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-3">{t("dataCollection.email.title")}</h3>
-          <p className="mb-3">{t("dataCollection.email.description")}</p>
-          <ul className="list-disc list-inside mb-4 ml-4 space-y-1">
-            <li>{t("dataCollection.email.contactForm")}</li>
-            <li>{t("dataCollection.email.subscription")}</li>
-            <li>{t("dataCollection.email.storage")}</li>
-          </ul>
-        </div>
+        <DataCollectionSection
+          title={t("dataCollection.email.title")}
+          description={t("dataCollection.email.description")}
+          items={[
+            t("dataCollection.email.contactForm"),
+            t("dataCollection.email.subscription"),
+            t("dataCollection.email.storage"),
+          ]}
+        />
 
         {/* Notification Tokens */}
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-3">{t("dataCollection.notifications.title")}</h3>
-          <p className="mb-3">{t("dataCollection.notifications.description")}</p>
-          <ul className="list-disc list-inside mb-4 ml-4 space-y-1">
-            <li>{t("dataCollection.notifications.optIn")}</li>
-            <li>{t("dataCollection.notifications.tokens")}</li>
-            <li>{t("dataCollection.notifications.revoke")}</li>
-          </ul>
-        </div>
+        <DataCollectionSection
+          title={t("dataCollection.notifications.title")}
+          description={t("dataCollection.notifications.description")}
+          items={[
+            t("dataCollection.notifications.optIn"),
+            t("dataCollection.notifications.tokens"),
+            t("dataCollection.notifications.revoke"),
+          ]}
+        />
 
         {/* Connectivity Check */}
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-3">{t("dataCollection.connectivity.title")}</h3>
-          <p className="mb-3">{t("dataCollection.connectivity.description")}</p>
-          <ul className="list-disc list-inside mb-4 ml-4 space-y-1">
-            <li>{t("dataCollection.connectivity.request")}</li>
-            <li>{t("dataCollection.connectivity.noData")}</li>
-            <li>{t("dataCollection.connectivity.frequency")}</li>
-          </ul>
-        </div>
+        <DataCollectionSection
+          title={t("dataCollection.connectivity.title")}
+          description={t("dataCollection.connectivity.description")}
+          items={[
+            t("dataCollection.connectivity.request"),
+            t("dataCollection.connectivity.noData"),
+            t("dataCollection.connectivity.frequency"),
+          ]}
+        />
 
         {/* Browser Storage */}
         <div className="mb-6">
