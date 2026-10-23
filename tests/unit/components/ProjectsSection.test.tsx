@@ -322,6 +322,32 @@ describe("ProjectsSection Component", () => {
         "src",
         "/images/badges/google-play-en.png"
       );
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "width",
+        "564"
+      );
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "height",
+        "168"
+      );
+    });
+  });
+
+  it("renders every store badge at the same height class with trimmed intrinsic sizes", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<ProjectsSection projects={sampleProjects} locale="en" />);
+    await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
+
+    await waitFor(() => {
+      const appStore = screen.getByRole("img", { name: /download on the app store/i });
+      const play = screen.getByRole("img", { name: /get it on google play/i });
+      const fdroid = screen.getByRole("img", { name: /get it on f-droid/i });
+      for (const badge of [appStore, play, fdroid]) {
+        expect(badge).toHaveClass("h-10");
+        expect(badge).not.toHaveClass("h-12");
+      }
+      expect(fdroid).toHaveAttribute("width", "564");
+      expect(fdroid).toHaveAttribute("height", "168");
     });
   });
 
@@ -334,6 +360,15 @@ describe("ProjectsSection Component", () => {
       expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
         "src",
         "/images/badges/google-play-es.png"
+      );
+      // The es artwork is trimmed to 646x192, unlike en's 564x168.
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "width",
+        "646"
+      );
+      expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
+        "height",
+        "192"
       );
     });
   });
