@@ -66,7 +66,7 @@ function ThirdPartyServiceEntry({
   );
 }
 
-function CookiePolicyContent() {
+export function CookiePolicyContent() {
   const t = useTranslations("cookies");
 
   return (

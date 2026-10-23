@@ -51,7 +51,7 @@ function DataCollectionSection({
   );
 }
 
-function PrivacyPolicyContent() {
+export function PrivacyPolicyContent() {
   const t = useTranslations("privacy");
 
   return (
