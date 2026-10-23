@@ -10,6 +10,7 @@
  * 1. All three badges render at the same height (within 1px)
  * 2. The Play and F-Droid images are wide, trimmed artwork (aspect ratio > 3),
  *    not the padded 646x250 originals (aspect ratio ~2.58)
+ * 3. The Play badge is the locale's own artwork, not the English fallback
  */
 
 import { test, expect } from "@playwright/test";
@@ -63,6 +64,10 @@ for (const locale of ["en", "es", "pt-BR"] as const) {
       for (const box of boxes.slice(1)) {
         expect(box.width / box.height).toBeGreaterThan(3);
       }
+
+      // Every locale has its own Play artwork; none falls back to English.
+      const playSrc = await images.nth(1).evaluate((el) => (el as HTMLImageElement).currentSrc);
+      expect(decodeURIComponent(playSrc)).toContain(`/images/badges/google-play-${locale}.png`);
     });
   });
 }

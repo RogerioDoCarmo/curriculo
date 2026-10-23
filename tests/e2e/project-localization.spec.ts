@@ -142,10 +142,9 @@ test.describe("Localized project content", () => {
       "https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji"
     );
 
-    // Google's badge isn't sourced for pt-BR yet — falls back to the English asset.
     await expect(detail.getByRole("img", { name: /disponível no google play/i })).toHaveAttribute(
       "src",
-      /\/images\/badges\/google-play-en\.png/
+      /\/images\/badges\/google-play-pt-BR\.png/
     );
     await expect(detail.getByRole("link", { name: /disponível no google play/i })).toHaveAttribute(
       "href",
