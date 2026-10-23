@@ -26,11 +26,21 @@ const STORE_BADGE_LOCALES: ReadonlySet<string> = new Set(["pt-BR", "en", "es"]);
 const FALLBACK_BADGE_LOCALE = "en";
 
 /**
- * Locales with a sourced Google Play badge, separate from `STORE_BADGE_LOCALES`
+ * Locales with a sourced Google Play badge, with their intrinsic sizes, separate from `STORE_BADGE_LOCALES`
  * because Google's official badge asset (unlike Apple's and F-Droid's) isn't
  * available in pt-BR at the same source — falls back to `en` until sourced.
  */
-const PLAY_BADGE_LOCALES: ReadonlySet<string> = new Set(["en", "es"]);
+const PLAY_BADGE_SIZES: Readonly<Record<string, { width: number; height: number }>> = {
+  en: { width: 564, height: 168 },
+  es: { width: 646, height: 192 },
+};
+
+/*
+ * Every store badge file is trimmed to its visible artwork (no transparent
+ * padding), so rendering all three at the same CSS height (`h-10`) makes them
+ * look the same height. Google's and F-Droid's originals ship with ~41px of
+ * padding on each side; re-adding untrimmed artwork brings back the mismatch.
+ */
 
 // ─── FilterButton ────────────────────────────────────────────────────────────
 
@@ -187,7 +197,8 @@ interface ProjectDetailProps {
 function ProjectDetail({ project, locale, shareUrl }: ProjectDetailProps) {
   const t = useTranslations();
   const badgeLocale = STORE_BADGE_LOCALES.has(locale) ? locale : FALLBACK_BADGE_LOCALE;
-  const playBadgeLocale = PLAY_BADGE_LOCALES.has(locale) ? locale : FALLBACK_BADGE_LOCALE;
+  const playBadgeLocale = Object.hasOwn(PLAY_BADGE_SIZES, locale) ? locale : FALLBACK_BADGE_LOCALE;
+  const playBadgeSize = PLAY_BADGE_SIZES[playBadgeLocale];
   const { copied, failed, copy } = useCopyToClipboard();
 
   // The share URL is built on click, never during render: `window.location`
@@ -311,9 +322,9 @@ function ProjectDetail({ project, locale, shareUrl }: ProjectDetailProps) {
               <Image
                 src={`/images/badges/google-play-${playBadgeLocale}.png`}
                 alt={`${t("projects.playStore")} — ${project.title}`}
-                width={646}
-                height={250}
-                className="h-12 w-auto"
+                width={playBadgeSize.width}
+                height={playBadgeSize.height}
+                className="h-10 w-auto"
               />
             </a>
           )}
@@ -327,9 +338,9 @@ function ProjectDetail({ project, locale, shareUrl }: ProjectDetailProps) {
               <Image
                 src={`/images/badges/f-droid-${badgeLocale}.svg`}
                 alt={`${t("projects.fdroid")} — ${project.title}`}
-                width={646}
-                height={250}
-                className="h-12 w-auto"
+                width={564}
+                height={168}
+                className="h-10 w-auto"
               />
             </a>
           )}

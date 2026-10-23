@@ -145,9 +145,9 @@ export async function subscribeToTopic(topic: string): Promise<boolean> {
  * Unsubscribes the current device from a FCM topic.
  *
  * @param topic - The topic name to unsubscribe from
- * @returns Promise that resolves to true if unsubscription succeeded, false otherwise
+ * @returns True if unsubscription succeeded, false otherwise
  */
-export async function unsubscribeFromTopic(topic: string): Promise<boolean> {
+export function unsubscribeFromTopic(topic: string): boolean {
   try {
     // Remove subscription preference from localStorage
     const subscriptions = getTopicSubscriptions();

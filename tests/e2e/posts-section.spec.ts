@@ -17,13 +17,15 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-// Newest first: the OmniMorse video, the AI agents post, then the deep-links
-// article. The two 2026-09-13 posts tie on date and are ordered by id.
+// Newest first: the OmniMorse launch post, the OmniMorse video, then the AI
+// agents post. The two 2026-09-13 posts (deep-links-article/post) tie on date
+// and are ordered by id; both now fall outside the latest three.
+const RELEASE_EN = "Launching OmniMorse";
 const NEWEST_EN = "OmniMorse App — encode, decode and learn Morse code";
 const AGENTS_EN = "Two AI agents, one Git repository";
-const ARTICLE_EN = "Implementing Deep Links in a Next.js Site";
-const ARTICLE_PT = "Implementando Deep Link em um site Next.js";
+const AGENTS_PT = "Dois agentes de IA, um repositório Git";
 // Older than the latest three: on the posts page only.
+const ARTICLE_EN = "Implementing Deep Links in a Next.js Site";
 const DEEP_POST_EN = "Deep links in the portfolio";
 const FOURTH_EN = "An accessible scroll minimap";
 const OLDEST_EN = "Useful tools for beginners in web development";
@@ -79,12 +81,12 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    for (const title of [NEWEST_EN, AGENTS_EN, ARTICLE_EN]) {
+    for (const title of [RELEASE_EN, NEWEST_EN, AGENTS_EN]) {
       await expect(
         section.getByRole("button", { name: `View details for ${title}` }).first()
       ).toBeVisible();
     }
-    for (const title of [DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
+    for (const title of [ARTICLE_EN, DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
       await expect(section.getByRole("button", { name: `View details for ${title}` })).toHaveCount(
         0
       );
@@ -113,26 +115,26 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const articleCard = section
-      .getByRole("button", { name: `View details for ${ARTICLE_EN}` })
+    const agentsCard = section
+      .getByRole("button", { name: `View details for ${AGENTS_EN}` })
       .first();
-    await expect(articleCard).toBeVisible();
-    await expect(articleCard).toContainText("LinkedIn");
-    await expect(articleCard).toContainText("Article");
-    await expect(articleCard).toContainText("Sep 2026");
-    await expect(articleCard).toContainText("In Portuguese");
+    await expect(agentsCard).toBeVisible();
+    await expect(agentsCard).toContainText("LinkedIn");
+    await expect(agentsCard).toContainText("Post");
+    await expect(agentsCard).toContainText("Sep 2026");
+    await expect(agentsCard).toContainText("In Portuguese");
   });
 
   test("shows Portuguese titles and no language flag on the pt-BR page", async ({ page }) => {
     await page.goto("/pt-BR/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const articleCard = section
-      .getByRole("button", { name: `Ver detalhes de ${ARTICLE_PT}` })
+    const agentsCard = section
+      .getByRole("button", { name: `Ver detalhes de ${AGENTS_PT}` })
       .first();
-    await expect(articleCard).toBeVisible();
-    await expect(articleCard).toContainText("Artigo");
-    await expect(articleCard).not.toContainText("Em português");
+    await expect(agentsCard).toBeVisible();
+    await expect(agentsCard).toContainText("Post");
+    await expect(agentsCard).not.toContainText("Em português");
     await expect(section.getByRole("link", { name: "Ver todas as publicações" })).toHaveAttribute(
       "href",
       "/pt-BR/posts/"
@@ -142,13 +144,13 @@ test.describe("Posts section", () => {
   test("opens a post and links out to LinkedIn in a new tab", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    const dialog = await openPost(page, ARTICLE_EN);
+    const dialog = await openPost(page, AGENTS_EN);
 
-    await expect(dialog.getByRole("heading", { name: ARTICLE_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: AGENTS_EN })).toBeVisible();
     const link = dialog.getByRole("link", { name: "Read on LinkedIn (opens in a new tab)" });
     await expect(link).toHaveAttribute(
       "href",
-      "https://www.linkedin.com/pulse/implementando-deep-link-em-um-site-nextjs-ramos-rodrigues-do-carmo-qa7yf/"
+      "https://www.linkedin.com/posts/rogeriodocarmo_dois-agentes-de-ia-um-reposit%C3%B3rio-git-zero-ugcPost-7509704418368368640-P4mv/"
     );
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -157,13 +159,13 @@ test.describe("Posts section", () => {
   test("steps through the three posts with Prev/Next, wrapping within them", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    const dialog = await openPost(page, NEWEST_EN);
+    const dialog = await openPost(page, RELEASE_EN);
     // Previous from the first wraps to the last of the three — not to the oldest post.
     await dialog.getByRole("button", { name: "Previous post" }).click();
-    await expect(dialog.getByRole("heading", { name: ARTICLE_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: AGENTS_EN })).toBeVisible();
 
     await dialog.getByRole("button", { name: "Next post" }).click();
-    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: RELEASE_EN })).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
@@ -229,12 +231,12 @@ test.describe("Posts section", () => {
     await expect(page.getByRole("dialog")).toHaveCount(0);
   });
 
-  test("loads the article's cover image", async ({ page }) => {
+  test("loads the video's thumbnail image", async ({ page }) => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
     const cover = section
-      .getByRole("button", { name: `View details for ${ARTICLE_EN}` })
+      .getByRole("button", { name: `View details for ${NEWEST_EN}` })
       .first()
       .locator("img");
     // Retried as a whole: on phones the carousel replaces the hydration-time
@@ -244,7 +246,7 @@ test.describe("Posts section", () => {
       const width = await cover.evaluate(
         (img: HTMLImageElement) => img.complete && img.naturalWidth
       );
-      expect(width).toBe(1200);
+      expect(width).toBe(480);
     }).toPass({ timeout: 20000 });
   });
 
