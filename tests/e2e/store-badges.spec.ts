@@ -37,9 +37,11 @@ for (const locale of ["en", "es", "pt-BR"] as const) {
 
       // The badges sit below the fold and next/image lazy-loads them: bring
       // them into view, then wait for every image to decode so `w-auto`
-      // resolves to the real width.
-      await images.last().scrollIntoViewIfNeeded();
+      // resolves to the real width. Scroll with the DOM API, retried inside
+      // the poll: `scrollIntoViewIfNeeded` waits for the element to be stable,
+      // which times out in WebKit while the dialog is still animating open.
       await expect(async () => {
+        await images.last().evaluate((el) => el.scrollIntoView({ block: "center" }));
         const loaded = await images.evaluateAll((els) =>
           els.every(
             (el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0
