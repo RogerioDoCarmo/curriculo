@@ -641,6 +641,16 @@
         "purpose": "Monitoramento anônimo de desempenho e análise de tráfego agregado (sem cookies)",
         "privacyPolicyLabel": "Política de Privacidade",
         "privacyPolicyLink": "Política de Privacidade da Vercel"
+      },
+      "connectivityCheck": {
+        "title": "Verificação de Conectividade (Cloudflare e Google)",
+        "description": "Para distinguir uma queda real de internet do simples sinalizador \"offline\" do navegador, um pequeno widget envia periodicamente uma verificação de alcançabilidade no-cors. Ele não define nenhum cookie.",
+        "providerLabel": "Provedores",
+        "provider": "Cloudflare, Inc. e Google LLC",
+        "purposeLabel": "Finalidade",
+        "purpose": "Apenas verificação de alcançabilidade — não é usado para rastreamento ou análise",
+        "requestLabel": "Requisição",
+        "request": "Uma requisição HEAD para cp.cloudflare.com e, se necessário, para www.gstatic.com, ao carregar a página e depois a cada 30 segundos aproximadamente enquanto estiver offline"
       }
     },
     "cookieConsent": {
@@ -748,6 +758,13 @@
         "optIn": "Coletamos tokens do Firebase Cloud Messaging (FCM)",
         "tokens": "Tokens são usados apenas para enviar notificações sobre novo conteúdo",
         "revoke": "Você pode revogar a permissão de notificação a qualquer momento nas configurações do navegador"
+      },
+      "connectivity": {
+        "title": "Verificação de Conectividade",
+        "description": "Para distinguir uma queda real de internet do simples sinalizador \"offline\" do navegador, o site envia periodicamente uma verificação de alcançabilidade de rede:",
+        "request": "Uma requisição HEAD no-cors para os endpoints de verificação de conectividade da Cloudflare (cp.cloudflare.com) e, se necessário, do Google (www.gstatic.com)",
+        "noData": "A requisição não envia cookies, não envia cabeçalho Referer e não envia dados pessoais — apenas o fato de ter recebido alguma resposta já conta como \"alcançável\"",
+        "frequency": "Verificado ao carregar a página e, depois, a cada 30 segundos aproximadamente enquanto a conexão parecer estar fora do ar"
       },
       "browserStorage": {
         "title": "Armazenamento do Navegador (localStorage) - NÃO São Cookies",
