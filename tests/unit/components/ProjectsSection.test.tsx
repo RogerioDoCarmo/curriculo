@@ -312,7 +312,7 @@ describe("ProjectsSection Component", () => {
     });
   });
 
-  it("falls back to the English Google Play badge for pt-BR (not yet sourced)", async () => {
+  it("uses the Portuguese Google Play badge for pt-BR", async () => {
     const user = userEvent.setup();
     renderWithIntl(<ProjectsSection projects={sampleProjects} locale="pt-BR" />);
     await user.click(screen.getByRole("button", { name: /view details for e-commerce app/i }));
@@ -320,15 +320,16 @@ describe("ProjectsSection Component", () => {
     await waitFor(() => {
       expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
         "src",
-        "/images/badges/google-play-en.png"
+        "/images/badges/google-play-pt-BR.png"
       );
+      // The pt-BR artwork is trimmed to 646x192, like es.
       expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
         "width",
-        "564"
+        "646"
       );
       expect(screen.getByRole("img", { name: /get it on google play/i })).toHaveAttribute(
         "height",
-        "168"
+        "192"
       );
     });
   });

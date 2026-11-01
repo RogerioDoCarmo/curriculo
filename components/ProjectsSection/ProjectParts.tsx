@@ -26,13 +26,13 @@ const STORE_BADGE_LOCALES: ReadonlySet<string> = new Set(["pt-BR", "en", "es"]);
 const FALLBACK_BADGE_LOCALE = "en";
 
 /**
- * Locales with a sourced Google Play badge, with their intrinsic sizes, separate from `STORE_BADGE_LOCALES`
- * because Google's official badge asset (unlike Apple's and F-Droid's) isn't
- * available in pt-BR at the same source — falls back to `en` until sourced.
+ * Intrinsic size of each locale's Google Play badge. Google pads its artwork
+ * differently per language, so the trimmed files are not all the same shape.
  */
 const PLAY_BADGE_SIZES: Readonly<Record<string, { width: number; height: number }>> = {
   en: { width: 564, height: 168 },
   es: { width: 646, height: 192 },
+  "pt-BR": { width: 646, height: 192 },
 };
 
 /*
