@@ -56,12 +56,16 @@ jobs:
 
             console.log(`Filtered to ${filteredAlerts.length} alerts (severity: ${severityFilter})`);
 
-            // Get existing tracking issues
-            const { data: issues } = await github.rest.issues.listForRepo({
+            // Get existing tracking issues. Must paginate: the REST API defaults
+            // to 30 per page, and once open tracking issues passed that count the
+            // oldest ones silently fell out of an unpaginated call, breaking the
+            // GHSA dedup below and causing duplicate issues to be created daily.
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: 'security,dependabot'
+              labels: 'security,dependabot',
+              per_page: 100
             });
 
             // Dedupe by GHSA ID rather than alert number: GitHub sometimes
