@@ -6,6 +6,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { SUPPORTED_LOCALES, type SupportedLocale } from "@/types/index";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { FilterPulseProvider } from "@/hooks/useFilterPulse";
+import OfflineDetectorProvider from "@/components/OfflineDetectorProvider";
 import { generateStructuredDataScript } from "@/lib/structured-data";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -218,19 +219,21 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <FilterPulseProvider>
-              <AnalyticsProvider>
-                <ErrorBoundary component="RootLayout">
-                  <Header locale={locale} />
-                  <main className="min-h-screen">{children}</main>
-                  <Footer locale={locale} />
-                  <BackToTopButton label={backToTopLabel} />
-                  <CookieConsent />
-                  <FilterPulseOverlay />
-                  <FilterPulseWarningDialog />
-                </ErrorBoundary>
-              </AnalyticsProvider>
-            </FilterPulseProvider>
+            <OfflineDetectorProvider>
+              <FilterPulseProvider>
+                <AnalyticsProvider>
+                  <ErrorBoundary component="RootLayout">
+                    <Header locale={locale} />
+                    <main className="min-h-screen">{children}</main>
+                    <Footer locale={locale} />
+                    <BackToTopButton label={backToTopLabel} />
+                    <CookieConsent />
+                    <FilterPulseOverlay />
+                    <FilterPulseWarningDialog />
+                  </ErrorBoundary>
+                </AnalyticsProvider>
+              </FilterPulseProvider>
+            </OfflineDetectorProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
