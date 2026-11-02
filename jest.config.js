@@ -55,6 +55,8 @@ const config = {
     "hooks/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
     "app/[locale]/components/ComponentGalleryClient.tsx",
+    "app/[locale]/privacy/page.tsx",
+    "app/[locale]/cookies/page.tsx",
     "!**/*.d.ts",
     "!**/*.stories.{ts,tsx}", // Exclude Storybook files
     "!**/node_modules/**",
