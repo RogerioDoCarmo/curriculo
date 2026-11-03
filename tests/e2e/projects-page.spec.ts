@@ -17,9 +17,10 @@ import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { waitForHydrated } from "./helpers/stability";
 
-const TOTAL_PROJECTS = 4;
-// Display order: featured first (Miroji, INCT), then newest (OmniMorse, Android).
-const ON_HOME = ["Miroji", "INCT GNSS App", "OmniMorse"];
+const TOTAL_PROJECTS = 5;
+// Display order: featured first, newest first within that group (GNSS Skyplot,
+// Miroji, INCT), then newest (OmniMorse, Android).
+const ON_HOME = ["GNSS Skyplot", "Miroji", "INCT GNSS App"];
 const NOT_ON_HOME = "Android Native Crud";
 
 /** Project cards on the page: each is one button named "View details for …", per locale. */
@@ -98,7 +99,9 @@ test.describe("Projects page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names).toEqual([...ON_HOME, NOT_ON_HOME].map((t) => `View details for ${t}`));
+    expect(names).toEqual(
+      [...ON_HOME, "OmniMorse", NOT_ON_HOME].map((t) => `View details for ${t}`)
+    );
   });
 
   test("filters by technology and keeps the choice in the URL", async ({ page }) => {
@@ -141,12 +144,14 @@ test.describe("Projects page", () => {
   });
 
   test("steps through every project with Prev/Next, wrapping", async ({ page }) => {
-    await page.goto("/en/projects/?project=miroji", { waitUntil: "domcontentloaded" });
+    await page.goto("/en/projects/?project=gnss-skyplot", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: "Miroji" })).toBeVisible({ timeout: 10000 });
-    // Miroji is first, so Previous wraps all the way to the last project: unlike
-    // the home page's three, this list holds all four.
+    await expect(dialog.getByRole("heading", { name: "GNSS Skyplot" })).toBeVisible({
+      timeout: 10000,
+    });
+    // GNSS Skyplot is first, so Previous wraps all the way to the last project:
+    // unlike the home page's three, this list holds all five.
     await dialog.getByRole("button", { name: "Previous project" }).click();
     await expect(dialog.getByRole("heading", { name: NOT_ON_HOME })).toBeVisible();
   });

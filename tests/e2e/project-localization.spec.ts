@@ -64,13 +64,13 @@ test.describe("Localized project content", () => {
       await expect(projectsSection.getByRole("heading", { name: PROJECTS_HEADING })).toBeVisible();
 
       // Every locale shows the same three project entries (the home page shows
-      // the first three: Miroji, INCT, OmniMorse; the rest are on the projects
-      // page, covered by projects-page.spec.ts). On mobile the carousel renders
-      // three copies of each card, but only the middle copy is exposed to the
-      // accessibility tree — so count by role, not by element.
+      // the first three: GNSS Skyplot, Miroji, INCT; the rest are on the
+      // projects page, covered by projects-page.spec.ts). On mobile the
+      // carousel renders three copies of each card, but only the middle copy
+      // is exposed to the accessibility tree — so count by role, not by element.
       await expect(projectsSection.getByRole("heading", { level: 3 })).toHaveCount(3);
+      await expect(projectsSection.getByText("GNSS Skyplot").first()).toBeVisible();
       await expect(projectsSection.getByText("Miroji").first()).toBeVisible();
-      await expect(projectsSection.getByText("OmniMorse").first()).toBeVisible();
     });
   }
 
