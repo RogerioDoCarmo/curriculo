@@ -14,11 +14,13 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-const VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
-const NEWEST_EN = "Launching offline-detector"; // newest post overall, and newest LinkedIn post
+const OMNIMORSE_VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
+const MIROJI_VIDEO_EN = "Miroji: just a mirror, with zoom, flip and flashlight (Android & iOS)"; // newest post overall
+const OFFLINE_DETECTOR_EN = "Launching offline-detector"; // newest LinkedIn post
 const OLDEST_EN = "Useful tools for beginners in web development";
-const TOTAL_POSTS = 9;
+const TOTAL_POSTS = 10;
 const LINKEDIN_POSTS = 8;
+const YOUTUBE_POSTS = 2;
 
 /** The card buttons on the page (each card is one button named "View details for …", per locale). */
 const cards = (page: Page) =>
@@ -50,7 +52,7 @@ test.describe("Posts page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names[0]).toBe(`View details for ${NEWEST_EN}`);
+    expect(names[0]).toBe(`View details for ${MIROJI_VIDEO_EN}`);
     expect(names.at(-1)).toBe(`View details for ${OLDEST_EN}`);
   });
 
@@ -66,13 +68,18 @@ test.describe("Posts page", () => {
     await expect(cards(page)).toHaveCount(LINKEDIN_POSTS);
   });
 
-  test("filters to the YouTube video, and clears the filter again", async ({ page }) => {
+  test("filters to the YouTube videos, and clears the filter again", async ({ page }) => {
     await page.goto("/en/posts/");
 
     await chip(page, "YouTube").click();
 
-    await expect(cards(page)).toHaveCount(1);
-    await expect(page.getByRole("button", { name: `View details for ${VIDEO_EN}` })).toBeVisible();
+    await expect(cards(page)).toHaveCount(YOUTUBE_POSTS);
+    await expect(
+      page.getByRole("button", { name: `View details for ${OMNIMORSE_VIDEO_EN}` })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: `View details for ${MIROJI_VIDEO_EN}` })
+    ).toBeVisible();
 
     // Clicking the active chip again clears the filter.
     await chip(page, "YouTube").click();
@@ -93,7 +100,7 @@ test.describe("Posts page", () => {
     await page.goto("/en/posts/?platform=youtube");
 
     await expect(chip(page, "YouTube")).toHaveAttribute("aria-pressed", "true");
-    await expect(cards(page)).toHaveCount(1);
+    await expect(cards(page)).toHaveCount(YOUTUBE_POSTS);
   });
 
   test("shows everything for an unknown platform in the URL", async ({ page }) => {
@@ -116,7 +123,7 @@ test.describe("Posts page", () => {
   test("writes the open post into the URL and clears it on close", async ({ page }) => {
     await page.goto("/en/posts/");
 
-    await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
+    await page.getByRole("button", { name: `View details for ${OFFLINE_DETECTOR_EN}` }).click();
     await expect(page).toHaveURL(/\?post=offline-detector-release-post$/);
 
     await page.keyboard.press("Escape");
@@ -127,7 +134,7 @@ test.describe("Posts page", () => {
   test("steps through every post with Prev/Next, wrapping", async ({ page }) => {
     await page.goto("/en/posts/");
 
-    await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
+    await page.getByRole("button", { name: `View details for ${MIROJI_VIDEO_EN}` }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByRole("button", { name: "Previous post" }).click();
 
@@ -145,7 +152,7 @@ test.describe("Posts page", () => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/en/posts/");
 
-    await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
+    await page.getByRole("button", { name: `View details for ${OFFLINE_DETECTOR_EN}` }).click();
     await page
       .getByRole("dialog")
       .getByRole("button", { name: /^Copy link/ })
@@ -157,7 +164,9 @@ test.describe("Posts page", () => {
 
     // And the link itself works: it reopens the same post.
     await page.goto(copied);
-    await expect(page.getByRole("dialog").getByRole("heading", { name: NEWEST_EN })).toBeVisible();
+    await expect(
+      page.getByRole("dialog").getByRole("heading", { name: OFFLINE_DETECTOR_EN })
+    ).toBeVisible();
   });
 
   test("is localized in Portuguese", async ({ page }) => {
@@ -169,9 +178,9 @@ test.describe("Posts page", () => {
     await expect(chip(page, "Todas")).toHaveAttribute("aria-pressed", "true");
 
     await chip(page, "YouTube").click();
-    // The video is in English, so on the Portuguese page it says so (WebKit
+    // Both videos are in English, so on the Portuguese page they say so (WebKit
     // capitalises the language name, Chrome does not).
-    await expect(cards(page)).toHaveCount(1);
+    await expect(cards(page)).toHaveCount(YOUTUBE_POSTS);
     await expect(cards(page).first()).toContainText(/em inglês/i);
   });
 

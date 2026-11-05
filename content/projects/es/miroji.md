@@ -23,6 +23,7 @@ liveUrl: https://rogeriodocarmo.github.io/mirror_app/
 appStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907
 playStoreUrl: https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji
 fdroidUrl: https://f-droid.org/es/packages/com.rogeriodocarmo.miroji
+videoUrl: https://youtu.be/x4I-w_m2X3Y
 images:
   - /images/projects/miroji.png
 ---
