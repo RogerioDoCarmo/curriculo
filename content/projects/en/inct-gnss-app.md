@@ -5,6 +5,7 @@ description: Android application for real-time collection and processing of raw 
 featured: true
 mockData: false
 date: 2021-06-01
+order: 4
 technologies:
   - Java
   - Android SDK

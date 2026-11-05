@@ -25,29 +25,17 @@ const MIROJI_BODY_HEADINGS: Record<string, { overview: string; download: string 
 };
 
 /**
- * Opens the Miroji project detail modal and returns it.
- *
- * Below the `sm` breakpoint the grid is swapped for a swipe carousel once the
- * media query resolves, which detaches the card that was rendered during
- * hydration. Retrying the whole locate-and-click rides out that swap instead of
- * failing with "element is not attached to the DOM".
+ * Waits for the Miroji project detail modal, opened via the `?project=miroji`
+ * deep link, and returns it. Miroji is no longer among the home page's first
+ * three cards, so its card isn't there to click — the deep link opens its
+ * dialog directly regardless of whether the project is home-shown.
  */
 async function openMirojiDetail(page: Page) {
   const section = page.locator('section[id="projects"]');
   await expect(section.getByRole("heading", { name: PROJECTS_HEADING })).toBeVisible();
 
   const dialog = page.getByRole("dialog");
-  await expect(async () => {
-    // Guarded so a retry never clicks the card again behind an open modal.
-    if (!(await dialog.isVisible())) {
-      await section
-        .getByRole("button", { name: /miroji/i })
-        .first()
-        .click({ timeout: 3000 });
-    }
-    await expect(dialog).toBeVisible({ timeout: 3000 });
-  }).toPass({ timeout: 20000 });
-
+  await expect(dialog).toBeVisible({ timeout: 10000 });
   return dialog;
 }
 
@@ -64,13 +52,14 @@ test.describe("Localized project content", () => {
       await expect(projectsSection.getByRole("heading", { name: PROJECTS_HEADING })).toBeVisible();
 
       // Every locale shows the same three project entries (the home page shows
-      // the first three: Miroji, INCT, OmniMorse; the rest are on the projects
-      // page, covered by projects-page.spec.ts). On mobile the carousel renders
-      // three copies of each card, but only the middle copy is exposed to the
-      // accessibility tree — so count by role, not by element.
+      // the first three in `order`: OmniMorse, offline-detector, GNSS Skyplot;
+      // the rest are on the projects page, covered by projects-page.spec.ts).
+      // On mobile the carousel renders three copies of each card, but only the
+      // middle copy is exposed to the accessibility tree — so count by role,
+      // not by element.
       await expect(projectsSection.getByRole("heading", { level: 3 })).toHaveCount(3);
-      await expect(projectsSection.getByText("Miroji").first()).toBeVisible();
       await expect(projectsSection.getByText("OmniMorse").first()).toBeVisible();
+      await expect(projectsSection.getByText("GNSS Skyplot").first()).toBeVisible();
     });
   }
 
@@ -78,7 +67,7 @@ test.describe("Localized project content", () => {
   // navigation timeout when the whole browser matrix runs in parallel.
   for (const [locale, headings] of Object.entries(MIROJI_BODY_HEADINGS)) {
     test(`project copy is translated for ${locale}`, async ({ page }) => {
-      await page.goto(`/${locale}`);
+      await page.goto(`/${locale}/?project=miroji#projects`, { waitUntil: "domcontentloaded" });
       const detail = await openMirojiDetail(page);
 
       await expect(detail.getByText(headings.overview).first()).toBeVisible();
@@ -87,7 +76,7 @@ test.describe("Localized project content", () => {
   }
 
   test("store badges link to the App Store, Google Play and F-Droid listings", async ({ page }) => {
-    await page.goto("/en");
+    await page.goto("/en/?project=miroji#projects", { waitUntil: "domcontentloaded" });
     const detail = await openMirojiDetail(page);
 
     const appStoreLink = detail.getByRole("link", { name: /download on the app store/i });
@@ -126,7 +115,7 @@ test.describe("Localized project content", () => {
   });
 
   test("store badges use the locale's artwork", async ({ page }) => {
-    await page.goto("/pt-BR");
+    await page.goto("/pt-BR/?project=miroji#projects", { waitUntil: "domcontentloaded" });
     const detail = await openMirojiDetail(page);
 
     await expect(detail.getByRole("img", { name: /baixe na app store/i })).toHaveAttribute(

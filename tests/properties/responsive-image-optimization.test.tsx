@@ -101,6 +101,7 @@ describe("Property 10: Responsive Image Optimization", () => {
               .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
               .filter((d) => !isNaN(d.getTime()))
               .map((d) => d.toISOString().split("T")[0]),
+            order: fc.nat(),
             liveUrl: fc.option(fc.webUrl(), { nil: undefined }),
             repoUrl: fc.option(fc.webUrl(), { nil: undefined }),
           }),
@@ -144,6 +145,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       images: ["/test-image-1.jpg"],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
@@ -173,6 +175,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       images: ["/test-image-1.jpg", "/test-image-2.jpg"],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
@@ -213,6 +216,7 @@ describe("Property 10: Responsive Image Optimization", () => {
               .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
               .filter((d) => !isNaN(d.getTime()))
               .map((d) => d.toISOString().split("T")[0]),
+            order: fc.nat(),
           }),
           { minLength: 1, maxLength: 3 }
         ),
@@ -257,6 +261,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       images: [],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
@@ -278,6 +283,7 @@ describe("Property 10: Responsive Image Optimization", () => {
       images: ["/test-image-1.jpg"],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
@@ -300,6 +306,7 @@ describe("Property 10: Responsive Image Optimization", () => {
         images: ["/image-1.jpg"],
         featured: true,
         date: "2024-01-01",
+        order: 1,
       },
       {
         id: "project-2",
@@ -309,6 +316,7 @@ describe("Property 10: Responsive Image Optimization", () => {
         images: ["/image-2.jpg", "/image-3.jpg"],
         featured: false,
         date: "2024-01-02",
+        order: 2,
       },
     ];
 

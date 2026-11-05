@@ -23,10 +23,9 @@ interface ProjectsSectionProps {
 }
 
 /**
- * The home page's projects section: the first three projects (featured first,
- * then newest) as cards (a swipe carousel on phones), a detail dialog, and a
- * link to the projects page that holds all of them and lets visitors filter by
- * technology.
+ * The home page's projects section: the first three projects (by `order`) as
+ * cards (a swipe carousel on phones), a detail dialog, and a link to the
+ * projects page that holds all of them and lets visitors filter by technology.
  */
 export default function ProjectsSection({ projects, locale }: ProjectsSectionProps) {
   const t = useTranslations();

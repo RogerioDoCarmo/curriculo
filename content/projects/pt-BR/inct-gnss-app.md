@@ -5,6 +5,7 @@ description: Aplicação Android para coleta e processamento de dados GNSS bruto
 featured: true
 mockData: false
 date: 2021-06-01
+order: 4
 technologies:
   - Java
   - Android SDK

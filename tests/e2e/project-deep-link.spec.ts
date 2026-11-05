@@ -87,8 +87,8 @@ test.describe("Project deep links", () => {
   test("writes the open project into the URL and clears it on close", async ({ page }) => {
     await page.goto("/en", { waitUntil: "domcontentloaded" });
 
-    const dialog = await openProjectDetail(page, /^view details for miroji$/i);
-    await expect(page).toHaveURL(/\?project=miroji/);
+    const dialog = await openProjectDetail(page, /^view details for gnss skyplot$/i);
+    await expect(page).toHaveURL(/\?project=gnss-skyplot/);
 
     // Close writes to history and shuts a native <dialog>. On slow WebKit the
     // click was dispatched but its action never returned (waiting on the
@@ -106,15 +106,15 @@ test.describe("Project deep links", () => {
   test("back and forward step through the opened project", async ({ page }) => {
     await page.goto("/en", { waitUntil: "domcontentloaded" });
 
-    await openProjectDetail(page, /^view details for miroji$/i);
-    await expect(page).toHaveURL(/\?project=miroji/);
+    await openProjectDetail(page, /^view details for gnss skyplot$/i);
+    await expect(page).toHaveURL(/\?project=gnss-skyplot/);
 
     await page.goBack();
     await expect(page.getByRole("dialog")).toBeHidden();
 
     await page.goForward();
     await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(page).toHaveURL(/\?project=miroji/);
+    await expect(page).toHaveURL(/\?project=gnss-skyplot/);
   });
 
   test("copies the shareable link to the clipboard", async ({ page, context, browserName }) => {
@@ -125,14 +125,14 @@ test.describe("Project deep links", () => {
 
     await page.goto("/en", { waitUntil: "domcontentloaded" });
 
-    const dialog = await openProjectDetail(page, /^view details for miroji$/i);
+    const dialog = await openProjectDetail(page, /^view details for gnss skyplot$/i);
     await dialog.getByRole("button", { name: COPY_LINK }).click();
 
     // The confirmation lands in the dialog's live region.
     await expect(dialog.getByRole("status")).toHaveText(/copied/i);
 
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toMatch(/\/en\/\?project=miroji#projects$/);
+    expect(copied).toMatch(/\/en\/\?project=gnss-skyplot#projects$/);
     expect(copied.startsWith("http")).toBe(true);
   });
 
@@ -140,15 +140,16 @@ test.describe("Project deep links", () => {
     // Rather than round-tripping through the clipboard (permission-gated), open
     // the project, read the URL the app produced, and navigate to it fresh.
     await page.goto("/en", { waitUntil: "domcontentloaded" });
-    // INCT, not the oldest project: the home page shows only the first three.
-    await openProjectDetail(page, /^view details for inct gnss app$/i);
+    // offline-detector: one of the home page's first three, so its card is
+    // clickable there.
+    await openProjectDetail(page, /^view details for offline-detector$/i);
 
     const url = page.url();
-    expect(url).toContain("?project=inct-gnss-app");
+    expect(url).toContain("?project=offline-detector");
 
     await page.goto(url, { waitUntil: "domcontentloaded" });
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 10000 });
-    await expect(dialog.getByRole("heading", { name: /inct gnss app/i })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: /offline-detector/i })).toBeVisible();
   });
 });

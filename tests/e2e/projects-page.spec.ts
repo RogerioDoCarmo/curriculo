@@ -1,7 +1,7 @@
 /**
  * E2E Test: Projects Page, and the home page's three-project section
  *
- * The home page shows the first three projects (featured first, then newest);
+ * The home page shows the first three projects, in a hand-picked `order`;
  * /<locale>/projects/ lists all of them with a technology filter. These tests
  * verify:
  *
@@ -17,9 +17,11 @@ import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { waitForHydrated } from "./helpers/stability";
 
-const TOTAL_PROJECTS = 4;
-// Display order: featured first (Miroji, INCT), then newest (OmniMorse, Android).
-const ON_HOME = ["Miroji", "INCT GNSS App", "OmniMorse"];
+const TOTAL_PROJECTS = 6;
+// Display order is the hand-picked `order` field: OmniMorse, offline-detector,
+// GNSS Skyplot, INCT GNSS App, Miroji, Android Native Crud.
+const ON_HOME = ["OmniMorse", "offline-detector", "GNSS Skyplot"];
+const OFF_HOME = ["INCT GNSS App", "Miroji", "Android Native Crud"];
 const NOT_ON_HOME = "Android Native Crud";
 
 /** Project cards on the page: each is one button named "View details for …", per locale. */
@@ -50,9 +52,11 @@ test.describe("Projects page", () => {
           section.getByRole("button", { name: `View details for ${title}` }).first()
         ).toBeVisible();
       }
-      await expect(
-        section.getByRole("button", { name: `View details for ${NOT_ON_HOME}` })
-      ).toHaveCount(0);
+      for (const title of OFF_HOME) {
+        await expect(
+          section.getByRole("button", { name: `View details for ${title}` })
+        ).toHaveCount(0);
+      }
       // The filter moved to the page: no technology chips here any more.
       await expect(section.getByRole("group")).toHaveCount(0);
     });
@@ -98,7 +102,7 @@ test.describe("Projects page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names).toEqual([...ON_HOME, NOT_ON_HOME].map((t) => `View details for ${t}`));
+    expect(names).toEqual([...ON_HOME, ...OFF_HOME].map((t) => `View details for ${t}`));
   });
 
   test("filters by technology and keeps the choice in the URL", async ({ page }) => {
@@ -141,12 +145,14 @@ test.describe("Projects page", () => {
   });
 
   test("steps through every project with Prev/Next, wrapping", async ({ page }) => {
-    await page.goto("/en/projects/?project=miroji", { waitUntil: "domcontentloaded" });
+    await page.goto("/en/projects/?project=omnimorse", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: "Miroji" })).toBeVisible({ timeout: 10000 });
-    // Miroji is first, so Previous wraps all the way to the last project: unlike
-    // the home page's three, this list holds all four.
+    await expect(dialog.getByRole("heading", { name: "OmniMorse" })).toBeVisible({
+      timeout: 10000,
+    });
+    // OmniMorse is first, so Previous wraps all the way to the last project:
+    // unlike the home page's three, this list holds all six.
     await dialog.getByRole("button", { name: "Previous project" }).click();
     await expect(dialog.getByRole("heading", { name: NOT_ON_HOME })).toBeVisible();
   });
@@ -194,6 +200,26 @@ test.describe("Projects page", () => {
       const link = dialog.getByRole("link", { name: new RegExp(`^${label}`) });
       await expect(link).toBeVisible({ timeout: 10000 });
       await expect(link).toHaveAttribute("href", "https://youtu.be/CcyTyHB7n_M");
+      await expect(link).toHaveAttribute("target", "_blank");
+    }
+  });
+
+  test("GNSS Skyplot's dialog has a button to its YouTube video, in every language", async ({
+    page,
+  }) => {
+    for (const [locale, label] of [
+      ["en", "Watch video"],
+      ["pt-BR", "Assistir ao vídeo"],
+      ["es", "Ver el video"],
+    ]) {
+      await page.goto(`/${locale}/projects/?project=gnss-skyplot`, {
+        waitUntil: "domcontentloaded",
+      });
+
+      const dialog = page.getByRole("dialog");
+      const link = dialog.getByRole("link", { name: new RegExp(`^${label}`) });
+      await expect(link).toBeVisible({ timeout: 10000 });
+      await expect(link).toHaveAttribute("href", "https://youtu.be/1diU8lZBDQc");
       await expect(link).toHaveAttribute("target", "_blank");
     }
   });

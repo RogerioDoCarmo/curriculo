@@ -28,6 +28,9 @@ export interface Project {
    * data. When unset, a heuristic (no repo or no images) decides. */
   mockData?: boolean;
   date: string; // ISO 8601 date string (e.g., "2024-01-15")
+  /** Display position, lowest first. Independent of `date` and `featured`,
+   * which stay the project's real date and its "Featured" badge. */
+  order: number;
 }
 
 // ─── Post ───────────────────────────────────────────────────────────────────

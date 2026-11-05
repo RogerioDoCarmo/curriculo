@@ -14,7 +14,7 @@ import {
   sortProjectsForDisplay,
 } from "@/lib/projects";
 
-const p = (id: string, featured: boolean, date: string) => ({ id, featured, date });
+const p = (id: string, order: number) => ({ id, order });
 const ids = (list: readonly { id: string }[]) => list.map((x) => x.id);
 
 describe("HOME_PROJECTS_COUNT", () => {
@@ -24,62 +24,32 @@ describe("HOME_PROJECTS_COUNT", () => {
 });
 
 describe("sortProjectsForDisplay", () => {
-  it("puts featured projects first, then everything else", () => {
-    const sorted = sortProjectsForDisplay([
-      p("plain-new", false, "2026-10-04"),
-      p("feat-old", true, "2017-01-01"),
-    ]);
-    expect(ids(sorted)).toEqual(["feat-old", "plain-new"]);
-  });
-
-  it("orders each group newest first", () => {
-    const sorted = sortProjectsForDisplay([
-      p("plain-old", false, "2017-09-01"),
-      p("feat-old", true, "2021-06-01"),
-      p("plain-new", false, "2026-10-04"),
-      p("feat-new", true, "2026-08-18"),
-    ]);
-    expect(ids(sorted)).toEqual(["feat-new", "feat-old", "plain-new", "plain-old"]);
+  it("orders by `order` ascending", () => {
+    const sorted = sortProjectsForDisplay([p("c", 3), p("a", 1), p("b", 2)]);
+    expect(ids(sorted)).toEqual(["a", "b", "c"]);
   });
 
   it("gives the same answer whichever way the projects arrive", () => {
-    const input = [
-      p("b", false, "2020-01-01"),
-      p("a", true, "2019-01-01"),
-      p("c", false, "2022-01-01"),
-    ];
-    expect(ids(sortProjectsForDisplay(input))).toEqual(["a", "c", "b"]);
-    expect(ids(sortProjectsForDisplay([...input].reverse()))).toEqual(["a", "c", "b"]);
+    const input = [p("b", 2), p("a", 1), p("c", 3)];
+    expect(ids(sortProjectsForDisplay(input))).toEqual(["a", "b", "c"]);
+    expect(ids(sortProjectsForDisplay([...input].reverse()))).toEqual(["a", "b", "c"]);
   });
 
-  it("orders projects on the same date by id", () => {
-    const sorted = sortProjectsForDisplay([
-      p("z", false, "2026-01-01"),
-      p("a", false, "2026-01-01"),
-      p("m", false, "2026-01-01"),
-    ]);
+  it("orders projects with the same `order` value by id", () => {
+    const sorted = sortProjectsForDisplay([p("z", 1), p("a", 1), p("m", 1)]);
     expect(ids(sorted)).toEqual(["a", "m", "z"]);
   });
 
-  it("lets the date win over the id, and the featured flag win over the date", () => {
-    expect(
-      ids(sortProjectsForDisplay([p("a", false, "2020-01-01"), p("z", false, "2021-01-01")]))
-    ).toEqual(["z", "a"]);
-    expect(
-      ids(sortProjectsForDisplay([p("a", false, "2030-01-01"), p("z", true, "2000-01-01")]))
-    ).toEqual(["z", "a"]);
-  });
-
-  it("keeps projects with the same featured flag, date and id in their original order", () => {
-    const tagged = [1, 2, 3, 4].map((n) => ({ ...p("same", false, "2026-01-01"), n }));
+  it("keeps projects with the same `order` and id in their original order", () => {
+    const tagged = [1, 2, 3, 4].map((n) => ({ ...p("same", 1), n }));
     expect(sortProjectsForDisplay(tagged).map((x) => x.n)).toEqual([1, 2, 3, 4]);
   });
 
   it("returns a new array and leaves the input alone", () => {
-    const input = [p("old", false, "2020-01-01"), p("new", false, "2026-01-01")];
+    const input = [p("later", 2), p("first", 1)];
     const sorted = sortProjectsForDisplay(input);
     expect(sorted).not.toBe(input);
-    expect(ids(input)).toEqual(["old", "new"]);
+    expect(ids(input)).toEqual(["later", "first"]);
   });
 
   it("handles an empty list", () => {
@@ -88,26 +58,20 @@ describe("sortProjectsForDisplay", () => {
 });
 
 describe("getHomeProjects", () => {
-  const projects = [
-    p("oldest", false, "2017-09-01"),
-    p("feat-old", true, "2021-06-01"),
-    p("recent", false, "2026-10-04"),
-    p("feat-new", true, "2026-08-18"),
-    p("middle", false, "2023-01-01"),
-  ];
+  const projects = [p("fifth", 5), p("second", 2), p("fourth", 4), p("first", 1), p("third", 3)];
 
   it("returns the first three in display order", () => {
-    expect(ids(getHomeProjects(projects))).toEqual(["feat-new", "feat-old", "recent"]);
+    expect(ids(getHomeProjects(projects))).toEqual(["first", "second", "third"]);
   });
 
   it("honours an explicit count", () => {
-    expect(ids(getHomeProjects(projects, 1))).toEqual(["feat-new"]);
+    expect(ids(getHomeProjects(projects, 1))).toEqual(["first"]);
     expect(getHomeProjects(projects, 0)).toEqual([]);
     expect(ids(getHomeProjects(projects, 10))).toHaveLength(5);
   });
 
   it("returns everything when there are fewer than the count", () => {
-    expect(ids(getHomeProjects([p("only", false, "2020-01-01")]))).toEqual(["only"]);
+    expect(ids(getHomeProjects([p("only", 1)]))).toEqual(["only"]);
     expect(getHomeProjects([])).toEqual([]);
   });
 });

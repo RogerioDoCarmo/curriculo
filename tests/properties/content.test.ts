@@ -67,6 +67,7 @@ const projectFrontmatterArb = fc.record({
   images: imagesArb,
   featured: fc.boolean(),
   date: isoDateArb,
+  order: fc.nat(),
   liveUrl: optionalUrlArb,
   repoUrl: optionalUrlArb,
   appStoreUrl: optionalUrlArb,
@@ -87,6 +88,7 @@ function buildMarkdownFile(frontmatter: {
   images: string[];
   featured: boolean;
   date: string;
+  order: number;
   liveUrl?: string;
   repoUrl?: string;
   appStoreUrl?: string;
@@ -112,6 +114,7 @@ function buildMarkdownFile(frontmatter: {
     `description: ${JSON.stringify(frontmatter.description)}`,
     `featured: ${frontmatter.featured}`,
     `date: ${frontmatter.date}`,
+    `order: ${frontmatter.order}`,
     frontmatter.technologies.length > 0 ? `technologies:\n${techLines}` : "technologies: []",
     frontmatter.images.length > 0 ? `images:\n${imageLines}` : "images: []",
     liveUrlLine,
@@ -201,11 +204,13 @@ describe("Property 46: Content Field Support", () => {
             expect(Array.isArray(project.images)).toBe(true);
             expect(typeof project.featured).toBe("boolean");
             expect(typeof project.date).toBe("string");
+            expect(typeof project.order).toBe("number");
 
             // Values must match what was written
             expect(project.title).toBe(frontmatter.title);
             expect(project.description).toBe(frontmatter.description);
             expect(project.featured).toBe(frontmatter.featured);
+            expect(project.order).toBe(frontmatter.order);
             expect(project.technologies).toEqual(frontmatter.technologies);
             expect(project.images).toEqual(frontmatter.images);
 
@@ -249,6 +254,7 @@ describe("Property 46: Content Field Support", () => {
               images: imagesArb,
               featured: fc.boolean(),
               date: isoDateArb,
+              order: fc.nat(),
             }),
             { minLength: 2, maxLength: 5 }
           )

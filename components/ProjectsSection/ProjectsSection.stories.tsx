@@ -26,6 +26,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: true,
     date: "2023-06-01",
+    order: 1,
   },
   {
     id: "portfolio-website",
@@ -36,6 +37,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: false,
     date: "2024-01-01",
+    order: 2,
   },
   {
     id: "study-app",
@@ -45,6 +47,7 @@ const projects: Project[] = [
     images: [],
     featured: false,
     date: "2022-03-01",
+    order: 3,
   },
 ];
 

@@ -4,6 +4,7 @@ title: offline-detector
 description: Headless connectivity detector for React and React Native that confirms real internet access, not just the browser's online flag, with ready-made snackbar, banner and indicator UI. Published on npm, early development (0.x)
 featured: false
 date: 2026-10-28
+order: 2
 technologies:
   - TypeScript
   - React
