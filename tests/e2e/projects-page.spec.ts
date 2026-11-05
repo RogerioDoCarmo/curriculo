@@ -17,9 +17,9 @@ import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { waitForHydrated } from "./helpers/stability";
 
-const TOTAL_PROJECTS = 5;
+const TOTAL_PROJECTS = 6;
 // Display order: featured first, newest first within that group (GNSS Skyplot,
-// Miroji, INCT), then newest (OmniMorse, Android).
+// Miroji, INCT), then newest (offline-detector, OmniMorse, Android).
 const ON_HOME = ["GNSS Skyplot", "Miroji", "INCT GNSS App"];
 const NOT_ON_HOME = "Android Native Crud";
 
@@ -100,7 +100,7 @@ test.describe("Projects page", () => {
       els.map((el) => el.getAttribute("aria-label"))
     );
     expect(names).toEqual(
-      [...ON_HOME, "OmniMorse", NOT_ON_HOME].map((t) => `View details for ${t}`)
+      [...ON_HOME, "offline-detector", "OmniMorse", NOT_ON_HOME].map((t) => `View details for ${t}`)
     );
   });
 
