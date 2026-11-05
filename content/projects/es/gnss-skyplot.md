@@ -19,6 +19,7 @@ technologies:
 images:
   - /images/projects/gnss-skyplot.png
 liveUrl: https://gnss-skyplot.rogeriodocarmo.com
+videoUrl: https://youtu.be/1diU8lZBDQc
 ---
 
 ## Visión General
