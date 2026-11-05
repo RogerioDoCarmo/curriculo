@@ -17,13 +17,15 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-// Newest first: the OmniMorse launch post, the OmniMorse video, then the AI
-// agents post. The two 2026-09-13 posts (deep-links-article/post) tie on date
-// and are ordered by id; both now fall outside the latest three.
+// Newest first: the offline-detector launch post, the OmniMorse launch post,
+// then the OmniMorse video. The AI agents post and the two 2026-09-13 posts
+// (deep-links-article/post, which tie on date and are ordered by id) now all
+// fall outside the latest three.
+const OFFLINE_DETECTOR_EN = "Launching offline-detector";
+const OFFLINE_DETECTOR_PT = "Lançamento do offline-detector";
 const RELEASE_EN = "Launching OmniMorse";
 const NEWEST_EN = "OmniMorse App — encode, decode and learn Morse code";
 const AGENTS_EN = "Two AI agents, one Git repository";
-const AGENTS_PT = "Dois agentes de IA, um repositório Git";
 // Older than the latest three: on the posts page only.
 const ARTICLE_EN = "Implementing Deep Links in a Next.js Site";
 const DEEP_POST_EN = "Deep links in the portfolio";
@@ -81,12 +83,12 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    for (const title of [RELEASE_EN, NEWEST_EN, AGENTS_EN]) {
+    for (const title of [OFFLINE_DETECTOR_EN, RELEASE_EN, NEWEST_EN]) {
       await expect(
         section.getByRole("button", { name: `View details for ${title}` }).first()
       ).toBeVisible();
     }
-    for (const title of [ARTICLE_EN, DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
+    for (const title of [AGENTS_EN, ARTICLE_EN, DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
       await expect(section.getByRole("button", { name: `View details for ${title}` })).toHaveCount(
         0
       );
@@ -115,26 +117,26 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const agentsCard = section
-      .getByRole("button", { name: `View details for ${AGENTS_EN}` })
+    const card = section
+      .getByRole("button", { name: `View details for ${OFFLINE_DETECTOR_EN}` })
       .first();
-    await expect(agentsCard).toBeVisible();
-    await expect(agentsCard).toContainText("LinkedIn");
-    await expect(agentsCard).toContainText("Post");
-    await expect(agentsCard).toContainText("Sep 2026");
-    await expect(agentsCard).toContainText("In Portuguese");
+    await expect(card).toBeVisible();
+    await expect(card).toContainText("LinkedIn");
+    await expect(card).toContainText("Post");
+    await expect(card).toContainText("Nov 2026");
+    await expect(card).toContainText("In Portuguese");
   });
 
   test("shows Portuguese titles and no language flag on the pt-BR page", async ({ page }) => {
     await page.goto("/pt-BR/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const agentsCard = section
-      .getByRole("button", { name: `Ver detalhes de ${AGENTS_PT}` })
+    const card = section
+      .getByRole("button", { name: `Ver detalhes de ${OFFLINE_DETECTOR_PT}` })
       .first();
-    await expect(agentsCard).toBeVisible();
-    await expect(agentsCard).toContainText("Post");
-    await expect(agentsCard).not.toContainText("Em português");
+    await expect(card).toBeVisible();
+    await expect(card).toContainText("Post");
+    await expect(card).not.toContainText("Em português");
     await expect(section.getByRole("link", { name: "Ver todas as publicações" })).toHaveAttribute(
       "href",
       "/pt-BR/posts/"
@@ -144,13 +146,13 @@ test.describe("Posts section", () => {
   test("opens a post and links out to LinkedIn in a new tab", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    const dialog = await openPost(page, AGENTS_EN);
+    const dialog = await openPost(page, OFFLINE_DETECTOR_EN);
 
-    await expect(dialog.getByRole("heading", { name: AGENTS_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: OFFLINE_DETECTOR_EN })).toBeVisible();
     const link = dialog.getByRole("link", { name: "Read on LinkedIn (opens in a new tab)" });
     await expect(link).toHaveAttribute(
       "href",
-      "https://www.linkedin.com/posts/rogeriodocarmo_dois-agentes-de-ia-um-reposit%C3%B3rio-git-zero-ugcPost-7509704418368368640-P4mv/"
+      "https://www.linkedin.com/posts/rogeriodocarmo_react-reactnative-typescript-ugcPost-7523925227072978944-Qxb9/"
     );
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -159,13 +161,13 @@ test.describe("Posts section", () => {
   test("steps through the three posts with Prev/Next, wrapping within them", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    const dialog = await openPost(page, RELEASE_EN);
+    const dialog = await openPost(page, OFFLINE_DETECTOR_EN);
     // Previous from the first wraps to the last of the three — not to the oldest post.
     await dialog.getByRole("button", { name: "Previous post" }).click();
-    await expect(dialog.getByRole("heading", { name: AGENTS_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
 
     await dialog.getByRole("button", { name: "Next post" }).click();
-    await expect(dialog.getByRole("heading", { name: RELEASE_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: OFFLINE_DETECTOR_EN })).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
@@ -174,9 +176,9 @@ test.describe("Posts section", () => {
   test("writes the open post into the URL, keeping the section hash", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    await openPost(page, AGENTS_EN);
+    await openPost(page, OFFLINE_DETECTOR_EN);
 
-    await expect(page).toHaveURL(/\?post=ai-agents-git-worktrees#posts$/);
+    await expect(page).toHaveURL(/\?post=offline-detector-release-post#posts$/);
   });
 
   test("opens a deep-linked post on arrival", async ({ page }) => {
@@ -254,7 +256,9 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    const card = section.getByRole("button", { name: `View details for ${AGENTS_EN}` }).first();
+    const card = section
+      .getByRole("button", { name: `View details for ${OFFLINE_DETECTOR_EN}` })
+      .first();
     await expect(card).toBeVisible();
     await expect(card.locator("img")).toHaveCount(0);
   });
