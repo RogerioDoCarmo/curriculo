@@ -175,6 +175,7 @@ const mockProjects: Project[] = [
     images: ["/test-image-1.jpg"],
     featured: false,
     date: "2024-01-01",
+    order: 1,
   },
   {
     id: "project-2",
@@ -184,6 +185,7 @@ const mockProjects: Project[] = [
     images: ["/test-image-2.jpg"],
     featured: true,
     date: "2024-01-02",
+    order: 2,
   },
 ];
 

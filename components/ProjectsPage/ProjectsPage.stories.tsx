@@ -26,6 +26,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: false,
     date: "2017-09-01",
+    order: 4,
   },
   {
     id: "miroji",
@@ -36,6 +37,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: true,
     date: "2026-08-18",
+    order: 3,
   },
   {
     id: "inct-gnss-app",
@@ -46,6 +48,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: true,
     date: "2021-06-01",
+    order: 2,
   },
   {
     id: "omnimorse",
@@ -56,6 +59,7 @@ const projects: Project[] = [
     repoUrl: "https://example.com/repo",
     featured: false,
     date: "2026-10-04",
+    order: 1,
   },
 ];
 

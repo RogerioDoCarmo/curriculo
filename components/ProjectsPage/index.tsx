@@ -22,9 +22,9 @@ interface ProjectsPageProps {
 }
 
 /**
- * Every project, in the same order as the home page (featured first, then
- * newest), with a technology filter. The chosen technology lives in the URL
- * (`?tech=Kotlin`) so a filtered view can be linked to.
+ * Every project, in the same order as the home page (by `order`), with a
+ * technology filter. The chosen technology lives in the URL (`?tech=Kotlin`)
+ * so a filtered view can be linked to.
  */
 export default function ProjectsPage({ projects, locale }: ProjectsPageProps) {
   const t = useTranslations();

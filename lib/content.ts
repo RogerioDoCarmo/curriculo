@@ -87,6 +87,20 @@ function requireField(
 }
 
 /**
+ * Validates that a required field is present and a finite number.
+ */
+function requireNumber(value: unknown, fieldName: string, filePath: string): number {
+  requireField(value, fieldName, filePath);
+  const num = Number(value);
+  if (!Number.isFinite(num)) {
+    throw new TypeError(
+      `Content validation error in "${filePath}": field "${fieldName}" must be a number.`
+    );
+  }
+  return num;
+}
+
+/**
  * Validates that a required field is present and non-empty, returning it
  * coerced to a string (frontmatter values come back as `unknown` from the
  * YAML parser — e.g. an unquoted date becomes a `Date`, not a `string`).
@@ -145,6 +159,7 @@ function parseProjectFile(filePath: string): Project {
     featured: Boolean(data.featured),
     mockData: data.mockData === undefined ? undefined : Boolean(data.mockData),
     date: requireString(data.date, "date", filePath),
+    order: requireNumber(data.order, "order", filePath),
   };
 }
 

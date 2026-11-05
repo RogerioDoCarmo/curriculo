@@ -4,6 +4,7 @@ title: Android Native Crud
 description: Aplicação de exemplo para estudo inicial do ambiente Android, explorando componentes fundamentais e padrões de desenvolvimento
 featured: false
 date: 2017-09-01
+order: 6
 technologies:
   - Java
   - Android SDK

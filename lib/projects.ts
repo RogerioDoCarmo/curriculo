@@ -11,21 +11,18 @@ import type { Project } from "@/types/index";
 export const HOME_PROJECTS_COUNT = 3;
 
 /**
- * Projects in display order: featured first, then newest first.
+ * Projects in display order: `order` ascending.
  *
- * Plain newest-first would put a project at the top just for being recent. The
- * featured flag is the owner's statement of what to lead with, and the date
- * orders everything else. Projects that tie on both are ordered by id, so the
- * three shown on the home page never depend on the order a directory listing
+ * `order` is a deliberate, hand-picked position — independent of `date` (the
+ * project's real date) and `featured` (its "Featured" badge). Ties fall back
+ * to `id`, so the order never depends on the order a directory listing
  * happened to return files in. The input is left untouched.
  */
-export function sortProjectsForDisplay<T extends Pick<Project, "id" | "date" | "featured">>(
+export function sortProjectsForDisplay<T extends Pick<Project, "id" | "order">>(
   projects: readonly T[]
 ): T[] {
   return projects.toSorted((a, b) => {
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
-    if (a.date < b.date) return 1;
-    if (a.date > b.date) return -1;
+    if (a.order !== b.order) return a.order - b.order;
     if (a.id < b.id) return -1;
     if (a.id > b.id) return 1;
     return 0;
@@ -33,7 +30,7 @@ export function sortProjectsForDisplay<T extends Pick<Project, "id" | "date" | "
 }
 
 /** The projects the home page shows, in display order. */
-export function getHomeProjects<T extends Pick<Project, "id" | "date" | "featured">>(
+export function getHomeProjects<T extends Pick<Project, "id" | "order">>(
   projects: readonly T[],
   count: number = HOME_PROJECTS_COUNT
 ): T[] {

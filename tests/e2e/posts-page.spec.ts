@@ -15,10 +15,10 @@ import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
 const VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
-const NEWEST_EN = "Launching OmniMorse"; // newest post overall, and newest LinkedIn post
+const NEWEST_EN = "Launching offline-detector"; // newest post overall, and newest LinkedIn post
 const OLDEST_EN = "Useful tools for beginners in web development";
-const TOTAL_POSTS = 8;
-const LINKEDIN_POSTS = 7;
+const TOTAL_POSTS = 9;
+const LINKEDIN_POSTS = 8;
 
 /** The card buttons on the page (each card is one button named "View details for …", per locale). */
 const cards = (page: Page) =>
@@ -117,7 +117,7 @@ test.describe("Posts page", () => {
     await page.goto("/en/posts/");
 
     await page.getByRole("button", { name: `View details for ${NEWEST_EN}` }).click();
-    await expect(page).toHaveURL(/\?post=omnimorse-release-post$/);
+    await expect(page).toHaveURL(/\?post=offline-detector-release-post$/);
 
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toBeHidden();
@@ -153,7 +153,7 @@ test.describe("Posts page", () => {
     await expect(page.getByRole("dialog").getByRole("status")).toHaveText("Link copied!");
 
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toBe(`${baseURL}/en/posts/?post=omnimorse-release-post`);
+    expect(copied).toBe(`${baseURL}/en/posts/?post=offline-detector-release-post`);
 
     // And the link itself works: it reopens the same post.
     await page.goto(copied);

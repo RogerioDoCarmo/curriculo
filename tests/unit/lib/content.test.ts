@@ -252,12 +252,12 @@ describe("Content Management System", () => {
       write(
         dir,
         "projects/pt-BR/old.md",
-        `---\nid: old\ntitle: Old\ndescription: d\ndate: "2020-01-01"\ntechnologies: [React]\nfeatured: false\n---\nBody`
+        `---\nid: old\ntitle: Old\ndescription: d\ndate: "2020-01-01"\norder: 2\ntechnologies: [React]\nfeatured: false\n---\nBody`
       );
       write(
         dir,
         "projects/pt-BR/new.md",
-        `---\nid: new\ntitle: New\ndescription: d\ndate: "2024-01-01"\ntechnologies: [Next.js]\nimages: [a.png]\nfeatured: true\nliveUrl: https://x.dev\nrepoUrl: https://github.com/x\n---\nBody`
+        `---\nid: new\ntitle: New\ndescription: d\ndate: "2024-01-01"\norder: 1\ntechnologies: [Next.js]\nimages: [a.png]\nfeatured: true\nliveUrl: https://x.dev\nrepoUrl: https://github.com/x\n---\nBody`
       );
       const projects = await getProjects(undefined, dir);
       expect(projects.map((p) => p.id)).toEqual(["new", "old"]);
@@ -275,6 +275,7 @@ id: with
 title: T
 description: d
 date: "2024-02-01"
+order: 1
 videoUrl: https://youtu.be/CcyTyHB7n_M
 ---
 Body`
@@ -287,6 +288,7 @@ id: without
 title: T
 description: d
 date: "2024-01-01"
+order: 2
 ---
 Body`
       );
@@ -302,7 +304,7 @@ Body`
       write(
         dir,
         "projects/pt-BR/p.md",
-        `---\nid: p\ntitle: T\ndescription: d\ndate: 2024-01-01\ntechnologies: notalist\n---\nBody`
+        `---\nid: p\ntitle: T\ndescription: d\ndate: 2024-01-01\norder: 1\ntechnologies: notalist\n---\nBody`
       );
       const [project] = await getProjects(undefined, dir);
       expect(project.technologies).toEqual([]);
@@ -392,7 +394,7 @@ Body`
       write(
         dir,
         "projects/pt-BR/empty.md",
-        `---\nid: e\ntitle: T\ndescription: d\ndate: "2024-01-01"\n---\n`
+        `---\nid: e\ntitle: T\ndescription: d\ndate: "2024-01-01"\norder: 1\n---\n`
       );
       const [project] = await getProjects(undefined, dir);
       expect(project.longDescription).toBeUndefined();
@@ -446,12 +448,12 @@ Body`
       write(
         dir,
         "projects/pt-BR/app.md",
-        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\norder: 1\n---\nCorpo`
       );
       write(
         dir,
         "projects/en/app.md",
-        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\n---\nBody`
+        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\norder: 1\n---\nBody`
       );
 
       const [english] = await getProjects("en", dir);
@@ -464,12 +466,12 @@ Body`
       write(
         dir,
         "projects/pt-BR/app.md",
-        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\norder: 1\n---\nCorpo`
       );
       write(
         dir,
         "projects/en/app.md",
-        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\n---\nBody`
+        `---\nid: app\ntitle: Application\ndescription: Description\ndate: "2024-01-01"\norder: 1\n---\nBody`
       );
 
       const [defaulted] = await getProjects(undefined, dir);
@@ -481,7 +483,7 @@ Body`
       write(
         dir,
         "projects/pt-BR/app.md",
-        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\n---\nCorpo`
+        `---\nid: app\ntitle: Aplicativo\ndescription: Descrição\ndate: "2024-01-01"\norder: 1\n---\nCorpo`
       );
 
       const [fallback] = await getProjects("fr-FR", dir);
@@ -493,7 +495,7 @@ Body`
       write(
         dir,
         "projects/legacy.md",
-        `---\nid: legacy\ntitle: Legacy\ndescription: d\ndate: "2024-01-01"\n---\nBody`
+        `---\nid: legacy\ntitle: Legacy\ndescription: d\ndate: "2024-01-01"\norder: 1\n---\nBody`
       );
 
       const [legacy] = await getProjects("en", dir);
@@ -505,7 +507,7 @@ Body`
       write(
         dir,
         "projects/pt-BR/stores.md",
-        `---\nid: stores\ntitle: T\ndescription: d\ndate: "2024-01-01"\nappStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907\nplayStoreUrl: https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji\nfdroidUrl: https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji\n---\nBody`
+        `---\nid: stores\ntitle: T\ndescription: d\ndate: "2024-01-01"\norder: 1\nappStoreUrl: https://apps.apple.com/us/app/miroji/id6774924907\nplayStoreUrl: https://play.google.com/store/apps/details?id=com.rogeriodocarmo.miroji\nfdroidUrl: https://f-droid.org/pt/packages/com.rogeriodocarmo.miroji\n---\nBody`
       );
       const [withStores] = await getProjects(undefined, dir);
       expect(withStores.appStoreUrl).toBe("https://apps.apple.com/us/app/miroji/id6774924907");
@@ -522,7 +524,7 @@ Body`
       write(
         dir,
         "projects/pt-BR/nostores.md",
-        `---\nid: nostores\ntitle: T\ndescription: d\ndate: "2024-01-01"\n---\nBody`
+        `---\nid: nostores\ntitle: T\ndescription: d\ndate: "2024-01-01"\norder: 1\n---\nBody`
       );
       const [withoutStores] = await getProjects(undefined, dir);
       expect(withoutStores.appStoreUrl).toBeUndefined();

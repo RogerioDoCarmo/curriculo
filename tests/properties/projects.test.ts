@@ -67,6 +67,7 @@ const projectArb: fc.Arbitrary<Project> = fc.record({
   fdroidUrl: optionalUrlArb,
   featured: fc.boolean(),
   date: fc.constant("2024-01-15"),
+  order: fc.nat(),
 });
 
 // ─── Pure rendering logic (mirrors ProjectsSection / ProjectCard component) ───

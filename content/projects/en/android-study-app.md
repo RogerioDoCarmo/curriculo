@@ -4,6 +4,7 @@ title: Android Native Crud
 description: Sample application built to study the Android environment, exploring its fundamental components and development patterns
 featured: false
 date: 2017-09-01
+order: 6
 technologies:
   - Java
   - Android SDK

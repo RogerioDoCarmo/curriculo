@@ -217,6 +217,7 @@ describe.skip("Lazy Components", () => {
         images: ["/test.jpg"],
         featured: false,
         date: "2024-01-01",
+        order: 1,
       },
     ];
 
