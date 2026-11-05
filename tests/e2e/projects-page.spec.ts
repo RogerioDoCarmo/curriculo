@@ -21,6 +21,7 @@ const TOTAL_PROJECTS = 6;
 // Display order is the hand-picked `order` field: OmniMorse, offline-detector,
 // GNSS Skyplot, INCT GNSS App, Miroji, Android Native Crud.
 const ON_HOME = ["OmniMorse", "offline-detector", "GNSS Skyplot"];
+const OFF_HOME = ["INCT GNSS App", "Miroji", "Android Native Crud"];
 const NOT_ON_HOME = "Android Native Crud";
 
 /** Project cards on the page: each is one button named "View details for …", per locale. */
@@ -51,9 +52,11 @@ test.describe("Projects page", () => {
           section.getByRole("button", { name: `View details for ${title}` }).first()
         ).toBeVisible();
       }
-      await expect(
-        section.getByRole("button", { name: `View details for ${NOT_ON_HOME}` })
-      ).toHaveCount(0);
+      for (const title of OFF_HOME) {
+        await expect(
+          section.getByRole("button", { name: `View details for ${title}` })
+        ).toHaveCount(0);
+      }
       // The filter moved to the page: no technology chips here any more.
       await expect(section.getByRole("group")).toHaveCount(0);
     });
@@ -99,9 +102,7 @@ test.describe("Projects page", () => {
     const names = await cards(page).evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label"))
     );
-    expect(names).toEqual(
-      [...ON_HOME, "INCT GNSS App", "Miroji", NOT_ON_HOME].map((t) => `View details for ${t}`)
-    );
+    expect(names).toEqual([...ON_HOME, ...OFF_HOME].map((t) => `View details for ${t}`));
   });
 
   test("filters by technology and keeps the choice in the URL", async ({ page }) => {
