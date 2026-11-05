@@ -57,33 +57,22 @@ jest.mock("next/image", () => ({
   }) => <img src={src} alt={alt} {...rest} />,
 }));
 
-const project = (
-  id: string,
-  title: string,
-  featured: boolean,
-  date: string,
-  technologies: string[]
-): Project => ({
+const project = (id: string, title: string, order: number, technologies: string[]): Project => ({
   id,
   title,
   description: `${title} description.`,
   technologies,
   images: [],
-  featured,
-  date,
+  featured: false,
+  date: "2024-01-01",
+  order,
 });
 
-// Deliberately not in display order. Display order is featured first, then newest.
-const featuredOld = project("featured-old", "Featured Old", true, "2021-06-01", [
-  "Java",
-  "TypeScript",
-]);
-const featuredNew = project("featured-new", "Featured New", true, "2026-08-18", [
-  "Kotlin",
-  "TypeScript",
-]);
-const recent = project("recent", "Recent", false, "2026-10-04", ["Kotlin", "Jest"]);
-const oldest = project("oldest", "Oldest", false, "2017-09-01", ["Java"]);
+// Deliberately not in display order. Display order is `order` ascending.
+const featuredOld = project("featured-old", "Featured Old", 2, ["Java", "TypeScript"]);
+const featuredNew = project("featured-new", "Featured New", 1, ["Kotlin", "TypeScript"]);
+const recent = project("recent", "Recent", 3, ["Kotlin", "Jest"]);
+const oldest = project("oldest", "Oldest", 4, ["Java"]);
 
 const allProjects: Project[] = [oldest, featuredOld, recent, featuredNew];
 
@@ -114,7 +103,7 @@ describe("ProjectsPage", () => {
       expect(screen.getByText("Everything I've built.")).toBeInTheDocument();
     });
 
-    it("lists every project in display order: featured first, then newest", () => {
+    it("lists every project in display order: `order` ascending", () => {
       renderPage(allProjects);
       expect(cardTitles()).toEqual(["Featured New", "Featured Old", "Recent", "Oldest"]);
     });

@@ -310,6 +310,7 @@ describe("Property 17: Interactive Elements Have Accessible Labels", () => {
               .date()
               .filter((d) => !isNaN(d.getTime()))
               .map((d) => d.toISOString().split("T")[0]),
+            order: fc.nat(),
             liveUrl: fc.option(fc.webUrl(), { nil: undefined }),
             repoUrl: fc.option(fc.webUrl(), { nil: undefined }),
           }),

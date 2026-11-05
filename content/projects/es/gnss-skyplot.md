@@ -5,6 +5,7 @@ description: Globo 3D y skyplot polar en tiempo real que muestra qué satélites
 featured: true
 mockData: false
 date: 2026-11-02
+order: 3
 technologies:
   - JavaScript
   - three.js

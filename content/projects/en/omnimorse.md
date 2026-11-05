@@ -4,6 +4,7 @@ title: OmniMorse
 description: Morse code translator for Android and iOS (type, speak or tap it in; play it back as sound, flash, screen or vibration), built as a case study in hexagonal architecture and testing. Available now on the App Store
 featured: false
 date: 2026-10-04
+order: 1
 technologies:
   - React Native 0.86
   - Expo SDK 57

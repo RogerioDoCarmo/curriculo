@@ -94,6 +94,7 @@ describe("Property 14: All Images Have Alt Text", () => {
               .date({ min: new Date("2000-01-01"), max: new Date("2030-12-31") })
               .filter((d) => !isNaN(d.getTime()))
               .map((d) => d.toISOString().split("T")[0]),
+            order: fc.nat(),
             liveUrl: fc.option(fc.webUrl(), { nil: undefined }),
             repoUrl: fc.option(fc.webUrl(), { nil: undefined }),
           }),
@@ -135,6 +136,7 @@ describe("Property 14: All Images Have Alt Text", () => {
       images: ["/test-image-1.jpg", "/test-image-2.jpg"],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);
@@ -159,6 +161,7 @@ describe("Property 14: All Images Have Alt Text", () => {
       images: [],
       featured: false,
       date: "2024-01-15",
+      order: 1,
     };
 
     const { container } = renderWithIntl(<ProjectsSection projects={[project]} locale="en" />);

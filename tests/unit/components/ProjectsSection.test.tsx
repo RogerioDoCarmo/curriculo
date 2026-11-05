@@ -82,6 +82,7 @@ const sampleProjects: Project[] = [
     fdroidUrl: "https://f-droid.org/en/packages/com.rogeriodocarmo.miroji",
     featured: true,
     date: "2024-01-15",
+    order: 1,
   },
   {
     id: "project-2",
@@ -91,6 +92,7 @@ const sampleProjects: Project[] = [
     images: ["/images/resume.png"],
     featured: false,
     date: "2023-06-01",
+    order: 2,
   },
   {
     id: "project-3",
@@ -100,6 +102,7 @@ const sampleProjects: Project[] = [
     images: [],
     featured: false,
     date: "2023-01-01",
+    order: 3,
   },
 ];
 
@@ -467,29 +470,30 @@ describe("ProjectsSection Component", () => {
   });
 
   describe("the first three projects and the projects page", () => {
-    const project = (id: string, title: string, featured: boolean, date: string): Project => ({
+    const project = (id: string, title: string, order: number): Project => ({
       id,
       title,
       description: `${title} description.`,
       technologies: ["TypeScript"],
       images: [],
-      featured,
-      date,
+      featured: false,
+      date: "2024-01-01",
+      order,
     });
 
-    // Deliberately not in display order. Display order is featured first, then
-    // newest: Featured New, Featured Old, Recent | Middle, Oldest.
+    // Deliberately not in display order. Display order is `order` ascending:
+    // Featured New, Featured Old, Recent | Middle, Oldest.
     const manyProjects: Project[] = [
-      project("middle", "Middle", false, "2023-01-01"),
-      project("featured-old", "Featured Old", true, "2021-06-01"),
-      project("oldest", "Oldest", false, "2017-09-01"),
-      project("recent", "Recent", false, "2026-10-04"),
-      project("featured-new", "Featured New", true, "2026-08-18"),
+      project("middle", "Middle", 4),
+      project("featured-old", "Featured Old", 2),
+      project("oldest", "Oldest", 5),
+      project("recent", "Recent", 3),
+      project("featured-new", "Featured New", 1),
     ];
 
     const cardTitles = () => screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
 
-    it("shows only the first three, featured first and then newest", () => {
+    it("shows only the first three, in `order`", () => {
       renderWithIntl(<ProjectsSection projects={manyProjects} locale="en" />);
 
       expect(cardTitles()).toEqual(["Featured New", "Featured Old", "Recent"]);

@@ -4,6 +4,7 @@ title: Miroji
 description: App de espejo con cámara frontal publicada en la App Store, Google Play y F-Droid, usada como caso de estudio de arquitectura hexagonal, pruebas automatizadas y CI/CD
 featured: true
 date: 2026-08-18
+order: 5
 technologies:
   - React Native 0.81
   - Expo SDK 54

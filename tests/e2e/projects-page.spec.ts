@@ -1,7 +1,7 @@
 /**
  * E2E Test: Projects Page, and the home page's three-project section
  *
- * The home page shows the first three projects (featured first, then newest);
+ * The home page shows the first three projects, in a hand-picked `order`;
  * /<locale>/projects/ lists all of them with a technology filter. These tests
  * verify:
  *
@@ -18,9 +18,9 @@ import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 import { waitForHydrated } from "./helpers/stability";
 
 const TOTAL_PROJECTS = 6;
-// Display order: featured first, newest first within that group (GNSS Skyplot,
-// Miroji, INCT), then newest (offline-detector, OmniMorse, Android).
-const ON_HOME = ["GNSS Skyplot", "Miroji", "INCT GNSS App"];
+// Display order is the hand-picked `order` field: OmniMorse, offline-detector,
+// GNSS Skyplot, INCT GNSS App, Miroji, Android Native Crud.
+const ON_HOME = ["OmniMorse", "offline-detector", "GNSS Skyplot"];
 const NOT_ON_HOME = "Android Native Crud";
 
 /** Project cards on the page: each is one button named "View details for …", per locale. */
@@ -100,7 +100,7 @@ test.describe("Projects page", () => {
       els.map((el) => el.getAttribute("aria-label"))
     );
     expect(names).toEqual(
-      [...ON_HOME, "offline-detector", "OmniMorse", NOT_ON_HOME].map((t) => `View details for ${t}`)
+      [...ON_HOME, "INCT GNSS App", "Miroji", NOT_ON_HOME].map((t) => `View details for ${t}`)
     );
   });
 
@@ -144,14 +144,14 @@ test.describe("Projects page", () => {
   });
 
   test("steps through every project with Prev/Next, wrapping", async ({ page }) => {
-    await page.goto("/en/projects/?project=gnss-skyplot", { waitUntil: "domcontentloaded" });
+    await page.goto("/en/projects/?project=omnimorse", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: "GNSS Skyplot" })).toBeVisible({
+    await expect(dialog.getByRole("heading", { name: "OmniMorse" })).toBeVisible({
       timeout: 10000,
     });
-    // GNSS Skyplot is first, so Previous wraps all the way to the last project:
-    // unlike the home page's three, this list holds all five.
+    // OmniMorse is first, so Previous wraps all the way to the last project:
+    // unlike the home page's three, this list holds all six.
     await dialog.getByRole("button", { name: "Previous project" }).click();
     await expect(dialog.getByRole("heading", { name: NOT_ON_HOME })).toBeVisible();
   });

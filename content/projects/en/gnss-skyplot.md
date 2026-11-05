@@ -5,6 +5,7 @@ description: Real-time 3D globe and polar skyplot showing which GPS, Galileo, Be
 featured: true
 mockData: false
 date: 2026-11-02
+order: 3
 technologies:
   - JavaScript
   - three.js
