@@ -17,14 +17,15 @@
 import { test, expect, type Page } from "@playwright/test";
 import { setCookieConsentBeforeLoad } from "./helpers/dismissCookieBanner";
 
-// Newest first: the offline-detector launch post, the OmniMorse launch post,
-// then the OmniMorse video. The AI agents post and the two 2026-09-13 posts
-// (deep-links-article/post, which tie on date and are ordered by id) now all
-// fall outside the latest three.
+// Newest first: the Miroji video, the offline-detector launch post, then the
+// OmniMorse launch post. The OmniMorse video, the AI agents post and the two
+// 2026-09-13 posts (deep-links-article/post, which tie on date and are
+// ordered by id) now all fall outside the latest three.
+const NEWEST_EN = "Miroji: just a mirror, with zoom, flip and flashlight (Android & iOS)";
 const OFFLINE_DETECTOR_EN = "Launching offline-detector";
 const OFFLINE_DETECTOR_PT = "Lançamento do offline-detector";
 const RELEASE_EN = "Launching OmniMorse";
-const NEWEST_EN = "OmniMorse App — encode, decode and learn Morse code";
+const OMNIMORSE_VIDEO_EN = "OmniMorse App — encode, decode and learn Morse code";
 const AGENTS_EN = "Two AI agents, one Git repository";
 // Older than the latest three: on the posts page only.
 const ARTICLE_EN = "Implementing Deep Links in a Next.js Site";
@@ -83,12 +84,19 @@ test.describe("Posts section", () => {
     await page.goto("/en/#posts");
     const section = page.locator('section[id="posts"]');
 
-    for (const title of [OFFLINE_DETECTOR_EN, RELEASE_EN, NEWEST_EN]) {
+    for (const title of [NEWEST_EN, OFFLINE_DETECTOR_EN, RELEASE_EN]) {
       await expect(
         section.getByRole("button", { name: `View details for ${title}` }).first()
       ).toBeVisible();
     }
-    for (const title of [AGENTS_EN, ARTICLE_EN, DEEP_POST_EN, FOURTH_EN, OLDEST_EN]) {
+    for (const title of [
+      OMNIMORSE_VIDEO_EN,
+      AGENTS_EN,
+      ARTICLE_EN,
+      DEEP_POST_EN,
+      FOURTH_EN,
+      OLDEST_EN,
+    ]) {
       await expect(section.getByRole("button", { name: `View details for ${title}` })).toHaveCount(
         0
       );
@@ -161,13 +169,13 @@ test.describe("Posts section", () => {
   test("steps through the three posts with Prev/Next, wrapping within them", async ({ page }) => {
     await page.goto("/en/#posts");
 
-    const dialog = await openPost(page, OFFLINE_DETECTOR_EN);
+    const dialog = await openPost(page, NEWEST_EN);
     // Previous from the first wraps to the last of the three — not to the oldest post.
     await dialog.getByRole("button", { name: "Previous post" }).click();
-    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: RELEASE_EN })).toBeVisible();
 
     await dialog.getByRole("button", { name: "Next post" }).click();
-    await expect(dialog.getByRole("heading", { name: OFFLINE_DETECTOR_EN })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
@@ -198,7 +206,9 @@ test.describe("Posts section", () => {
     await page.goto("/en/?post=omnimorse-video#posts", { waitUntil: "domcontentloaded" });
 
     const dialog = page.getByRole("dialog");
-    await expect(dialog.getByRole("heading", { name: NEWEST_EN })).toBeVisible({ timeout: 10000 });
+    await expect(dialog.getByRole("heading", { name: OMNIMORSE_VIDEO_EN })).toBeVisible({
+      timeout: 10000,
+    });
     await expect(dialog.locator("iframe")).toHaveAttribute(
       "src",
       "https://www.youtube-nocookie.com/embed/CcyTyHB7n_M"
