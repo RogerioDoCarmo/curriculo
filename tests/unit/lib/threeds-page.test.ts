@@ -105,6 +105,11 @@ test("renders a link to the live site using SITE_URL", () => {
   expect(html).toContain('<a href="https://rogeriodocarmo.com">');
 });
 
+test("renders a noindex directive so search engines skip this duplicate-content page", () => {
+  const html = renderThreeDsHtml(baseInput);
+  expect(html).toContain('<meta name="robots" content="noindex">');
+});
+
 test("renders a valid, non-empty page when all lists are empty", () => {
   const html = renderThreeDsHtml(baseInput);
   expect(html).toContain("<h1>Rogério do Carmo</h1>");

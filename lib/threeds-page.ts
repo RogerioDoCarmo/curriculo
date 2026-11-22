@@ -63,7 +63,9 @@ export function renderThreeDsHtml(input: ThreeDsPageInput): string {
 
   return (
     `<!doctype html><html lang="en"><head><meta charset="utf-8">` +
-    `<title>${name}</title></head><body>` +
+    `<title>${name}</title>` +
+    `<meta name="robots" content="noindex">` +
+    `</head><body>` +
     `<h1>${name}</h1>` +
     `<p>${title}</p>` +
     `<p>${subtitle}</p>` +
