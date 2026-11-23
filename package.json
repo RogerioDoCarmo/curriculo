@@ -29,6 +29,7 @@
     "test:mutation": "stryker run",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "build:3ds": "tsx scripts/generate-3ds-page.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "chromatic:publish": "npm run build-storybook && npx chromatic --storybook-build-dir=storybook-static",
