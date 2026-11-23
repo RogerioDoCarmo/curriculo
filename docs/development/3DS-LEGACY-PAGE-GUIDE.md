@@ -12,11 +12,12 @@ is generated from the same content sources as the main site
 
 ## One-time setup
 
-### 1. Create the publish branch
+### 1. Create the publish branch — done
 
 A dedicated orphan branch, isolated from everything else in this repo
 (including `docs/`, which is **not** safe to publish wholesale — it holds
-committed planning docs that shouldn't go out on the open web).
+committed planning docs that shouldn't go out on the open web). Already
+created and pushed (empty) as of 2026-11-22:
 
 ```bash
 git checkout --orphan 3ds-pages
@@ -25,6 +26,12 @@ git commit --allow-empty -m "chore: initialize 3ds-pages branch"
 git push origin 3ds-pages
 git checkout develop
 ```
+
+It's also protected by a dedicated GitHub ruleset ("3ds-pages Protection"):
+deletion and force-push/history-rewrite are blocked, but plain pushes
+(what "Every time the content changes" below does) are allowed — lighter
+than the `main`/`develop` ruleset, which also requires a PR and CI checks
+that don't make sense for a generated-static-file branch.
 
 ### 2. Hostinger DNS
 
