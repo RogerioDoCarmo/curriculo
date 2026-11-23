@@ -35,6 +35,11 @@ const nextConfig = {
   poweredByHeader: false, // Remove X-Powered-By header for security
   // React strict mode for better development experience
   reactStrictMode: true,
+  experimental: {
+    // Lets `next build`/`next dev` auto-apply the security-advisory upgrade
+    // flow (the "SecurityFatalError" nudge) instead of just warning.
+    agentUpgrade: "security",
+  },
 };
 
 module.exports = withBundleAnalyzer(withNextIntl(nextConfig));
