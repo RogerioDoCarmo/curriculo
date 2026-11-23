@@ -65,11 +65,22 @@ In this repo's **Settings → Pages**:
 - **Source:** branch `3ds-pages`, folder `/ (root)`.
 - **Custom domain:** `3ds.rogeriodocarmo.com`.
 - Wait for GitHub to provision the certificate (can take a few minutes).
-- **Enforce HTTPS:** decide based on a real-device test once the domain is
-  live — the design doc's own testing found GitHub Pages loads with a mild
-  SSL warning on the real Old 3DS (not a clean padlock like Cloudflare's),
-  so forcing HTTPS should still work, but confirm on the actual console
-  before relying on it. _(Record the result here once tested.)_
+- **Enforce HTTPS:** tested on the real Old 3DS on 2026-11-23 —
+  `https://3ds.rogeriodocarmo.com/` loads (with the same mild SSL warning
+  modal seen during the design doc's earlier GitHub Pages testing; not a
+  clean padlock), and the page works past that warning. Decision: **enforce
+  HTTPS**. Not yet toggled on as of this writing — GitHub hadn't finished
+  issuing the dedicated certificate for the custom domain yet (the API
+  returns `"The certificate does not exist yet"` for the `https_enforced`
+  update). Once `gh api repos/RogerioDoCarmo/curriculo/pages --jq
+.https_enforced` would accept it, enable with:
+
+  ```bash
+  gh api -X PUT repos/RogerioDoCarmo/curriculo/pages -F "https_enforced=true"
+  ```
+
+  (`-F`, not `-f` — the field is a boolean, and `-f` sends it as a string,
+  which the API rejects.)
 
 ## Every time the content changes
 
