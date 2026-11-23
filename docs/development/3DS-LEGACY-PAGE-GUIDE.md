@@ -14,17 +14,20 @@ is generated from the same content sources as the main site
 
 ### 1. Create the publish branch — done
 
-A dedicated orphan branch, isolated from everything else in this repo
-(including `docs/`, which is **not** safe to publish wholesale — it holds
-committed planning docs that shouldn't go out on the open web). Already
-created and pushed (empty) as of 2026-11-22:
+Following this repo's normal Git Flow, `3ds-pages` was branched **from
+`develop`** (shared history, not a disconnected orphan) with one empty
+commit, then merged straight back into `develop` — a true no-op on
+`develop`'s files, since the commit changed nothing. The branch stays
+active afterward (unlike a typical short-lived feature branch, which
+gets deleted once merged): it's the long-lived GitHub Pages publish
+target. Done as of 2026-11-22:
 
 ```bash
-git checkout --orphan 3ds-pages
-git rm -rf .
-git commit --allow-empty -m "chore: initialize 3ds-pages branch"
-git push origin 3ds-pages
+git checkout -b 3ds-pages develop
+git commit --allow-empty -m "chore: initialize 3ds-pages publish branch"
+git push -u origin 3ds-pages
 git checkout develop
+git merge 3ds-pages   # fast-forward, no file changes
 ```
 
 It's also protected by a dedicated GitHub ruleset ("3ds-pages Protection"):
@@ -32,6 +35,16 @@ deletion and force-push/history-rewrite are blocked, but plain pushes
 (what "Every time the content changes" below does) are allowed — lighter
 than the `main`/`develop` ruleset, which also requires a PR and CI checks
 that don't make sense for a generated-static-file branch.
+
+Because `3ds-pages` shares history with `develop`, its current tree is
+still the **entire** source repo (app/, docs/, etc.), not an empty one —
+`docs/` is **not** safe to publish wholesale, since it holds committed
+planning docs that shouldn't go out on the open web. The first publish
+step below (`git rm -rf .` in the worktree, before copying the generated
+files in) clears that down to just the generated page every time, so
+nothing beyond `index.html`, `hero.jpg`, and `CNAME` is ever actually
+served — `git history` existing isn't the same as GitHub Pages serving
+it; Pages only serves the branch's current tree snapshot.
 
 ### 2. Hostinger DNS
 
@@ -63,14 +76,20 @@ In this repo's **Settings → Pages**:
 ```bash
 npm run build:3ds
 git worktree add ../3ds-pages-worktree 3ds-pages
-cp -r legacy-3ds-dist/* ../3ds-pages-worktree/
 cd ../3ds-pages-worktree
+git rm -rf .
+cp -r ../website/legacy-3ds-dist/* .
 git add -A
 git commit -m "chore: update 3DS legacy page"
 git push
 cd -
 git worktree remove ../3ds-pages-worktree
 ```
+
+`git rm -rf .` here only touches the throwaway worktree, never `develop`
+— it's what keeps the published tree down to just the three generated
+files on every publish, regardless of what `3ds-pages` inherited from
+`develop` at branch time.
 
 This is intentionally manual — see the design doc's non-goals. If this
 ever grows into something updated often, wiring it into a GitHub Actions
