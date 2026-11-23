@@ -156,6 +156,53 @@ Bundle Size: ✅ 1.6% smaller (185KB → 182KB)
 Lighthouse:  ✅ +1 point (92 → 93)
 ```
 
+## GitHub Pages / Subdomain Publishing Gotchas
+
+Learned publishing the 3DS legacy page (`3ds-pages` branch,
+`3ds.rogeriodocarmo.com`, see
+[`docs/development/3DS-LEGACY-PAGE-GUIDE.md`](docs/development/3DS-LEGACY-PAGE-GUIDE.md))
+on 2026-11-23. Applies to any future subdomain published via GitHub Pages
+from this repo.
+
+- **"Branch created" ≠ "content published."** The Git Flow empty-commit
+  trick for creating a publish branch only satisfies the branch's
+  ancestry — it does not put any generated page on the branch. Don't mark
+  a publish step "done" in a doc, or consider the feature finished, until
+  you've actually run the publish workflow and verified the **live URL**
+  serves the expected content — not just that the git-level setup exists.
+  This exact gap sat unnoticed across a full session here.
+- **The shared pre-commit hook still fires inside a publish-branch
+  worktree**, even after `git rm -rf .` clears that worktree's working
+  tree — hooks live in the shared `.git/hooks`, not per-worktree. A hook
+  that runs `lint-staged` will fail with "could not find any valid
+  configuration" on a branch that's deliberately just static generated
+  files (no `package.json`/lint config there). `--no-verify` on that one
+  commit is legitimate here — there's no source code to lint — but only
+  with explicit user go-ahead each time, same as any other hook skip.
+- **GitHub Pages' per-domain TLS cert takes real time to issue** after a
+  custom domain is set, separate from the Pages build itself —
+  `status: "built"` does **not** mean the cert exists yet.
+  `gh api -X PUT repos/<owner>/<repo>/pages -F "https_enforced=true"`
+  returns `404 "The certificate does not exist yet"` until it's ready;
+  treat that as "not yet," not a failure, and poll/retry (a ~45s backoff
+  loop worked). Also use `-F` (typed) not `-f` (string) for this boolean
+  field, or the API rejects it as "not of type boolean."
+- **`vercel.json`'s HSTS header has `includeSubDomains; preload`** for
+  the main domain. Any modern browser that's previously visited
+  `https://rogeriodocarmo.com` will force-upgrade `http://` requests to
+  _any_ subdomain — including a brand-new GitHub Pages one — to HTTPS,
+  and will hard-fail with no bypass if that subdomain's cert isn't ready
+  yet. This is why an old/non-HSTS-aware browser (e.g. the Nintendo 3DS's)
+  can reach a new subdomain over plain HTTP successfully while a modern
+  browser cannot. Expect this gap whenever adding a new subdomain-based
+  side project, and don't read a modern-browser failure as proof the
+  subdomain is broken.
+- **Enabling GitHub Pages and toggling `https_enforced` are both
+  mutating, public-facing changes** — Claude Code's auto-mode classifier
+  denies them by default ("Destructive or Unwanted Actions"). Always
+  surface the exact command and ask before retrying, same as the
+  SonarCloud API-write pattern described elsewhere.
+
 ## Reference Docs
 
 Detailed standards live in `.kiro/docs/`:
