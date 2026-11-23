@@ -43,14 +43,16 @@ test("formatExperienceLine renders an open-ended entry as Present", () => {
 });
 
 test("formatProjectLine joins title and description", () => {
-  const project = {
+  const project: Project = {
     id: "p",
     title: "Miroji",
     description: "A mirror app.",
     technologies: [],
     images: [],
     featured: false,
-  } as Project;
+    date: "2024-01-15",
+    order: 1,
+  };
   expect(formatProjectLine(project)).toBe("Miroji — A mirror app.");
 });
 
