@@ -187,6 +187,22 @@ from this repo.
   treat that as "not yet," not a failure, and poll/retry (a ~45s backoff
   loop worked). Also use `-F` (typed) not `-f` (string) for this boolean
   field, or the API rejects it as "not of type boolean."
+- **If that `404` persists for over 24 hours with the build otherwise
+  healthy** (`status: "built"`, no `pending_domain_unverified_at`, no
+  `protected_domain_state`), and CAA records don't block Let's Encrypt
+  (check via `curl -s "https://dns.google/resolve?name=<domain>&type=CAA"`
+  — it follows the CNAME chain to `*.github.io`'s own CAA, which already
+  allows `letsencrypt.org`), the Pages record itself can get stuck even
+  though the cert was quietly approved server-side. Fix: clear and re-add
+  just the Pages API's `cname` field (not the DNS record) —
+  `gh api -X PUT repos/<owner>/<repo>/pages -F "cname="` then, a few
+  seconds later, `-F "cname=<domain>"` again — which forces GitHub to
+  restart domain verification. Confirmed working on `curriculo` 2026-11-24
+  after 24+ hours stuck. This can leave `status: "errored"` as a stale
+  build record even though the live site is already serving the new cert
+  — verify with `curl -sv https://<domain>/` directly rather than trusting
+  `status`, and clear a stale error with a fresh manual build:
+  `gh api -X POST repos/<owner>/<repo>/pages/builds`.
 - **`vercel.json`'s HSTS header has `includeSubDomains; preload`** for
   the main domain. Any modern browser that's previously visited
   `https://rogeriodocarmo.com` will force-upgrade `http://` requests to
