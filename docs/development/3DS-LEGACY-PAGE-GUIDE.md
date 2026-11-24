@@ -69,11 +69,7 @@ In this repo's **Settings → Pages**:
   `https://3ds.rogeriodocarmo.com/` loads (with the same mild SSL warning
   modal seen during the design doc's earlier GitHub Pages testing; not a
   clean padlock), and the page works past that warning. Decision: **enforce
-  HTTPS**. Not yet toggled on as of this writing — GitHub hadn't finished
-  issuing the dedicated certificate for the custom domain yet (the API
-  returns `"The certificate does not exist yet"` for the `https_enforced`
-  update). Once `gh api repos/RogerioDoCarmo/curriculo/pages --jq
-.https_enforced` would accept it, enable with:
+  HTTPS**. Enabled on 2026-11-24:
 
   ```bash
   gh api -X PUT repos/RogerioDoCarmo/curriculo/pages -F "https_enforced=true"
@@ -81,6 +77,42 @@ In this repo's **Settings → Pages**:
 
   (`-F`, not `-f` — the field is a boolean, and `-f` sends it as a string,
   which the API rejects.)
+
+  **If this returns `404 "The certificate does not exist yet"` for a long
+  time** (this instance sat stuck for over 24h, well past GitHub's own
+  "can take a few minutes" and even past the occasional "up to 24 hours"
+  outlier): check `gh api repos/<owner>/<repo>/pages --jq .status` first —
+  `"built"` with no `pending_domain_unverified_at` and no
+  `protected_domain_state` rules out an actual misconfiguration (also check
+  CAA records don't block Let's Encrypt: `curl -s
+"https://dns.google/resolve?name=<domain>&type=CAA"` — CAA lookups follow
+  the CNAME chain, so a GitHub Pages domain inherits `*.github.io`'s CAA,
+  which already allows `letsencrypt.org`). If the build is healthy and CAA
+  isn't the issue, the fix that worked here was clearing and re-adding the
+  custom domain to force GitHub to restart verification and re-request the
+  cert — not removing/re-adding the DNS CNAME, just the Pages API's `cname`
+  field:
+
+  ```bash
+  gh api -X PUT repos/<owner>/<repo>/pages -F "cname="
+  sleep 5
+  gh api -X PUT repos/<owner>/<repo>/pages -F "cname=<domain>"
+  ```
+
+  This briefly takes the custom domain off Pages (falls back to serving on
+  `<owner>.github.io` for a minute) before re-adding it. In this case the
+  certificate turned out to already be `"approved"` server-side the moment
+  verification re-ran — the stuck state was in GitHub's own Pages record,
+  not in DNS or the cert pipeline itself. The `https_enforced=true` PUT
+  then succeeded immediately. The re-add can also leave the `status` as
+  `"errored"` on a stale build record even though the live site is already
+  serving 200s on the new cert — verify with a direct `curl -sv
+https://<domain>/` rather than trusting `status` alone, and if it is
+  stale, clear it with a fresh manual build:
+
+  ```bash
+  gh api -X POST repos/<owner>/<repo>/pages/builds
+  ```
 
 ## Every time the content changes
 
