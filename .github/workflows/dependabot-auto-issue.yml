@@ -81,7 +81,17 @@ jobs:
               // when it revises an advisory (e.g. a patched-version update),
               // which would otherwise create a duplicate issue and leave the
               // old one open forever.
-              const ghsaFromBody = (body) => body?.match(/advisories\/(GHSA-[a-z0-9-]+)/i)?.[1] ?? null;
+              //
+              // Must match the "GitHub Security Advisory" link specifically,
+              // not just the first `advisories/GHSA-...` URL in the body: an
+              // advisory's description can narrate an earlier, *related*
+              // advisory (e.g. a bypass of a previous fix) before the tracked
+              // one appears, so a bare first-match grabs the wrong GHSA and
+              // silently breaks dedup for every alert in that chain — this is
+              // what let alert #78 (GHSA-587h-7wmj-h5pm) spawn 22 duplicate
+              // issues daily for three weeks before being caught.
+              const ghsaFromBody = (body) =>
+                body?.match(/\[GitHub Security Advisory\]\(https:\/\/github\.com\/advisories\/(GHSA-[a-z0-9-]+)\)/i)?.[1] ?? null;
 
               const issuesByGhsa = new Map();
               for (const issue of issues) {
